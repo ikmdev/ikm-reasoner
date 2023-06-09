@@ -1,10 +1,14 @@
-/*-
+/**
+ * 
+ */
+package org.semanticweb.elk.testing;
+/*
  * #%L
- * ELK Reasoner Core
+ * ELK Reasoner
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2017 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2013 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +23,17 @@
  * limitations under the License.
  * #L%
  */
-package org.semanticweb.elk;
 
-public class ElkTestUtils {
 
-	public final static String TEST_INPUT_LOCATION = "test_input";
+/**
+ * Provides seed to all randomized tests
+ * 
+ * @author Pavel Klinov
+ *
+ * pavel.klinov@uni-ulm.de
+ */
+public class RandomSeedProvider {
 
-	private ElkTestUtils() {
-		// Forbid instantiation.
-	}
+	public static long VALUE = System.currentTimeMillis();
 
 }

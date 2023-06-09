@@ -29,7 +29,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Random;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 
 /**
  * Generates random incremental "changes", that is, sets of added and deleted

@@ -24,7 +24,7 @@ package org.semanticweb.elk.owlapi.query;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owlapi.OwlApiIncrementalReasoningTestDelegate;
 import org.semanticweb.elk.reasoner.query.QueryTestInput;
 import org.semanticweb.elk.reasoner.query.SatisfiabilityTestOutput;

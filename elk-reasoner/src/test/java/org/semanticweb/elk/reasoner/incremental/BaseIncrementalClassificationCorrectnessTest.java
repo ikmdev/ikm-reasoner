@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.reasoner.ElkClassTaxonomyTestOutput;
 import org.semanticweb.elk.reasoner.SimpleManifestCreator;
 import org.semanticweb.elk.testing.ConfigurationUtils;

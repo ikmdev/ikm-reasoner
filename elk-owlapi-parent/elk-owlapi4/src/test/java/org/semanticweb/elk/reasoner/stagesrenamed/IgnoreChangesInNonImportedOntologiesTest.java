@@ -1,4 +1,4 @@
-package org.semanticweb.elk.reasoner.stages;
+package org.semanticweb.elk.reasoner.stagesrenamed;
 
 /*
  * #%L
@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.semanticweb.elk.owlapi.ElkReasoner;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.elk.owlapi.TestOWLManager;
+import org.semanticweb.elk.reasoner.stages.AbstractReasonerState;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;

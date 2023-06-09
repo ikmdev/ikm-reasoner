@@ -40,7 +40,7 @@ import org.liveontologies.puli.ProofNode;
 import org.liveontologies.puli.ProofNodes;
 import org.liveontologies.puli.ProofStep;
 import org.liveontologies.puli.Proofs;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;
 import org.semanticweb.elk.owlapi.OWLAPITestUtils;
 import org.semanticweb.elk.owlapi.TestOWLManager;

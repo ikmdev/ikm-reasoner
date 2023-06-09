@@ -25,13 +25,13 @@ package org.semanticweb.elk.owlapi;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.reasoner.BaseClassificationCorrectnessTest;
 import org.semanticweb.elk.reasoner.ElkClassTaxonomyTestOutput;
 import org.semanticweb.elk.reasoner.ReasoningTestManifest;
 import org.semanticweb.elk.reasoner.stages.ElkInterruptedException;
 import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.TestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.UrlTestInput;
 
 @RunWith(PolySuite.class)

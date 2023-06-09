@@ -31,7 +31,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owlapi.ElkProver;
 import org.semanticweb.elk.owlapi.EntailmentTestManifestCreator;
 import org.semanticweb.elk.owlapi.OWLAPITestUtils;

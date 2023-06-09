@@ -20,7 +20,7 @@
  * limitations under the License.
  * #L%
  */
-package org.semanticweb.elk.owl.printers;
+package org.semanticweb.elk.owl.printersrename;
 
 import static org.junit.Assert.assertNotNull;
 

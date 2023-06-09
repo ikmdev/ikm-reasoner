@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.loading.AllAxiomTrackingOntologyLoader;
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.loading.TestAxiomLoader;

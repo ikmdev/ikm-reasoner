@@ -32,7 +32,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.loading.Owl2StreamLoader;

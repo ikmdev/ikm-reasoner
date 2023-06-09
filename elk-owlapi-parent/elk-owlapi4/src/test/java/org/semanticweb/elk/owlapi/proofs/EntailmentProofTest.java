@@ -26,7 +26,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owlapi.EntailmentTestManifestCreator;
 import org.semanticweb.elk.owlapi.OwlApiReasoningTestDelegate;
 import org.semanticweb.elk.owlapi.query.OwlEntailmentQueryTestOutput;

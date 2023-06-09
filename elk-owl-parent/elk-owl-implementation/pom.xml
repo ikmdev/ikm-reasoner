@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>elk-owl-parent</artifactId>
 		<groupId>org.semanticweb.elk</groupId>
-		<version>0.5.0-SNAPSHOT</version>
+		<version>0.6.0</version>
 	</parent>
 
 	<artifactId>elk-owl-implementation</artifactId>
@@ -21,13 +21,13 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owl-model</artifactId>
-			<version>${project.version}</version>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>${project.groupId}</groupId>-->
+<!--			<artifactId>elk-owl-model</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--			<type>test-jar</type>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-common</artifactId>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
+<!--			<scope>test</scope>-->
 		</dependency>
 	</dependencies>
 

@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;

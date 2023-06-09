@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.loading.TestAxiomLoaderFactory;
 import org.semanticweb.elk.loading.TestChangesLoader;

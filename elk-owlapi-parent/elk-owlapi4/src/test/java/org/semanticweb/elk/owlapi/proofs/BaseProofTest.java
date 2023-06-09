@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 
 import org.junit.Before;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;
 import org.semanticweb.elk.owlapi.TestOWLManager;
 import org.semanticweb.elk.reasoner.SimpleManifestCreator;

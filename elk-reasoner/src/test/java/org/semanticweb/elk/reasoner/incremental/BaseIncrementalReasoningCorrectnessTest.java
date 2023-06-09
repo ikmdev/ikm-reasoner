@@ -26,7 +26,7 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.reasoner.BaseReasoningCorrectnessTest;
 import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.TestInput;

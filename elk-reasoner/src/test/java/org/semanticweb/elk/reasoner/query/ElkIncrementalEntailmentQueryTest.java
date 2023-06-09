@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.reasoner.incremental.ElkIncrementalReasoningTestDelegate;

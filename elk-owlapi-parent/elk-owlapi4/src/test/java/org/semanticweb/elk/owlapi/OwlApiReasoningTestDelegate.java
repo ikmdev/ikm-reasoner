@@ -24,7 +24,7 @@ package org.semanticweb.elk.owlapi;
 import java.io.InputStream;
 import java.util.Random;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.reasoner.AbstractReasoningTestWithInterruptsDelegate;
 import org.semanticweb.elk.reasoner.TestReasonerInterrupter;
 import org.semanticweb.elk.reasoner.ReasoningTestWithOutputAndInterruptsDelegate;

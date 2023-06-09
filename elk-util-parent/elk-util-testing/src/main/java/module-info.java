@@ -1,14 +1,10 @@
-/**
- * 
- */
-package org.semanticweb.elk;
-/*
+/*-
  * #%L
- * ELK Reasoner
+ * ELK OWL API v.4 Binding
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2013 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2023 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +19,15 @@ package org.semanticweb.elk;
  * limitations under the License.
  * #L%
  */
+open module org.semanticweb.elk.util.testing {
+	
+	requires junit;
+	
+	requires org.apache.log4j;
 
+	requires org.semanticweb.elk.util.io;
 
-/**
- * Provides seed to all randomized tests
- * 
- * @author Pavel Klinov
- *
- * pavel.klinov@uni-ulm.de
- */
-public class RandomSeedProvider {
-
-	public static long VALUE = System.currentTimeMillis();
+	exports org.semanticweb.elk.testing;
+	exports org.semanticweb.elk.testing.io;
 
 }

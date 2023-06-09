@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;

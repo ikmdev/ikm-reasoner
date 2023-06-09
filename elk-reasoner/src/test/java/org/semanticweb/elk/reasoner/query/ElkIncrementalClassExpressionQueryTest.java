@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.reasoner.incremental.ElkIncrementalReasoningTestDelegate;

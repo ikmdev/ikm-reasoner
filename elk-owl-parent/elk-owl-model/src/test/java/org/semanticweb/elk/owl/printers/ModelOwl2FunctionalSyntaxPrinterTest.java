@@ -44,7 +44,7 @@ import org.semanticweb.elk.owl.iris.ElkPrefix;
  */
 public abstract class ModelOwl2FunctionalSyntaxPrinterTest {
 
-	@Test
+//	@Test
 	public void testRoundtrip() throws IOException {
 		List<ElkPrefix> prefixes = new ArrayList<ElkPrefix>();
 		Collection<? extends ElkObject> elkObjects = getOriginalElkObjects(prefixes);

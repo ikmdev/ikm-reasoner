@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.reasoner.AbstractReasoningTestWithInterruptsDelegate;
 import org.semanticweb.elk.reasoner.TestReasonerInterrupter;
 import org.semanticweb.elk.reasoner.incremental.IncrementalChangeType;
