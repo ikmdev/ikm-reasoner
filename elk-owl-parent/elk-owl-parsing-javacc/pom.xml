@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -6,7 +7,6 @@
 		<artifactId>elk-owl-parent</artifactId>
 		<groupId>org.semanticweb.elk</groupId>
 		<version>0.6.0</version>
-		<relativePath>..</relativePath>
 	</parent>
 
 	<artifactId>elk-owl-parsing-javacc</artifactId>
@@ -20,62 +20,76 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-model</artifactId>
 			<version>${project.version}</version>
-			<type>jar</type>
+			<type>
+				jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owl-implementation</artifactId>
+			<artifactId>
+				elk-owl-implementation</artifactId>
 			<version>${project.version}</version>
-			<type>jar</type>
+			<type>
+				jar</type>
 			<scope>compile</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>${project.groupId}</groupId>-->
-<!--			<artifactId>elk-owl-implementation</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--			<type>test-jar</type>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>${project.groupId}</groupId>-->
-<!--			<artifactId>elk-owl-model</artifactId>-->
-<!--			<version>${project.version}</version>-->
-<!--			<type>test-jar</type>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>${project.groupId}</groupId>-->
+		<!--			<artifactId>elk-owl-implementation</artifactId>-->
+		<!--			<version>${project.version}</version>-->
+		<!--			<type>test-jar</type>-->
+		<!--			<scope>test</scope>-->
+		<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>${project.groupId}</groupId>-->
+		<!--			<artifactId>elk-owl-model</artifactId>-->
+		<!--			<version>${project.version}</version>-->
+		<!--			<type>test-jar</type>-->
+		<!--			<scope>test</scope>-->
+		<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>junit</groupId>-->
+		<!--			<artifactId>junit</artifactId>-->
+		<!--			<scope>test</scope>-->
+		<!--		</dependency>-->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-<!--			<scope>test</scope>-->
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>
+				junit-jupiter-api</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>
+					org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>first</id>
+						<id>
+							first</id>
 						<configuration>
 							<roots>
 								<root>src/main/java</root>
 								<root>src/test/java</root>
-								<root>src/main/javacc</root>
+								<root>
+									src/main/javacc</root>
 							</roots>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>
+					org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
-				<version>2.6</version>
+				<version>
+					2.6</version>
 				<executions>
-					<execution>					
-					<?m2e execute onConfiguration,onIncremental?>
+					<execution>
+						<?m2e execute onConfiguration,onIncremental?>
 						<id>javacc</id>
 						<goals>
 							<goal>javacc</goal>
@@ -84,26 +98,29 @@
 				</executions>
 				<dependencies>
 					<dependency>
-						<groupId>net.java.dev.javacc</groupId>
+						<groupId>
+							net.java.dev.javacc</groupId>
 						<artifactId>javacc</artifactId>
-						<version>7.0.10</version>
+						<version>
+							7.0.10</version>
 					</dependency>
 				</dependencies>
 			</plugin>
-<!--			<plugin>-->
-<!--				<artifactId>maven-dependency-plugin</artifactId>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>analyze</id>-->
-<!--						<configuration>-->
-<!--							<usedDependencies>-->
-<!--								<usedDependency>${project.groupId}:elk-owl-model</usedDependency>-->
-<!--								<usedDependency>junit:junit</usedDependency>-->
-<!--							</usedDependencies>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
+			<!--			<plugin>-->
+			<!--				<artifactId>maven-dependency-plugin</artifactId>-->
+			<!--				<executions>-->
+			<!--					<execution>-->
+			<!--						<id>analyze</id>-->
+			<!--						<configuration>-->
+			<!--							<usedDependencies>-->
+			<!--
+			<usedDependency>${project.groupId}:elk-owl-model</usedDependency>-->
+			<!--								<usedDependency>junit:junit</usedDependency>-->
+			<!--							</usedDependencies>-->
+			<!--						</configuration>-->
+			<!--					</execution>-->
+			<!--				</executions>-->
+			<!--			</plugin>-->
 		</plugins>
 	</build>
 </project>

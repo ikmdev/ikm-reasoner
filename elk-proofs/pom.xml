@@ -7,7 +7,6 @@
 		<artifactId>elk-parent</artifactId>
 		<groupId>org.semanticweb.elk</groupId>
 		<version>0.6.0</version>
-		<relativePath>..</relativePath>
 	</parent>
 
 	<artifactId>elk-proofs</artifactId>

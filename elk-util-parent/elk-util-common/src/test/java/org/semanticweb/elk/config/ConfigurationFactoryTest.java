@@ -22,17 +22,17 @@
  */
 package org.semanticweb.elk.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.testing.TestUtils;
 
@@ -45,13 +45,13 @@ import org.semanticweb.elk.testing.TestUtils;
 public class ConfigurationFactoryTest {
 
 //	@SuppressWarnings("static-method")
-	@Before
+	@BeforeEach
 	public void setUp() {
 		TestUtils.createTestEnvironment(new File(""));
 	}
 
 //	@SuppressWarnings("static-method")
-	@After
+	@AfterEach
 	public void cleanUp() {
 		TestUtils.cleanUp(new File(""));
 	}

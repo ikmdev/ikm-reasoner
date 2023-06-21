@@ -20,10 +20,6 @@
  * #L%
  */
 open module org.semanticweb.elk.util.testing {
-	
-	requires junit;
-	
-	requires org.apache.log4j;
 
 	requires org.semanticweb.elk.util.io;
 

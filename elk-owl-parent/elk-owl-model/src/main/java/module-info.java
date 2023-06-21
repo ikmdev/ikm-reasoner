@@ -21,8 +21,6 @@
  */
 open module org.semanticweb.elk.owl.model {
 
-//	requires junit;
-
 	requires org.semanticweb.elk.util.hashing;
 
 	exports org.semanticweb.elk.owl.interfaces;

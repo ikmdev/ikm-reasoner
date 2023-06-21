@@ -20,16 +20,16 @@
  * limitations under the License.
  * #L%
  */
-package org.semanticweb.elk.owl.printersrename;
+package org.semanticweb.elk.owl.parsing.javacc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.interfaces.ElkSWRLRule;
 import org.semanticweb.elk.owl.iris.ElkPrefix;
@@ -40,7 +40,7 @@ import org.semanticweb.elk.owl.printers.OwlFunctionalStylePrinter;
  * 
  * @author Pavel Klinov
  *
- * pavel.klinov@uni-ulm.de
+ *         pavel.klinov@uni-ulm.de
  *
  */
 public abstract class ModelOwl2FunctionalSyntaxPrinterTest {
@@ -49,27 +49,29 @@ public abstract class ModelOwl2FunctionalSyntaxPrinterTest {
 	public void testRoundtrip() throws IOException {
 		List<ElkPrefix> prefixes = new ArrayList<ElkPrefix>();
 		Collection<? extends ElkObject> elkObjects = getOriginalElkObjects(prefixes);
-		//serialize into a string
+		// serialize into a string
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (ElkObject elkObject : elkObjects) {
-			
+
 			if (elkObject instanceof ElkSWRLRule) {
 				System.out.println("");
 			}
-			
+
 			OwlFunctionalStylePrinter.append(builder, elkObject);
 			builder.append(System.getProperty("line.separator"));
 		}
-		
-		//System.out.println(builder.toString());
-		
+
+		// System.out.println(builder.toString());
+
 		Collection<? extends ElkObject> loadedElkObjects = loadPrintedElkObjects(builder.toString(), prefixes);
-		//TODO A diff here?
-		
+		// TODO A diff here?
+
 		assertEquals(elkObjects.size(), loadedElkObjects.size());
 	}
 
 	protected abstract Collection<? extends ElkObject> getOriginalElkObjects(List<ElkPrefix> prefixes);
-	protected abstract Collection<? extends ElkObject> loadPrintedElkObjects(String serialized, List<ElkPrefix> prefixes);
+
+	protected abstract Collection<? extends ElkObject> loadPrintedElkObjects(String serialized,
+			List<ElkPrefix> prefixes);
 }

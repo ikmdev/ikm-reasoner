@@ -23,7 +23,7 @@
 /**
  * 
  */
-package org.semanticweb.elk.owl.parsing;
+package org.semanticweb.elk.owl.parsing.javacc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +34,8 @@ import java.util.Set;
 
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.iris.ElkPrefix;
+import org.semanticweb.elk.owl.parsing.Owl2ParseException;
+import org.semanticweb.elk.owl.parsing.Owl2ParserAxiomProcessor;
 
 /**
  * Used to test parsers

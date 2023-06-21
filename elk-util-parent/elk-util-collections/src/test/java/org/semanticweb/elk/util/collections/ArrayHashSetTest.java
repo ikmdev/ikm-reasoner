@@ -25,25 +25,24 @@
  */
 package org.semanticweb.elk.util.collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Yevgeny Kazakov
  * 
  */
-public class ArrayHashSetTest extends TestCase {
-
-	public ArrayHashSetTest(String testName) {
-		super(testName);
-	}
+public class ArrayHashSetTest {
 
 	/**
 	 * Checking if two sets are equal

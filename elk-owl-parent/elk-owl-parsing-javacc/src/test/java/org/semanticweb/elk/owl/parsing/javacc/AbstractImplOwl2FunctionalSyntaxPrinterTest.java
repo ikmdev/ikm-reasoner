@@ -20,9 +20,9 @@
  * limitations under the License.
  * #L%
  */
-package org.semanticweb.elk.owl.printersrename;
+package org.semanticweb.elk.owl.parsing.javacc;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +32,6 @@ import java.util.List;
 
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.iris.ElkPrefix;
-import org.semanticweb.elk.owl.parsing.ElkTestAxiomProcessor;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;
 import org.semanticweb.elk.owl.parsing.Owl2Parser;
 
@@ -47,13 +46,11 @@ import org.semanticweb.elk.owl.parsing.Owl2Parser;
  *         pavel.klinov@uni-ulm.de
  * 
  */
-public abstract class AbstractImplOwl2FunctionalSyntaxPrinterTest extends
-		ModelOwl2FunctionalSyntaxPrinterTest {
+public abstract class AbstractImplOwl2FunctionalSyntaxPrinterTest extends ModelOwl2FunctionalSyntaxPrinterTest {
 
 	@Override
 	protected List<? extends ElkObject> getOriginalElkObjects(List<ElkPrefix> prefixes) {
-		InputStream input = getClass().getClassLoader().getResourceAsStream(
-				"owl2primer.owl");
+		InputStream input = getClass().getClassLoader().getResourceAsStream("owl2primer.owl");
 
 		assertNotNull(input);
 
@@ -62,8 +59,7 @@ public abstract class AbstractImplOwl2FunctionalSyntaxPrinterTest extends
 
 	@Override
 	protected List<? extends ElkObject> loadPrintedElkObjects(String input, List<ElkPrefix> prefixes) {
-		String ontology = " Ontology(<http://example.com/owl/> \n" + input
-				+ "\n)";
+		String ontology = " Ontology(<http://example.com/owl/> \n" + input + "\n)";
 
 		return parseAxioms(new StringReader(ontology), prefixes, true);
 	}

@@ -1,5 +1,7 @@
 package org.semanticweb.elk.util.concurrent.collections;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 /*
  * #%L
  * ELK Utilities for Concurrency
@@ -24,9 +26,9 @@ package org.semanticweb.elk.util.concurrent.collections;
 
 import java.util.Random;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class ActivationStackTest extends TestCase {
+public class ActivationStackTest {
 
 	/**
 	 * the number of stack used in the test
@@ -58,10 +60,6 @@ public class ActivationStackTest extends TestCase {
 	 */
 	final Random generator = new Random(123);
 
-	public ActivationStackTest(String testName) {
-		super(testName);
-	}
-
 	public void prepare() {
 		// creating stack monitors
 		for (int i = 0; i < STACKS_COUNT_; i++) {
@@ -82,15 +80,16 @@ public class ActivationStackTest extends TestCase {
 		StackMonitor<Integer> monitor = stacks[generator.nextInt(STACKS_COUNT_)];
 		if (monitor.stack.push(element)) {
 			/*
-			 * the element is the first element in the stack and therefore the
-			 * stack should be added to the nonEmptyStacks. No worker should
-			 * access the stack at this time.
+			 * the element is the first element in the stack and therefore the stack should
+			 * be added to the nonEmptyStacks. No worker should access the stack at this
+			 * time.
 			 */
 			monitor.checkActive();
 			nonEmptyStacks.push(monitor);
 		}
 	}
 
+	@Test
 	public void testStack() {
 		prepare();
 
@@ -102,11 +101,11 @@ public class ActivationStackTest extends TestCase {
 	}
 
 	/**
-	 * Each worker is repeatedly takes the next stack with unprocessed values
-	 * and distribute these values randomly over stacks until it becomes empty.
-	 * Only one worker should be working with each stack, therefore, when
-	 * working with elements the stack we lock the respective monitor of the
-	 * stack. If everything works correctly, no double locking should occur.
+	 * Each worker is repeatedly takes the next stack with unprocessed values and
+	 * distribute these values randomly over stacks until it becomes empty. Only one
+	 * worker should be working with each stack, therefore, when working with
+	 * elements the stack we lock the respective monitor of the stack. If everything
+	 * works correctly, no double locking should occur.
 	 * 
 	 * @author "Yevgeny Kazakov"
 	 * 
@@ -137,8 +136,7 @@ public class ActivationStackTest extends TestCase {
 	 * 
 	 * @author "Yevgeny Kazakov"
 	 * 
-	 * @param <T>
-	 *            the type of elements in the stack
+	 * @param <T> the type of elements in the stack
 	 */
 	private static class StackMonitor<T> {
 		final ConcurrentLinkedActivationStack<T> stack;

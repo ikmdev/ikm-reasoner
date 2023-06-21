@@ -25,24 +25,21 @@
  */
 package org.semanticweb.elk.util.collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Yevgeny Kazakov
  * 
  */
-public class ArraySlicedSetTest extends TestCase {
-
-	public ArraySlicedSetTest(String testName) {
-		super(testName);
-	}
+public class ArraySlicedSetTest {
 
 	/**
 	 * Checking if two sets are equal
@@ -67,15 +64,13 @@ public class ArraySlicedSetTest extends TestCase {
 		assertEquals(referenceSet.size(), i);
 	}
 
-	static <E> void testSetsEquality(Set<E>[] referenceSets,
-			ArraySlicedSet<E> slicedSet) {
+	static <E> void testSetsEquality(Set<E>[] referenceSets, ArraySlicedSet<E> slicedSet) {
 		for (int i = 0; i < referenceSets.length; i++) {
 			// System.out.println("Test equality for: " + i);
 			testSetEquality(referenceSets[i], slicedSet.getSlice(i));
 		}
 	}
 
-	@SuppressWarnings("static-method")
 	@Test
 	public void testAddRemoveContains() {
 		// random number generator for elements
@@ -96,8 +91,7 @@ public class ArraySlicedSetTest extends TestCase {
 
 			int initialSize = generator.nextInt(noElements);
 			int slices = generator.nextInt(32) + 1;
-			ArraySlicedSet<Integer> slicedSet = new ArraySlicedSet<Integer>(
-					slices, initialSize);
+			ArraySlicedSet<Integer> slicedSet = new ArraySlicedSet<Integer>(slices, initialSize);
 
 			@SuppressWarnings("unchecked")
 			Set<Integer>[] referenceSets = new Set[slices];

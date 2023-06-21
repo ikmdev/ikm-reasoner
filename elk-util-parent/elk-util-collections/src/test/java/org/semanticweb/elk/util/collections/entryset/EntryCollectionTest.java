@@ -22,19 +22,18 @@
  */
 package org.semanticweb.elk.util.collections.entryset;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-public class EntryCollectionTest extends TestCase {
-
-	public EntryCollectionTest(String testName) {
-		super(testName);
-	}
+public class EntryCollectionTest {
 
 	/**
 	 * Checking if two sets are equal
@@ -42,8 +41,7 @@ public class EntryCollectionTest extends TestCase {
 	 * @param referenceSet
 	 * @param testSet
 	 */
-	static void testSetEquality(Set<Integer> referenceSet,
-			EntryCollection<Int> testSet) {
+	static void testSetEquality(Set<Integer> referenceSet, EntryCollection<Int> testSet) {
 		int i = 0;
 		for (int n : referenceSet) {
 			Int canonical = testSet.findStructural(new Int(n));
