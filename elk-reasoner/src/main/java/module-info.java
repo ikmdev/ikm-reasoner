@@ -23,8 +23,6 @@ open module org.semanticweb.elk.reasoner {
 
 	requires com.google.common;
 
-//	requires junit;
-
 	requires org.slf4j;
 
 	requires org.liveontologies.puli;
@@ -38,9 +36,9 @@ open module org.semanticweb.elk.reasoner {
 	requires org.semanticweb.elk.util.common;
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.hashing;
-	requires org.semanticweb.elk.util.logging;
-//	requires org.semanticweb.elk.util.testing;
 	requires org.semanticweb.elk.util.io;
+	requires org.semanticweb.elk.util.logging;
+	requires static org.semanticweb.elk.util.testing;
 
 	exports org.semanticweb.elk.loading;
 	exports org.semanticweb.elk.reasoner;
