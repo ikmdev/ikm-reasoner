@@ -23,6 +23,7 @@
 		<module>elk-util-concurrent</module>
 		<module>elk-util-common</module>
 		<module>elk-util-testing</module>
+		<module>elk-util-testing4</module>
 		<module>elk-util-io</module>
 	</modules>
 
