@@ -23,6 +23,7 @@ package org.semanticweb.elk.owl.inferences;
 
 import static org.junit.Assume.assumeTrue;
 
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -48,12 +49,14 @@ import org.semanticweb.elk.reasoner.tracing.ComprehensiveSubsumptionTracingTests
 import org.semanticweb.elk.reasoner.tracing.TracingTestVisitor;
 import org.semanticweb.elk.reasoner.tracing.TracingTests;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+
+import org.semanticweb.elk.testing4.PolySuite4;;
+
 
 /**
  * Tests tracing and axiom binding for all atomic subsumption inferences in all
@@ -62,7 +65,7 @@ import org.semanticweb.elk.testing.UrlTestInput;
  * @author Pavel Klinov
  * 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class ProofTest {
 
 	// remove when proofs for ranges are supported

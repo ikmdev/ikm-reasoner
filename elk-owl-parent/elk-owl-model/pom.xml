@@ -16,20 +16,13 @@
 	<description>General Interfaces for working with OWL objects</description>
 
 	<dependencies>
-		<!--		<dependency>-->
-		<!--			<groupId>junit</groupId>-->
-		<!--			<artifactId>junit</artifactId>-->
-		<!--			<scope>test</scope>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>
-				elk-util-hashing</artifactId>
+			<artifactId>elk-util-hashing</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

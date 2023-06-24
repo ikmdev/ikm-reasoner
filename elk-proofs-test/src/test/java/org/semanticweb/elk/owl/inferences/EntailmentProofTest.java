@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;
@@ -43,12 +42,13 @@ import org.semanticweb.elk.reasoner.query.BaseQueryTest;
 import org.semanticweb.elk.reasoner.query.QueryTestInput;
 import org.semanticweb.elk.reasoner.query.QueryTestManifest;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
+import org.semanticweb.elk.testing4.PolySuite4;;
 
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class EntailmentProofTest
 		extends BaseQueryTest<ElkAxiom, ElkQueryDerivabilityTestOutput> {
 

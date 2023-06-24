@@ -39,7 +39,6 @@ open module org.semanticweb.elk.owlapi {
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.io;
 	requires org.semanticweb.elk.util.logging;
-//	requires org.semanticweb.elk.util.testing;
 
 	exports org.semanticweb.elk.owlapi;
 	exports org.semanticweb.elk.owlapi.proofs;

@@ -30,15 +30,12 @@ open module org.semanticweb.elk.reasoner {
 	requires org.semanticweb.elk.owl.implementation;
 	requires org.semanticweb.elk.owl.model;
 
-//	requires  org.semanticweb.elk.owl.parsing.javacc;
-
 	requires org.semanticweb.elk.util.collections;
 	requires org.semanticweb.elk.util.common;
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.hashing;
 	requires org.semanticweb.elk.util.io;
 	requires org.semanticweb.elk.util.logging;
-	requires static org.semanticweb.elk.util.testing;
 
 	exports org.semanticweb.elk.loading;
 	exports org.semanticweb.elk.reasoner;

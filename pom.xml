@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -510,6 +509,7 @@
 		<!--		<module>elk-ore-parent</module>-->
 		<module>elk-owl-parent</module>
 		<module>elk-proofs</module>
+		<module>elk-proofs-test</module>
 		<module>elk-reasoner</module>
 		<module>elk-util-parent</module>
 		<module>elk-owlapi-parent</module>

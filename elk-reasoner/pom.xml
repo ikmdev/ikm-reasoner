@@ -60,19 +60,19 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-testing</artifactId>
 			<version>${project.version}</version>
-			<!--			<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-testing4</artifactId>
 			<version>${project.version}</version>
-			<!--			<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-parsing-javacc</artifactId>
 			<version>${project.version}</version>
-			<!--			<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.liveontologies</groupId>
@@ -89,7 +89,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<!--			<scope>test</scope>-->
 		</dependency>
 	</dependencies>
 
