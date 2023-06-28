@@ -98,7 +98,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<owlapi4.version>4.5.25-komet</owlapi4.version>
+		<owlapi4.version>4.5.25-komet-module</owlapi4.version>
 		<owlapi5.version>5.1.17</owlapi5.version>
 		<protege-proof-explanation.version>0.1.0</protege-proof-explanation.version>
 		<!-- try to keep the version low for backward compatibility -->
