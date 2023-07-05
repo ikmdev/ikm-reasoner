@@ -1,16 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<artifactId>elk-proofs-test</artifactId>
+
 	<parent>
-		<artifactId>elk-parent</artifactId>
 		<groupId>org.semanticweb.elk</groupId>
+		<artifactId>elk-parent</artifactId>
 		<version>0.6.0</version>
 	</parent>
-
-	<artifactId>elk-proofs-test</artifactId>
-	<packaging>jar</packaging>
 
 	<name>ELK Proofs Package for Test</name>
 
@@ -19,18 +17,19 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-proofs</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-reasoner</artifactId>
-			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-parsing-javacc</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-reasoner</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -42,36 +41,19 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-dependency-plugin</artifactId>-->
-			<!--				<executions>-->
-			<!--					<execution>-->
-			<!--						<id>analyze</id>-->
-			<!--						<configuration>-->
-			<!--							<usedDependencies>-->
-			<!--								<usedDependency>-->
-			<!--									${project.groupId}:elk-util-concurrent</usedDependency>-->
-			<!--								<usedDependency>-->
-			<!--									${project.groupId}:elk-owl-parsing-javacc</usedDependency>-->
-			<!--							</usedDependencies>-->
-			<!--						</configuration>-->
-			<!--					</execution>-->
-			<!--				</executions>-->
-			<!--			</plugin>-->
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>test</phase>
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
+						<phase>test</phase>
 					</execution>
 				</executions>
 			</plugin>

@@ -1,16 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>elk-owlapi4-tests</artifactId>
 
 	<parent>
 		<groupId>org.semanticweb.elk</groupId>
 		<artifactId>elk-owlapi-parent</artifactId>
 		<version>0.6.0</version>
 	</parent>
-
-	<artifactId>elk-owlapi4-tests</artifactId>
-	<packaging>jar</packaging>
 
 	<name>ELK OWL API v.4 Binding for Test</name>
 	<description>ELK bindings for OWL API version 4 - Tests</description>
@@ -24,10 +22,24 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owlapi4</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-parsing-javacc</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-owl-parsing-javacc</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-proofs-test</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
@@ -41,21 +53,13 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-proofs-test</artifactId>
+			<artifactId>elk-util-testing4</artifactId>
 			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-testing4</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -66,10 +70,10 @@
 				<executions>
 					<execution>
 						<id>attach-test-sources</id>
-						<phase>verify</phase>
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
+						<phase>verify</phase>
 						<configuration>
 							<excludeResources>true</excludeResources>
 						</configuration>
@@ -81,14 +85,12 @@
 				<executions>
 					<execution>
 						<id>attach-test-resources</id>
-						<phase>verify</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
+						<phase>verify</phase>
 						<configuration>
-							<classesDirectory>
-								${project.basedir}/src/test/resources
-							</classesDirectory>
+							<classesDirectory>${project.basedir}/src/test/resources</classesDirectory>
 							<classifier>test-resources</classifier>
 						</configuration>
 					</execution>

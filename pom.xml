@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -10,16 +11,340 @@
 
 	<name>ELK Reasoner</name>
 	<description>A Java-based OWL EL reasoner</description>
+
+	<modules>
+		<!--		<module>elk-cli</module>-->
+		<!--		<module>elk-distribution-parent</module>-->
+		<!--		<module>elk-ore-parent</module>-->
+		<module>elk-owl-parent</module>
+		<module>elk-proofs</module>
+		<module>elk-proofs-test</module>
+		<module>elk-reasoner</module>
+		<module>elk-util-parent</module>
+		<module>elk-owlapi-parent</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>11</java.version>
+		<slf4j.version>2.0.7</slf4j.version>
+		<jetty-slf4j-impl.version>11.0.15</jetty-slf4j-impl.version>
+		<owlapi4.version>4.5.25-komet-module</owlapi4.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.liveontologies</groupId>
+				<artifactId>puli</artifactId>
+				<version>0.2.0</version>
+			</dependency>
+			<!--			<dependency>-->
+			<!--				<groupId>org.liveontologies</groupId>-->
+			<!--				<artifactId>owlapi-proof</artifactId>-->
+			<!--				<version>0.1.0</version>-->
+			<!--			</dependency>-->
+			<dependency>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>guava</artifactId>
+				<version>31.1-jre</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.2</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>5.6.3</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-slf4j-impl</artifactId>
+				<version>${jetty-slf4j-impl.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-slf4j-impl</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-changes-plugin</artifactId>
+					<version>2.12.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.10.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.6.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.0.0-M3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.5.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.12.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.15.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>
+						${java.version}</source>
+					<target>${java.version}</target>
+					<fork>true</fork>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>
+					maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>analyze</id>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
+						<configuration>
+							<ignoreUnusedRuntime>
+								true</ignoreUnusedRuntime>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>
+					org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>
+							enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>
+										3.8.0</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>
+					org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>
+							attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>
+					org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<verbose>
+						false</verbose>
+					<addSvnKeyWords>true</addSvnKeyWords>
+					<extraExtensions>
+						<g>java</g>
+						<jj>java</jj>
+					</extraExtensions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>
+							first</id>
+						<goals>
+							<goal>update-file-header</goal>
+							<goal>
+								update-project-license</goal>
+						</goals>
+						<phase>
+							package</phase>
+						<configuration>
+							<licenseName>apache_v2</licenseName>
+							<roots>
+								<root>src/main/java</root>
+								<root>
+									src/test/java</root>
+							</roots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!--			<plugin>-->
+			<!--				<groupId>org.codehaus.mojo</groupId>-->
+			<!--				<artifactId>tidy-maven-plugin</artifactId>-->
+			<!--							<version>1.1.0</version>-->
+			<!--				<executions>-->
+			<!--					<execution>-->
+			<!--						<id>validate</id>-->
+			<!--						<phase>validate</phase>-->
+			<!--						<goals>-->
+			<!--							<goal>check</goal>-->
+			<!--						</goals>-->
+			<!--					</execution>-->
+			<!--				</executions>-->
+			<!--			</plugin>-->
+			<!--			<plugin>-->
+			<!--				<groupId>com.github.ekryd.sortpom</groupId>-->
+			<!--				<artifactId>sortpom-maven-plugin</artifactId>-->
+			<!--				<version>3.0.0</version>-->
+			<!--				<configuration>-->
+			<!--					<sortOrderFile>../sortpom.xml</sortOrderFile>-->
+			<!--					<encoding>${project.build.sourceEncoding}</encoding>-->
+			<!--					<nrOfIndentSpace>-1</nrOfIndentSpace>-->
+			<!--				</configuration>-->
+			<!--				<executions>-->
+			<!--					<execution>-->
+			<!--						<goals>-->
+			<!--							<goal>sort</goal>-->
+			<!--						</goals>-->
+			<!--						<phase>validate</phase>-->
+			<!--					</execution>-->
+			<!--				</executions>-->
+			<!--			</plugin>-->
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<!--			<plugin>-->
+			<!--				<artifactId>maven-project-info-reports-plugin</artifactId>-->
+			<!--				<version>2.9</version>-->
+			<!--			</plugin>-->
+			<!--			<plugin>-->
+			<!--				<artifactId>maven-javadoc-plugin</artifactId>-->
+			<!--				<reportSets>-->
+			<!--					<reportSet>-->
+			<!--						<id>aggregate</id>-->
+			<!--						<inherited>false</inherited>-->
+			<!--						<reports>-->
+			<!--							<report>aggregate</report>-->
+			<!--						</reports>-->
+			<!--					</reportSet>-->
+			<!--					<reportSet>-->
+			<!--						<id>default</id>-->
+			<!--						<reports>-->
+			<!--							<report>javadoc</report>-->
+			<!--						</reports>-->
+			<!--					</reportSet>-->
+			<!--				</reportSets>-->
+			<!--			</plugin>-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependency-updates-report</report>
+							<report>plugin-updates-report</report>
+							<report>property-updates-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+	
 	<url>http://elk.semanticweb.org/</url>
-
-	<scm>
-		<connection>scm:git:https://github.com/liveontologies/elk-reasoner.git</connection>
-		<developerConnection>
-			scm:git:git@github.com:liveontologies/elk-reasoner.git</developerConnection>
-		<url>https://github.com/liveontologies/elk-reasoner</url>
-		<tag>HEAD</tag>
-	</scm>
-
+	<inceptionYear>2011</inceptionYear>
+	<organization>
+		<name>Department of Computer Science, University of Oxford</name>
+		<url>http://www.cs.ox.ac.uk</url>
+	</organization>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -27,13 +352,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
-	<organization>
-		<name>Department of Computer Science, University of Oxford</name>
-		<url>http://www.cs.ox.ac.uk</url>
-	</organization>
-
-	<inceptionYear>2011</inceptionYear>
 
 	<developers>
 		<developer>
@@ -96,203 +414,6 @@
 		</developer>
 	</developers>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<owlapi4.version>4.5.25-komet-module</owlapi4.version>
-		<owlapi5.version>5.1.17</owlapi5.version>
-		<protege-proof-explanation.version>0.1.0</protege-proof-explanation.version>
-		<!-- try to keep the version low for backward compatibility -->
-		<protege.version>5.5.0</protege.version>
-		<java.required.version>8</java.required.version>
-		<java.version>11</java.version>
-		<slf4j.version>2.0.7</slf4j.version>
-		<logback.version>1.2.12</logback.version>
-		<elk.wiki>https://github.com/liveontologies/elk-reasoner/wiki</elk.wiki>
-		<protege.update.url>
-			https://raw.githubusercontent.com/liveontologies/elk-reasoner/release/elk-distribution-parent/elk-distribution-protege</protege.update.url>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.liveontologies</groupId>
-				<artifactId>puli</artifactId>
-				<version>0.2.0</version>
-			</dependency>
-			<!--			<dependency>-->
-			<!--				<groupId>org.liveontologies</groupId>-->
-			<!--				<artifactId>owlapi-proof</artifactId>-->
-			<!--				<version>0.1.0</version>-->
-			<!--			</dependency>-->
-			<dependency>
-				<groupId>
-					dev.ikm.jpms</groupId>
-				<artifactId>guava</artifactId>
-				<version>31.1-jre</version>
-				<exclusions>
-					<!--				<exclusion>-->
-					<!--					<groupId>com.google.code.findbugs</groupId>-->
-					<!--					<artifactId>jsr305</artifactId>-->
-					<!--				</exclusion>-->
-				</exclusions>
-			</dependency>
-			<!--			<dependency>-->
-			<!--				<groupId>commons-io</groupId>-->
-			<!--				<artifactId>commons-io</artifactId>-->
-			<!--				<version>2.11.0</version>-->
-			<!--			</dependency>-->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>
-					junit</artifactId>
-				<version>4.13.2</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>5.6.3</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>
-					org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>
-					org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>
-					${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>
-					slf4j-simple</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>
-					log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>
-			<dependency>
-				<groupId>
-					ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>
-					${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>
-					ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>
-					${logback.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<dependencies>
-		<!--		<dependency>-->
-		<!--			<groupId>-->
-		<!--				com.google.guava</groupId>-->
-		<!--			<artifactId>guava</artifactId>-->
-		<!--			<exclusions>-->
-		<!--				<exclusion>-->
-		<!--					<groupId>com.google.code.findbugs</groupId>-->
-		<!--					<artifactId>jsr305</artifactId>-->
-		<!--				</exclusion>-->
-		<!--			</exclusions>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>commons-io</groupId>-->
-		<!--			<artifactId>commons-io</artifactId>-->
-		<!--		</dependency>-->
-		<dependency>
-			<groupId>com.github.ben-manes.caffeine</groupId>
-			<artifactId>caffeine</artifactId>
-			<version>2.9.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<!--	<groupId>com.google.code.findbugs</groupId>-->
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>3.0.2</version>
-		</dependency>
-	</dependencies>
-
-	<reporting>
-		<plugins>
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-project-info-reports-plugin</artifactId>-->
-			<!--				<version>2.9</version>-->
-			<!--			</plugin>-->
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-javadoc-plugin</artifactId>-->
-			<!--				<reportSets>-->
-			<!--					<reportSet>-->
-			<!--						<id>aggregate</id>-->
-			<!--						<inherited>false</inherited>-->
-			<!--						<reports>-->
-			<!--							<report>aggregate</report>-->
-			<!--						</reports>-->
-			<!--					</reportSet>-->
-			<!--					<reportSet>-->
-			<!--						<id>default</id>-->
-			<!--						<reports>-->
-			<!--							<report>javadoc</report>-->
-			<!--						</reports>-->
-			<!--					</reportSet>-->
-			<!--				</reportSets>-->
-			<!--			</plugin>-->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>
-								dependency-updates-report</report>
-							<report>
-								plugin-updates-report</report>
-							<report>
-								property-updates-report</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<distributionManagement>
-		<downloadUrl>https://github.com/liveontologies/elk-reasoner/releases</downloadUrl>
-		<site>
-			<id>elk.semanticweb.org</id>
-			<url>
-				scp://elk.semanticweb.org/home/elkuser/elk_semanticweb_org/www/maven/${project.version}</url>
-		</site>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/liveontologies/elk-reasoner/issues/</url>
-	</issueManagement>
-
 	<mailingLists>
 		<mailingList>
 			<name>ELK-reasoner announcements</name>
@@ -310,260 +431,4 @@
 			<archive>http://groups.google.com/group/elk-reasoner-activities</archive>
 		</mailingList>
 	</mailingLists>
-
-	<repositories>
-		<repository>
-			<!-- the repository for snapshot dependencies -->
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.0-M1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.6.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>3.3.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.1.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.2.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-changes-plugin</artifactId>
-					<version>2.12.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>2.0.0</version>
-					<configuration>
-						<verbose>false</verbose>
-						<addSvnKeyWords>true</addSvnKeyWords>
-						<extraExtensions>
-							<g>java</g>
-							<jj>java</jj>
-						</extraExtensions>
-					</configuration>
-					<executions>
-						<execution>
-							<id>first</id>
-							<goals>
-								<goal>update-file-header</goal>
-								<goal>update-project-license</goal>
-							</goals>
-							<phase>package</phase>
-							<configuration>
-								<licenseName>apache_v2</licenseName>
-								<roots>
-									<root>src/main/java</root>
-									<root>src/test/java</root>
-								</roots>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.15.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.0.0-M1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.5.0</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.6</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-			</plugin>
-			<!-- making sure that the sources are always installed so that
-			sources 
-				are included in elk-distribution -->
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- ensure the required java version is used -->
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-dependency-plugin</artifactId>-->
-			<!--				<executions>-->
-			<!--					<execution>-->
-			<!--						<id>analyze</id>-->
-			<!--						<goals>-->
-			<!--							<goal>analyze-only</goal>-->
-			<!--						</goals>-->
-			<!--						<configuration>-->
-			<!--							<failOnWarning>true</failOnWarning>-->
-			<!--						</configuration>-->
-			<!--					</execution>-->
-			<!--				</executions>-->
-			<!--			</plugin>-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M3</version>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>3.8.0</version>
-								</requireMavenVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- deploying snapshots to sonatype and releases to maven central -->
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.8</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-	<modules>
-		<!--		<module>elk-cli</module>-->
-		<!--		<module>elk-distribution-parent</module>-->
-		<!--		<module>elk-ore-parent</module>-->
-		<module>elk-owl-parent</module>
-		<module>elk-proofs</module>
-		<module>elk-proofs-test</module>
-		<module>elk-reasoner</module>
-		<module>elk-util-parent</module>
-		<module>elk-owlapi-parent</module>
-	</modules>
-
-	<profiles>
-		<!-- compile only modules for the provided version of java -->
-		<!--		<profile>-->
-		<!--			<id>java-8+</id>-->
-		<!--			<activation>-->
-		<!--				<jdk>[1.8,)</jdk>-->
-		<!--			</activation>-->
-		<!--			<modules>-->
-		<!--				<module>elk-protege</module>-->
-		<!--			</modules>-->
-		<!--		</profile>-->
-		<profile>
-			<!-- activated only when staging a release -->
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- sign released artifacts using PGP, required by maven
-					central -->
-					<plugin>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- generate javadocs, required by maven central -->
-					<plugin>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<maxmemory>512m</maxmemory>
-									<minmemory>128m</minmemory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 </project>
