@@ -116,7 +116,7 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 				getDelegate().applyChanges(changingAxioms_.getOnElements(),
 						IncrementalChangeType.DELETE);
 
-				LOGGER_.info("===DELETIONS===");
+				LOGGER_.debug("===DELETIONS===");
 
 				outputChecker.check();
 
@@ -124,7 +124,7 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 				getDelegate().applyChanges(getChangingAxioms().getOnElements(),
 						IncrementalChangeType.ADD);
 
-				LOGGER_.info("===ADDITIONS===");
+				LOGGER_.debug("===ADDITIONS===");
 			}
 
 			outputChecker.finalCheck();

@@ -102,7 +102,7 @@ public abstract class BaseRandomWalkIncrementalCorrectnessTest {
 		Reasoner incrementalReasoner;
 		long seed = RandomSeedProvider.VALUE;
 
-		LOGGER_.info("Initial load of test axioms");
+		LOGGER_.debug("Initial load of test axioms");
 
 		InputStream stream = manifest.getInput().getUrl().openStream();
 		AxiomLoader fileLoader = new Owl2StreamLoader.Factory(
