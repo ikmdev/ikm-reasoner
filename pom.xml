@@ -35,6 +35,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>guava</artifactId>
+				<version>31.1-jre</version>
+			</dependency>
+			<dependency>
 				<groupId>org.liveontologies</groupId>
 				<artifactId>puli</artifactId>
 				<version>0.2.0</version>
@@ -45,9 +50,14 @@
 			<!--				<version>0.1.0</version>-->
 			<!--			</dependency>-->
 			<dependency>
-				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>guava</artifactId>
-				<version>31.1-jre</version>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-slf4j-impl</artifactId>
+				<version>${jetty-slf4j-impl.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -60,16 +70,6 @@
 				<artifactId>junit-jupiter-api</artifactId>
 				<version>5.6.3</version>
 				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-slf4j-impl</artifactId>
-				<version>${jetty-slf4j-impl.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -178,8 +178,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>
-					maven-dependency-plugin</artifactId>
+				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
 					<execution>
 						<id>analyze</id>
@@ -194,8 +193,7 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>
-					org.apache.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
@@ -216,8 +214,7 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>
-					org.apache.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<executions>
 					<execution>
@@ -248,8 +245,7 @@
 							first</id>
 						<goals>
 							<goal>update-file-header</goal>
-							<goal>
-								update-project-license</goal>
+							<goal>update-project-license</goal>
 						</goals>
 						<phase>
 							package</phase>
@@ -301,28 +297,38 @@
 
 	<reporting>
 		<plugins>
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-project-info-reports-plugin</artifactId>-->
-			<!--				<version>2.9</version>-->
-			<!--			</plugin>-->
-			<!--			<plugin>-->
-			<!--				<artifactId>maven-javadoc-plugin</artifactId>-->
-			<!--				<reportSets>-->
-			<!--					<reportSet>-->
-			<!--						<id>aggregate</id>-->
-			<!--						<inherited>false</inherited>-->
-			<!--						<reports>-->
-			<!--							<report>aggregate</report>-->
-			<!--						</reports>-->
-			<!--					</reportSet>-->
-			<!--					<reportSet>-->
-			<!--						<id>default</id>-->
-			<!--						<reports>-->
-			<!--							<report>javadoc</report>-->
-			<!--						</reports>-->
-			<!--					</reportSet>-->
-			<!--				</reportSets>-->
-			<!--			</plugin>-->
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<skippedModules>
+						elk-util-testing4,elk-proofs-test,elk-owlapi4-tests</skippedModules>
+					<doclint>none</doclint>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>aggregate-no-fork</report>
+						</reports>
+					</reportSet>
+					<!--					<reportSet>-->
+					<!--						<id>default</id>-->
+					<!--						<reports>-->
+					<!--							<report>javadoc</report>-->
+					<!--						</reports>-->
+					<!--					</reportSet>-->
+					<reportSet>
+						<id>test-aggregate</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+						<reports>
+							<report>test-aggregate-no-fork</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
@@ -334,11 +340,20 @@
 							<report>property-updates-report</report>
 						</reports>
 					</reportSet>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>dependency-updates-aggregate-report</report>
+							<report>plugin-updates-aggregate-report</report>
+							<report>property-updates-aggregate-report</report>
+						</reports>
+					</reportSet>
 				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
 	<url>http://elk.semanticweb.org/</url>
 	<inceptionYear>2011</inceptionYear>
 	<organization>
