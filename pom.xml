@@ -26,7 +26,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>11</java.version>
+		<java.version>19</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<jetty-slf4j-impl.version>11.0.15</jetty-slf4j-impl.version>
 		<owlapi4.version>4.5.25-komet-module</owlapi4.version>
