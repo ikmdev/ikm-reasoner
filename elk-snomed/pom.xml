@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>elk-owlapi4</artifactId>
+	<artifactId>elk-snomed</artifactId>
 
 	<parent>
 		<groupId>org.semanticweb.elk</groupId>
-		<artifactId>elk-owlapi-parent</artifactId>
+		<artifactId>elk-parent</artifactId>
 		<version>0.6.1-SNAPSHOT</version>
 	</parent>
-
-	<name>ELK OWL API v.4 Binding</name>
-	<description>ELK bindings for OWL API version 4</description>
 
 	<properties>
 		<owlapi.version>${owlapi4.version}</owlapi.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-api</artifactId>
@@ -38,17 +33,13 @@
 			<version>${owlapi.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.liveontologies</groupId>
-			<artifactId>puli</artifactId>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-parsers</artifactId>
+			<version>${owlapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owl-model</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -57,24 +48,36 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-proofs</artifactId>
+			<artifactId>elk-owlapi4</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-concurrent</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-logging</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+							<goal>update-project-license</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<skipUpdateLicense>true</skipUpdateLicense>
+							<skipUpdateProjectLicense>true</skipUpdateProjectLicense>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

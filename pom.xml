@@ -6,22 +6,20 @@
 
 	<groupId>org.semanticweb.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.6.0</version>
+	<version>0.6.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>ELK Reasoner</name>
 	<description>A Java-based OWL EL reasoner</description>
 
 	<modules>
-		<!--		<module>elk-cli</module>-->
-		<!--		<module>elk-distribution-parent</module>-->
-		<!--		<module>elk-ore-parent</module>-->
 		<module>elk-owl-parent</module>
 		<module>elk-proofs</module>
 		<module>elk-proofs-test</module>
 		<module>elk-reasoner</module>
 		<module>elk-util-parent</module>
 		<module>elk-owlapi-parent</module>
+		<module>elk-snomed</module>
 	</modules>
 
 	<properties>
@@ -29,7 +27,7 @@
 		<java.version>19</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<jetty-slf4j-impl.version>11.0.15</jetty-slf4j-impl.version>
-		<owlapi4.version>4.5.25-komet-module</owlapi4.version>
+		<owlapi4.version>4.5.25-ikm-r1-SNAPSHOT</owlapi4.version>
 	</properties>
 
 	<dependencyManagement>
@@ -37,12 +35,12 @@
 			<dependency>
 				<groupId>dev.ikm.jpms</groupId>
 				<artifactId>guava</artifactId>
-				<version>31.1-jre</version>
+				<version>31.1-jre-r1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.liveontologies</groupId>
 				<artifactId>puli</artifactId>
-				<version>0.2.0</version>
+				<version>0.2.1-SNAPSHOT</version>
 			</dependency>
 			<!--			<dependency>-->
 			<!--				<groupId>org.liveontologies</groupId>-->
