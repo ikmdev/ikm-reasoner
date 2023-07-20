@@ -27,7 +27,7 @@
 		<java.version>19</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<jetty-slf4j-impl.version>11.0.15</jetty-slf4j-impl.version>
-		<owlapi4.version>4.5.25-ikm-r1-SNAPSHOT</owlapi4.version>
+		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 	</properties>
 
 	<dependencyManagement>
@@ -35,12 +35,12 @@
 			<dependency>
 				<groupId>dev.ikm.jpms</groupId>
 				<artifactId>guava</artifactId>
-				<version>31.1-jre-r1-SNAPSHOT</version>
+				<version>31.1-jre-r1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.liveontologies</groupId>
 				<artifactId>puli</artifactId>
-				<version>0.2.1-SNAPSHOT</version>
+				<version>0.2.1</version>
 			</dependency>
 			<!--			<dependency>-->
 			<!--				<groupId>org.liveontologies</groupId>-->
