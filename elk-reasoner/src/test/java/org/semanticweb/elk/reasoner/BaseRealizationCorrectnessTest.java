@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
@@ -41,11 +40,12 @@ import org.semanticweb.elk.owl.parsing.javacc.Owl2FunctionalStyleParserFactory;
 import org.semanticweb.elk.reasoner.taxonomy.MockTaxonomyLoader;
 import org.semanticweb.elk.reasoner.taxonomy.model.InstanceTaxonomy;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Runs ABox realization tests for all test input in the test directory
@@ -55,7 +55,7 @@ import org.semanticweb.elk.testing.UrlTestInput;
  *         pavel.klinov@uni-ulm.de
  * @author Peter Skocovsky
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseRealizationCorrectnessTest extends
 		ReasoningCorrectnessTestWithInterrupts<UrlTestInput, InstanceTaxonomyTestOutput, ReasoningTestManifest<InstanceTaxonomyTestOutput>, ReasoningTestWithOutputAndInterruptsDelegate<InstanceTaxonomyTestOutput>> {
 

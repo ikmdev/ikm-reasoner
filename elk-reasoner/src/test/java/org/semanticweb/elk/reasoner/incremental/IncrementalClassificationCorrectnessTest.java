@@ -24,9 +24,9 @@ package org.semanticweb.elk.reasoner.incremental;
 import org.junit.runner.RunWith;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.ElkClassTaxonomyTestOutput;
-import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * 
  *         pavel.klinov@uni-ulm.de
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class IncrementalClassificationCorrectnessTest
 		extends BaseIncrementalClassificationCorrectnessTest<ElkAxiom> {
 

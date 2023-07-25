@@ -24,9 +24,9 @@ package org.semanticweb.elk.reasoner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Runs tests for all pairs of test input and expected output in the test
@@ -43,7 +43,7 @@ import org.semanticweb.elk.testing.TestManifestWithOutput;
  * @param <TM> 
  * @param <TD> 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class ReasoningCorrectnessTestWithInterrupts<I extends TestInput, O, TM extends TestManifestWithOutput<I, O>, TD extends ReasoningTestWithOutputAndInterruptsDelegate<O>>
 		extends ReasoningCorrectnessTestWithOutput<I, O, TM, TD> {
 

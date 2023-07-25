@@ -27,7 +27,7 @@ import static org.semanticweb.elk.util.collections.EvictorTestUtils.checkNothing
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicate;
 
@@ -38,34 +38,26 @@ public class CountingEvictorTest {
 	@Test
 	public void testSimpleEviction() {
 
-		EvictorTestUtils.testRecencyEviction(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final CountingEvictor.Builder b = new CountingEvictor.Builder();
-						return b.capacity(capacity).loadFactor(loadFactor)
-								.evictBeforeAddCount(EVICT_BEFORE_FIRST_ADD)
-								.build();
-					}
-				});
+		EvictorTestUtils.testRecencyEviction(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final CountingEvictor.Builder b = new CountingEvictor.Builder();
+				return b.capacity(capacity).loadFactor(loadFactor).evictBeforeAddCount(EVICT_BEFORE_FIRST_ADD).build();
+			}
+		});
 
 	}
 
 	@Test
 	public void testSimpleRetainment() {
 
-		EvictorTestUtils.testRecencyRetainment(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final CountingEvictor.Builder b = new CountingEvictor.Builder();
-						return b.capacity(capacity).loadFactor(loadFactor)
-								.evictBeforeAddCount(EVICT_BEFORE_FIRST_ADD)
-								.build();
-					}
-				});
+		EvictorTestUtils.testRecencyRetainment(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final CountingEvictor.Builder b = new CountingEvictor.Builder();
+				return b.capacity(capacity).loadFactor(loadFactor).evictBeforeAddCount(EVICT_BEFORE_FIRST_ADD).build();
+			}
+		});
 
 	}
 
@@ -73,8 +65,7 @@ public class CountingEvictorTest {
 	public void testEvictionBefore3Adds() {
 
 		final CountingEvictor.Builder b = new CountingEvictor.Builder();
-		final Evictor<Integer> evictor = b.capacity(10)
-				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
+		final Evictor<Integer> evictor = b.capacity(10).loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
 				.evictBeforeAddCount(3).build();
 
 		Iterator<Integer> evicted;
@@ -124,8 +115,7 @@ public class CountingEvictorTest {
 	public void testRetainmentWithEvictionBefore3Adds() {
 
 		final CountingEvictor.Builder b = new CountingEvictor.Builder();
-		final Evictor<Integer> evictor = b.capacity(10)
-				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
+		final Evictor<Integer> evictor = b.capacity(10).loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
 				.evictBeforeAddCount(3).build();
 
 		Iterator<Integer> evicted;

@@ -26,17 +26,17 @@ import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.reasoner.InstanceTaxonomyTestOutput;
 import org.semanticweb.elk.reasoner.SimpleManifestCreator;
 import org.semanticweb.elk.testing.ConfigurationUtils;
 import org.semanticweb.elk.testing.DiffableOutput;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Implements the correctness check based on comparing expected and obtained
@@ -48,7 +48,7 @@ import org.semanticweb.elk.testing.UrlTestInput;
  * @author Peter Skocovsky
  * @param <A> 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseIncrementalRealizationCorrectnessTest<A> extends
 		IncrementalReasoningCorrectnessTestWithInterrupts<UrlTestInput, A, InstanceTaxonomyTestOutput, IncrementalReasoningTestWithInterruptsDelegate<A, InstanceTaxonomyTestOutput>> {
 

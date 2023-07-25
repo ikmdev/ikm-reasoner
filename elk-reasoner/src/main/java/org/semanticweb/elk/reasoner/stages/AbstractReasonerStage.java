@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.semanticweb.elk.exceptions.ElkException;
+import org.semanticweb.elk.reasoner.Reasoner;
 import org.semanticweb.elk.reasoner.saturation.SaturationStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,8 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 	// logger for this class
 	private static final Logger LOGGER_ = LoggerFactory
 			.getLogger(AbstractReasonerStage.class);
+
+	private static boolean testing_p = Reasoner.testing();
 
 	final AbstractReasonerState reasoner;
 
@@ -141,7 +144,8 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 
 	@Override
 	public void execute() throws ElkException {
-		LOGGER_.info(getName());
+		if (!testing_p)
+			LOGGER_.info(getName());
 		reasoner.getProgressMonitor().start(getName());
 
 		try {

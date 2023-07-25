@@ -43,8 +43,7 @@ public class ElkProverFactory implements OWLProverFactory {
 
 	@Override
 	public ElkProver createNonBufferingReasoner(OWLOntology ontology) {
-		return new ElkProver(
-				reasonerFactory_.createNonBufferingReasoner(ontology));
+		return new ElkProver(reasonerFactory_.createNonBufferingReasoner(ontology));
 	}
 
 	@Override
@@ -53,15 +52,12 @@ public class ElkProverFactory implements OWLProverFactory {
 	}
 
 	@Override
-	public ElkProver createNonBufferingReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) {
-		return new ElkProver(
-				reasonerFactory_.createNonBufferingReasoner(ontology, config));
+	public ElkProver createNonBufferingReasoner(OWLOntology ontology, OWLReasonerConfiguration config) {
+		return new ElkProver(reasonerFactory_.createNonBufferingReasoner(ontology, config));
 	}
 
 	@Override
-	public ElkProver createReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) {
+	public ElkProver createReasoner(OWLOntology ontology, OWLReasonerConfiguration config) {
 		return new ElkProver(reasonerFactory_.createReasoner(ontology, config));
 	}
 

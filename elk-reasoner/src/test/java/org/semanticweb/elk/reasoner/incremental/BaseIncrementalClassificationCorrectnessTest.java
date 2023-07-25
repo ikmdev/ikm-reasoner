@@ -26,16 +26,16 @@ import java.net.URISyntaxException;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.reasoner.ElkClassTaxonomyTestOutput;
 import org.semanticweb.elk.reasoner.SimpleManifestCreator;
 import org.semanticweb.elk.testing.ConfigurationUtils;
 import org.semanticweb.elk.testing.DiffableOutput;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Implements the correctness check based on comparing expected and obtained
@@ -46,14 +46,13 @@ import org.semanticweb.elk.testing.UrlTestInput;
  *         pavel.klinov@uni-ulm.de
  * @author Peter Skocovsky
  * @author Yevgeny Kazakov
- * @param <A> 
+ * @param <A>
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseIncrementalClassificationCorrectnessTest<A> extends
 		IncrementalReasoningCorrectnessTestWithInterrupts<UrlTestInput, A, ElkClassTaxonomyTestOutput, IncrementalReasoningTestWithInterruptsDelegate<A, ElkClassTaxonomyTestOutput>> {
 
-	public BaseIncrementalClassificationCorrectnessTest(
-			final TestManifest<UrlTestInput> testManifest,
+	public BaseIncrementalClassificationCorrectnessTest(final TestManifest<UrlTestInput> testManifest,
 			final IncrementalReasoningTestWithInterruptsDelegate<A, ElkClassTaxonomyTestOutput> testDelegate) {
 		super(testManifest, testDelegate);
 	}
@@ -62,16 +61,13 @@ public abstract class BaseIncrementalClassificationCorrectnessTest<A> extends
 	protected void correctnessCheck(final ElkClassTaxonomyTestOutput actualOutput,
 			final ElkClassTaxonomyTestOutput expectedOutput) throws Exception {
 
-		boolean actualContainsAllExpected = actualOutput
-				.containsAllElementsOf(expectedOutput);
-		boolean expectedContainsAllActual = expectedOutput
-				.containsAllElementsOf(actualOutput);
+		boolean actualContainsAllExpected = actualOutput.containsAllElementsOf(expectedOutput);
+		boolean expectedContainsAllActual = expectedOutput.containsAllElementsOf(actualOutput);
 		if (actualContainsAllExpected && expectedContainsAllActual) {
 			return;
 		}
 		// else
-		final StringBuilder message = new StringBuilder(
-				"Actual output is not equal to the expected output:");
+		final StringBuilder message = new StringBuilder("Actual output is not equal to the expected output:");
 		if (!actualContainsAllExpected) {
 			reportMissing(actualOutput, expectedOutput, "< ", message);
 		}
@@ -81,8 +77,7 @@ public abstract class BaseIncrementalClassificationCorrectnessTest<A> extends
 		Assert.fail(message.toString());
 	}
 
-	private static <E, O extends DiffableOutput<E, O>> void reportMissing(
-			O first, O second, final String prefix,
+	private static <E, O extends DiffableOutput<E, O>> void reportMissing(O first, O second, final String prefix,
 			final StringBuilder message) {
 		first.reportMissingElementsOf(second, new DiffableOutput.Listener<E>() {
 
@@ -97,12 +92,9 @@ public abstract class BaseIncrementalClassificationCorrectnessTest<A> extends
 	}
 
 	@Config
-	public static Configuration getConfig()
-			throws URISyntaxException, IOException {
-		return ConfigurationUtils.loadFileBasedTestConfiguration(
-				ElkTestUtils.TEST_INPUT_LOCATION,
-				IncrementalClassificationCorrectnessTest.class,
-				SimpleManifestCreator.INSTANCE, "owl");
+	public static Configuration getConfig() throws URISyntaxException, IOException {
+		return ConfigurationUtils.loadFileBasedTestConfiguration(ElkTestUtils.TEST_INPUT_LOCATION,
+				IncrementalClassificationCorrectnessTest.class, SimpleManifestCreator.INSTANCE, "owl");
 	}
 
 }

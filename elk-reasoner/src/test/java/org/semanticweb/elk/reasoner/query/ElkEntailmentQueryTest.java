@@ -32,20 +32,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.ElkReasoningTestDelegate;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
 import org.semanticweb.elk.testing.TestUtils;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 import com.google.common.collect.ImmutableMap;
 
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class ElkEntailmentQueryTest extends
 		BaseQueryTest<Collection<ElkAxiom>, ElkEntailmentQueryTestOutput> {
 

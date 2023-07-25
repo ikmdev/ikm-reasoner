@@ -21,14 +21,14 @@
  */
 package org.semanticweb.elk.util.collections;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.semanticweb.elk.util.collections.EvictorTestUtils.checkEvicted;
 import static org.semanticweb.elk.util.collections.EvictorTestUtils.checkNothingEvicted;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CapacityBalancingEvictorTest {
 
@@ -39,38 +39,28 @@ public class CapacityBalancingEvictorTest {
 	@Test
 	public void testEviction() {
 
-		EvictorTestUtils.testRecencyEviction(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
-						return b.capacity(capacity)
-								.balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
-								.balanceAfterNRepeatedQueries(
-										NEVER_BALANCE_INTERVAL)
-								.loadFactor(loadFactor).build();
-					}
-				});
+		EvictorTestUtils.testRecencyEviction(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
+				return b.capacity(capacity).balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
+						.balanceAfterNRepeatedQueries(NEVER_BALANCE_INTERVAL).loadFactor(loadFactor).build();
+			}
+		});
 
 	}
 
 	@Test
 	public void testRetainment() {
 
-		EvictorTestUtils.testRecencyRetainment(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
-						return b.capacity(capacity)
-								.balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
-								.balanceAfterNRepeatedQueries(
-										NEVER_BALANCE_INTERVAL)
-								.loadFactor(loadFactor).build();
-					}
-				});
+		EvictorTestUtils.testRecencyRetainment(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
+				return b.capacity(capacity).balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
+						.balanceAfterNRepeatedQueries(NEVER_BALANCE_INTERVAL).loadFactor(loadFactor).build();
+			}
+		});
 
 	}
 
@@ -78,11 +68,9 @@ public class CapacityBalancingEvictorTest {
 	public void testCapacityDoesNotChange() {
 
 		final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
-		final Evictor<Integer> evictor = b.capacity(10)
-				.balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
+		final Evictor<Integer> evictor = b.capacity(10).balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
 				.balanceAfterNRepeatedQueries(ALWAYS_BALANCE_INTERVAL)
-				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.build();
+				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR).build();
 
 		Iterator<Integer> evicted;
 
@@ -99,9 +87,7 @@ public class CapacityBalancingEvictorTest {
 		}
 
 		// Check the capacity.
-		Assert.assertTrue("Capacity changed!",
-				((CapacityBalancingEvictor<Integer>) evictor)
-						.getCapacity() == 10);
+		assertTrue(((CapacityBalancingEvictor<Integer>) evictor).getCapacity() == 10, "Capacity changed!");
 
 	}
 
@@ -109,11 +95,9 @@ public class CapacityBalancingEvictorTest {
 	public void testCapacityShrinks() {
 
 		final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
-		final Evictor<Integer> evictor = b.capacity(10)
-				.balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
+		final Evictor<Integer> evictor = b.capacity(10).balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
 				.balanceAfterNRepeatedQueries(ALWAYS_BALANCE_INTERVAL)
-				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.build();
+				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR).build();
 
 		Iterator<Integer> evicted;
 
@@ -135,9 +119,7 @@ public class CapacityBalancingEvictorTest {
 		}
 
 		// Check the capacity is smaller.
-		Assert.assertTrue("Capacity did not shrink!",
-				((CapacityBalancingEvictor<Integer>) evictor)
-						.getCapacity() < 10);
+		assertTrue(((CapacityBalancingEvictor<Integer>) evictor).getCapacity() < 10, "Capacity did not shrink!");
 
 	}
 
@@ -145,11 +127,9 @@ public class CapacityBalancingEvictorTest {
 	public void testCapacityGrows() {
 
 		final CapacityBalancingEvictor.Builder b = new CapacityBalancingEvictor.Builder();
-		final Evictor<Integer> evictor = b.capacity(10)
-				.balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
+		final Evictor<Integer> evictor = b.capacity(10).balance(GET_FOUR_FIFTHS_OF_HITS_BALANCE)
 				.balanceAfterNRepeatedQueries(ALWAYS_BALANCE_INTERVAL)
-				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.build();
+				.loadFactor(EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR).build();
 
 		Iterator<Integer> evicted;
 
@@ -171,9 +151,7 @@ public class CapacityBalancingEvictorTest {
 		}
 
 		// Check the capacity grew.
-		Assert.assertTrue("Capacity did not grow!",
-				((CapacityBalancingEvictor<Integer>) evictor)
-						.getCapacity() > 10);
+		assertTrue(((CapacityBalancingEvictor<Integer>) evictor).getCapacity() > 10, "Capacity did not grow!");
 
 	}
 

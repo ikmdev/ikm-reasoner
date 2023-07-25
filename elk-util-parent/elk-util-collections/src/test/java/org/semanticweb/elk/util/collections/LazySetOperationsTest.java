@@ -24,15 +24,15 @@ package org.semanticweb.elk.util.collections;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pavel Klinov
@@ -67,7 +67,7 @@ public class LazySetOperationsTest {
 		}
 		assertTrue(refSet.isEmpty());
 	}
-	
+
 	private void test(Operation faithful, Operation lazy) {
 		// random number generator for elements
 		Random generator = new Random(456);
@@ -86,7 +86,7 @@ public class LazySetOperationsTest {
 			assertCorrectness(refSet, lazySet, noEntries);
 		}
 	}
-	
+
 	@Test
 	public void testLazyIntersection() {
 		test(new Operation() {
@@ -94,20 +94,22 @@ public class LazySetOperationsTest {
 			@Override
 			public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
 				Set<Integer> referenceIntersection = new HashSet<Integer>(set1);
-				
-				referenceIntersection.retainAll(set2);
-				
-				return referenceIntersection;
-			}},
-			
-			new Operation() {
 
-				@Override
-				public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
-					return new LazySetIntersection<Integer>(set1, set2);
-				}});
+				referenceIntersection.retainAll(set2);
+
+				return referenceIntersection;
+			}
+		},
+
+				new Operation() {
+
+					@Override
+					public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
+						return new LazySetIntersection<Integer>(set1, set2);
+					}
+				});
 	}
-	
+
 	@Test
 	public void testLazyUnion() {
 		test(new Operation() {
@@ -115,20 +117,22 @@ public class LazySetOperationsTest {
 			@Override
 			public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
 				Set<Integer> ref = new HashSet<Integer>(set1);
-				
-				ref.addAll(set2);
-				
-				return ref;
-			}},
-			
-			new Operation() {
 
-				@Override
-				public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
-					return new LazySetUnion<Integer>(set1, set2);
-				}});
-	}	
-	
+				ref.addAll(set2);
+
+				return ref;
+			}
+		},
+
+				new Operation() {
+
+					@Override
+					public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
+						return new LazySetUnion<Integer>(set1, set2);
+					}
+				});
+	}
+
 	@Test
 	public void testLazyDifference() {
 		test(new Operation() {
@@ -136,23 +140,24 @@ public class LazySetOperationsTest {
 			@Override
 			public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
 				Set<Integer> ref = new HashSet<Integer>(set1);
-				
-				ref.removeAll(set2);
-				
-				return ref;
-			}},
-			
-			new Operation() {
 
-				@Override
-				public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
-					return new LazyCollectionMinusSet<Integer>(set1, set2);
-				}});
-	}		
-	
+				ref.removeAll(set2);
+
+				return ref;
+			}
+		},
+
+				new Operation() {
+
+					@Override
+					public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2) {
+						return new LazyCollectionMinusSet<Integer>(set1, set2);
+					}
+				});
+	}
+
 	private static interface Operation {
-		
+
 		public Collection<Integer> create(Set<Integer> set1, Set<Integer> set2);
 	}
 }
-

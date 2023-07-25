@@ -67,8 +67,18 @@ import org.slf4j.LoggerFactory;
 public class Reasoner extends AbstractReasonerState {
 
 	// logger for this class
-	private static final Logger LOGGER_ = LoggerFactory
-			.getLogger(Reasoner.class);
+	private static final Logger LOGGER_ = LoggerFactory.getLogger(Reasoner.class);
+
+	public static boolean testing() {
+		try {
+			Class.forName("org.semanticweb.elk.testing.TestManifest");
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	private static boolean testing_p = Reasoner.testing();
 
 	/**
 	 * the executor used for concurrent tasks
@@ -105,8 +115,7 @@ public class Reasoner extends AbstractReasonerState {
 	 * Constructor. In most cases, Reasoners should be created by the
 	 * {@link ReasonerFactory}.
 	 */
-	protected Reasoner(ElkObject.Factory elkFactory,
-			final ReasonerInterrupter interrupter,
+	protected Reasoner(ElkObject.Factory elkFactory, final ReasonerInterrupter interrupter,
 			ReasonerStageExecutor stageExecutor, ReasonerConfiguration config) {
 		super(elkFactory, config);
 
@@ -115,7 +124,8 @@ public class Reasoner extends AbstractReasonerState {
 		this.progressMonitor = new DummyProgressMonitor();
 		this.allowFreshEntities = true;
 		setConfigurationOptions(config);
-		LOGGER_.info("ELK reasoner was created");
+		if (!testing_p)
+			LOGGER_.info("ELK reasoner was created");
 	}
 
 	/**
@@ -214,11 +224,11 @@ public class Reasoner extends AbstractReasonerState {
 	 *             if the current thread was interrupted
 	 */
 	@SuppressWarnings("static-method")
-	public synchronized boolean shutdown(long timeout, TimeUnit unit)
-			throws InterruptedException {
+	public synchronized boolean shutdown(long timeout, TimeUnit unit) throws InterruptedException {
 		boolean success = true;
 		if (success) {
-			LOGGER_.info("ELK reasoner has shut down");
+			if (!testing_p)
+				LOGGER_.info("ELK reasoner has shut down");
 		} else {
 			LOGGER_.error("ELK reasoner failed to shut down!");
 		}

@@ -27,37 +27,33 @@ import static org.semanticweb.elk.util.collections.EvictorTestUtils.checkNothing
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NQEvictorTest {
 
 	@Test
 	public void testSingleLevelEviction() {
 
-		EvictorTestUtils.testRecencyEviction(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final NQEvictor.Builder b = new NQEvictor.Builder();
-						return b.addLevel(capacity, loadFactor).build();
-					}
-				});
+		EvictorTestUtils.testRecencyEviction(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final NQEvictor.Builder b = new NQEvictor.Builder();
+				return b.addLevel(capacity, loadFactor).build();
+			}
+		});
 
 	}
 
 	@Test
 	public void testSingleLevelRetainment() {
 
-		EvictorTestUtils.testRecencyRetainment(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final NQEvictor.Builder b = new NQEvictor.Builder();
-						return b.addLevel(capacity, loadFactor).build();
-					}
-				});
+		EvictorTestUtils.testRecencyRetainment(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final NQEvictor.Builder b = new NQEvictor.Builder();
+				return b.addLevel(capacity, loadFactor).build();
+			}
+		});
 
 	}
 
@@ -65,10 +61,8 @@ public class NQEvictorTest {
 	public void testTwoLevelEviction() {
 
 		final NQEvictor.Builder b = new NQEvictor.Builder();
-		final Evictor<Integer> evictor = b
-				.addLevel(10, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.addLevel(5, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.build();
+		final Evictor<Integer> evictor = b.addLevel(10, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
+				.addLevel(5, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR).build();
 
 		Iterator<Integer> evicted;
 
@@ -129,11 +123,9 @@ public class NQEvictorTest {
 	public void testThirdLevelEviction() {
 
 		final NQEvictor.Builder b = new NQEvictor.Builder();
-		final Evictor<Integer> evictor = b
+		final Evictor<Integer> evictor = b.addLevel(1, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
 				.addLevel(1, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.addLevel(1, EvictorTestUtils.RETAIN_FULL_CAPACITY_LOAD_FACTOR)
-				.addLevel(10, EvictorTestUtils.RETAIN_FOUR_FIFTHS_LOAD_FACTOR)
-				.build();
+				.addLevel(10, EvictorTestUtils.RETAIN_FOUR_FIFTHS_LOAD_FACTOR).build();
 
 		Iterator<Integer> evicted;
 
@@ -169,8 +161,7 @@ public class NQEvictorTest {
 
 	}
 
-	private static Iterator<Integer> add3Times(final Evictor<Integer> evictor,
-			final int element) {
+	private static Iterator<Integer> add3Times(final Evictor<Integer> evictor, final int element) {
 		evictor.add(element);
 		evictor.add(element);
 		return evictor.addAndEvict(element);

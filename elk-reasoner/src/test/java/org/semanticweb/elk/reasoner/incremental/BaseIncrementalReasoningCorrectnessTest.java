@@ -26,11 +26,11 @@ import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.RandomSeedProvider;
 import org.semanticweb.elk.reasoner.BaseReasoningCorrectnessTest;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
+import org.semanticweb.elk.testing4.PolySuite4;
 import org.semanticweb.elk.util.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @param <O> 
  * @param <TD> 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInput, A, O, TD extends IncrementalReasoningTestDelegate<A, O>>
 		extends BaseReasoningCorrectnessTest<I, O, TestManifest<I>, TD> {
 
@@ -116,7 +116,7 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 				getDelegate().applyChanges(changingAxioms_.getOnElements(),
 						IncrementalChangeType.DELETE);
 
-				LOGGER_.info("===DELETIONS===");
+				LOGGER_.debug("===DELETIONS===");
 
 				outputChecker.check();
 
@@ -124,7 +124,7 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 				getDelegate().applyChanges(getChangingAxioms().getOnElements(),
 						IncrementalChangeType.ADD);
 
-				LOGGER_.info("===ADDITIONS===");
+				LOGGER_.debug("===ADDITIONS===");
 			}
 
 			outputChecker.finalCheck();

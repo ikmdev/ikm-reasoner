@@ -1,46 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<artifactId>elk-owl-model</artifactId>
+
 	<parent>
-		<artifactId>elk-owl-parent</artifactId>
 		<groupId>org.semanticweb.elk</groupId>
-		<version>0.5.0-SNAPSHOT</version>
+		<artifactId>elk-owl-parent</artifactId>
+		<version>0.6.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>elk-owl-model</artifactId>
-	<packaging>jar</packaging>
-
-	<name>ELK OWL Object Interfaces</name>
+	<name>ELK OWL Model Object Interfaces</name>
 	<description>General Interfaces for working with OWL objects</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-hashing</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>

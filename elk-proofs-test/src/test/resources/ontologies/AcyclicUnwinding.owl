@@ -1,0 +1,9 @@
+Prefix( : = <http://example.org/> ) 
+Ontology(
+SubClassOf(:A ObjectIntersectionOf(:B :C))
+SubClassOf(ObjectIntersectionOf(:A1 :A2) :B)
+SubClassOf(ObjectIntersectionOf(:A3 :A4) ObjectIntersectionOf(:A1 :A2))
+SubClassOf(ObjectIntersectionOf(:A5 :A6) ObjectIntersectionOf(:A3 :A4))
+SubClassOf(:B ObjectIntersectionOf(:A5 :A6))
+)
+

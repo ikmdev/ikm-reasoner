@@ -21,14 +21,14 @@
  */
 package org.semanticweb.elk.util.collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import org.junit.Assert;
 
 import com.google.common.base.Predicate;
 
@@ -42,8 +42,7 @@ class EvictorTestUtils {
 		// Forbid instantiation of an utility class.
 	}
 
-	public static <E> void checkEvicted(final Collection<E> expected,
-			final Iterator<E> actual) {
+	public static <E> void checkEvicted(final Collection<E> expected, final Iterator<E> actual) {
 
 		final Set<E> expectedSet = new LinkedHashSet<E>(expected);
 
@@ -58,16 +57,15 @@ class EvictorTestUtils {
 		final Set<E> inActualNotInExpected = new LinkedHashSet<E>(actualSet);
 		inActualNotInExpected.removeAll(expectedSet);
 
-		final String messageSuffix = "\nIn expected, not in actual: "
-				+ inExpectedNotInActual + "\nIn actual, not in expected: "
-				+ inActualNotInExpected + "\n";
+		final String messageSuffix = "\nIn expected, not in actual: " + inExpectedNotInActual
+				+ "\nIn actual, not in expected: " + inActualNotInExpected + "\n";
 
-		Assert.assertEquals(messageSuffix, expectedSet, actualSet);
+		assertEquals(expectedSet, actualSet, messageSuffix);
 
 	}
 
 	public static <E> void checkNothingEvicted(final Iterator<E> evicted) {
-		checkEvicted(Collections.<E> emptyList(), evicted);
+		checkEvicted(Collections.<E>emptyList(), evicted);
 	}
 
 	public static interface TestEvictorFactory<E> {
@@ -76,8 +74,7 @@ class EvictorTestUtils {
 
 	public static void testRecencyEviction(final TestEvictorFactory<Integer> factory) {
 
-		final Evictor<Integer> evictor = factory.newEvictor(10,
-				RETAIN_FOUR_FIFTHS_LOAD_FACTOR);
+		final Evictor<Integer> evictor = factory.newEvictor(10, RETAIN_FOUR_FIFTHS_LOAD_FACTOR);
 
 		Iterator<Integer> evicted;
 
@@ -112,11 +109,9 @@ class EvictorTestUtils {
 
 	}
 
-	public static void testRecencyRetainment(
-			final TestEvictorFactory<Integer> factory) {
+	public static void testRecencyRetainment(final TestEvictorFactory<Integer> factory) {
 
-		final Evictor<Integer> evictor = factory.newEvictor(10,
-				EVICT_EVERYTHING_LOAD_FACTOR);
+		final Evictor<Integer> evictor = factory.newEvictor(10, EVICT_EVERYTHING_LOAD_FACTOR);
 
 		Iterator<Integer> evicted;
 
@@ -143,8 +138,7 @@ class EvictorTestUtils {
 
 		// Evict everything.
 		evicted = evictor.addAndEvict(15);
-		checkEvicted(Arrays.asList(0, 2, 4, 6, 8, 10, 11, 12, 13, 14, 15),
-				evicted);
+		checkEvicted(Arrays.asList(0, 2, 4, 6, 8, 10, 11, 12, 13, 14, 15), evicted);
 
 	}
 

@@ -24,7 +24,7 @@ package org.semanticweb.elk.reasoner.incremental;
 import java.util.Random;
 
 import org.junit.Test;
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
 import org.slf4j.Logger;

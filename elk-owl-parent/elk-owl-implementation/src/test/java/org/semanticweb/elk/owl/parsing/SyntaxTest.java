@@ -22,27 +22,26 @@
  */
 package org.semanticweb.elk.owl.parsing;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import org.junit.jupiter.api.Test;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.iris.ElkFullIri;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
 
-import junit.framework.TestCase;
-
-public class SyntaxTest extends TestCase {
+public class SyntaxTest {
 	final ElkObject.Factory objectFactory = new ElkObjectEntityRecyclingFactory();
 
-	public SyntaxTest(String testName) {
-		super(testName);
-	}
-
+	@Test
 	public void testFactory() {
 		ElkClassExpression heart = objectFactory.getClass(new ElkFullIri("Heart"));
 		ElkClassExpression organ = objectFactory.getClass(new ElkFullIri("Organ"));
 		ElkClassExpression heart2 = objectFactory.getClass(new ElkFullIri("Heart"));
 
-		assertSame("heart == heart2", heart, heart2);
-		assertNotSame("heart != organ", organ);
+		assertSame(heart, heart2, "heart == heart2");
+		assertNotSame(heart, organ, "heart != organ");
 
 	}
 }
