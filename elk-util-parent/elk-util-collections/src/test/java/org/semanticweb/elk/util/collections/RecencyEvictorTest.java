@@ -21,39 +21,33 @@
  */
 package org.semanticweb.elk.util.collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RecencyEvictorTest {
 
 	@Test
 	public void testEviction() {
 
-		EvictorTestUtils.testRecencyEviction(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final RecencyEvictor.Builder b = new RecencyEvictor.Builder();
-						return b.capacity(capacity).loadFactor(loadFactor)
-								.build();
-					}
-				});
+		EvictorTestUtils.testRecencyEviction(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final RecencyEvictor.Builder b = new RecencyEvictor.Builder();
+				return b.capacity(capacity).loadFactor(loadFactor).build();
+			}
+		});
 
 	}
 
 	@Test
 	public void testRetainment() {
 
-		EvictorTestUtils.testRecencyRetainment(
-				new EvictorTestUtils.TestEvictorFactory<Integer>() {
-					@Override
-					public Evictor<Integer> newEvictor(final int capacity,
-							final double loadFactor) {
-						final RecencyEvictor.Builder b = new RecencyEvictor.Builder();
-						return b.capacity(capacity).loadFactor(loadFactor)
-								.build();
-					}
-				});
+		EvictorTestUtils.testRecencyRetainment(new EvictorTestUtils.TestEvictorFactory<Integer>() {
+			@Override
+			public Evictor<Integer> newEvictor(final int capacity, final double loadFactor) {
+				final RecencyEvictor.Builder b = new RecencyEvictor.Builder();
+				return b.capacity(capacity).loadFactor(loadFactor).build();
+			}
+		});
 
 	}
 

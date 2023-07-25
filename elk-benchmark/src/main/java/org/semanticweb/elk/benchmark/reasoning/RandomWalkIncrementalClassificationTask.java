@@ -29,7 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.benchmark.BenchmarkUtils;
 import org.semanticweb.elk.benchmark.Metrics;
 import org.semanticweb.elk.benchmark.Task;

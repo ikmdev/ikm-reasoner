@@ -25,9 +25,9 @@ import org.junit.runner.RunWith;
 import org.semanticweb.elk.reasoner.ReasoningCorrectnessTestWithInterrupts;
 import org.semanticweb.elk.reasoner.ReasoningTestWithOutputAndInterruptsDelegate;
 import org.semanticweb.elk.testing.DiffableOutput;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing4.PolySuite4;
 
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseQueryTest<Q, O extends DiffableOutput<?, O>> extends
 		ReasoningCorrectnessTestWithInterrupts<QueryTestInput<Q>, O, QueryTestManifest<Q, O>, ReasoningTestWithOutputAndInterruptsDelegate<O>> {
 

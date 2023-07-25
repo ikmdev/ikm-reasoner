@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.loading.AllAxiomTrackingOntologyLoader;
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.loading.TestAxiomLoader;
@@ -34,17 +33,18 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.SimpleManifestCreator;
 import org.semanticweb.elk.reasoner.incremental.RandomWalkRunnerIO.ElkAPIBasedIO;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * @author "Yevgeny Kazakov"
  * 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class RandomWalkIncrementalClassificationCorrectnessTest extends
 		BaseRandomWalkIncrementalCorrectnessTest {
 

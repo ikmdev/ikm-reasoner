@@ -1,20 +1,31 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>elk-reasoner</artifactId>
 
 	<parent>
 		<groupId>org.semanticweb.elk</groupId>
 		<artifactId>elk-parent</artifactId>
-		<version>0.5.0-SNAPSHOT</version>
+		<version>0.6.1-SNAPSHOT</version>
 	</parent>
-
-	<artifactId>elk-reasoner</artifactId>
-	<packaging>jar</packaging>
 
 	<name>ELK Reasoner Core</name>
 	<description>The core ELK Reasoner package</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>dev.ikm.jpms</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.liveontologies</groupId>
+			<artifactId>puli</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-model</artifactId>
@@ -32,24 +43,17 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-concurrent</artifactId>
 			<version>${project.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-hashing</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-logging</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -59,9 +63,8 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-testing</artifactId>
+			<artifactId>elk-util-logging</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -71,27 +74,19 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-concurrent</artifactId>
+			<artifactId>elk-util-testing</artifactId>
 			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.liveontologies</groupId>
-			<artifactId>puli</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-testing4</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -101,10 +96,10 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>test</phase>
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
+						<phase>test</phase>
 					</execution>
 				</executions>
 			</plugin>

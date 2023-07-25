@@ -22,17 +22,17 @@
  */
 package org.semanticweb.elk.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.testing.TestUtils;
 
@@ -44,52 +44,48 @@ import org.semanticweb.elk.testing.TestUtils;
  */
 public class ConfigurationFactoryTest {
 
-	@SuppressWarnings("static-method")
-	@Before
+//	@SuppressWarnings("static-method")
+	@BeforeEach
 	public void setUp() {
 		TestUtils.createTestEnvironment(new File(""));
 	}
 
-	@SuppressWarnings("static-method")
-	@After
+//	@SuppressWarnings("static-method")
+	@AfterEach
 	public void cleanUp() {
 		TestUtils.cleanUp(new File(""));
 	}
 
-	@SuppressWarnings("static-method")
+//	@SuppressWarnings("static-method")
 	@Test
 	public void getDefaultConfiguration() {
-		BaseConfiguration defaultConfig = new ConfigurationFactory()
-				.getConfiguration("elk", BaseConfiguration.class);
+		BaseConfiguration defaultConfig = new ConfigurationFactory().getConfiguration("elk", BaseConfiguration.class);
 
 		assertEquals(3, defaultConfig.getParameterNames().size());
 	}
 
-	@SuppressWarnings("static-method")
+//	@SuppressWarnings("static-method")
 	@Test
 	public void getDefaultConfigurationWithPrefix() {
-		BaseConfiguration defaultConfig = new ConfigurationFactory()
-				.getConfiguration("elk.reasoner", BaseConfiguration.class);
+		BaseConfiguration defaultConfig = new ConfigurationFactory().getConfiguration("elk.reasoner",
+				BaseConfiguration.class);
 
 		assertEquals(2, defaultConfig.getParameterNames().size());
 
-		defaultConfig = new ConfigurationFactory().getConfiguration(
-				"elk.parser", BaseConfiguration.class);
+		defaultConfig = new ConfigurationFactory().getConfiguration("elk.parser", BaseConfiguration.class);
 
 		assertEquals(1, defaultConfig.getParameterNames().size());
 	}
 
 	@Test
-	public void getConfigurationFromStream() throws ConfigurationException,
-			IOException {
+	public void getConfigurationFromStream() throws ConfigurationException, IOException {
 		InputStream stream = null;
 
 		try {
-			stream = this.getClass().getClassLoader()
-					.getResourceAsStream("elk.properties");
+			stream = this.getClass().getResourceAsStream("/elk.properties");
 
-			BaseConfiguration config = new ConfigurationFactory()
-					.getConfiguration(stream, "elk", BaseConfiguration.class);
+			BaseConfiguration config = new ConfigurationFactory().getConfiguration(stream, "elk",
+					BaseConfiguration.class);
 
 			assertEquals(3, config.getParameterNames().size());
 		} finally {
@@ -97,12 +93,11 @@ public class ConfigurationFactoryTest {
 		}
 	}
 
-	@SuppressWarnings("static-method")
+//	@SuppressWarnings("static-method")
 	@Test
 	public void roundtrip() throws ConfigurationException, IOException {
 		ConfigurationFactory factory = new ConfigurationFactory();
-		BaseConfiguration defaultConfig = factory.getConfiguration("elk",
-				BaseConfiguration.class);
+		BaseConfiguration defaultConfig = factory.getConfiguration("elk", BaseConfiguration.class);
 		InputStream stream = null;
 		File testFile = new File(TestUtils.TEST_ROOT + "/test.properties");
 
@@ -111,19 +106,17 @@ public class ConfigurationFactoryTest {
 		try {
 			stream = new FileInputStream(testFile);
 
-			BaseConfiguration loaded = factory.getConfiguration(stream, "elk",
-					BaseConfiguration.class);
+			BaseConfiguration loaded = factory.getConfiguration(stream, "elk", BaseConfiguration.class);
 
 			assertNotNull(loaded);
-			assertEquals(defaultConfig.getParameterNames().size(), loaded
-					.getParameterNames().size());
+			assertEquals(defaultConfig.getParameterNames().size(), loaded.getParameterNames().size());
 
 			for (String key : defaultConfig.getParameterNames()) {
-				assertEquals(defaultConfig.getParameter(key),
-						loaded.getParameter(key));
+				assertEquals(defaultConfig.getParameter(key), loaded.getParameter(key));
 			}
 		} finally {
 			IOUtils.closeQuietly(stream);
 		}
 	}
+
 }

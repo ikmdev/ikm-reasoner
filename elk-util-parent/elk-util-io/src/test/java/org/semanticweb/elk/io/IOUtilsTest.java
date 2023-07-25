@@ -21,6 +21,10 @@
  */
 package org.semanticweb.elk.io;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -30,8 +34,7 @@ import java.util.Stack;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class IOUtilsTest {
 
@@ -45,8 +48,7 @@ public class IOUtilsTest {
 		testTraverseJarContentTree("org");
 	}
 
-	public void testTraverseJarContentTree(final String rootPath)
-			throws IOException {
+	public void testTraverseJarContentTree(final String rootPath) throws IOException {
 
 		final Class<?> srcClass = Test.class;
 		final String root = rootPath.endsWith("/") ? rootPath : rootPath + "/";
@@ -59,51 +61,41 @@ public class IOUtilsTest {
 
 		final Stack<String> pathStack = new Stack<String>();
 
-		IOUtils.traverseJarContentTree(rootPath, srcClass,
-				new IOUtils.PathVisitor() {
+		IOUtils.traverseJarContentTree(rootPath, srcClass, new IOUtils.PathVisitor() {
 
-					@Override
-					public void visitBefore(final String path) {
-						/*
-						 * This must visit the content in alphabetical order,
-						 * each element exactly once!
-						 */
-						final String first = jarContent.get(0);
-						Assert.assertEquals("Visited by Before in wrong order!",
-								first, path);
-						jarContent.remove(0);
-						pathStack.push(path);
-					}
+			@Override
+			public void visitBefore(final String path) {
+				/*
+				 * This must visit the content in alphabetical order, each element exactly once!
+				 */
+				final String first = jarContent.get(0);
+				assertEquals(first, path, "Visited by Before in wrong order!");
+				jarContent.remove(0);
+				pathStack.push(path);
+			}
 
-					@Override
-					public void visitAfter(final String path) {
-						/*
-						 * This must visit everything that was visited by
-						 * Before.
-						 */
-						Assert.assertFalse("Visited by After before by Before!",
-								pathStack.isEmpty());
-						final String top = pathStack.pop();
-						Assert.assertEquals("Visited by After in wrong order!",
-								top, path);
-					}
+			@Override
+			public void visitAfter(final String path) {
+				/*
+				 * This must visit everything that was visited by Before.
+				 */
+				assertFalse(pathStack.isEmpty(), "Visited by After before by Before!");
+				final String top = pathStack.pop();
+				assertEquals(top, path, "Visited by After in wrong order!");
+			}
 
-				});
+		});
 
-		Assert.assertTrue("Not all elements visited by Before!",
-				jarContent.isEmpty());
-		Assert.assertTrue("Not all elements visited by After!",
-				pathStack.isEmpty());
+		assertTrue(jarContent.isEmpty(), "Not all elements visited by Before!");
+		assertTrue(pathStack.isEmpty(), "Not all elements visited by After!");
 
 	}
 
-	public static List<String> collectJarContent(final String rootPath,
-			final Class<?> srcClass) throws IOException {
+	public static List<String> collectJarContent(final String rootPath, final Class<?> srcClass) throws IOException {
 
 		final CodeSource src = srcClass.getProtectionDomain().getCodeSource();
 		if (src == null) {
-			throw new IOException("Unable to get code source for "
-					+ srcClass.getSimpleName());
+			throw new IOException("Unable to get code source for " + srcClass.getSimpleName());
 		}
 
 		final List<String> paths = new ArrayList<String>();

@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
@@ -40,11 +39,12 @@ import org.semanticweb.elk.owl.parsing.javacc.Owl2FunctionalStyleParserFactory;
 import org.semanticweb.elk.reasoner.taxonomy.MockTaxonomyLoader;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.testing.ConfigurationUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Runs classification tests for all test input in the test directory
@@ -54,32 +54,27 @@ import org.semanticweb.elk.testing.UrlTestInput;
  *         pavel.klinov@uni-ulm.de
  * @author Peter Skocovsky
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseClassificationCorrectnessTest extends
 		ReasoningCorrectnessTestWithInterrupts<UrlTestInput, ElkClassTaxonomyTestOutput, ReasoningTestManifest<ElkClassTaxonomyTestOutput>, ReasoningTestWithOutputAndInterruptsDelegate<ElkClassTaxonomyTestOutput>> {
 
-	public BaseClassificationCorrectnessTest(
-			final ReasoningTestManifest<ElkClassTaxonomyTestOutput> testManifest,
+	public BaseClassificationCorrectnessTest(final ReasoningTestManifest<ElkClassTaxonomyTestOutput> testManifest,
 			final ReasoningTestWithOutputAndInterruptsDelegate<ElkClassTaxonomyTestOutput> testDelegate) {
 		super(testManifest, testDelegate);
 	}
 
 	@Config
-	public static Configuration getConfig()
-			throws URISyntaxException, IOException {
-		return ConfigurationUtils.loadFileBasedTestConfiguration(
-				ElkTestUtils.TEST_INPUT_LOCATION,
+	public static Configuration getConfig() throws URISyntaxException, IOException {
+		return ConfigurationUtils.loadFileBasedTestConfiguration(ElkTestUtils.TEST_INPUT_LOCATION,
 				BaseClassificationCorrectnessTest.class,
 				new ConfigurationUtils.ManifestCreator<TestManifestWithOutput<UrlTestInput, ElkClassTaxonomyTestOutput>>() {
 					@Override
 					public Collection<? extends TestManifestWithOutput<UrlTestInput, ElkClassTaxonomyTestOutput>> createManifests(
-							final String name, final List<URL> urls)
-							throws IOException {
+							final String name, final List<URL> urls) throws IOException {
 
 						if (urls == null || urls.size() < 2) {
 							// Not enough inputs. Probably forgot something.
-							throw new IllegalArgumentException(
-									"Need at least 2 URL-s!");
+							throw new IllegalArgumentException("Need at least 2 URL-s!");
 						}
 						if (urls.get(0) == null || urls.get(1) == null) {
 							// No inputs, no manifests.
@@ -89,17 +84,11 @@ public abstract class BaseClassificationCorrectnessTest extends
 						// input and expected output are OWL ontologies
 						ElkObject.Factory objectFactory = new ElkObjectEntityRecyclingFactory();
 						try (InputStream stream = urls.get(1).openStream()) {
-							Taxonomy<ElkClass> expectedTaxonomy = MockTaxonomyLoader
-									.load(objectFactory,
-											new Owl2FunctionalStyleParserFactory(
-													objectFactory)
-															.getParser(stream));
+							Taxonomy<ElkClass> expectedTaxonomy = MockTaxonomyLoader.load(objectFactory,
+									new Owl2FunctionalStyleParserFactory(objectFactory).getParser(stream));
 
-							return Collections.singleton(
-									new ReasoningTestManifest<ElkClassTaxonomyTestOutput>(
-											name, urls.get(0),
-											new ElkClassTaxonomyTestOutput(
-													expectedTaxonomy)));
+							return Collections.singleton(new ReasoningTestManifest<ElkClassTaxonomyTestOutput>(name,
+									urls.get(0), new ElkClassTaxonomyTestOutput(expectedTaxonomy)));
 
 						} catch (Owl2ParseException e) {
 							throw new IOException(e);

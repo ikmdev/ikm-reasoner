@@ -30,18 +30,18 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.ElkTestUtils;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.reasoner.incremental.ElkIncrementalReasoningTestDelegate;
 import org.semanticweb.elk.testing.ConfigurationUtils;
 import org.semanticweb.elk.testing.DiffableOutput;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
+import org.semanticweb.elk.testing4.PolySuite4;
 
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class ElkIncrementalClassExpressionQueryTest<O extends DiffableOutput<?, O>>
 		extends BaseIncrementalQueryTest<ElkClassExpression, ElkAxiom, O> {
 

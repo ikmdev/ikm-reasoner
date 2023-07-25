@@ -32,7 +32,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.RandomSeedProvider;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.loading.Owl2StreamLoader;
@@ -42,10 +41,11 @@ import org.semanticweb.elk.owl.parsing.Owl2ParseException;
 import org.semanticweb.elk.owl.parsing.javacc.Owl2FunctionalStyleParserFactory;
 import org.semanticweb.elk.reasoner.Reasoner;
 import org.semanticweb.elk.reasoner.TestReasonerUtils;
-import org.semanticweb.elk.testing.PolySuite;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
+import org.semanticweb.elk.testing4.PolySuite4;
 import org.semanticweb.elk.util.concurrent.computation.DummyInterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * @author Pavel Klinov
  * 
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public abstract class BaseRandomWalkIncrementalCorrectnessTest {
 
 	// logger for this class
@@ -102,7 +102,7 @@ public abstract class BaseRandomWalkIncrementalCorrectnessTest {
 		Reasoner incrementalReasoner;
 		long seed = RandomSeedProvider.VALUE;
 
-		LOGGER_.info("Initial load of test axioms");
+		LOGGER_.debug("Initial load of test axioms");
 
 		InputStream stream = manifest.getInput().getUrl().openStream();
 		AxiomLoader fileLoader = new Owl2StreamLoader.Factory(

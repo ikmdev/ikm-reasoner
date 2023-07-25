@@ -29,14 +29,14 @@ import org.junit.runner.RunWith;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.reasoner.incremental.ElkIncrementalReasoningTestDelegate;
-import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 import com.google.common.collect.ImmutableMap;
 
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class ElkIncrementalClassExpressionEquivalentClassesQueryTest extends
 		ElkIncrementalClassExpressionQueryTest<ElkEquivalentClassesTestOutput> {
 

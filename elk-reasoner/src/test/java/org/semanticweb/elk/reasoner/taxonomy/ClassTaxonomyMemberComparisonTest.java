@@ -49,11 +49,11 @@ import org.semanticweb.elk.reasoner.TestReasonerUtils;
 import org.semanticweb.elk.reasoner.completeness.Incompleteness;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
-import org.semanticweb.elk.testing.PolySuite;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
+import org.semanticweb.elk.testing4.PolySuite4;
 
 /**
  * Tests whether members of various implementations of taxonomy are compared
@@ -62,7 +62,7 @@ import org.semanticweb.elk.testing.TestManifest;
  * 
  * @author Peter Skocovsky
  */
-@RunWith(PolySuite.class)
+@RunWith(PolySuite4.class)
 public class ClassTaxonomyMemberComparisonTest {
 
 	final static ElkObject.Factory OBJECT_FACTORY = new ElkObjectEntityRecyclingFactory();

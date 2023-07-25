@@ -25,24 +25,21 @@
  */
 package org.semanticweb.elk.util.collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yevgeny Kazakov
  * 
  */
-public class ArrayHashMapTest extends TestCase {
-
-	public ArrayHashMapTest(String testName) {
-		super(testName);
-	}
+public class ArrayHashMapTest {
 
 	/**
 	 * Checking if two maps are equal
@@ -83,18 +80,15 @@ public class ArrayHashMapTest extends TestCase {
 				noEntries <<= 1;
 
 			int initialSize = generator.nextInt(noEntries);
-			Map<Integer, Integer> testMap = new ArrayHashMap<Integer, Integer>(
-					initialSize);
-			Map<Integer, Integer> referenceMap = new HashMap<Integer, Integer>(
-					noEntries);
+			Map<Integer, Integer> testMap = new ArrayHashMap<Integer, Integer>(initialSize);
+			Map<Integer, Integer> referenceMap = new HashMap<Integer, Integer>(noEntries);
 
 			// adding random additions
 			for (i = 0; i < noEntries; i++) {
 				int key = generator.nextInt(noEntries / 2);
 				int value = i;
 				Integer previousReference = referenceMap.put(key, value);
-				assertEquals(previousReference == null,
-						!testMap.containsKey(key));
+				assertEquals(previousReference == null, !testMap.containsKey(key));
 				Integer previous = testMap.put(key, value);
 				assertEquals(previousReference, previous);
 				assertEquals(referenceMap.size(), testMap.size());
@@ -105,8 +99,7 @@ public class ArrayHashMapTest extends TestCase {
 			for (i = 0; i < noEntries; i++) {
 				int key = generator.nextInt(noEntries / 2);
 				Integer previousReference = referenceMap.remove(key);
-				assertEquals(previousReference == null,
-						!testMap.containsKey(key));
+				assertEquals(previousReference == null, !testMap.containsKey(key));
 				Integer previous = testMap.remove(key);
 				assertEquals(previousReference, previous);
 				assertEquals(referenceMap.size(), testMap.size());
@@ -120,13 +113,11 @@ public class ArrayHashMapTest extends TestCase {
 				if (generator.nextBoolean()) {
 					int value = i;
 					previousReference = referenceMap.put(key, value);
-					assertEquals(previousReference == null,
-							!testMap.containsKey(key));
+					assertEquals(previousReference == null, !testMap.containsKey(key));
 					previous = testMap.put(key, value);
 				} else {
 					previousReference = referenceMap.remove(key);
-					assertEquals(previousReference == null,
-							!testMap.containsKey(key));
+					assertEquals(previousReference == null, !testMap.containsKey(key));
 					previous = testMap.remove(key);
 				}
 				assertEquals(previousReference, previous);

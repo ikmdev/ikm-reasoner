@@ -27,7 +27,7 @@ package org.semanticweb.elk.benchmark.reasoning;
 
 import java.util.List;
 
-import org.semanticweb.elk.RandomSeedProvider;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.benchmark.TaskException;
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;

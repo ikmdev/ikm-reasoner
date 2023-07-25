@@ -47,13 +47,11 @@ public class ConfigurationBuilder {
 	private final List<PolySuite.Configuration> children_;
 
 	/**
-	 * Iteration over the entries must be in the same order as they were
-	 * inserted!
+	 * Iteration over the entries must be in the same order as they were inserted!
 	 */
 	private final Map<String, List<String>> fileNamesPerExtension_;
 
-	public ConfigurationBuilder(final Class<?> srcClass,
-			final ManifestCreator<?> creator, final String fileExt,
+	public ConfigurationBuilder(final Class<?> srcClass, final ManifestCreator<?> creator, final String fileExt,
 			final String... fileExts) {
 		this.srcClass_ = srcClass;
 		this.creator_ = creator;
@@ -78,8 +76,7 @@ public class ConfigurationBuilder {
 	}
 
 	public ConfigurationBuilder addFileName(final String fileName) {
-		final List<String> fileNames = fileNamesPerExtension_
-				.get(FileUtils.getExtension(fileName));
+		final List<String> fileNames = fileNamesPerExtension_.get(FileUtils.getExtension(fileName));
 		if (fileNames != null) {
 			fileNames.add(fileName);
 		}
@@ -99,8 +96,7 @@ public class ConfigurationBuilder {
 		}
 
 		// Get names of files in the input directory and sort them.
-		final List<Iterator<String>> fileNameIters = new ArrayList<Iterator<String>>(
-				fileNamesPerExtension_.size());
+		final List<Iterator<String>> fileNameIters = new ArrayList<Iterator<String>>(fileNamesPerExtension_.size());
 		for (final List<String> fileNames : fileNamesPerExtension_.values()) {
 			Collections.sort(fileNames);
 			fileNameIters.add(fileNames.iterator());
@@ -109,8 +105,7 @@ public class ConfigurationBuilder {
 		// Create manifests for tuples of the same file names without extension.
 		final List<TestManifest<?>> manifests = new ArrayList<TestManifest<?>>();
 
-		final List<Integer> minIndices = new ArrayList<Integer>(
-				fileNamesPerExtension_.size());
+		final List<Integer> minIndices = new ArrayList<Integer>(fileNamesPerExtension_.size());
 		boolean everyHasNext = true;
 		final List<String> files = everyNext(fileNameIters);
 		if (files == null) {
@@ -124,32 +119,28 @@ public class ConfigurationBuilder {
 
 				@Override
 				public int compare(final String o1, final String o2) {
-					return FileUtils.dropExtension(o1)
-							.compareTo(FileUtils.dropExtension(o2));
+					return FileUtils.dropExtension(o1).compareTo(FileUtils.dropExtension(o2));
 				}
 
 			}, minIndices);
 
 			// Create manifests from these files.
-			final List<URL> urls = new ArrayList<URL>(
-					fileNamesPerExtension_.size());
+			final List<URL> urls = new ArrayList<URL>(fileNamesPerExtension_.size());
 			for (int i = 0; i < fileNamesPerExtension_.size(); i++) {
 				urls.add(null);
 			}
 			String file = null;
 			for (final Integer index : minIndices) {
 				/*
-				 * A file name uses different separator on different platform,
-				 * but here it is used as a URL, which uses '/' as a separator.
+				 * A file name uses different separator on different platform, but here it is
+				 * used as a URL, which uses '/' as a separator.
 				 */
-				final String fileName = files.get(index)
-						.replace(File.separatorChar, '/');
-				urls.set(index,
-						srcClass_.getClassLoader().getResource(fileName));
+				final String fileName = files.get(index).replace(File.separatorChar, '/');
+				urls.set(index, srcClass_.getClassLoader().getResource(fileName));
 				file = files.get(index);
 			}
-			final Collection<? extends TestManifest<?>> manifs = creator_
-					.createManifests(FileUtils.dropExtension(file), urls);
+			final Collection<? extends TestManifest<?>> manifs = creator_.createManifests(FileUtils.dropExtension(file),
+					urls);
 			if (manifs != null) {
 				manifests.addAll(manifs);
 			}
@@ -172,11 +163,10 @@ public class ConfigurationBuilder {
 
 	/**
 	 * @param iterators
-	 * @return Next element from every iterator, or {@code null} if some
-	 *         iterator does not have a next element.
+	 * @return Next element from every iterator, or {@code null} if some iterator
+	 *         does not have a next element.
 	 */
-	private static <E> List<E> everyNext(
-			final Collection<? extends Iterator<E>> iterators) {
+	private static <E> List<E> everyNext(final Collection<? extends Iterator<E>> iterators) {
 		final List<E> result = new ArrayList<E>(iterators.size());
 		for (final Iterator<E> iterator : iterators) {
 			if (!iterator.hasNext()) {
@@ -188,15 +178,14 @@ public class ConfigurationBuilder {
 	}
 
 	/**
-	 * After this method successfully returns, {@code result} contains indices
-	 * of minimal elements from {@code list} according to {@code comparator}.
+	 * After this method successfully returns, {@code result} contains indices of
+	 * minimal elements from {@code list} according to {@code comparator}.
 	 * 
 	 * @param list
 	 * @param comparator
 	 * @param result
 	 */
-	private static <T> void collectMinIndices(final List<? extends T> list,
-			final Comparator<? super T> comparator,
+	private static <T> void collectMinIndices(final List<? extends T> list, final Comparator<? super T> comparator,
 			final List<Integer> result) {
 
 		result.clear();
@@ -234,8 +223,7 @@ public class ConfigurationBuilder {
 		private final Collection<? extends TestManifest<?>> manifests_;
 		private final Collection<? extends PolySuite.Configuration> children_;
 
-		public ConfigurationImpl(final String name,
-				final Collection<? extends TestManifest<?>> manifests,
+		public ConfigurationImpl(final String name, final Collection<? extends TestManifest<?>> manifests,
 				final Collection<? extends PolySuite.Configuration> children) {
 			this.name_ = name;
 			this.manifests_ = Collections.unmodifiableCollection(manifests);
