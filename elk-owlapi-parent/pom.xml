@@ -19,7 +19,6 @@
 	<modules>
 		<module>elk-owlapi4</module>
 		<module>elk-owlapi4-tests</module>
-		<!-- <module>elk-owlapi5</module>-->
 	</modules>
 
 </project>
