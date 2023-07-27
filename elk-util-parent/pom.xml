@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-parent</artifactId>
-		<version>0.7.0</version>
+		<version>0.7.1-SNAPSHOT</version>
 	</parent>
 
 	<name>ELK Utilities</name>
