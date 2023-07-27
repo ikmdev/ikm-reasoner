@@ -5,7 +5,7 @@
 	<artifactId>elk-proofs</artifactId>
 
 	<parent>
-		<groupId>org.semanticweb.elk</groupId>
+		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-parent</artifactId>
 		<version>0.6.1</version>
 	</parent>

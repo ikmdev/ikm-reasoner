@@ -5,7 +5,7 @@
 	<artifactId>elk-owlapi4</artifactId>
 
 	<parent>
-		<groupId>org.semanticweb.elk</groupId>
+		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-owlapi-parent</artifactId>
 		<version>0.6.1</version>
 	</parent>
