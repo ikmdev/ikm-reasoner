@@ -14,9 +14,14 @@ import org.semanticweb.owlapi.OWLAPIConfigProvider;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParser;
 import org.semanticweb.owlapi.io.StringDocumentSource;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -26,6 +31,10 @@ public class SnomedOwlOntology {
 	private OWLOntology ontology;
 
 	private OWLReasoner reasoner;
+
+	private HashMap<Long, OWLClass> classMap;
+
+	private HashMap<Long, OWLObjectProperty> objectPropertyMap;
 
 	public OWLOntology getOntology() {
 		return ontology;
@@ -54,14 +63,14 @@ public class SnomedOwlOntology {
 		//
 		// 116680003 |Is a (attribute)|
 		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-		.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-		.filter(fields -> Long.parseLong(fields[7]) == 116680003) // typeId
-		.forEach(fields -> {
-			long con = Long.parseLong(fields[4]); // sourceId
-			long par = Long.parseLong(fields[5]); // destinationId
-			isas.computeIfAbsent(con, x -> new HashSet<>());
-			isas.get(con).add(par);
-		});
+				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+				.filter(fields -> Long.parseLong(fields[7]) == 116680003) // typeId
+				.forEach(fields -> {
+					long con = Long.parseLong(fields[4]); // sourceId
+					long par = Long.parseLong(fields[5]); // destinationId
+					isas.computeIfAbsent(con, x -> new HashSet<>());
+					isas.get(con).add(par);
+				});
 		return isas;
 	}
 
@@ -91,10 +100,46 @@ public class SnomedOwlOntology {
 		return new SnomedOwlOntology(mgr.createOntology());
 	}
 
+	private void initMaps() {
+		classMap = new HashMap<>();
+		for (OWLClass clazz : ontology.getClassesInSignature()) {
+			classMap.put(Long.parseLong(clazz.getIRI().getShortForm()), clazz);
+		}
+		objectPropertyMap = new HashMap<>();
+		for (OWLObjectProperty prop : ontology.getObjectPropertiesInSignature()) {
+			objectPropertyMap.put(Long.parseLong(prop.getIRI().getShortForm()), prop);
+		}
+	}
+
+	public static long getId(OWLClass clazz) {
+		return Long.parseLong(clazz.getIRI().getShortForm());
+	}
+
+	public OWLClass getOwlClass(long id) {
+		return classMap.get(id);
+	}
+
+	public Set<OWLClassAxiom> getAxioms(OWLClass clazz) {
+		return ontology.getAxioms(clazz, Imports.EXCLUDED);
+	}
+
+	public static long getId(OWLObjectProperty prop) {
+		return Long.parseLong(prop.getIRI().getShortForm());
+	}
+
+	public OWLObjectProperty getOwlObjectProperty(long id) {
+		return objectPropertyMap.get(id);
+	}
+
+	public Set<OWLObjectPropertyAxiom> getAxioms(OWLObjectProperty prop) {
+		return ontology.getAxioms(prop, Imports.EXCLUDED);
+	}
+
 	public void loadOntology(Path file) throws Exception {
 		List<String> lines = readOntology(file);
 		OWLOntologyLoaderConfiguration config = new OWLAPIConfigProvider().get();
 		new OWLFunctionalSyntaxOWLParser().parse(new StringDocumentSource(String.join("\n", lines)), ontology, config);
+		initMaps();
 	}
 
 	public void classify() {
@@ -102,6 +147,14 @@ public class SnomedOwlOntology {
 		reasoner = rf.createReasoner(ontology);
 		reasoner.flush();
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+	}
+
+	public Set<Long> getSuperClasses(long id) {
+		OWLClass clazz = getOwlClass(id);
+		Set<Long> sups = reasoner.getSuperClasses(clazz, true).getFlattened().stream() //
+				.filter(x -> !x.isTopEntity()) //
+				.map(SnomedOwlOntology::getId).collect(Collectors.toSet());
+		return sups;
 	}
 
 }
