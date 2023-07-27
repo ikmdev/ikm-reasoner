@@ -6,7 +6,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.6.1</version>
+	<version>0.7.0</version>
 	<packaging>pom</packaging>
 
 	<name>IKM Classifier</name>
