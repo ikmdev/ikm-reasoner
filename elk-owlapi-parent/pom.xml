@@ -8,9 +8,9 @@
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>org.semanticweb.elk</groupId>
+		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
+		<version>0.7.1-SNAPSHOT</version>
 	</parent>
 
 	<name>ELK OWL API Bindings</name>
@@ -19,7 +19,6 @@
 	<modules>
 		<module>elk-owlapi4</module>
 		<module>elk-owlapi4-tests</module>
-		<!-- <module>elk-owlapi5</module>-->
 	</modules>
 
 </project>
