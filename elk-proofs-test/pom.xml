@@ -5,9 +5,9 @@
 	<artifactId>elk-proofs-test</artifactId>
 
 	<parent>
-		<groupId>org.semanticweb.elk</groupId>
+		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
+		<version>0.7.1-SNAPSHOT</version>
 	</parent>
 
 	<name>ELK Proofs Package for Test</name>
