@@ -12,6 +12,8 @@
 		<version>0.7.1-SNAPSHOT</version>
 	</parent>
 
+	<name>ELK Integration Testing with SNOMED</name>
+
 	<properties>
 		<owlapi.version>${owlapi4.version}</owlapi.version>
 	</properties>
@@ -56,28 +58,5 @@
 			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<goal>update-file-header</goal>
-							<goal>update-project-license</goal>
-						</goals>
-						<phase>process-sources</phase>
-						<configuration>
-							<skipUpdateLicense>true</skipUpdateLicense>
-							<skipUpdateProjectLicense>true</skipUpdateProjectLicense>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
