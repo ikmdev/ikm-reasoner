@@ -18,6 +18,9 @@ pipeline {
         // Console debug options
         timestamps()
         ansiColor('xterm')
+
+        // necessary for communicating status to gitlab
+        gitLabConnection('fda-shield-group')
     }
 
     stages {
