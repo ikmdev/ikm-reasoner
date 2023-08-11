@@ -13,11 +13,20 @@
 	<name>ELK Utilities for Testing</name>
 	<description>ELK Utilities for Testing</description>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-io</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-io</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
