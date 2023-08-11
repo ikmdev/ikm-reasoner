@@ -13,11 +13,20 @@
 	<name>ELK Utilities for Testing with Junit4</name>
 	<description>ELK Utilities for Testing with Junit4</description>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-testing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-testing</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

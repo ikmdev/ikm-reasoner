@@ -13,11 +13,24 @@
 	<name>ELK OWL Model Object Interfaces</name>
 	<description>General Interfaces for working with OWL objects</description>
 
+	<properties>
+		<elk-util-hashing.version></elk-util-hashing.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-hashing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-hashing</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
