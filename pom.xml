@@ -225,7 +225,7 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
 					<verbose>false</verbose>
-					<addSvnKeyWords>true</addSvnKeyWords>
+					<addSvnKeyWords>false</addSvnKeyWords>
 					<extraExtensions>
 						<g>java</g>
 						<jj>java</jj>
@@ -235,7 +235,7 @@
 					<execution>
 						<id>first</id>
 						<goals>
-							<goal>update-file-header</goal>
+<!--							<goal>update-file-header</goal>-->
 							<goal>update-project-license</goal>
 						</goals>
 						<phase>process-sources</phase>
@@ -344,12 +344,21 @@
 		</plugins>
 	</reporting>
 
-	<url>http://elk.semanticweb.org/</url>
-	<inceptionYear>2011</inceptionYear>
+	<!--	<url>http://elk.semanticweb.org/</url>-->
+	<!--	<inceptionYear>2011</inceptionYear>-->
+	<!--	<organization>-->
+	<!--		<name>Department of Computer Science, University of Oxford</name>-->
+	<!--		<url>http://www.cs.ox.ac.uk</url>-->
+	<!--	</organization>-->
+
+	<url>https://https://gitlab.tinkarbuild.com/fda-shield/</url>
+	<inceptionYear>2023</inceptionYear>
 	<organization>
-		<name>Department of Computer Science, University of Oxford</name>
-		<url>http://www.cs.ox.ac.uk</url>
+		<name>US FDA SHIELD Program</name>
+		<url>
+			https://www.fda.gov/medical-devices/diagnostic-data-program/systemic-harmonization-and-interoperability-enhancement-laboratory-data-shield</url>
 	</organization>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -419,21 +428,25 @@
 		</developer>
 	</developers>
 
-	<mailingLists>
-		<mailingList>
-			<name>ELK-reasoner announcements</name>
-			<subscribe>elk-reasoner-users+subscribe@googlegroups.com</subscribe>
-			<archive>http://groups.google.com/group/elk-reasoner-users</archive>
-		</mailingList>
-		<mailingList>
-			<name>ELK-reasoner discussion</name>
-			<subscribe>elk-reasoner-discussion+subscribe@googlegroups.com</subscribe>
-			<archive>http://groups.google.com/group/elk-reasoner-discussion</archive>
-		</mailingList>
-		<mailingList>
-			<name>ELK-reasoner activities</name>
-			<subscribe>elk-reasoner-activities+subscribe@googlegroups.com</subscribe>
-			<archive>http://groups.google.com/group/elk-reasoner-activities</archive>
-		</mailingList>
-	</mailingLists>
+	<!--	<mailingLists>-->
+	<!--		<mailingList>-->
+	<!--			<name>ELK-reasoner announcements</name>-->
+	<!--			<subscribe>elk-reasoner-users+subscribe@googlegroups.com</subscribe>-->
+	<!--			<archive>http://groups.google.com/group/elk-reasoner-users</archive>-->
+	<!--		</mailingList>-->
+	<!--		<mailingList>-->
+	<!--			<name>ELK-reasoner discussion</name>-->
+	<!--
+	<subscribe>elk-reasoner-discussion+subscribe@googlegroups.com</subscribe>-->
+	<!--
+	<archive>http://groups.google.com/group/elk-reasoner-discussion</archive>-->
+	<!--		</mailingList>-->
+	<!--		<mailingList>-->
+	<!--			<name>ELK-reasoner activities</name>-->
+	<!--
+	<subscribe>elk-reasoner-activities+subscribe@googlegroups.com</subscribe>-->
+	<!--
+	<archive>http://groups.google.com/group/elk-reasoner-activities</archive>-->
+	<!--		</mailingList>-->
+	<!--	</mailingLists>-->
 </project>
