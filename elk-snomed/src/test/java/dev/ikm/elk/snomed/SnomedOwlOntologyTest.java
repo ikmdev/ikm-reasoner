@@ -9,9 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,22 +87,33 @@ public class SnomedOwlOntologyTest {
 		assertEquals(367699, isas.size());
 	}
 
-	private long getId(OWLClass clazz) {
-		return Long.parseLong(clazz.getIRI().getShortForm());
+	private HashMap<Long, Set<Long>> isas;
+
+	private boolean hasAncestor(long con, long ancestor) {
+		if (isas.get(con) == null)
+			return false;
+		if (isas.get(con).contains(ancestor))
+			return true;
+		for (long parent : isas.get(con)) {
+			if (hasAncestor(parent, ancestor))
+				return true;
+		}
+		return false;
 	}
 
 	@Test
 	public void isas() throws Exception {
+		TreeSet<Long> misses = new TreeSet<>();
 		int miss_cnt = 0;
-		HashMap<Long, Set<Long>> isas = SnomedOwlOntology.readIsa(rels_file);
+		int pharma_cnt = 0;
+		int other_cnt = 0;
+		isas = SnomedOwlOntology.readIsa(rels_file);
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
 		ontology.classify();
 		for (OWLClass clazz : ontology.getOntology().getClassesInSignature()) {
-			Set<Long> sups = ontology.getReasoner().getSuperClasses(clazz, true).getFlattened().stream() //
-					.filter(x -> !x.isTopEntity()) //
-					.map(this::getId).collect(Collectors.toSet());
-			long id = getId(clazz);
+			long id = SnomedOwlOntology.getId(clazz);
+			Set<Long> sups = ontology.getSuperClasses(id);
 			Set<Long> parents = isas.get(id);
 			// 138875005 |SNOMED CT Concept (SNOMED RT+CTV3)|
 			if (id == 138875005) {
@@ -111,18 +123,44 @@ public class SnomedOwlOntologyTest {
 				assertNotNull(parents);
 			}
 			if (!parents.equals(sups)) {
-//				LOG.error("Miss: " + clazz);
-//				HashSet<Long> par = new HashSet<>(parents);
-//				par.removeAll(sups);
-//				HashSet<Long> sup = new HashSet<>(sups);
-//				sup.removeAll(parents);
-//				LOG.error("Par:  " + par);
-//				LOG.error("Sup:  " + sup);
+				misses.add(id);
 				miss_cnt++;
+				if (hasAncestor(id, 373873005)) {
+					// 373873005 |Pharmaceutical / biologic product (product)|
+					pharma_cnt++;
+				} else if (hasAncestor(id, 127785005)) {
+					// 127785005 |Administration of substance to produce immunity, either active or
+					// passive (procedure)|
+				} else if (hasAncestor(id, 713404003)) {
+					// 713404003 |Vaccination given (situation)|
+				} else if (hasAncestor(id, 591000119102l)) {
+					// 591000119102 |Vaccine declined by patient (situation)|
+				} else if (hasAncestor(id, 90351000119108l)) {
+					// 90351000119108 |Vaccination not done (situation)|
+				} else if (hasAncestor(id, 293104008)) {
+					// 293104008 |Adverse reaction to component of vaccine product (disorder)|
+				} else if (hasAncestor(id, 266758009)) {
+					// 266758009 |Immunization contraindicated (situation)|
+				} else {
+					other_cnt++;
+				}
 			}
 		}
+		misses.stream().limit(10).forEach((id) -> {
+			LOG.error("Miss: " + id);
+			Set<Long> sups = ontology.getSuperClasses(id);
+			Set<Long> parents = isas.get(id);
+			HashSet<Long> par = new HashSet<>(parents);
+			par.removeAll(sups);
+			HashSet<Long> sup = new HashSet<>(sups);
+			sup.removeAll(parents);
+			LOG.error("Sno:  " + par);
+			LOG.error("Elk:  " + sup);
+		});
 		LOG.error("Miss cnt: " + miss_cnt);
-//		assertEquals(0, miss_cnt);
+		LOG.error("Pharma cnt: " + pharma_cnt);
+		LOG.error("Other cnt: " + other_cnt);
+		assertEquals(0, other_cnt);
 	}
 
 }
