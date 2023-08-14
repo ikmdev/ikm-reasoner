@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>elk-util-testing4</artifactId>
+    <artifactId>elk-util-testing4</artifactId>
 
-	<parent>
-		<groupId>dev.ikm.elk</groupId>
-		<artifactId>elk-util-parent</artifactId>
-		<version>0.8.0-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>dev.ikm.elk</groupId>
+        <artifactId>elk-util-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+    </parent>
 
-	<name>ELK Utilities for Testing with Junit4</name>
-	<description>ELK Utilities for Testing with Junit4</description>
+    <name>ELK Utilities for Testing with Junit4</name>
+    <description>ELK Utilities for Testing with Junit4</description>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-testing</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>elk-util-testing</artifactId>
+        </dependency>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-testing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+        <!-- since this is a library that is used for test cases, this needs junit
+             in the compile scope to keep it as a transitive dependency -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>dev.ikm.elk.provider.testingfour</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
