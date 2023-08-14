@@ -7,17 +7,26 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-util-parent</artifactId>
-		<version>0.7.1-SNAPSHOT</version>
+		<version>0.8.0-SNAPSHOT</version>
 	</parent>
 
 	<name>ELK Utilities for Testing</name>
 	<description>ELK Utilities for Testing</description>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-io</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-io</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

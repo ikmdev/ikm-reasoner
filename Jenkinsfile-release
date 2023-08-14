@@ -1,0 +1,141 @@
+@Library("titan-library") _
+
+pipeline {
+
+    agent any
+
+    options {
+        buildDiscarder logRotator(
+            numToKeepStr: '10'
+        )
+
+        // Console debug options
+        timestamps()
+        ansiColor('xterm')
+    }
+
+    stages {
+        stage('Initialize') {
+            steps {
+                // Clean before checkout & build
+                cleanWs()
+                checkout scm
+
+                script {
+                    trunkBranchName = "main"
+                    BRANCH_NAME = "${GIT_BRANCH.startsWith('origin/') ? GIT_BRANCH['origin/'.length()..-1] : GIT_BRANCH}"
+
+                    pomModel = readMavenPom(file: 'pom.xml')
+                    pomVersion = pomModel.getVersion()
+                    isSnapshot = pomVersion.contains("-SNAPSHOT")
+
+                    echo "pomVersion: ${pomVersion}"
+                    if(!isSnapshot) {
+                        echo "ERROR: Version is set to incompatible version '${pomVersion}'. Only SNAPSHOT development versions can be converted to a release version."
+                        fail()
+                    }
+                    if(BRANCH_NAME != trunkBranchName) {
+                        echo "ERROR: Attempting to release from branch ${BRANCH_NAME}. Release from ${trunkBranchName} branch only..."
+                        fail()
+                    }
+                    
+                    releaseVersion = pomVersion.split("-")[0]
+                    nextDevVersion = semanticVersion.getIncrementedVersionString(releaseVersion) + "-SNAPSHOT"
+
+                    echo "releaseVersion: ${releaseVersion}"
+                    echo "nextDevVersion: ${nextDevVersion}"
+                    echo "GIT_BRANCH: ${GIT_BRANCH}"
+                    echo "BRANCH_NAME: ${BRANCH_NAME}"
+                    echo "${currentBuild.buildCauses}"
+                }
+            }
+        }
+
+        stage ('Set Release Version'){
+            tools {
+                jdk 'default'
+                maven 'default'
+            }
+            steps {
+                configFileProvider([configFile(fileId: 'settings.xml', variable: 'MAVEN_SETTINGS')]) {
+                    sh """
+                        mvn versions:set \
+                            -s ${MAVEN_SETTINGS} \
+                            -DgenerateBackupPoms=false \
+                            -DnewVersion=${releaseVersion}
+                    """
+                }
+            }
+        }
+
+        stage ('Build Release Version'){
+            tools {
+                jdk 'default'
+                maven 'default'
+            }
+            steps {
+                configFileProvider([configFile(fileId: 'settings.xml', variable: 'MAVEN_SETTINGS')]) {
+                    sh """
+                        mvn --version
+                        mvn clean install \
+                            -s ${MAVEN_SETTINGS} \
+                            --batch-mode \
+                            -e \
+                            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                            -PcodeQuality,codeQuality-release
+                    """
+                }
+            }
+        }
+
+        stage ('Commit & Tag'){
+            tools {
+                git 'git'
+            }
+            steps {
+                withCredentials([gitUsernamePassword(credentialsId: 'gitlab-for-ikmdev-release-token', gitToolName: 'git')]) {
+                    sh """
+                        git add .
+                        git config user.name jenkins
+                        git commit -m 'Release ${releaseVersion}'
+                        git tag -a ${releaseVersion} -m '${releaseVersion}' --force
+                    """
+                }
+            }
+        }
+
+        stage ('Set next dev version'){
+            tools {
+                jdk 'default'
+                maven 'default'
+            }
+            steps {
+                configFileProvider([configFile(fileId: 'settings.xml', variable: 'MAVEN_SETTINGS')]) {
+                    sh """
+                        mvn versions:set \
+                            -s ${MAVEN_SETTINGS} \
+                            -DgenerateBackupPoms=false \
+                            -DnewVersion=${nextDevVersion}
+                    """
+                }
+            }
+        }
+        
+        stage ('Commit & Push'){
+            tools {
+                git 'git'
+            }
+            steps {
+                withCredentials([gitUsernamePassword(credentialsId: 'gitlab-for-ikmdev-release-token', gitToolName: 'git')]) {
+                    sh """
+                        git add .
+                        git config user.name jenkins
+                        git commit -m 'Set next dev version to ${nextDevVersion}'
+                        git push origin HEAD:${BRANCH_NAME}
+                        git push --tags origin
+                    """
+                }
+            }
+        }
+    }
+}

@@ -275,7 +275,6 @@ public abstract class AbstractOwl2FunctionalSyntaxParseTest {
 				+ "SubClassOf( :Person owl:Thing )" + ") ";
 
 		assertThrows(Owl2ParseException.class, () -> parseOntology(testString));
-		fail("Should have thrown Owl2ParseException");
 	}
 
 	@Test
