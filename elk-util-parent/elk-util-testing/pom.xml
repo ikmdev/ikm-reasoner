@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>elk-util-testing</artifactId>
+    <artifactId>elk-util-testing</artifactId>
 
-	<parent>
-		<groupId>dev.ikm.elk</groupId>
-		<artifactId>elk-util-parent</artifactId>
-		<version>0.8.0-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>dev.ikm.elk</groupId>
+        <artifactId>elk-util-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+    </parent>
 
-	<name>ELK Utilities for Testing</name>
-	<description>ELK Utilities for Testing</description>
+    <name>ELK Utilities for Testing</name>
+    <description>ELK Utilities for Testing</description>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-io</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-util-io</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>elk-util-io</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>org.semanticweb.elk.util.testing</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

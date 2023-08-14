@@ -18,74 +18,62 @@
 		<owlapi.version>${owlapi4.version}</owlapi.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-api</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-impl</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-apibinding</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-parsers</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-reasoner</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owlapi4</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-impl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-apibinding</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-parsers</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-reasoner</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owlapi4</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-apibinding</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapi-parsers</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Automatic-Module-Name>dev.ikm.elk.snomed</Automatic-Module-Name>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
