@@ -31,7 +31,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>19</java.version>
+		<java.version>21</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<!--		<jetty-slf4j-impl.version>11.0.15</jetty-slf4j-impl.version>-->
 		<log4j.version>3.0.0-alpha1</log4j.version>
@@ -73,7 +73,7 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j2-impl</artifactId>
 				<version>${log4j.version}</version>
-				<scope>runtime</scope>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<scope>runtime</scope>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -184,9 +184,36 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<compilerArgs combine.self="override">
+			        </compilerArgs>
 					<fork>true</fork>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+            <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <doclint>none</doclint>
+                            <source>${java.version}</source>
+                            <release>${java.version}</release>
+                            <release>${java.version}</release>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>jar</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
