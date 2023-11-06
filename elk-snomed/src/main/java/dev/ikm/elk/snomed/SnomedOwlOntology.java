@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,9 +15,11 @@ import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParser;
 import org.semanticweb.owlapi.io.StringDocumentSource;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -28,7 +29,15 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 public class SnomedOwlOntology {
 
+	// 138875005 |SNOMED CT Concept (SNOMED RT+CTV3)|
+	public static final long root = 138875005;
+
+	// 609096000 |Role group (attribute)|
+	public static final long role_group = 609096000;
+
 	private OWLOntology ontology;
+
+	private OWLDataFactory dataFactory;
 
 	private OWLReasoner reasoner;
 
@@ -40,12 +49,17 @@ public class SnomedOwlOntology {
 		return ontology;
 	}
 
+	public OWLDataFactory getDataFactory() {
+		return dataFactory;
+	}
+
 	public OWLReasoner getReasoner() {
 		return reasoner;
 	}
 
-	private SnomedOwlOntology(OWLOntology ontology) {
-		this.ontology = ontology;
+	private SnomedOwlOntology(OWLOntologyManager mgr) throws OWLOntologyCreationException {
+		this.ontology = mgr.createOntology();
+		this.dataFactory = mgr.getOWLDataFactory();
 	}
 
 	public static List<String> readAxioms(Path file) throws IOException {
@@ -54,24 +68,6 @@ public class SnomedOwlOntology {
 				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
 				.map(fields -> fields[6]) //
 				.collect(Collectors.toList());
-	}
-
-	public static HashMap<Long, Set<Long>> readIsa(Path file) throws IOException {
-		HashMap<Long, Set<Long>> isas = new HashMap<>();
-		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
-		// typeId characteristicTypeId modifierId
-		//
-		// 116680003 |Is a (attribute)|
-		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) == 116680003) // typeId
-				.forEach(fields -> {
-					long con = Long.parseLong(fields[4]); // sourceId
-					long par = Long.parseLong(fields[5]); // destinationId
-					isas.computeIfAbsent(con, x -> new HashSet<>());
-					isas.get(con).add(par);
-				});
-		return isas;
 	}
 
 	public static List<String> getPrefixDeclaration(List<String> lines) {
@@ -97,17 +93,17 @@ public class SnomedOwlOntology {
 
 	public static SnomedOwlOntology createOntology() throws Exception {
 		OWLOntologyManager mgr = OWLManager.createOWLOntologyManager();
-		return new SnomedOwlOntology(mgr.createOntology());
+		return new SnomedOwlOntology(mgr);
 	}
 
 	private void initMaps() {
 		classMap = new HashMap<>();
 		for (OWLClass clazz : ontology.getClassesInSignature()) {
-			classMap.put(Long.parseLong(clazz.getIRI().getShortForm()), clazz);
+			classMap.put(getId(clazz), clazz);
 		}
 		objectPropertyMap = new HashMap<>();
 		for (OWLObjectProperty prop : ontology.getObjectPropertiesInSignature()) {
-			objectPropertyMap.put(Long.parseLong(prop.getIRI().getShortForm()), prop);
+			objectPropertyMap.put(getId(prop), prop);
 		}
 	}
 
@@ -137,6 +133,10 @@ public class SnomedOwlOntology {
 
 	public void loadOntology(Path file) throws Exception {
 		List<String> lines = readOntology(file);
+		loadOntology(lines);
+	}
+
+	public void loadOntology(List<String> lines) throws Exception {
 		OWLOntologyLoaderConfiguration config = new OWLAPIConfigProvider().get();
 		new OWLFunctionalSyntaxOWLParser().parse(new StringDocumentSource(String.join("\n", lines)), ontology, config);
 		initMaps();
@@ -151,9 +151,25 @@ public class SnomedOwlOntology {
 
 	public Set<Long> getSuperClasses(long id) {
 		OWLClass clazz = getOwlClass(id);
-		Set<Long> sups = reasoner.getSuperClasses(clazz, true).getFlattened().stream() //
+		return getSuperClasses(clazz).stream().map(SnomedOwlOntology::getId).collect(Collectors.toSet());
+	}
+
+	public Set<OWLClass> getSuperClasses(OWLClass clazz) {
+		Set<OWLClass> sups = reasoner.getSuperClasses(clazz, true).getFlattened().stream() //
 				.filter(x -> !x.isTopEntity()) //
-				.map(SnomedOwlOntology::getId).collect(Collectors.toSet());
+				.collect(Collectors.toSet());
+		return sups;
+	}
+
+	public Set<Long> getSubClasses(long id) {
+		OWLClass clazz = getOwlClass(id);
+		return getSubClasses(clazz).stream().map(SnomedOwlOntology::getId).collect(Collectors.toSet());
+	}
+
+	public Set<OWLClass> getSubClasses(OWLClass clazz) {
+		Set<OWLClass> sups = reasoner.getSubClasses(clazz, true).getFlattened().stream() //
+				.filter(x -> !x.isBottomEntity()) //
+				.collect(Collectors.toSet());
 		return sups;
 	}
 

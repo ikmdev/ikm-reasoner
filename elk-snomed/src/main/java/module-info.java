@@ -8,6 +8,7 @@ open module dev.ikm.elk.snomed {
 	requires org.semanticweb.owlapi.parsers;
 
 	requires org.semanticweb.elk.owlapi;
+	requires org.semanticweb.elk.reasoner;
 
 	exports dev.ikm.elk.snomed;
 

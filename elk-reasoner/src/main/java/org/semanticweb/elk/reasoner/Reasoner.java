@@ -68,6 +68,8 @@ public class Reasoner extends AbstractReasonerState {
 
 	// logger for this class
 	private static final Logger LOGGER_ = LoggerFactory.getLogger(Reasoner.class);
+	
+	public static boolean processingNecessaryNormalForm = false;
 
 	public static boolean testing() {
 		try {

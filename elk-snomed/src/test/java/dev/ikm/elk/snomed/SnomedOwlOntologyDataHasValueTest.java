@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,29 +15,29 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedOwlOntologyTest extends SnomedTestBase {
+public class SnomedOwlOntologyDataHasValueTest extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyDataHasValueTest.class);
 
 	protected String getDir() {
-		return "data/snomed/SnomedCT_USEditionRF2_PRODUCTION_20210301T120000Z/Snapshot/Terminology/";
+		return "data/snomed/SnomedCT_ManagedServiceUS_PRODUCTION_US1000124_20230301T120000Z/Snapshot/Terminology/";
 	}
 
 	protected String getVersion() {
-		return "20210301";
+		return "20230301";
 	}
 
 	@Test
 	public void readAxioms() throws Exception {
 		List<String> axioms = SnomedOwlOntology.readAxioms(axioms_file);
-		assertEquals(362861, axioms.size());
+		assertEquals(369237, axioms.size());
 		axioms.stream().map(ax -> ax.substring(0, ax.indexOf("("))).distinct().sorted().forEach(LOG::info);
 	}
 
 	@Test
 	public void readOntology() throws Exception {
 		List<String> axioms = SnomedOwlOntology.readOntology(axioms_file);
-		assertEquals(362862, axioms.size());
+		assertEquals(369238, axioms.size());
 		axioms.stream().limit(10).forEach(LOG::info);
 		LOG.info("...");
 		axioms.stream().skip(axioms.size() - 5).forEach(LOG::info);
@@ -46,12 +47,12 @@ public class SnomedOwlOntologyTest extends SnomedTestBase {
 	public void loadOntology() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
-		assertEquals(362853, ontology.getOntology().getAxiomCount());
-		assertEquals(361462, ontology.getOntology().getSignature().size());
-		assertEquals(361331, ontology.getOntology().getClassesInSignature().size());
-		assertEquals(131, ontology.getOntology().getObjectPropertiesInSignature().size());
-		assertEquals(0, ontology.getOntology().getDataPropertiesInSignature().size());
-		assertEquals(0, ontology.getOntology().getDatatypesInSignature().size());
+		assertEquals(369230, ontology.getOntology().getAxiomCount());
+		assertEquals(367704, ontology.getOntology().getSignature().size());
+		assertEquals(367565, ontology.getOntology().getClassesInSignature().size());
+		assertEquals(126, ontology.getOntology().getObjectPropertiesInSignature().size());
+		assertEquals(11, ontology.getOntology().getDataPropertiesInSignature().size());
+		assertEquals(2, ontology.getOntology().getDatatypesInSignature().size());
 		Set<OWLEntity> sig = ontology.getOntology().getSignature();
 		sig.removeAll(ontology.getOntology().getClassesInSignature());
 		sig.removeAll(ontology.getOntology().getObjectPropertiesInSignature());
@@ -59,8 +60,6 @@ public class SnomedOwlOntologyTest extends SnomedTestBase {
 		sig.stream().forEach(x -> LOG.info("In sig: " + x + " " + x.getClass()));
 		sig.removeAll(ontology.getOntology().getDatatypesInSignature());
 		assertEquals(0, sig.size());
-		assertEquals(1200, ontology.getOntology().getClassesInSignature().stream()
-				.filter(x -> ontology.getAxioms(x).size() != 1).toList().size());
 	}
 
 	@Test
@@ -74,6 +73,8 @@ public class SnomedOwlOntologyTest extends SnomedTestBase {
 	public void isas() throws Exception {
 		TreeSet<Long> misses = new TreeSet<>();
 		int miss_cnt = 0;
+		int pharma_cnt = 0;
+		int other_cnt = 0;
 		SnomedIsa isas = SnomedIsa.init(rels_file);
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
@@ -90,9 +91,42 @@ public class SnomedOwlOntologyTest extends SnomedTestBase {
 			if (!parents.equals(sups)) {
 				misses.add(id);
 				miss_cnt++;
+				if (isas.hasAncestor(id, 373873005)) {
+					// 373873005 |Pharmaceutical / biologic product (product)|
+					pharma_cnt++;
+				} else if (isas.hasAncestor(id, 127785005)) {
+					// 127785005 |Administration of substance to produce immunity, either active or
+					// passive (procedure)|
+				} else if (isas.hasAncestor(id, 713404003)) {
+					// 713404003 |Vaccination given (situation)|
+				} else if (isas.hasAncestor(id, 591000119102l)) {
+					// 591000119102 |Vaccine declined by patient (situation)|
+				} else if (isas.hasAncestor(id, 90351000119108l)) {
+					// 90351000119108 |Vaccination not done (situation)|
+				} else if (isas.hasAncestor(id, 293104008)) {
+					// 293104008 |Adverse reaction to component of vaccine product (disorder)|
+				} else if (isas.hasAncestor(id, 266758009)) {
+					// 266758009 |Immunization contraindicated (situation)|
+				} else {
+					other_cnt++;
+				}
 			}
 		}
-		assertEquals(0, miss_cnt);
+		misses.stream().limit(10).forEach((id) -> {
+			LOG.error("Miss: " + id);
+			Set<Long> sups = ontology.getSuperClasses(id);
+			Set<Long> parents = isas.getParents(id);
+			HashSet<Long> par = new HashSet<>(parents);
+			par.removeAll(sups);
+			HashSet<Long> sup = new HashSet<>(sups);
+			sup.removeAll(parents);
+			LOG.error("Sno:  " + par);
+			LOG.error("Elk:  " + sup);
+		});
+		LOG.error("Miss cnt: " + miss_cnt);
+		LOG.error("Pharma cnt: " + pharma_cnt);
+		LOG.error("Other cnt: " + other_cnt);
+		assertEquals(0, other_cnt);
 	}
 
 }

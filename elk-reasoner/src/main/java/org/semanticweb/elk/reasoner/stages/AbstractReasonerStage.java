@@ -42,8 +42,7 @@ import org.slf4j.LoggerFactory;
 abstract class AbstractReasonerStage implements ReasonerStage {
 
 	// logger for this class
-	private static final Logger LOGGER_ = LoggerFactory
-			.getLogger(AbstractReasonerStage.class);
+	private static final Logger LOGGER_ = LoggerFactory.getLogger(AbstractReasonerStage.class);
 
 	private static boolean testing_p = Reasoner.testing();
 
@@ -56,8 +55,8 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 	private boolean isInitialized_ = false;
 
 	/**
-	 * {@code true} if the stage does not require execution, i.e., if it is
-	 * already executed
+	 * {@code true} if the stage does not require execution, i.e., if it is already
+	 * executed
 	 */
 	private boolean isCompleted_ = false;
 
@@ -79,14 +78,11 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 	/**
 	 * Creates a new reasoner stage for a given reasoner.
 	 * 
-	 * @param reasoner
-	 *            the reasoner for which the reasoner stage is created
-	 * @param preStages
-	 *            the reasoner stages that should be executed directly before
-	 *            this stage
+	 * @param reasoner  the reasoner for which the reasoner stage is created
+	 * @param preStages the reasoner stages that should be executed directly before
+	 *                  this stage
 	 */
-	public AbstractReasonerStage(AbstractReasonerState reasoner,
-			AbstractReasonerStage... preStages) {
+	public AbstractReasonerStage(AbstractReasonerState reasoner, AbstractReasonerStage... preStages) {
 		this.reasoner = reasoner;
 		this.preStages_ = Arrays.asList(preStages);
 		for (AbstractReasonerStage preStage : preStages)
@@ -102,7 +98,7 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 	public Iterable<? extends ReasonerStage> getPreStages() {
 		return preStages_;
 	}
-	
+
 	/**
 	 * Initialize the parameters of the computation for this stage; this is the
 	 * first thing to be done before stage is executed
@@ -131,7 +127,7 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 		LOGGER_.trace("{}: done", this);
 		this.isCompleted_ = true;
 		this.workerNo = 0;
-		this.isInitialized_ = false;		
+		this.isInitialized_ = false;
 		return true;
 	}
 
@@ -144,7 +140,7 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 
 	@Override
 	public void execute() throws ElkException {
-		if (!testing_p)
+		if (!testing_p && !Reasoner.processingNecessaryNormalForm)
 			LOGGER_.info(getName());
 		reasoner.getProgressMonitor().start(getName());
 
@@ -155,18 +151,18 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 			reasoner.getProgressMonitor().finish();
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
 	}
 
 	/**
-	 * Marks this {@link AbstractReasonerStage} as not completed; this will
-	 * require its execution next time unless {@link #setCompleted()} is called
+	 * Marks this {@link AbstractReasonerStage} as not completed; this will require
+	 * its execution next time unless {@link #setCompleted()} is called
 	 * 
-	 * @return {@code true} if this stage was not invalidated and {@code false}
-	 *         if this stage was already invalidated before the call
+	 * @return {@code true} if this stage was not invalidated and {@code false} if
+	 *         this stage was already invalidated before the call
 	 */
 	boolean invalidate() {
 		if (!isCompleted_ && !isInitialized_) {
@@ -177,7 +173,7 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 		isInitialized_ = false;
 		return true;
 	}
-	
+
 	/**
 	 * Invalidates this stage and all subsequent stages if not already done so
 	 */
@@ -195,11 +191,11 @@ abstract class AbstractReasonerStage implements ReasonerStage {
 	}
 
 	/**
-	 * Marks this {@link AbstractReasonerStage} as completed; next time the
-	 * stage will not be executed unless {@link #invalidate()} is called
+	 * Marks this {@link AbstractReasonerStage} as completed; next time the stage
+	 * will not be executed unless {@link #invalidate()} is called
 	 * 
-	 * @return {@code true} if this stage was invalidated and {@code false} if
-	 *         this stage was already not invalidated before the call
+	 * @return {@code true} if this stage was invalidated and {@code false} if this
+	 *         stage was already not invalidated before the call
 	 */
 	boolean setCompleted() {
 		if (isCompleted_)
