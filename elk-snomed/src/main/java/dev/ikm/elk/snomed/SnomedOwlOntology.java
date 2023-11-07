@@ -62,6 +62,10 @@ public class SnomedOwlOntology {
 		this.dataFactory = mgr.getOWLDataFactory();
 	}
 
+	public OWLOntologyManager getOntologyManager() {
+		return ontology.getOWLOntologyManager();
+	}
+
 	public static List<String> readAxioms(Path file) throws IOException {
 		// id effectiveTime active moduleId refsetId referencedComponentId owlExpression
 		return Files.lines(file).skip(1).map(line -> line.split("\\t")) //
