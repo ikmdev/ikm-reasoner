@@ -3,6 +3,7 @@
  */
 package org.semanticweb.elk.reasoner.saturation.rules;
 
+import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,15 +44,15 @@ import org.slf4j.LoggerFactory;
 public class BasicRuleVisitor extends DummyRuleVisitor<Void> {
 
 	// logger for events
-	private static final Logger LOGGER_ = LoggerFactory
-			.getLogger(BasicRuleVisitor.class);
+	private static final Logger LOGGER_ = LoggerFactory.getLogger(BasicRuleVisitor.class);
 
 	@Override
-	protected <P> Void defaultVisit(Rule<P> rule, P premise,
-			ContextPremises premises, ClassInferenceProducer producer) {
+	protected <P> Void defaultVisit(Rule<P> rule, P premise, ContextPremises premises,
+			ClassInferenceProducer producer) {
 		if (LOGGER_.isTraceEnabled()) {
 			LOGGER_.trace("{}: process {} by {}", premises, premise, rule);
 		}
+		DevTrace.log(LOGGER_, "{}: process {} by {} <{}>", premises, premise, rule, rule.getClass().getName());
 		rule.apply(premise, premises, producer);
 		return null;
 	}

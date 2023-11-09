@@ -1,5 +1,7 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
+import org.semanticweb.elk.reasoner.DevTrace;
+
 /*
  * #%L
  * ELK Reasoner
@@ -27,6 +29,8 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link SubsumerDecompositionRule} that processes
@@ -39,8 +43,10 @@ import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
  * 
  * @author "Yevgeny Kazakov"
  */
-public class IndexedObjectSomeValuesFromDecomposition extends
-		AbstractSubsumerDecompositionRule<IndexedObjectSomeValuesFrom> {
+public class IndexedObjectSomeValuesFromDecomposition
+		extends AbstractSubsumerDecompositionRule<IndexedObjectSomeValuesFrom> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(IndexedObjectSomeValuesFromDecomposition.class);
 
 	public static final String NAME = "IndexedObjectSomeValuesFrom Decomposition";
 
@@ -56,10 +62,9 @@ public class IndexedObjectSomeValuesFromDecomposition extends
 	}
 
 	@Override
-	public void apply(IndexedObjectSomeValuesFrom premise,
-			ContextPremises premises, ClassInferenceProducer producer) {
-		IndexedObjectSomeValuesFrom.Helper.produceDecomposedExistentialLink(
-				producer, premises.getRoot(), premise);
+	public void apply(IndexedObjectSomeValuesFrom premise, ContextPremises premises, ClassInferenceProducer producer) {
+		DevTrace.log(LOG, "produceDecomposedExistentialLink: {}, {}, {}", producer, premises.getRoot(), premise);
+		IndexedObjectSomeValuesFrom.Helper.produceDecomposedExistentialLink(producer, premises.getRoot(), premise);
 	}
 
 	@Override
@@ -68,9 +73,9 @@ public class IndexedObjectSomeValuesFromDecomposition extends
 	}
 
 	@Override
-	public void accept(SubsumerDecompositionRuleVisitor<?> visitor,
-			IndexedObjectSomeValuesFrom premise, ContextPremises premises,
-			ClassInferenceProducer producer) {
+	public void accept(SubsumerDecompositionRuleVisitor<?> visitor, IndexedObjectSomeValuesFrom premise,
+			ContextPremises premises, ClassInferenceProducer producer) {
+		DevTrace.log(LOG, "Visitor: {}", visitor);
 		visitor.visit(this, premise, premises, producer);
 	}
 
