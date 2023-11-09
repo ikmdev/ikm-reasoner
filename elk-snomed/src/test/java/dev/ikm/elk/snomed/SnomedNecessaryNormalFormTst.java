@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedNecessaryNormalFormTest extends SnomedTestBase {
+public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTst.class);
 
 	@Test
 	public void init() throws Exception {
@@ -22,7 +22,7 @@ public class SnomedNecessaryNormalFormTest extends SnomedTestBase {
 		LOG.info("Init complete");
 		NecessaryNormalFormTest.checkPriors(ontology, nnf);
 		SnomedRoles roles = SnomedRoles.init(rels_file);
-;		nnf.generate(roles);
+		nnf.generate(roles);
 	}
 
 }
