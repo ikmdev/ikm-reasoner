@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -16,8 +16,23 @@
 	<version>0.8.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>IKM Classifier</name>
+	<name>IKM ELK Reasoner</name>
 	<description>A Java-based OWL EL reasoner</description>
+
+	<url>https://www.ikm.dev</url>
+	<inceptionYear>2023</inceptionYear>
+	<organization>
+		<name>Integrated Knowledge Management</name>
+		<url>https://www.ikm.dev</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<modules>
 		<module>elk-owl-parent</module>
@@ -37,7 +52,7 @@
 		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 		<guava.version>31.1-jre-r1</guava.version>
 		<puli.version>0.2.1</puli.version>
-		<junit.version>4.13.2</junit.version>
+		<junit4.version>4.13.2</junit4.version>
 		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
 	</properties>
 
@@ -72,7 +87,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
+				<version>${junit4.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -83,7 +98,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -98,7 +112,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.6.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -108,27 +122,27 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.3.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
+					<version>3.11.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.6.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -138,32 +152,32 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.4.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.0</version>
+					<version>3.12.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>2.0.1</version>
+					<version>3.2.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.15.0</version>
+					<version>2.16.1</version>
+				</plugin>
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>4.3</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -215,35 +229,6 @@
 						</goals>
 						<configuration>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<verbose>false</verbose>
-					<addSvnKeyWords>false</addSvnKeyWords>
-					<extraExtensions>
-						<g>java</g>
-						<jj>java</jj>
-					</extraExtensions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<!--							<goal>update-file-header</goal>-->
-							<goal>update-project-license</goal>
-						</goals>
-						<phase>process-sources</phase>
-						<configuration>
-							<licenseName>apache_v2</licenseName>
-							<roots>
-								<root>src/main/java</root>
-								<root>src/test/java</root>
-							</roots>
 						</configuration>
 					</execution>
 				</executions>
@@ -338,109 +323,45 @@
 		</plugins>
 	</reporting>
 
-	<!--	<url>http://elk.semanticweb.org/</url>-->
-	<!--	<inceptionYear>2011</inceptionYear>-->
-	<!--	<organization>-->
-	<!--		<name>Department of Computer Science, University of Oxford</name>-->
-	<!--		<url>http://www.cs.ox.ac.uk</url>-->
-	<!--	</organization>-->
-
-	<url>https://gitlab.tinkarbuild.com/fda-shield/</url>
-	<inceptionYear>2023</inceptionYear>
-	<organization>
-		<name>US FDA SHIELD Program</name>
-		<url>
-			https://www.fda.gov/medical-devices/diagnostic-data-program/systemic-harmonization-and-interoperability-enhancement-laboratory-data-shield</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<id>yevgeny</id>
-			<name>Yevgeny Kazakov</name>
-			<email>yevgeny.kazakov@uni-ulm.de</email>
-			<organization>Institute of Artificial Intelligence, University of
-				Ulm</organization>
-			<organizationUrl>http://www.uni-ulm.de/en/in/ki.html</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>1</timezone>
-		</developer>
-		<developer>
-			<id>markus</id>
-			<name>Markus Kroetzsch</name>
-			<email>markus.kroetzsch@cs.ox.ac.uk</email>
-			<organization>Department of Computer Science, University of Oxford</organization>
-			<organizationUrl>http://www.cs.ox.ac.uk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>0</timezone>
-		</developer>
-		<developer>
-			<id>frantisek</id>
-			<name>Frantisek Simancik</name>
-			<email>frantisek.simancik@cs.ox.ac.uk</email>
-			<organization>Department of Computer Science, University of Oxford</organization>
-			<organizationUrl>http://www.cs.ox.ac.uk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>0</timezone>
-		</developer>
-		<developer>
-			<id>pavel</id>
-			<name>Pavel Klinov</name>
-			<email>pavel.klinov@uni-ulm.de</email>
-			<organization>Institute of Artificial Intelligence, University of
-				Ulm</organization>
-			<organizationUrl>http://www.uni-ulm.de/en/in/ki.html</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>1</timezone>
-		</developer>
-		<developer>
-			<id>petesko</id>
-			<name>Peter Skocovsky</name>
-			<email>peter.skocovsky@uni-ulm.de</email>
-			<organization>Institute of Artificial Intelligence, University of
-				Ulm</organization>
-			<organizationUrl>http://www.uni-ulm.de/en/in/ki.html</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>1</timezone>
-		</developer>
-	</developers>
-
-	<!--	<mailingLists>-->
-	<!--		<mailingList>-->
-	<!--			<name>ELK-reasoner announcements</name>-->
-	<!--			<subscribe>elk-reasoner-users+subscribe@googlegroups.com</subscribe>-->
-	<!--			<archive>http://groups.google.com/group/elk-reasoner-users</archive>-->
-	<!--		</mailingList>-->
-	<!--		<mailingList>-->
-	<!--			<name>ELK-reasoner discussion</name>-->
-	<!--
-	<subscribe>elk-reasoner-discussion+subscribe@googlegroups.com</subscribe>-->
-	<!--
-	<archive>http://groups.google.com/group/elk-reasoner-discussion</archive>-->
-	<!--		</mailingList>-->
-	<!--		<mailingList>-->
-	<!--			<name>ELK-reasoner activities</name>-->
-	<!--
-	<subscribe>elk-reasoner-activities+subscribe@googlegroups.com</subscribe>-->
-	<!--
-	<archive>http://groups.google.com/group/elk-reasoner-activities</archive>-->
-	<!--		</mailingList>-->
-	<!--	</mailingLists>-->
+	<profiles>
+		<profile>
+			<id>java-source-additional-tasks</id>
+			<activation>
+				<file>
+					<exists>${basedir}/src/main/java</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>java-tests-additional-tasks</id>
+			<activation>
+				<file>
+					<exists>${basedir}/src/main/java</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<inherited>false</inherited>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
