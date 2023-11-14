@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.24.0-SNAPSHOT</version>
+		<version>1.23.0</version>
 		<relativePath />
 	</parent>
 
@@ -182,6 +182,40 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+<!--			<plugin>-->
+<!--				https://github.com/mathieucarbou/license-maven-plugin/issues/36-->
+<!--				<groupId>com.mycila</groupId>-->
+<!--				<artifactId>license-maven-plugin</artifactId>-->
+<!--				<inherited>false</inherited>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>update-license-headers</id>-->
+<!--						<phase>generate-sources</phase>-->
+<!--						<goals>-->
+<!--							<goal>format</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<aggregate>true</aggregate>-->
+<!--							<licenseSets>-->
+<!--								<licenseSet>-->
+<!--									-->
+<!--									<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>-->
+<!--									-->
+<!--									<header>IKM-ELK-dual-license-template.txt</header>-->
+<!--									<includes>-->
+<!--										<include>**/src/main/java/**/*.java</include>-->
+<!--										<include>**/src/test/java/**/*.java</include>-->
+<!--									</includes>-->
+<!--								</licenseSet>-->
+<!--							</licenseSets>-->
+<!--							<properties>-->
+<!--								<owner>${project.organization.name}</owner>-->
+<!--								<owner.email>support@ikm.dev</owner.email>-->
+<!--							</properties>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
