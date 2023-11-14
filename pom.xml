@@ -18,14 +18,12 @@
 
 	<name>IKM ELK Reasoner</name>
 	<description>A Java-based OWL EL reasoner</description>
-
 	<url>https://www.ikm.dev</url>
 	<inceptionYear>2023</inceptionYear>
 	<organization>
 		<name>Integrated Knowledge Management</name>
 		<url>https://www.ikm.dev</url>
 	</organization>
-
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -95,6 +93,117 @@
 				<artifactId>junit-jupiter-api</artifactId>
 				<version>${junit-jupiter-api.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<!-- OWL API dependencies-->
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-api</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-apibinding</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-impl</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.owlapi</groupId>
+				<artifactId>owlapi-parsers</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<!-- Project dependencies-->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owlapi4</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-implementation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-parsing-javacc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-parsing-javacc</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-proofs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-proofs-test</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-reasoner</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-reasoner</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-collections</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-concurrent</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-hashing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-io</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-logging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-testing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-testing4</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -182,48 +291,49 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-<!--			<plugin>-->
-<!--				https://github.com/mathieucarbou/license-maven-plugin/issues/36-->
-<!--				<groupId>com.mycila</groupId>-->
-<!--				<artifactId>license-maven-plugin</artifactId>-->
-<!--				<inherited>false</inherited>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>update-license-headers</id>-->
-<!--						<phase>generate-sources</phase>-->
-<!--						<goals>-->
-<!--							<goal>format</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<aggregate>true</aggregate>-->
-<!--							<licenseSets>-->
-<!--								<licenseSet>-->
-<!--									-->
-<!--									<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>-->
-<!--									-->
-<!--									<header>IKM-ELK-dual-license-template.txt</header>-->
-<!--									<includes>-->
-<!--										<include>**/src/main/java/**/*.java</include>-->
-<!--										<include>**/src/test/java/**/*.java</include>-->
-<!--									</includes>-->
-<!--								</licenseSet>-->
-<!--							</licenseSets>-->
-<!--							<properties>-->
-<!--								<owner>${project.organization.name}</owner>-->
-<!--								<owner.email>support@ikm.dev</owner.email>-->
-<!--							</properties>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
+			<!--			<plugin>-->
+			<!--
+			https://github.com/mathieucarbou/license-maven-plugin/issues/36-->
+			<!--				<groupId>com.mycila</groupId>-->
+			<!--				<artifactId>license-maven-plugin</artifactId>-->
+			<!--				<inherited>false</inherited>-->
+			<!--				<executions>-->
+			<!--					<execution>-->
+			<!--						<id>update-license-headers</id>-->
+			<!--						<phase>generate-sources</phase>-->
+			<!--						<goals>-->
+			<!--							<goal>format</goal>-->
+			<!--						</goals>-->
+			<!--						<configuration>-->
+			<!--							<aggregate>true</aggregate>-->
+			<!--							<licenseSets>-->
+			<!--								<licenseSet>-->
+			<!--									-->
+			<!--
+			<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>-->
+			<!--									-->
+			<!--									<header>IKM-ELK-dual-license-template.txt</header>-->
+			<!--									<includes>-->
+			<!--										<include>**/src/main/java/**/*.java</include>-->
+			<!--										<include>**/src/test/java/**/*.java</include>-->
+			<!--									</includes>-->
+			<!--								</licenseSet>-->
+			<!--							</licenseSets>-->
+			<!--							<properties>-->
+			<!--								<owner>${project.organization.name}</owner>-->
+			<!--								<owner.email>support@ikm.dev</owner.email>-->
+			<!--							</properties>-->
+			<!--						</configuration>-->
+			<!--					</execution>-->
+			<!--				</executions>-->
+			<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<compilerArgs combine.self="override">
-					</compilerArgs>
+					<compilerArgs combine.self="override"></compilerArgs>
 					<fork>true</fork>
 				</configuration>
 			</plugin>
@@ -316,19 +426,19 @@
 				<reportSets>
 					<reportSet>
 						<id>aggregate</id>
-						<inherited>false</inherited>
 						<reports>
 							<report>aggregate-no-fork</report>
 						</reports>
+						<inherited>false</inherited>
 					</reportSet>
 					<reportSet>
 						<id>test-aggregate</id>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
 						<reports>
 							<report>test-aggregate-no-fork</report>
 						</reports>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
 					</reportSet>
 				</reportSets>
 			</plugin>
@@ -345,12 +455,12 @@
 					</reportSet>
 					<reportSet>
 						<id>aggregate</id>
-						<inherited>false</inherited>
 						<reports>
 							<report>dependency-updates-aggregate-report</report>
 							<report>plugin-updates-aggregate-report</report>
 							<report>property-updates-aggregate-report</report>
 						</reports>
+						<inherited>false</inherited>
 					</reportSet>
 				</reportSets>
 			</plugin>
