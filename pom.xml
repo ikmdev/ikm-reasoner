@@ -33,11 +33,11 @@
 	</licenses>
 
 	<modules>
+		<module>elk-util-parent</module>
 		<module>elk-owl-parent</module>
+		<module>elk-reasoner</module>
 		<module>elk-proofs</module>
 		<module>elk-proofs-test</module>
-		<module>elk-reasoner</module>
-		<module>elk-util-parent</module>
 		<module>elk-owlapi-parent</module>
 		<module>elk-snomed</module>
 	</modules>
@@ -47,9 +47,9 @@
 		<java.version>21</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
-		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 		<guava.version>31.1-jre-r1</guava.version>
 		<puli.version>0.2.1</puli.version>
+		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 		<junit4.version>4.13.2</junit4.version>
 		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
 	</properties>
@@ -57,44 +57,35 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.liveontologies</groupId>
-				<artifactId>puli</artifactId>
-				<version>${puli.version}</version>
-			</dependency>
-			<!--			<dependency>-->
-			<!--				<groupId>org.liveontologies</groupId>-->
-			<!--				<artifactId>owlapi-proof</artifactId>-->
-			<!--				<version>0.1.0</version>-->
-			<!--			</dependency>-->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j2-impl</artifactId>
 				<version>${log4j.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit4.version}</version>
-				<scope>test</scope>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
+			<!-- dev.ikm JPMS dependencies-->
 			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>${junit-jupiter-api.version}</version>
-				<scope>test</scope>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
-			<!-- OWL API dependencies-->
+			<!-- dev.ikm PULI dependencies-->
+			<!-- This module is in elk-owlapi4 and should be moved out-->
+			<!--	<dependency>-->
+			<!--		<groupId>org.liveontologies</groupId>-->
+			<!--		<artifactId>owlapi-proof</artifactId>-->
+			<!--		<version>0.1.0</version>-->
+			<!--	</dependency>-->
+			<dependency>
+				<groupId>org.liveontologies</groupId>
+				<artifactId>puli</artifactId>
+				<version>${puli.version}</version>
+			</dependency>
+			<!-- dev.ikm OWL API dependencies-->
 			<dependency>
 				<groupId>net.sourceforge.owlapi</groupId>
 				<artifactId>owlapi-api</artifactId>
@@ -123,12 +114,12 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-model</artifactId>
+				<artifactId>elk-owl-implementation</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-implementation</artifactId>
+				<artifactId>elk-owl-model</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -189,7 +180,6 @@
 				<artifactId>elk-util-io</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>elk-util-logging</artifactId>
@@ -204,6 +194,19 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>elk-util-testing4</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<!-- Test dependencies-->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit4.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit-jupiter-api.version}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -468,6 +471,8 @@
 	</reporting>
 
 	<profiles>
+		<!-- Block these. License changes all files (incorrectly). Jar is a
+		bug.-->
 		<profile>
 			<id>java-source-additional-tasks</id>
 			<activation>
