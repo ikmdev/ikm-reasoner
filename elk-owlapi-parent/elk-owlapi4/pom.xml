@@ -33,7 +33,7 @@
 			<artifactId>owlapi-apibinding</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.liveontologies</groupId>
+			<groupId>dev.ikm.puli</groupId>
 			<artifactId>puli</artifactId>
 		</dependency>
 		<dependency>
