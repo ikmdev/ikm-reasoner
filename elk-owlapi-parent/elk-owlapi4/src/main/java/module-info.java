@@ -21,12 +21,11 @@
  */
 open module org.semanticweb.elk.owlapi {
 
-//	requires junit;
-	
 	requires com.google.common;
 
 	requires org.slf4j;
 
+	requires org.liveontologies.owlapi.proof;
 	requires org.liveontologies.puli;
 
 	requires org.semanticweb.owlapi;
@@ -41,6 +40,5 @@ open module org.semanticweb.elk.owlapi {
 	requires org.semanticweb.elk.util.logging;
 
 	exports org.semanticweb.elk.owlapi;
-	exports org.semanticweb.elk.owlapi.proofs;
 
 }

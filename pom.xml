@@ -74,12 +74,11 @@
 				<version>${guava.version}</version>
 			</dependency>
 			<!-- dev.ikm PULI dependencies-->
-			<!-- This module is in elk-owlapi4 and should be moved out-->
-			<!--	<dependency>-->
-			<!--		<groupId>org.liveontologies</groupId>-->
-			<!--		<artifactId>owlapi-proof</artifactId>-->
-			<!--		<version>0.1.0</version>-->
-			<!--	</dependency>-->
+			<dependency>
+				<groupId>dev.ikm.puli</groupId>
+				<artifactId>owlapi-proof</artifactId>
+				<version>${puli.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>dev.ikm.puli</groupId>
 				<artifactId>puli</artifactId>

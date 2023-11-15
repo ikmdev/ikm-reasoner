@@ -34,6 +34,10 @@
 		</dependency>
 		<dependency>
 			<groupId>dev.ikm.puli</groupId>
+			<artifactId>owlapi-proof</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>dev.ikm.puli</groupId>
 			<artifactId>puli</artifactId>
 		</dependency>
 		<dependency>
