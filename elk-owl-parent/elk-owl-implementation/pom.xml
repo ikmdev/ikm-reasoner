@@ -8,7 +8,7 @@
     <parent>
         <groupId>dev.ikm.elk</groupId>
         <artifactId>elk-owl-parent</artifactId>
-        <version>0.9.0-SNAPSHOT</version>
+        <version>0.9.0</version>
     </parent>
 
     <name>ELK OWL Model Implementation</name>
