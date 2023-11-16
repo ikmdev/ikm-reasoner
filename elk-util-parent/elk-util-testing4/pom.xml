@@ -23,9 +23,13 @@
         <!-- since this is a library that is used for test cases, this needs junit
              in the compile scope to keep it as a transitive dependency -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>compile</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
         </dependency>
     </dependencies>
 
