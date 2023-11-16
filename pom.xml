@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.13.0</version>
+		<version>1.23.0</version>
 		<relativePath />
 	</parent>
 
@@ -61,8 +61,6 @@
 		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 		<guava.version>31.1-jre-r1</guava.version>
 		<puli.version>0.2.1</puli.version>
-		<junit.version>4.13.2</junit.version>
-		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
 		<slf4j.version>2.0.0-alpha6</slf4j.version>
 	</properties>
 
@@ -229,20 +227,6 @@
 				<artifactId>owlapi-apibinding</artifactId>
 				<version>${owlapi.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>${junit-jupiter-api.version}</version>
-				<scope>test</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -266,8 +250,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

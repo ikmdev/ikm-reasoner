@@ -56,10 +56,6 @@
 			<artifactId>elk-util-testing4</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 	</dependencies>
+
 </project>
