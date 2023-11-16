@@ -20,7 +20,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>dev.ikm.puli</groupId>
+			<groupId>dev.ikm.puli</groupId>
 			<artifactId>puli</artifactId>
 		</dependency>
 		<dependency>
