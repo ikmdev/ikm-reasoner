@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-parent</artifactId>
-		<version>0.9.0</version>
+		<version>0.10.0-SNAPSHOT</version>
 	</parent>
 
 	<name>ELK OWL API Bindings</name>
