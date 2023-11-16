@@ -1,10 +1,8 @@
 /*-
  * #%L
- * ELK OWL Object Interfaces
- * $Id:$
- * $HeadURL:$
+ * ELK OWL JavaCC Parser
  * %%
- * Copyright (C) 2011 - 2023 Department of Computer Science, University of Oxford
+ * Copyright (C) 2023 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +18,6 @@
  * #L%
  */
 open module org.semanticweb.elk.owl.parsing.javacc {
-
-//	requires junit;
 
 	requires org.semanticweb.elk.owl.implementation;
 	requires org.semanticweb.elk.owl.model;

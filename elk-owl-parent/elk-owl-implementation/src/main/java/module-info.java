@@ -1,10 +1,8 @@
 /*-
  * #%L
  * ELK OWL Model Implementation
- * $Id:$
- * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2023 Department of Computer Science, University of Oxford
+ * Copyright (C) 2023 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +19,6 @@
  */
 open module org.semanticweb.elk.owl.implementation {
 
-//	requires junit;
-	
 	requires org.slf4j;
 
 	requires org.semanticweb.elk.owl.model;

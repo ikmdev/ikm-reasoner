@@ -1,10 +1,8 @@
 /*-
  * #%L
  * ELK Proofs Package
- * $Id:$
- * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2023 Department of Computer Science, University of Oxford
+ * Copyright (C) 2023 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +21,6 @@ open module org.semanticweb.elk.proofs {
 
 	requires com.google.common;
 
-//	requires junit;
-
 	requires org.slf4j;
 
 	requires org.liveontologies.puli;
@@ -38,7 +34,7 @@ open module org.semanticweb.elk.proofs {
 	requires org.semanticweb.elk.util.hashing;
 	requires org.semanticweb.elk.util.io;
 
-	exports org.semanticweb.elk.proofs;
 	exports org.semanticweb.elk.owl.inferences;
+	exports org.semanticweb.elk.proofs;
 
 }
