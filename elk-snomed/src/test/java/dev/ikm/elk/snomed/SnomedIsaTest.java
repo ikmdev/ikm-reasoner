@@ -24,10 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashSet;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +49,7 @@ public class SnomedIsaTest extends SnomedTestBase {
 
 	@Test
 	public void size() throws Exception {
-		assertEquals(361460, isas.getIsas().size());
+		assertEquals(361461, isas.getConcepts().size());
 	}
 
 	@Test
@@ -57,7 +60,7 @@ public class SnomedIsaTest extends SnomedTestBase {
 
 	@Test
 	public void hasAncestor() {
-		for (long con : isas.getIsas().keySet()) {
+		for (long con : isas.getConcepts()) {
 			for (long ancestor : isas.getAncestors(con)) {
 				assertTrue(isas.hasAncestor(con, ancestor));
 				assertFalse(isas.hasAncestor(ancestor, con));
@@ -67,7 +70,7 @@ public class SnomedIsaTest extends SnomedTestBase {
 
 	@Test
 	public void hasParent() {
-		for (long con : isas.getIsas().keySet()) {
+		for (long con : isas.getConcepts()) {
 			for (long parent : isas.getParents(con)) {
 				assertTrue(isas.hasParent(con, parent));
 				assertFalse(isas.hasParent(parent, con));
@@ -75,6 +78,30 @@ public class SnomedIsaTest extends SnomedTestBase {
 				assertFalse(isas.hasAncestor(parent, con));
 				assertTrue(isas.getAncestors(con).contains(parent));
 			}
+		}
+	}
+	
+	@Test
+	public void hasChild() {
+		for (long con : isas.getConcepts()) {
+			for (long child : isas.getChildren(con)) {
+				assertTrue(isas.hasChild(con, child));
+				assertFalse(isas.hasChild(child, con));
+//				assertTrue(isas.hasAncestor(con, parent));
+//				assertFalse(isas.hasAncestor(parent, con));
+//				assertTrue(isas.getAncestors(con).contains(parent));
+			}
+		}
+	}
+
+	@Test
+	public void checkPriors() {
+		HashSet<Long> priors = new HashSet<>();
+		for (long con : isas.getConcepts()) {
+			for (long sup : isas.getParents(con)) {
+				assertTrue(priors.contains(sup));
+			}
+			priors.add(con);
 		}
 	}
 

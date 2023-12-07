@@ -150,10 +150,10 @@ public class IncrementalClassifierCldTest extends SnomedTestBase {
 		LOG.info("eqToSub");
 		SnomedOwlOntology ontology = ontologyEquivalentClasses();
 		ontology.classify();
-		assertEquals(equivalent_classes_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(equivalent_classes_isa.getParentsMap(), getSuperClassMap(ontology));
 		toSubClassOf(ontology);
 		ontology.getReasoner().flush();
-		assertEquals(sub_class_of_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(sub_class_of_isa.getParentsMap(), getSuperClassMap(ontology));
 	}
 
 	@Test
@@ -161,10 +161,10 @@ public class IncrementalClassifierCldTest extends SnomedTestBase {
 		LOG.info("subToEq");
 		SnomedOwlOntology ontology = ontologySubClassOf();
 		ontology.classify();
-		assertEquals(sub_class_of_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(sub_class_of_isa.getParentsMap(), getSuperClassMap(ontology));
 		toEquivalentClasses(ontology);
 		ontology.getReasoner().flush();
-		assertEquals(equivalent_classes_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(equivalent_classes_isa.getParentsMap(), getSuperClassMap(ontology));
 	}
 
 	@Test
@@ -172,13 +172,13 @@ public class IncrementalClassifierCldTest extends SnomedTestBase {
 		LOG.info("subToEqToSub");
 		SnomedOwlOntology ontology = ontologySubClassOf();
 		ontology.classify();
-		assertEquals(sub_class_of_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(sub_class_of_isa.getParentsMap(), getSuperClassMap(ontology));
 		toEquivalentClasses(ontology);
 		ontology.getReasoner().flush();
-		assertEquals(equivalent_classes_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(equivalent_classes_isa.getParentsMap(), getSuperClassMap(ontology));
 		toSubClassOf(ontology);
 		ontology.getReasoner().flush();
-		assertEquals(sub_class_of_isa.getIsas(), getSuperClassMap(ontology));
+		assertEquals(sub_class_of_isa.getParentsMap(), getSuperClassMap(ontology));
 	}
 
 }

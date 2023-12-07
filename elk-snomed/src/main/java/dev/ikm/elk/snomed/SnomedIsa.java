@@ -23,26 +23,83 @@ package dev.ikm.elk.snomed;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class SnomedIsa {
 
 	public static long root = SnomedOwlOntology.root;
 
-	private HashMap<Long, Set<Long>> isas = new HashMap<>();
+	public static long isa = SnomedOwlOntology.isa;
+
+	private HashMap<Long, Set<Long>> parentsMap = new HashMap<>();
+
+	private HashMap<Long, Set<Long>> childrenMap = new HashMap<>();
+
+	private ArrayList<Long> concepts = new ArrayList<>();
+
+	public HashMap<Long, Set<Long>> getParentsMap() {
+		return parentsMap;
+	}
+
+	public HashMap<Long, Set<Long>> getChildrenMap() {
+		return childrenMap;
+	}
+
+	public ArrayList<Long> getConcepts() {
+		return concepts;
+	}
 
 	public static SnomedIsa init(Path file) throws IOException {
 		SnomedIsa ret = new SnomedIsa();
 		ret.load(file);
+		ret.init();
 		return ret;
 	}
 
 	public static SnomedIsa init(HashMap<Long, Set<Long>> isas) {
 		SnomedIsa ret = new SnomedIsa();
-		ret.isas = isas;
+		ret.parentsMap = isas;
+		ret.init();
 		return ret;
+	}
+
+	private void init() {
+		initChildren();
+		initConcepts();
+	}
+
+	private void initChildren() {
+		for (Entry<Long, Set<Long>> es : parentsMap.entrySet()) {
+			long con = es.getKey();
+			for (long parent : es.getValue()) {
+				childrenMap.computeIfAbsent(parent, x -> new HashSet<>());
+				childrenMap.get(parent).add(con);
+			}
+		}
+	}
+
+	private void initConcepts() {
+		HashSet<Long> visited = new HashSet<>();
+		concepts.add(root);
+		visited.add(root);
+		initConcepts(root, visited);
+	}
+
+	private void initConcepts(long con, HashSet<Long> visited) {
+		for (long sub : getChildren(con)) {
+			boolean sups_visited = getParents(sub).stream().allMatch(x -> visited.contains(x));
+			if (sups_visited) {
+				if (!visited.contains(sub)) {
+					concepts.add(sub);
+					visited.add(sub);
+				}
+				initConcepts(sub, visited);
+			}
+		}
 	}
 
 	public void load(Path file) throws IOException {
@@ -52,25 +109,21 @@ public class SnomedIsa {
 		// 116680003 |Is a (attribute)|
 		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
 				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) == 116680003) // typeId
+				.filter(fields -> Long.parseLong(fields[7]) == isa) // typeId
 				.forEach(fields -> {
 					long con = Long.parseLong(fields[4]); // sourceId
 					long par = Long.parseLong(fields[5]); // destinationId
-					isas.computeIfAbsent(con, x -> new HashSet<>());
-					isas.get(con).add(par);
+					parentsMap.computeIfAbsent(con, x -> new HashSet<>());
+					parentsMap.get(con).add(par);
 				});
 	}
 
-	public HashMap<Long, Set<Long>> getIsas() {
-		return isas;
-	}
-
 	public Set<Long> getParents(long con) {
-		return isas.getOrDefault(con, Set.of());
+		return parentsMap.getOrDefault(con, Set.of());
 	}
 
-	public boolean hasParent(long con, long ancestor) {
-		return getParents(con).contains(ancestor);
+	public boolean hasParent(long con, long parent) {
+		return getParents(con).contains(parent);
 	}
 
 	public HashSet<Long> getAncestors(long con) {
@@ -103,6 +156,14 @@ public class SnomedIsa {
 			visited.add(parent);
 		}
 		return false;
+	}
+
+	public Set<Long> getChildren(long con) {
+		return childrenMap.getOrDefault(con, Set.of());
+	}
+
+	public boolean hasChild(long con, long child) {
+		return getChildren(con).contains(child);
 	}
 
 }

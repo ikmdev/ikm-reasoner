@@ -22,9 +22,24 @@ package dev.ikm.elk.snomed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import dev.ikm.elk.snomed.SnomedRoles.Role;
 
 public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 
@@ -36,13 +51,51 @@ public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 		ontology.loadOntology(axioms_file);
 		ontology.classify();
 		LOG.info("Classify complete");
-		NecessaryNormalFormBuilder nnf = new NecessaryNormalFormBuilder(ontology);
-		nnf.init();
-		assertEquals(361331, nnf.getConcepts().size());
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(ontology);
+		nnfb.init();
+		assertEquals(361331, nnfb.getConcepts().size());
 		LOG.info("Init complete");
-		NecessaryNormalFormTest.checkPriors(ontology, nnf);
-		SnomedRoles roles = SnomedRoles.init(rels_file);
-		nnf.generate(roles);
+		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
+//		SnomedRoles roles = SnomedRoles.init(rels_file);
+		SnomedRoles roles = SnomedRoles.init(Paths.get("nnf-20231121.txt"));
+//		for (Entry<Long, Set<Role>> es : roles.getRoles().entrySet()) {
+//			if (es.getValue().stream().anyMatch(x -> x.relationshipGroup == 0)
+//					&& es.getValue().stream().anyMatch(x -> x.relationshipGroup != 0))
+//				LOG.info("Ungrouped and grouped (roles): " + es.getKey());
+//		}
+		nnfb.generate(roles);
+		write(nnfb);
+	}
+
+	private void write(NecessaryNormalFormBuilder nnfb) throws Exception {
+		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
+		// typeId characteristicTypeId modifierId
+		PrintWriter out = new PrintWriter(Files.newBufferedWriter(Paths.get("nnf.txt")));
+		out.println("id" + "\t" + "effectiveTime" + "\t" + "active" + "\t" + "moduleId" + "\t" + "sourceId" + "\t"
+				+ "destinationId" + "\t" + "relationshipGroup" + "\t" + "typeId" + "\t" + "characteristicTypeId" + "\t"
+				+ "modifierId");
+		String active = "1";
+		for (Entry<OWLClass, NecessaryNormalForm> es : nnfb.getNecessaryNormalForm().entrySet()) {
+			long sourceId = SnomedOwlOntology.getId(es.getKey());
+			ArrayList<Set<OWLObjectSomeValuesFrom>> props = new ArrayList<>();
+			props.add(es.getValue().getUngroupedProps());
+			props.addAll(es.getValue().getGroupedProps());
+//			if (!es.getValue().getUngroupedProps().isEmpty() && !es.getValue().getGroupedProps().isEmpty())
+//				LOG.info("Ungrouped and grouped (props): " + sourceId);
+			int relationshipGroup = 0;
+			for (Set<OWLObjectSomeValuesFrom> group : props) {
+				for (OWLObjectSomeValuesFrom prop : group) {
+					OWLObjectProperty property = prop.getProperty().asOWLObjectProperty();
+					OWLClass filler = prop.getFiller().asOWLClass();
+					long destinationId = SnomedOwlOntology.getId(filler);
+					long typeId = SnomedOwlOntology.getId(property);
+					out.println("-1\t-2\t" + active + "\t-4\t" + sourceId + "\t" + destinationId + "\t"
+							+ relationshipGroup + "\t" + typeId + "\t" + "-9\t-10");
+				}
+				relationshipGroup++;
+			}
+		}
+		out.close();
 	}
 
 }

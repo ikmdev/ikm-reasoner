@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,10 @@ public class NecessaryNormalFormBuilder {
 
 	private HashMap<OWLClass, NecessaryNormalForm> necessaryNormalForm = new HashMap<>();
 
+	final private boolean useReasonerSCOE = false;
+
+	final private boolean checkWithReasonerSCOE = false;
+
 	public List<OWLClass> getConcepts() {
 		return concepts;
 	}
@@ -108,30 +113,22 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private void initConcepts() {
-		HashSet<OWLClass> visited = new HashSet<>();
-		OWLClass root = ontology.getOwlClass(SnomedOwlOntology.root);
-		concepts.add(root);
-		visited.add(root);
-		initConcepts(root, visited);
 		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
-		for (OWLClass clazz : ontology.getOntology().getClassesInSignature()) {
-			long id = SnomedOwlOntology.getId(clazz);
+		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
+		for (OWLClass concept : ontology.getOntology().getClassesInSignature()) {
+			long id = SnomedOwlOntology.getId(concept);
 			superConcepts.put(id, ontology.getSuperClasses(id));
+			dependentOnConcepts.put(id, getDependentOnConcepts(concept));
 		}
 		isa = SnomedIsa.init(superConcepts);
+//		isa.getConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
+		sortConcepts(dependentOnConcepts);
+		LOG.info("Concepts: " + concepts.size());
 	}
 
-	private void initConcepts(OWLClass con, HashSet<OWLClass> visited) {
-		if (concepts.size() % 10000 == 0)
-			LOG.info("Concepts: " + concepts.size());
-		for (OWLClass sub : ontology.getSubClasses(con)) {
-			boolean sups_visited = ontology.getSuperClasses(sub).stream().allMatch(x -> visited.contains(x));
-			if (sups_visited) {
-				concepts.add(sub);
-				visited.add(sub);
-				initConcepts(sub, visited);
-			}
-		}
+	private void sortConcepts(HashMap<Long, Set<Long>> dependentOnConcepts) {
+		SnomedIsa deps = SnomedIsa.init(dependentOnConcepts);
+		deps.getConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
 	}
 
 	private void initRoles() {
@@ -139,9 +136,9 @@ public class NecessaryNormalFormBuilder {
 			LOG.info("Chain: " + ax);
 			if (ax.getPropertyChain().size() != 2)
 				throw new UnsupportedOperationException("Unexpected: " + ax);
-			OWLObjectProperty prop1 = (OWLObjectProperty) ax.getPropertyChain().get(0);
-			OWLObjectProperty prop2 = (OWLObjectProperty) ax.getPropertyChain().get(1);
-			OWLObjectProperty sup = (OWLObjectProperty) ax.getSuperProperty();
+			OWLObjectProperty prop1 = ax.getPropertyChain().get(0).asOWLObjectProperty();
+			OWLObjectProperty prop2 = ax.getPropertyChain().get(1).asOWLObjectProperty();
+			OWLObjectProperty sup = ax.getSuperProperty().asOWLObjectProperty();
 			if (!prop1.equals(sup))
 				throw new UnsupportedOperationException("Unexpected: " + ax);
 			if (chained.get(prop1) != null)
@@ -154,7 +151,7 @@ public class NecessaryNormalFormBuilder {
 		}
 		for (OWLTransitiveObjectPropertyAxiom ax : ontology.getOntology()
 				.getAxioms(AxiomType.TRANSITIVE_OBJECT_PROPERTY)) {
-			OWLObjectProperty prop = (OWLObjectProperty) ax.getProperty();
+			OWLObjectProperty prop = ax.getProperty().asOWLObjectProperty();
 			transitive.add(prop);
 		}
 		for (OWLObjectProperty prop : transitive) {
@@ -164,9 +161,43 @@ public class NecessaryNormalFormBuilder {
 			superProps.put(prop, new HashSet<>());
 			superProps.get(prop).add(prop);
 			// TODO Why does this this cause incompleteness warnings
-			ontology.getReasoner().getSuperObjectProperties(prop, false).getFlattened()
-					.forEach(x -> superProps.get(prop).add((OWLObjectProperty) x));
+			ontology.getReasoner().getSuperObjectProperties(prop, false).getFlattened().stream()
+					.filter(x -> !x.isOWLTopObjectProperty())
+					.forEach(x -> superProps.get(prop).add(x.asOWLObjectProperty()));
 		}
+		for (Entry<OWLObjectProperty, Set<OWLObjectProperty>> es : superProps.entrySet()) {
+			if (es.getValue().size() > 1) {
+				LOG.info("Super props: " + es.getKey());
+				for (OWLObjectProperty prop : es.getValue()) {
+					if (!prop.equals(es.getKey()))
+						LOG.info("\t" + prop);
+				}
+			}
+		}
+	}
+
+	private HashSet<Long> getDependentOnConcepts(OWLClass concept) {
+		HashSet<Long> dependentOnConcepts = new HashSet<>();
+		long id = SnomedOwlOntology.getId(concept);
+		dependentOnConcepts.addAll(ontology.getSuperClasses(id));
+		for (OWLClassAxiom axiom : ontology.getAxioms(concept)) {
+			OWLClassExpression def = getDefinition(concept, axiom);
+			Set<OWLObjectSomeValuesFrom> props = processDefinition(def);
+			for (OWLObjectSomeValuesFrom prop : props) {
+				if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedOwlOntology.role_group) {
+					OWLClassExpression gr_expr = prop.getFiller();
+					Set<OWLObjectSomeValuesFrom> gr_props = processDefinition(gr_expr);
+					for (OWLObjectSomeValuesFrom gr_prop : gr_props) {
+						OWLClass value = gr_prop.getFiller().asOWLClass();
+						dependentOnConcepts.add(SnomedOwlOntology.getId(value));
+					}
+				} else {
+					OWLClass value = prop.getFiller().asOWLClass();
+					dependentOnConcepts.add(SnomedOwlOntology.getId(value));
+				}
+			}
+		}
+		return dependentOnConcepts;
 	}
 
 	public void generate() {
@@ -184,7 +215,7 @@ public class NecessaryNormalFormBuilder {
 		Reasoner.processingNecessaryNormalForm = true;
 		int cnt = 0;
 		for (OWLClass concept : concepts) {
-			if (++cnt % 1000 == 0)
+			if (++cnt % 10000 == 0)
 				LOG.info("Generate: " + cnt);
 			necessaryNormalForms.put(concept, new ArrayList<>());
 			for (OWLClassAxiom axiom : ontology.getAxioms(concept)) {
@@ -196,9 +227,10 @@ public class NecessaryNormalFormBuilder {
 			}
 			necessaryNormalForm.put(concept, mergeNNFs(necessaryNormalForms.get(concept)));
 			if (roles != null) {
-				compare(concept, roles.getRoles(SnomedOwlOntology.getId(concept)), necessaryNormalForms.get(concept));
+				compare(concept, roles.getRoles(SnomedOwlOntology.getId(concept)), necessaryNormalForm.get(concept));
 			}
 		}
+		LOG.info("Generate: " + cnt);
 		Reasoner.processingNecessaryNormalForm = false;
 		LOG.info("Mis match: " + mis_match_cnt);
 		LOG.info("Mis match ungrouped: " + mis_match_roles_ungrouped_cnt + " roles " + mis_match_props_ungrouped_cnt
@@ -206,6 +238,8 @@ public class NecessaryNormalFormBuilder {
 		LOG.info("Mis match grouped: " + mis_match_roles_grouped_cnt + " roles " + mis_match_props_grouped_cnt
 				+ " props");
 		LOG.info("Mis match grouping issue: " + mis_match_grouping_issue_cnt);
+		LOG.info("SCOE: " + scoe_cnt);
+		LOG.info("SCOE chained: " + scoe_chained_cnt + " " + (scoe_chained_cnt * 100 / scoe_cnt) + "%");
 	}
 
 	private NecessaryNormalForm mergeNNFs(List<NecessaryNormalForm> nnfs) {
@@ -223,6 +257,23 @@ public class NecessaryNormalFormBuilder {
 		simplify(merged_nnf.getUngroupedProps());
 		simplifyGroup(merged_nnf.getGroupedProps());
 		return merged_nnf;
+	}
+
+	private OWLClassExpression getDefinition(OWLClass concept, OWLClassAxiom axiom) {
+		switch (axiom) {
+		case OWLEquivalentClassesAxiom x -> {
+			Set<OWLClassExpression> class_exprs = x.getClassExpressionsMinus(concept);
+			if (class_exprs.size() != 1)
+				throw new UnsupportedOperationException("Unexpected: " + class_exprs.size() + " " + class_exprs);
+			OWLClassExpression def = class_exprs.iterator().next();
+			return def;
+		}
+		case OWLSubClassOfAxiom x -> {
+			OWLClassExpression def = x.getSuperClass();
+			return def;
+		}
+		default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
+		}
 	}
 
 	private NecessaryNormalForm createExpression(OWLClass concept, OWLClassAxiom axiom) {
@@ -246,21 +297,8 @@ public class NecessaryNormalFormBuilder {
 					.map(x -> x.getGroupedProps()).flatMap(Set::stream).collect(Collectors.toCollection(HashSet::new));
 			expr.setGroupedProps(exprs);
 		}
-		Set<OWLObjectSomeValuesFrom> props = new HashSet<>();
-		switch (axiom) {
-		case OWLEquivalentClassesAxiom x -> {
-			Set<OWLClassExpression> class_exprs = x.getClassExpressionsMinus(concept);
-			if (class_exprs.size() != 1)
-				throw new UnsupportedOperationException("Unexpected: " + class_exprs.size() + " " + class_exprs);
-			OWLClassExpression def = class_exprs.iterator().next();
-			props = processDefinition(def);
-		}
-		case OWLSubClassOfAxiom x -> {
-			OWLClassExpression def = x.getSuperClass();
-			props = processDefinition(def);
-		}
-		default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
-		}
+		OWLClassExpression def = getDefinition(concept, axiom);
+		Set<OWLObjectSomeValuesFrom> props = processDefinition(def);
 		for (OWLObjectSomeValuesFrom prop : props) {
 			if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedOwlOntology.role_group) {
 				OWLClassExpression gr_expr = prop.getFiller();
@@ -303,34 +341,136 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private int scoe_cnt = 0;
-	private int scoe_unchained_cnt = 0;
-
-	final private boolean check_with_reasoner = false;
+	private int scoe_chained_cnt = 0;
 
 	private boolean isSubClassOfEntailed(OWLObjectSomeValuesFrom prop1, OWLObjectSomeValuesFrom prop2) {
+		if (useReasonerSCOE)
+			return isSubClassOfEntailedReasoner(prop1, prop2);
+		return isSubClassOfEntailedStructural(prop1, prop2);
+	}
+
+	private boolean isSubClassOfEntailedReasoner(OWLObjectSomeValuesFrom prop1, OWLObjectSomeValuesFrom prop2) {
 		boolean isSubClassOf = false;
-//		boolean chain_p = false;
-		if (superProps.get((OWLObjectProperty) prop1.getProperty()).contains((OWLObjectProperty) prop2.getProperty())) {
-			if (++scoe_cnt % 10000 == 0)
-				LOG.info("SCOE: " + scoe_unchained_cnt + " of " + scoe_cnt);
+		if (superProps.get(prop1.getProperty().asOWLObjectProperty())
+				.contains(prop2.getProperty().asOWLObjectProperty())) {
+			scoe_cnt++;
 			if (chained.get(prop1.getProperty()) == null && chained.get(prop2.getProperty()) == null
 					&& !transitive.contains(prop1.getProperty()) && !transitive.contains(prop2.getProperty())) {
-				scoe_unchained_cnt++;
-				long con1 = SnomedOwlOntology.getId((OWLClass) prop1.getFiller());
-				long con2 = SnomedOwlOntology.getId((OWLClass) prop2.getFiller());
+				long con1 = SnomedOwlOntology.getId(prop1.getFiller().asOWLClass());
+				long con2 = SnomedOwlOntology.getId(prop2.getFiller().asOWLClass());
 				isSubClassOf = con1 == con2 || isa.hasAncestor(con1, con2);
 			} else {
-//				chain_p = true;
+				scoe_chained_cnt++;
 				OWLSubClassOfAxiom en = ontology.getDataFactory().getOWLSubClassOfAxiom(prop1, prop2);
 				isSubClassOf = ontology.getReasoner().isEntailed(en);
 			}
 		}
-		if (check_with_reasoner) {
+		if (checkWithReasonerSCOE) {
 			OWLSubClassOfAxiom en = ontology.getDataFactory().getOWLSubClassOfAxiom(prop1, prop2);
 			if (isSubClassOf != ontology.getReasoner().isEntailed(en))
 				throw new RuntimeException("");
 		}
 		return isSubClassOf;
+	}
+
+	private static class SVF {
+		private OWLObjectProperty prop;
+		private OWLClass filler;
+
+		public SVF(OWLObjectProperty prop, OWLClass filler) {
+			super();
+			this.prop = prop;
+			this.filler = filler;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(filler, prop);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			SVF other = (SVF) obj;
+			return Objects.equals(filler, other.filler) && Objects.equals(prop, other.prop);
+		}
+
+		@Override
+		public String toString() {
+			return "SVF(" + prop + " " + filler + ")";
+		}
+
+	}
+
+	private HashSet<SVF> expandChain(OWLObjectProperty prop, OWLClass filler) {
+		HashSet<SVF> svfs = new HashSet<>();
+		svfs.add(new SVF(prop, filler));
+		while (true) {
+			ArrayList<SVF> svfs_l = new ArrayList<>(svfs);
+			for (SVF svf : svfs_l) {
+				List<SVF> chain_exps = expandChain1(svf);
+				svfs.addAll(chain_exps);
+				List<SVF> prop_exps = expandSuperProps(svf);
+				svfs.addAll(prop_exps);
+			}
+			if (svfs.size() == svfs_l.size())
+				break;
+		}
+		return svfs;
+	}
+
+	private List<SVF> expandChain1(SVF svf) {
+		ArrayList<OWLObjectProperty> chained_props = new ArrayList<>();
+		if (chained.get(svf.prop) != null) {
+			chained_props.add(chained.get(svf.prop));
+		}
+		if (transitive.contains(svf.prop))
+			chained_props.add(svf.prop);
+		List<OWLClass> chained_cons = necessaryNormalForm.get(svf.filler).getUngroupedProps().stream()
+				.filter(x -> chained_props.contains(x.getProperty().asOWLObjectProperty()))
+				.map(x -> x.getFiller().asOWLClass()).distinct().toList();
+		return chained_cons.stream().map(x -> new SVF(svf.prop, x)).toList();
+	}
+
+	private List<SVF> expandSuperProps(SVF svf) {
+		return superProps.get(svf.prop).stream().filter(x -> !x.equals(svf.prop)).map(x -> new SVF(x, svf.filler))
+				.toList();
+	}
+
+	private boolean isSubsumedBy(OWLClass con1, OWLClass con2) {
+		if (con1.equals(con2))
+			return true;
+		return isa.hasAncestor(SnomedOwlOntology.getId(con1), SnomedOwlOntology.getId(con2));
+	}
+
+	private boolean isSubsumedBy(SVF svf1, SVF svf2) {
+		return superProps.get(svf1.prop).contains(svf2.prop) && isSubsumedBy(svf1.filler, svf2.filler);
+	}
+
+	private boolean isSubClassOfEntailedStructural(OWLObjectSomeValuesFrom prop1, OWLObjectSomeValuesFrom prop2) {
+		if (superProps.get(prop1.getProperty().asOWLObjectProperty())
+				.contains(prop2.getProperty().asOWLObjectProperty())) {
+			scoe_cnt++;
+			{
+				OWLClass con1 = prop1.getFiller().asOWLClass();
+				OWLClass con2 = prop2.getFiller().asOWLClass();
+				if (isSubsumedBy(con1, con2))
+					return true;
+			}
+			HashSet<SVF> chain1 = expandChain(prop1.getProperty().asOWLObjectProperty(),
+					prop1.getFiller().asOWLClass());
+			HashSet<SVF> chain2 = expandChain(prop2.getProperty().asOWLObjectProperty(),
+					prop2.getFiller().asOWLClass());
+			boolean isSubsumedBy = chain2.stream()
+					.allMatch(svf2 -> chain1.stream().anyMatch(svf1 -> isSubsumedBy(svf1, svf2)));
+			return isSubsumedBy;
+		}
+		return false;
 	}
 
 	private void simplifySups(Set<OWLClass> cons) {
@@ -348,13 +488,9 @@ public class NecessaryNormalFormBuilder {
 		cons.removeAll(to_remove);
 	}
 
-	private int simplify_cnt = 0;
-
 	private void simplify(Set<OWLObjectSomeValuesFrom> props) {
 		if (props.isEmpty())
 			return;
-		if (++simplify_cnt % 10000 == 0)
-			LOG.info("Simplify      : " + simplify_cnt);
 		ArrayList<OWLObjectSomeValuesFrom> to_remove = new ArrayList<>();
 		for (OWLObjectSomeValuesFrom prop1 : props) {
 			for (OWLObjectSomeValuesFrom prop2 : props) {
@@ -367,13 +503,9 @@ public class NecessaryNormalFormBuilder {
 		props.removeAll(to_remove);
 	}
 
-	private int simplify_group_cnt = 0;
-
 	private void simplifyGroup(Set<Set<OWLObjectSomeValuesFrom>> props) {
 		if (props.isEmpty())
 			return;
-		if (++simplify_group_cnt % 1000 == 0)
-			LOG.info("Simplify group: " + simplify_group_cnt);
 		ArrayList<Set<OWLObjectSomeValuesFrom>> to_remove = new ArrayList<>();
 		for (Set<OWLObjectSomeValuesFrom> prop1 : props) {
 			for (Set<OWLObjectSomeValuesFrom> prop2 : props) {
@@ -383,7 +515,7 @@ public class NecessaryNormalFormBuilder {
 						.allMatch(p2 -> prop1.stream().anyMatch(p1 -> isSubClassOfEntailed(p1, p2)));
 				if (isSubClassOf)
 					to_remove.add(prop2);
-				if (check_with_reasoner) {
+				if (checkWithReasonerSCOE) {
 					OWLObjectIntersectionOf and1 = ontology.getDataFactory().getOWLObjectIntersectionOf(prop1);
 					OWLObjectIntersectionOf and2 = ontology.getDataFactory().getOWLObjectIntersectionOf(prop2);
 					OWLSubClassOfAxiom en = ontology.getDataFactory().getOWLSubClassOfAxiom(and1, and2);
@@ -397,26 +529,9 @@ public class NecessaryNormalFormBuilder {
 
 	HashSet<OWLClass> grouping_issue_concepts = new HashSet<>();
 
-	private void compare(OWLClass concept, Set<Role> roles, List<NecessaryNormalForm> nnfs) {
+	private void compare(OWLClass concept, Set<Role> roles, NecessaryNormalForm nnf) {
 		if (roles == null)
 			roles = Set.of();
-		NecessaryNormalForm nnf;
-		if (nnfs.size() == 1) {
-			nnf = nnfs.getFirst();
-		} else {
-			nnf = new NecessaryNormalForm();
-			// TODO subClassOf
-			nnf.setSups(new HashSet<>());
-			nnf.setUngroupedProps(new HashSet<>());
-			nnf.setGroupedProps(new HashSet<>());
-			for (NecessaryNormalForm f : nnfs) {
-				nnf.getSups().addAll(f.getSups());
-				nnf.getUngroupedProps().addAll(f.getUngroupedProps());
-				nnf.getGroupedProps().addAll(f.getGroupedProps());
-			}
-			simplify(nnf.getUngroupedProps());
-			simplifyGroup(nnf.getGroupedProps());
-		}
 		List<Role> roles_ungrouped = roles.stream().filter(x -> x.relationshipGroup == 0).toList();
 		Collection<List<Role>> roles_grouped = roles.stream().filter(x -> x.relationshipGroup != 0)
 				.collect(Collectors.groupingBy(x -> x.relationshipGroup)).values();
@@ -473,7 +588,7 @@ public class NecessaryNormalFormBuilder {
 		inc = false;
 		if (mis_match) {
 			mis_match_cnt++;
-			LOG.info("NNFs: " + nnfs.size());
+//			LOG.info("NNFs: " + nnfs.size());
 			LOG.info("Roles:");
 			roles.stream()
 					.sorted(Comparator.comparingLong((Role x) -> x.relationshipGroup)
@@ -510,8 +625,8 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private boolean compare(Role role, OWLObjectSomeValuesFrom prop) {
-		return role.typeId == SnomedOwlOntology.getId((OWLObjectProperty) prop.getProperty())
-				&& role.destinationId == SnomedOwlOntology.getId((OWLClass) prop.getFiller());
+		return role.typeId == SnomedOwlOntology.getId(prop.getProperty().asOWLObjectProperty())
+				&& role.destinationId == SnomedOwlOntology.getId(prop.getFiller().asOWLClass());
 	}
 
 }

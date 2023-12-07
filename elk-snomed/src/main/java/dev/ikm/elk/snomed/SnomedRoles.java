@@ -31,6 +31,8 @@ public class SnomedRoles {
 
 	public static long root = SnomedOwlOntology.root;
 
+	public static long isa = SnomedOwlOntology.isa;
+
 	public static class Role {
 
 		public long destinationId;
@@ -51,7 +53,15 @@ public class SnomedRoles {
 
 	}
 
-	private HashMap<Long, Set<Role>> roles = new HashMap<>();;
+	private HashMap<Long, Set<Role>> roles = new HashMap<>();
+
+	public HashMap<Long, Set<Role>> getRoles() {
+		return roles;
+	}
+
+	public Set<Role> getRoles(long con) {
+		return roles.get(con);
+	}
 
 	public static SnomedRoles init(Path file) throws IOException {
 		SnomedRoles ret = new SnomedRoles();
@@ -64,7 +74,7 @@ public class SnomedRoles {
 		// typeId characteristicTypeId modifierId
 		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
 				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) != 116680003) // typeId
+				.filter(fields -> Long.parseLong(fields[7]) != isa) // typeId
 				.forEach(fields -> {
 					long con = Long.parseLong(fields[4]); // sourceId
 					long destination = Long.parseLong(fields[5]); // destinationId
@@ -73,13 +83,9 @@ public class SnomedRoles {
 					roles.computeIfAbsent(con, x -> new HashSet<>());
 					roles.get(con).add(new Role(destination, relationshipGroup, typeId));
 					// 900000000000011006 |Inferred relationship (core metadata concept)|
-					if (Long.parseLong(fields[8]) != 900000000000011006l)
-						throw new RuntimeException(fields[8]);
+//					if (Long.parseLong(fields[8]) != 900000000000011006l)
+//						throw new RuntimeException(fields[8]);
 				});
-	}
-
-	public Set<Role> getRoles(long con) {
-		return roles.get(con);
 	}
 
 }
