@@ -49,14 +49,11 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 public class SnomedOwlOntology {
 
-	// 138875005 |SNOMED CT Concept (SNOMED RT+CTV3)|
-	public static final long root = 138875005;
+	public static final long root = SnomedIds.root;
 
-	// 116680003 |Is a (attribute)|
-	public static final long isa = 116680003;
+	public static final long isa = SnomedIds.isa;
 
-	// 609096000 |Role group (attribute)|
-	public static final long role_group = 609096000;
+	public static final long role_group = SnomedIds.role_group;
 
 	private OWLOntology ontology;
 

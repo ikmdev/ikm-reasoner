@@ -167,11 +167,11 @@ public class NecessaryNormalFormBuilder {
 		}
 		for (Entry<OWLObjectProperty, Set<OWLObjectProperty>> es : superProps.entrySet()) {
 			if (es.getValue().size() > 1) {
-				LOG.info("Super props: " + es.getKey());
-				for (OWLObjectProperty prop : es.getValue()) {
-					if (!prop.equals(es.getKey()))
-						LOG.info("\t" + prop);
-				}
+//				LOG.info("Super props: " + es.getKey());
+//				for (OWLObjectProperty prop : es.getValue()) {
+//					if (!prop.equals(es.getKey()))
+//						LOG.info("\t" + prop);
+//				}
 			}
 		}
 	}
@@ -211,11 +211,15 @@ public class NecessaryNormalFormBuilder {
 	int mis_match_props_grouped_cnt = 0;
 	int mis_match_grouping_issue_cnt = 0;
 
+	public int getMisMatchCount() {
+		return mis_match_cnt;
+	}
+
 	public void generate(SnomedRoles roles) {
 		Reasoner.processingNecessaryNormalForm = true;
 		int cnt = 0;
 		for (OWLClass concept : concepts) {
-			if (++cnt % 10000 == 0)
+			if (++cnt % 50000 == 0)
 				LOG.info("Generate: " + cnt);
 			necessaryNormalForms.put(concept, new ArrayList<>());
 			for (OWLClassAxiom axiom : ontology.getAxioms(concept)) {

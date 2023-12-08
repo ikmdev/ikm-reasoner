@@ -40,15 +40,19 @@ public abstract class SnomedTestBase {
 		return "data/snomed/SnomedCT_USEditionRF2_PRODUCTION_20210301T120000Z/Snapshot/Terminology/";
 	}
 
+	protected String getEdition() {
+		return "US1000124";
+	}
+
 	protected String getVersion() {
 		return "20210301";
 	}
 
 	protected Path axioms_file = Paths.get(home, getDir(),
-			"sct2_sRefset_OWLExpressionSnapshot_US1000124_" + getVersion() + ".txt");
+			"sct2_sRefset_OWLExpressionSnapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
 	protected Path rels_file = Paths.get(home, getDir(),
-			"sct2_Relationship_Snapshot_US1000124_" + getVersion() + ".txt");
+			"sct2_Relationship_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
 	@BeforeEach
 	private void filesExist() {

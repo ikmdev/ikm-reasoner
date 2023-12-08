@@ -10,7 +10,7 @@
 
 	<artifactId>elk-snomed</artifactId>
 
-	<name>ELK Integration Testing with SNOMED</name>
+	<name>ELK Integration with SNOMED</name>
 
 	<dependencies>
 		<dependency>
