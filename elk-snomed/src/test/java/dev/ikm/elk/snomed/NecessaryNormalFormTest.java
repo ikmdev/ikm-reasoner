@@ -27,27 +27,28 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.model.Definition;
+import dev.ikm.elk.snomed.model.RoleGroup;
 
 public class NecessaryNormalFormTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NecessaryNormalFormTest.class);
 
 	public static void checkPriors(SnomedOwlOntology ontology, NecessaryNormalFormBuilder nnf) {
-		HashSet<OWLClass> priors = new HashSet<>();
-		for (OWLClass con : nnf.getConcepts()) {
+		HashSet<Long> priors = new HashSet<>();
+		for (Concept con : nnf.getConcepts()) {
 //			LOG.info("Con: " + con);
-			for (OWLClass sup : ontology.getSuperClasses(con)) {
+			for (Long sup : ontology.getSuperClasses(con.getId())) {
 //				LOG.info(con + " " + sup);
 				assertTrue(priors.contains(sup));
 			}
-			priors.add(con);
+			priors.add(con.getId());
 		}
 	}
 
@@ -63,16 +64,15 @@ public class NecessaryNormalFormTest {
 		LOG.info("Init complete");
 		checkPriors(ontology, nnfb);
 		nnfb.generate();
-		for (OWLClass con : nnfb.getConcepts()) {
-			LOG.info("Con: " + con);
-			if (nnfb.getNecessaryNormalForms(con) == null)
+		for (Concept con : nnfb.getConcepts()) {
+			LOG.info("Con: " + con.getId());
+			if (nnfb.getNecessaryNormalForm(con) == null)
 				continue;
-			for (NecessaryNormalForm expr : nnfb.getNecessaryNormalForms(con)) {
-				LOG.info("\t" + expr.isSubClassOf());
-				expr.getSups().forEach(x -> LOG.info("\tSup: " + x));
-				expr.getUngroupedProps().forEach(x -> LOG.info("\tProp: " + x));
-				expr.getGroupedProps().forEach(x -> LOG.info("\tProp group: " + x));
-			}
+			Definition expr = nnfb.getNecessaryNormalForm(con);
+			LOG.info("\t" + expr.getDefinitionType());
+			expr.getSuperConcepts().forEach(x -> LOG.info("\tSup: " + x.getId()));
+			expr.getUngroupedRoles().forEach(x -> LOG.info("\t" + x));
+			expr.getRoleGroups().forEach(x -> LOG.info("\t" + x));
 		}
 		return nnfb;
 	}
@@ -81,49 +81,49 @@ public class NecessaryNormalFormTest {
 	public void ungrouped() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalForm.owl");
-		NecessaryNormalForm nnf;
-		nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(202)).getFirst();
-		assertEquals(1, nnf.getUngroupedProps().size());
-		assertEquals(ontology.getOwlClass(102), nnf.getUngroupedProps().iterator().next().getFiller());
-		assertEquals(0, nnf.getGroupedProps().size());
-		nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(203)).getFirst();
-		assertEquals(2, nnf.getUngroupedProps().size());
-		assertEquals(0, nnf.getGroupedProps().size());
-		nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(204)).getFirst();
-		assertEquals(2, nnf.getUngroupedProps().size());
-		assertEquals(0, nnf.getGroupedProps().size());
+		Definition nnf;
+		nnf = nnfb.getNecessaryNormalForm(202);
+		assertEquals(1, nnf.getUngroupedRoles().size());
+		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals(0, nnf.getRoleGroups().size());
+		nnf = nnfb.getNecessaryNormalForm(203);
+		assertEquals(2, nnf.getUngroupedRoles().size());
+		assertEquals(0, nnf.getRoleGroups().size());
+		nnf = nnfb.getNecessaryNormalForm(204);
+		assertEquals(2, nnf.getUngroupedRoles().size());
+		assertEquals(0, nnf.getRoleGroups().size());
 	}
 
 	@Test
 	public void grouped() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormGrouped.owl");
-		NecessaryNormalForm nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(202)).getFirst();
-		assertEquals(0, nnf.getUngroupedProps().size());
-		assertEquals(1, nnf.getGroupedProps().size());
-		Set<OWLObjectSomeValuesFrom> gr = nnf.getGroupedProps().iterator().next();
-		assertEquals(1, gr.size());
-		assertEquals(ontology.getOwlClass(102), gr.iterator().next().getFiller());
+		Definition nnf = nnfb.getNecessaryNormalForm(202);
+		assertEquals(0, nnf.getUngroupedRoles().size());
+		assertEquals(1, nnf.getRoleGroups().size());
+		RoleGroup rg = nnf.getRoleGroups().iterator().next();
+		assertEquals(1, rg.getRoles().size());
+		assertEquals(102, rg.getRoles().iterator().next().getConcept().getId());
 	}
 
 	@Test
 	public void subProperty() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormSubProperty.owl");
-		NecessaryNormalForm nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(202)).getFirst();
-		assertEquals(1, nnf.getUngroupedProps().size());
-		assertEquals(ontology.getOwlClass(102), nnf.getUngroupedProps().iterator().next().getFiller());
-		assertEquals(0, nnf.getGroupedProps().size());
+		Definition nnf = nnfb.getNecessaryNormalForm(202);
+		assertEquals(1, nnf.getUngroupedRoles().size());
+		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals(0, nnf.getRoleGroups().size());
 	}
 
 	@Test
 	public void propertyChain() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormPropertyChain.owl");
-		NecessaryNormalForm nnf = nnfb.getNecessaryNormalForms(ontology.getOwlClass(202)).getFirst();
-		assertEquals(1, nnf.getUngroupedProps().size());
-		assertEquals(ontology.getOwlClass(102), nnf.getUngroupedProps().iterator().next().getFiller());
-		assertEquals(0, nnf.getGroupedProps().size());
+		Definition nnf = nnfb.getNecessaryNormalForm(202);
+		assertEquals(1, nnf.getUngroupedRoles().size());
+		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals(0, nnf.getRoleGroups().size());
 	}
 
 }

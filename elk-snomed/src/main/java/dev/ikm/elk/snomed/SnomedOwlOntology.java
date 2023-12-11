@@ -139,6 +139,14 @@ public class SnomedOwlOntology {
 		return classMap.get(id);
 	}
 
+	public Set<OWLClass> getOwlClasses() {
+		return ontology.getClassesInSignature();
+	}
+
+	public Set<OWLObjectProperty> getObjectProperties() {
+		return ontology.getObjectPropertiesInSignature();
+	}
+
 	public Set<OWLClassAxiom> getAxioms(OWLClass clazz) {
 		return ontology.getAxioms(clazz, Imports.EXCLUDED);
 	}
