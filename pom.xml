@@ -38,6 +38,7 @@
 		<module>elk-proofs-test</module>
 		<module>elk-owlapi-parent</module>
 		<module>elk-snomed</module>
+		<module>elk-snomed-reasoner</module>
 	</modules>
 
 	<properties>
