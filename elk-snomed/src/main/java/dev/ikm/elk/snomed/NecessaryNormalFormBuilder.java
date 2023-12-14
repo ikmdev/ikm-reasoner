@@ -207,10 +207,10 @@ public class NecessaryNormalFormBuilder {
 	private Definition getNNF(Concept con) {
 		Definition def = new Definition();
 		if (con.getDefinitions().stream().map(Definition::getDefinitionType)
-				.anyMatch(dt -> dt.equals(DefinitionType.SubConcept))) {
-			def.setDefinitionType(DefinitionType.SubConcept);
-		} else {
+				.anyMatch(dt -> dt.equals(DefinitionType.EquivalentConcept))) {
 			def.setDefinitionType(DefinitionType.EquivalentConcept);
+		} else {
+			def.setDefinitionType(DefinitionType.SubConcept);
 		}
 		List<Concept> sups = snomedOwlOntology.getSuperClasses(con.getId()).stream()
 				.map(x -> snomedOntology.getConcept(x)).distinct().collect(Collectors.toCollection(ArrayList::new));
@@ -333,6 +333,9 @@ public class NecessaryNormalFormBuilder {
 		rgs.removeAll(to_remove);
 	}
 
+	HashSet<Long> mis_match_cons = new HashSet<>();
+	int root_mis_match_cnt = 0;
+
 	private void compare(Concept concept, Set<SnomedRoles.Role> roles, Definition definition) {
 		if (roles == null)
 			roles = Set.of();
@@ -406,6 +409,12 @@ public class NecessaryNormalFormBuilder {
 				LOG.info("Group:");
 				x.getRoles().forEach(y -> LOG.info("\t" + y));
 			});
+			if (!mis_match_cons.stream().anyMatch(x -> isa.hasAncestor(concept.getId(), x))) {
+				LOG.info("Root mis-match: " + concept.getId());
+				root_mis_match_cnt++;
+			}
+			mis_match_cons.add(concept.getId());
+			LOG.info("Root mis-match cnt: " + root_mis_match_cnt);
 //			if (mis_match_roles_grouped.size() > 0 && mis_match_props_grouped.size() > 0) {
 //				if (compare(mis_match_roles_grouped, mis_match_props_grouped)) {
 //					LOG.warn("Grouping issue");
