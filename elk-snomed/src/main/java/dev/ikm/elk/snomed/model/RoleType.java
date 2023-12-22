@@ -36,6 +36,8 @@ public class RoleType {
 
 	private RoleType chained;
 
+	private boolean reflexive = false;
+
 	public RoleType(long id) {
 		this.id = id;
 	}
@@ -76,6 +78,14 @@ public class RoleType {
 		this.chained = chained;
 	}
 
+	public boolean isReflexive() {
+		return reflexive;
+	}
+
+	public void setReflexive(boolean reflexive) {
+		this.reflexive = reflexive;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -92,7 +102,10 @@ public class RoleType {
 		RoleType other = (RoleType) obj;
 		return id == other.id;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "RoleType[" + id + "]";
+	}
 
 }

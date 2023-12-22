@@ -32,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
@@ -89,30 +90,41 @@ public class OwlTransformer {
 			OWLObjectProperty prop = ax.getProperty().asOWLObjectProperty();
 			getRoleType(prop).setTransitive(true);
 		}
+		for (OWLReflexiveObjectPropertyAxiom ax : ontology.getOntology()
+				.getAxioms(AxiomType.REFLEXIVE_OBJECT_PROPERTY)) {
+			OWLObjectProperty prop = ax.getProperty().asOWLObjectProperty();
+			getRoleType(prop).setReflexive(true);
+		}
 		for (OWLClass clazz : ontology.getOwlClasses()) {
 			Concept concept = getConcept(clazz);
 			for (OWLClassAxiom axiom : ontology.getAxioms(clazz)) {
-				Definition def = createDefinition(clazz, axiom);
+				Definition def = createDefinition(clazz, axiom, false);
 				concept.addDefinition(def);
+			}
+			for (OWLSubClassOfAxiom axiom : ontology.getGciAxioms(clazz)) {
+				Definition def = createDefinition(clazz, axiom, true);
+				concept.addGciDefinition(def);
 			}
 		}
 		return new SnomedOntology(concepts.values(), roleTypes.values());
 	}
 
-	private Definition createDefinition(OWLClass concept, OWLClassAxiom axiom) {
+	private Definition createDefinition(OWLClass concept, OWLClassAxiom axiom, boolean isGci) {
 		Definition def = new Definition();
 		switch (axiom) {
 		case OWLEquivalentClassesAxiom x -> def.setDefinitionType(DefinitionType.EquivalentConcept);
 		case OWLSubClassOfAxiom x -> def.setDefinitionType(DefinitionType.SubConcept);
 		default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
 		}
-		processAxiom(def, concept, axiom);
+		processAxiom(def, concept, axiom, isGci);
 		return def;
 	}
 
-	private void processAxiom(Definition def, OWLClass concept, OWLClassAxiom axiom) {
+	private void processAxiom(Definition def, OWLClass concept, OWLClassAxiom axiom, boolean isGci) {
 		switch (axiom) {
 		case OWLEquivalentClassesAxiom x -> {
+			if (isGci)
+				throw new UnsupportedOperationException("Unexpected: GCI for " + axiom);
 			Set<OWLClassExpression> class_exprs = x.getClassExpressionsMinus(concept);
 			if (class_exprs.size() != 1)
 				throw new UnsupportedOperationException("Unexpected: " + class_exprs.size() + " " + class_exprs);
@@ -120,7 +132,7 @@ public class OwlTransformer {
 			processClassExpression(def, expr);
 		}
 		case OWLSubClassOfAxiom x -> {
-			OWLClassExpression expr = x.getSuperClass();
+			OWLClassExpression expr = (isGci ? x.getSubClass() : x.getSuperClass());
 			processClassExpression(def, expr);
 		}
 		default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());

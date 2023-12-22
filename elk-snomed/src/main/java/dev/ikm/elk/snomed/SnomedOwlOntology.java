@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ import org.semanticweb.owlapi.OWLAPIConfigProvider;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParser;
 import org.semanticweb.owlapi.io.StringDocumentSource;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -42,6 +44,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -131,6 +134,26 @@ public class SnomedOwlOntology {
 		}
 	}
 
+	public Set<OWLAxiom> getAxioms() {
+		return ontology.getAxioms(Imports.EXCLUDED);
+	}
+
+	private Set<OWLSubClassOfAxiom> gci_axioms = null;
+
+	public Set<OWLSubClassOfAxiom> getGciAxioms() {
+		if (gci_axioms == null)
+			gci_axioms = getAxioms().stream().filter(ax -> ax instanceof OWLSubClassOfAxiom) //
+					.map(ax -> ((OWLSubClassOfAxiom) ax)) //
+					.filter(ax -> !ax.getSubClass().isClassExpressionLiteral()) //
+					.collect(Collectors.toCollection(HashSet::new));
+		return gci_axioms;
+	}
+
+	public Set<OWLSubClassOfAxiom> getGciAxioms(OWLClass clazz) {
+		return getGciAxioms().stream().filter(ax -> ax.getSuperClass().equals(clazz))
+				.collect(Collectors.toCollection(HashSet::new));
+	}
+
 	public static long getId(OWLClass clazz) {
 		return Long.parseLong(clazz.getIRI().getShortForm());
 	}
@@ -175,10 +198,10 @@ public class SnomedOwlOntology {
 	}
 
 	public void classify() {
-		OWLReasonerFactory rf = (OWLReasonerFactory) new ElkReasonerFactory();
+		OWLReasonerFactory rf = new ElkReasonerFactory();
 		reasoner = rf.createReasoner(ontology);
 		reasoner.flush();
-		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
 	}
 
 	public Set<Long> getSuperClasses(long id) {

@@ -28,6 +28,8 @@ open module dev.ikm.elk.snomed {
 
 	requires org.semanticweb.elk.owlapi;
 	requires org.semanticweb.elk.reasoner;
+	requires dev.ikm.elk.snomed.reasoner;
+	requires org.semanticweb.elk.owl.model;
 
 	exports dev.ikm.elk.snomed;
 

@@ -20,26 +20,14 @@ package dev.ikm.elk.snomed.owlapix.model;
  * #L%
  */
 
-public class OwlxOntologyManager {
+public interface OwlxOntologyManager {
 
-	public void addOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_) {
-		// TODO Auto-generated method stub
+	public void addOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
 
-	}
+	public void addOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
 
-	public void addOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_) {
-		// TODO Auto-generated method stub
+	public void removeOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
 
-	}
-
-	public void removeOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void removeOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void removeOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
 
 }

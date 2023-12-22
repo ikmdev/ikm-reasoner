@@ -119,7 +119,7 @@ public class ElkReasoner {
 	/** ELK object factory used to create any ElkObjects */
 	private final ElkObject.Factory objectFactory_;
 	/** Converter from OWL API to ELK OWL */
-	private final OwlConverter owlConverter_;
+//	private final OwlConverter owlConverter_;
 	/** Converter from ELK OWL to OWL API */
 	private final ElkConverter elkConverter_;
 	/** this object is used to load pending changes */
@@ -156,7 +156,7 @@ public class ElkReasoner {
 		this.ontologyChangeProgressListener_ = new OntologyChangeProgressListener();
 		this.owlOntologymanager_.addOntologyChangeProgessListener(ontologyChangeProgressListener_);
 		this.objectFactory_ = internalReasoner.getElkFactory();
-		this.owlConverter_ = OwlConverter.getInstance();
+//		this.owlConverter_ = OwlConverter.getInstance();
 		this.elkConverter_ = ElkConverter.getInstance();
 
 		this.config_ = elkConfig.getElkConfiguration();
@@ -174,8 +174,10 @@ public class ElkReasoner {
 	}
 
 	ElkReasoner(OwlxOntology ontology, boolean isBufferingMode, ElkReasonerConfiguration elkConfig) {
+//		this(ontology, isBufferingMode, elkConfig,
+//				new ReasonerFactory().createReasoner(elkConfig.getElkConfiguration()));
 		this(ontology, isBufferingMode, elkConfig,
-				new ReasonerFactory().createReasoner(elkConfig.getElkConfiguration()));
+				new ReasonerFactory().createReasoner(ontology.getObjectFactory(),  elkConfig.getElkConfiguration()));
 	}
 
 	OwlxOntology getOWLOntology() {
@@ -976,11 +978,11 @@ public class ElkReasoner {
 		}
 	}
 
-	public IncompleteResult<Boolean> checkEntailment(final ElkAxiom owlAxiom)
+	public IncompleteResult<Boolean> checkEntailment(final ElkAxiom elkAxiom)
 			throws ReasonerInterruptedException, UnsupportedEntailmentTypeException, TimeOutException,
 			AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
 		try {
-			final ElkAxiom elkAxiom = owlConverter_.convert(owlAxiom);
+//			final ElkAxiom elkAxiom = owlConverter_.convert(owlAxiom);
 			QueryResult entailment = reasoner_.checkEntailment(elkAxiom);
 			return new IncompleteResult<Boolean>(entailment.entailmentProved(), entailment.getIncompletenessMonitor());
 		} catch (final ElkUnsupportedReasoningTaskException e) {
@@ -1009,7 +1011,7 @@ public class ElkReasoner {
 		checkInterrupted();
 		try {
 			Map<ElkAxiom, VerifiableQueryResult> results = reasoner_
-					.checkEntailment(owlConverter_.convertAxiomSet(owlAxioms));
+					.checkEntailment(owlAxioms);
 			for (final VerifiableQueryResult result : results.values()) {
 				if (!Incompleteness.getValue(result)) {
 					return false;
@@ -1057,7 +1059,7 @@ public class ElkReasoner {
 			FreshEntitiesException, InconsistentOntologyException {
 		checkInterrupted();
 		try {
-			return reasoner_.isSatisfiable(owlConverter_.convert(classExpression));
+			return reasoner_.isSatisfiable(classExpression);
 		} catch (ElkException e) {
 			throw elkConverter_.convert(e);
 		} catch (ElkRuntimeException e) {

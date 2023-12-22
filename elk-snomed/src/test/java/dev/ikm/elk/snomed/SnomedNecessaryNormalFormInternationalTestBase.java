@@ -23,7 +23,7 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedNecessaryNormalFormInternationalTestBase extends SnomedTestBase {
+public class SnomedNecessaryNormalFormInternationalTestBase extends SnomedInternationalTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternationalTestBase.class);
 

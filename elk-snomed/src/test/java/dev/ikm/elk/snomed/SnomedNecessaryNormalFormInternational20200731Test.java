@@ -36,7 +36,7 @@ public class SnomedNecessaryNormalFormInternational20200731Test extends SnomedNe
 	}
 
 	@Test
-	public void init() throws Exception {
+	public void run() throws Exception {
 		NecessaryNormalFormBuilder nnfb = generate();
 		assertEquals(354256, nnfb.getConcepts().size());
 		assertEquals(0, nnfb.getMisMatchCount());

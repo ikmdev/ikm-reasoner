@@ -39,6 +39,10 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-snomed-reasoner</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owlapi4</artifactId>
 		</dependency>
 		<dependency>

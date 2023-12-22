@@ -21,16 +21,25 @@ package dev.ikm.elk.snomed;
  */
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
+import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,20 +76,56 @@ public class SnomedOwlOntologyTest extends SnomedTestBase {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
 		assertEquals(362853, ontology.getOntology().getAxiomCount());
+		assertEquals(362853, ontology.getAxioms().size());
+		assertEquals(362853, ontology.getOntology().getLogicalAxiomCount());
 		assertEquals(361462, ontology.getOntology().getSignature().size());
-		assertEquals(361331, ontology.getOntology().getClassesInSignature().size());
-		assertEquals(131, ontology.getOntology().getObjectPropertiesInSignature().size());
+		assertEquals(361331, ontology.getOwlClasses().size());
+		assertEquals(131, ontology.getObjectProperties().size());
 		assertEquals(0, ontology.getOntology().getDataPropertiesInSignature().size());
 		assertEquals(0, ontology.getOntology().getDatatypesInSignature().size());
 		Set<OWLEntity> sig = ontology.getOntology().getSignature();
-		sig.removeAll(ontology.getOntology().getClassesInSignature());
-		sig.removeAll(ontology.getOntology().getObjectPropertiesInSignature());
+		sig.removeAll(ontology.getOwlClasses());
+		sig.removeAll(ontology.getObjectProperties());
 		sig.removeAll(ontology.getOntology().getDataPropertiesInSignature());
 		sig.stream().forEach(x -> LOG.info("In sig: " + x + " " + x.getClass()));
 		sig.removeAll(ontology.getOntology().getDatatypesInSignature());
 		assertEquals(0, sig.size());
-		assertEquals(1200, ontology.getOntology().getClassesInSignature().stream()
-				.filter(x -> ontology.getAxioms(x).size() != 1).toList().size());
+		assertEquals(1200,
+				ontology.getOwlClasses().stream().filter(x -> ontology.getAxioms(x).size() != 1).toList().size());
+		int gci_cnt = 0;
+		for (OWLAxiom axiom : ontology.getAxioms()) {
+			switch (axiom) {
+			case OWLEquivalentClassesAxiom x -> {
+				assertEquals(2, x.getClassExpressions().size());
+				List<OWLClass> classes = x.getClassExpressions().stream()
+						.filter(expr -> expr.isClassExpressionLiteral()).map(expr -> expr.asOWLClass()).toList();
+				assertEquals(1, classes.size());
+				assertTrue(ontology.getAxioms(classes.getFirst()).contains(axiom));
+			}
+			case OWLSubClassOfAxiom x -> {
+				if (x.getSubClass().isClassExpressionLiteral()) {
+					assertTrue(ontology.getAxioms(x.getSubClass().asOWLClass()).contains(axiom));
+				} else {
+//					LOG.info("GCI: " + x);
+					gci_cnt++;
+					assertTrue(x.getSuperClass().isClassExpressionLiteral());
+					assertFalse(ontology.getAxioms(x.getSuperClass().asOWLClass()).contains(axiom));
+				}
+			}
+			case OWLSubObjectPropertyOfAxiom x -> {
+			}
+			case OWLTransitiveObjectPropertyAxiom x -> {
+			}
+			case OWLSubPropertyChainOfAxiom x -> {
+			}
+			case OWLReflexiveObjectPropertyAxiom x -> {
+			}
+			default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
+			}
+		}
+		assertEquals(161, gci_cnt);
+		assertEquals(161, ontology.getGciAxioms().size());
+		assertEquals(161, ontology.getOwlClasses().stream().mapToInt(x -> ontology.getGciAxioms(x).size()).sum());
 	}
 
 	@Test

@@ -55,8 +55,8 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	/**
 	 * the converter used to convert OWL axioms into ELK axioms
 	 */
-	private static final OwlConverter OWL_CONVERTER_ = OwlConverter
-			.getInstance();
+//	private static final OwlConverter OWL_CONVERTER_ = OwlConverter
+//			.getInstance();
 	/**
 	 * the ontology to be loaded
 	 */
@@ -132,8 +132,9 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 
 			LOGGER_.trace("loading {}", axiom);
 			
-			if (OWL_CONVERTER_.isRelevantAxiom(axiom))
-				axiomInserter.visit(OWL_CONVERTER_.convert(axiom));
+//			if (OWL_CONVERTER_.isRelevantAxiom(axiom))
+//			axiomInserter.visit(OWL_CONVERTER_.convert(axiom));
+			axiomInserter.visit(axiom);
 			
 			axiomsProcessed_++;
 			progressMonitor_.report(axiomsProcessed_, axiomsCount_);

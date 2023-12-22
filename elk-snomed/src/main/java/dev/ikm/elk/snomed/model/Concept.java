@@ -22,6 +22,7 @@ package dev.ikm.elk.snomed.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Concept {
 
@@ -29,7 +30,9 @@ public class Concept {
 
 	private String name;
 
-	private List<Definition> definitions = new ArrayList<>();;
+	private List<Definition> definitions = new ArrayList<>();
+
+	private List<Definition> gciDefinitions = new ArrayList<>();
 
 	public Concept(long id) {
 		super();
@@ -52,8 +55,33 @@ public class Concept {
 		this.definitions.add(definition);
 	}
 
+	public List<Definition> getGciDefinitions() {
+		return gciDefinitions;
+	}
+
+	public void addGciDefinition(Definition definition) {
+		this.gciDefinitions.add(definition);
+	}
+
 	public long getId() {
 		return id;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Concept other = (Concept) obj;
+		return id == other.id;
 	}
 
 	@Override

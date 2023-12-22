@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 public class SnomedNecessaryNormalFormInternational20200131Test extends SnomedNecessaryNormalFormInternationalTestBase {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20200131Test.class);
 
 	protected String getVersion() {
@@ -35,7 +36,7 @@ public class SnomedNecessaryNormalFormInternational20200131Test extends SnomedNe
 	}
 
 	@Test
-	public void init() throws Exception {
+	public void run() throws Exception {
 		NecessaryNormalFormBuilder nnfb = generate();
 		assertEquals(352449, nnfb.getConcepts().size());
 		assertEquals(0, nnfb.getMisMatchCount());

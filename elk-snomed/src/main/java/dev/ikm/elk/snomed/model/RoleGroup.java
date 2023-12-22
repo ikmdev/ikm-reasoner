@@ -1,5 +1,7 @@
 package dev.ikm.elk.snomed.model;
 
+import java.util.Comparator;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -23,6 +25,7 @@ package dev.ikm.elk.snomed.model;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class RoleGroup {
 

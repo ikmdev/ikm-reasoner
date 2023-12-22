@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration Testing with SNOMED
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 Integrated Knowledge Management
  * %%
@@ -20,26 +20,20 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedNecessaryNormalFormInternational20210131Test extends SnomedNecessaryNormalFormInternationalTestBase {
+public class SnomedInternationalTestBase extends SnomedTestBase {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20210131Test.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedInternationalTestBase.class);
 
-	protected String getVersion() {
-		return "20210131";
+	protected String getDir() {
+		return "data/snomed/SnomedCT_InternationalRF2_PRODUCTION_" + getVersion() + "T120000Z/Snapshot/Terminology/";
 	}
 
-	@Test
-	public void run() throws Exception {
-		NecessaryNormalFormBuilder nnfb = generate();
-		assertEquals(354318, nnfb.getConcepts().size());
-		assertEquals(0, nnfb.getMisMatchCount());
+	protected String getEdition() {
+		return "INT";
 	}
 
 }
