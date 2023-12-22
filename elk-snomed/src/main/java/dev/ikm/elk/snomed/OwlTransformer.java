@@ -1,7 +1,5 @@
 package dev.ikm.elk.snomed;
 
-import java.util.HashMap;
-
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -22,6 +20,7 @@ import java.util.HashMap;
  * #L%
  */
 
+import java.util.HashMap;
 import java.util.Set;
 
 import org.semanticweb.owlapi.model.AxiomType;

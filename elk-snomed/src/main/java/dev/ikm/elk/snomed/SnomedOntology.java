@@ -1,8 +1,5 @@
 package dev.ikm.elk.snomed;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -23,6 +20,8 @@ import java.util.Collection;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 

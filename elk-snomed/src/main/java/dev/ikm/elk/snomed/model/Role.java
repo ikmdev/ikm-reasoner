@@ -1,7 +1,5 @@
 package dev.ikm.elk.snomed.model;
 
-import java.util.Objects;
-
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -21,6 +19,8 @@ import java.util.Objects;
  * limitations under the License.
  * #L%
  */
+
+import java.util.Objects;
 
 public class Role {
 

@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration Testing with SNOMED
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 Integrated Knowledge Management
  * %%
@@ -22,24 +22,11 @@ package dev.ikm.elk.snomed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import dev.ikm.elk.snomed.SnomedRoles.Role;
 
 public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 

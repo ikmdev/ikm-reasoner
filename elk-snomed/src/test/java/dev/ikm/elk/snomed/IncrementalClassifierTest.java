@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration Testing with SNOMED
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 Integrated Knowledge Management
  * %%

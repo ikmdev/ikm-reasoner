@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration Testing with SNOMED
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 Integrated Knowledge Management
  * %%
@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLAxiom;
