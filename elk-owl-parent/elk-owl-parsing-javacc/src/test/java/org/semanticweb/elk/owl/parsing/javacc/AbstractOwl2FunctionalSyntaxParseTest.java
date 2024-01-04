@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.semanticweb.elk.owl.parsing.javacc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

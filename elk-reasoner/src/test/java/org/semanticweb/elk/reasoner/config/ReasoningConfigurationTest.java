@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.semanticweb.elk.reasoner.config;
 
 import static org.junit.Assert.assertEquals;

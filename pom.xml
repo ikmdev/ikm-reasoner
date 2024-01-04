@@ -478,6 +478,7 @@
 								</goals>
 								<phase>generate-sources</phase>
 								<configuration>
+									<skip>true</skip>
 									<licenseSets>
 										<licenseSet>
 											<!-- Do not change this to <header /> as this will break -->
