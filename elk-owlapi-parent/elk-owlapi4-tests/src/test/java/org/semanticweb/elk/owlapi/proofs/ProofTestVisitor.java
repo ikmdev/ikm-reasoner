@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.semanticweb.elk.owlapi.proofs;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
