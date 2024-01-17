@@ -11,7 +11,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.8.0-SNAPSHOT</version>
+	<version>0.13.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
@@ -38,8 +38,8 @@
 		<module>elk-proofs-test</module>
 		<module>elk-owlapi-parent</module>
 		<module>elk-snomed</module>
-		<module>elk-snomed-owl</module>
 		<module>elk-snomed-reasoner</module>
+		<module>elk-snomed-owl</module>
 	</modules>
 
 	<properties>
@@ -48,7 +48,7 @@
 		<slf4j.version>2.0.7</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<guava.version>31.1-jre-r1</guava.version>
-		<puli.version>0.2.2-SNAPSHOT</puli.version>
+		<puli.version>0.2.2</puli.version>
 		<owlapi4.version>4.5.25-ikm-r3</owlapi4.version>
 		<junit4.version>4.13.2</junit4.version>
 		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
@@ -366,42 +366,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--			<plugin>-->
-			<!--
-			https://github.com/mathieucarbou/license-maven-plugin/issues/36-->
-			<!--				<groupId>com.mycila</groupId>-->
-			<!--				<artifactId>license-maven-plugin</artifactId>-->
-			<!--				<inherited>false</inherited>-->
-			<!--				<executions>-->
-			<!--					<execution>-->
-			<!--						<id>update-license-headers</id>-->
-			<!--						<phase>generate-sources</phase>-->
-			<!--						<goals>-->
-			<!--							<goal>format</goal>-->
-			<!--						</goals>-->
-			<!--						<configuration>-->
-			<!--							<aggregate>true</aggregate>-->
-			<!--							<licenseSets>-->
-			<!--								<licenseSet>-->
-			<!--									-->
-			<!--
-			<header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>-->
-			<!--									-->
-			<!--									<header>IKM-ELK-dual-license-template.txt</header>-->
-			<!--									<includes>-->
-			<!--										<include>**/src/main/java/**/*.java</include>-->
-			<!--										<include>**/src/test/java/**/*.java</include>-->
-			<!--									</includes>-->
-			<!--								</licenseSet>-->
-			<!--							</licenseSets>-->
-			<!--							<properties>-->
-			<!--								<owner>${project.organization.name}</owner>-->
-			<!--								<owner.email>support@ikm.dev</owner.email>-->
-			<!--							</properties>-->
-			<!--						</configuration>-->
-			<!--					</execution>-->
-			<!--				</executions>-->
-			<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
