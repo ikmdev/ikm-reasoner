@@ -31,9 +31,9 @@ import java.util.Set;
 
 public class SnomedIsa {
 
-	public static long root = SnomedOwlOntology.root;
+	public static long root = SnomedIds.root;
 
-	public static long isa = SnomedOwlOntology.isa;
+	public static long isa = SnomedIds.isa;
 
 	private HashMap<Long, Set<Long>> parentsMap = new HashMap<>();
 

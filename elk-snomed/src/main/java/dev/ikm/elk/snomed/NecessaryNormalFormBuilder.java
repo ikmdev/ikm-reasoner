@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.semanticweb.elk.reasoner.Reasoner;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +45,13 @@ public class NecessaryNormalFormBuilder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NecessaryNormalFormBuilder.class);
 
-	private SnomedOwlOntology snomedOwlOntology;
-
 	private SnomedOntology snomedOntology;
 
 	private List<Concept> concepts = new ArrayList<>();
+
+	private HashMap<Long, Set<Long>> superConcepts;
+
+	private HashMap<Long, Set<Long>> superRoles;
 
 	private SnomedIsa isa;
 
@@ -75,40 +76,43 @@ public class NecessaryNormalFormBuilder {
 		return necessaryNormalForm.get(con);
 	}
 
-	public NecessaryNormalFormBuilder(SnomedOwlOntology snomedOwlOntology) {
+	public NecessaryNormalFormBuilder(SnomedOntology snomedOntology, HashMap<Long, Set<Long>> superConcepts,
+			HashMap<Long, Set<Long>> superObjectProperties) {
 		super();
-		this.snomedOwlOntology = snomedOwlOntology;
+		this.snomedOntology = snomedOntology;
+		this.superConcepts = superConcepts;
+		this.superRoles = superObjectProperties;
 	}
 
 	public void init() {
-		snomedOntology = new OwlTransformer().transform(snomedOwlOntology);
+//		snomedOntology = new OwlTransformer().transform(snomedOwlOntology);
 		initConcepts();
 		initRoles();
-		for (OWLAxiom ax : snomedOwlOntology.getOntology().getAxioms()) {
-			switch (ax.getAxiomType().getName()) {
-			case "SubClassOf" -> {
-			}
-			case "EquivalentClasses" -> {
-			}
-			case "SubObjectPropertyOf" -> {
-			}
-			case "SubPropertyChainOf" -> {
-			}
-			case "TransitiveObjectProperty" -> {
-			}
-			case "ReflexiveObjectProperty" -> {
-			}
-			default -> throw new UnsupportedOperationException("Unexpected: " + ax + " " + ax.getAxiomType());
-			}
-		}
+//		for (OWLAxiom ax : snomedOwlOntology.getOntology().getAxioms()) {
+//			switch (ax.getAxiomType().getName()) {
+//			case "SubClassOf" -> {
+//			}
+//			case "EquivalentClasses" -> {
+//			}
+//			case "SubObjectPropertyOf" -> {
+//			}
+//			case "SubPropertyChainOf" -> {
+//			}
+//			case "TransitiveObjectProperty" -> {
+//			}
+//			case "ReflexiveObjectProperty" -> {
+//			}
+//			default -> throw new UnsupportedOperationException("Unexpected: " + ax + " " + ax.getAxiomType());
+//			}
+//		}
 	}
 
 	private void initConcepts() {
-		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
+//		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
 		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
 		for (Concept concept : snomedOntology.getConcepts()) {
 			long id = concept.getId();
-			superConcepts.put(id, snomedOwlOntology.getSuperClasses(id));
+//			superConcepts.put(id, snomedOwlOntology.getSuperClasses(id));
 			dependentOnConcepts.put(id, getDependentOnConcepts(concept));
 		}
 		isa = SnomedIsa.init(superConcepts);
@@ -127,11 +131,8 @@ public class NecessaryNormalFormBuilder {
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
 			superRolesTypes.put(rt, new HashSet<>());
 			superRolesTypes.get(rt).add(rt);
-			// TODO Why does this this cause incompleteness warnings
-			snomedOwlOntology.getReasoner()
-					.getSuperObjectProperties(snomedOwlOntology.getOwlObjectProperty(rt.getId()), false).getFlattened()
-					.stream().filter(x -> !x.isOWLTopObjectProperty()).forEach(x -> superRolesTypes.get(rt)
-							.add(snomedOntology.getRoleType(SnomedOwlOntology.getId(x.asOWLObjectProperty()))));
+			superRoles.get(rt.getId()).stream().map(x -> snomedOntology.getRoleType(x))
+					.forEach(x -> superRolesTypes.get(rt).add(x));
 		}
 		if (log_roles) {
 			for (Entry<RoleType, Set<RoleType>> es : superRolesTypes.entrySet()) {
@@ -151,7 +152,7 @@ public class NecessaryNormalFormBuilder {
 	private HashSet<Long> getDependentOnConcepts(Concept concept) {
 		HashSet<Long> dependentOnConcepts = new HashSet<>();
 		long id = concept.getId();
-		dependentOnConcepts.addAll(snomedOwlOntology.getSuperClasses(id));
+		dependentOnConcepts.addAll(superConcepts.get(id));
 		for (Definition def : concept.getDefinitions()) {
 			List<RoleGroup> rgs = new ArrayList<>(def.getRoleGroups());
 			for (Role role : def.getUngroupedRoles()) {
@@ -212,8 +213,8 @@ public class NecessaryNormalFormBuilder {
 		} else {
 			def.setDefinitionType(DefinitionType.SubConcept);
 		}
-		List<Concept> sups = snomedOwlOntology.getSuperClasses(con.getId()).stream()
-				.map(x -> snomedOntology.getConcept(x)).distinct().collect(Collectors.toCollection(ArrayList::new));
+		List<Concept> sups = superConcepts.get(con.getId()).stream().map(x -> snomedOntology.getConcept(x)).distinct()
+				.collect(Collectors.toCollection(ArrayList::new));
 		sups.forEach(sup -> def.addSuperConcept(sup));
 		for (Concept sup : sups) {
 			for (Role role : necessaryNormalForm.get(sup).getUngroupedRoles()) {

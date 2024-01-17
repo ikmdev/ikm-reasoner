@@ -7,3 +7,4 @@ plugin.xml
 .idea
 *.iml
 **/catalog-v???.xml
+.factorypath

@@ -29,9 +29,9 @@ import java.util.Set;
 
 public class SnomedRoles {
 
-	public static long root = SnomedOwlOntology.root;
+	public static long root = SnomedIds.root;
 
-	public static long isa = SnomedOwlOntology.isa;
+	public static long isa = SnomedIds.isa;
 
 	public static class Role {
 

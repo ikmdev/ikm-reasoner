@@ -1,3 +1,5 @@
+package dev.ikm.elk.snomed.owl;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -17,22 +19,21 @@
  * limitations under the License.
  * #L%
  */
-open module dev.ikm.elk.snomed {
 
-	requires org.slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	requires org.semanticweb.elk.owl.model;
-//	requires org.semanticweb.elk.owlapi;
-	requires org.semanticweb.elk.reasoner;
+public class SnomedInternationalTestBase extends SnomedTestBase {
 
-//	requires org.semanticweb.owlapi;
-//	requires org.semanticweb.owlapi.apibinding;
-//	requires org.semanticweb.owlapi.impl;
-//	requires org.semanticweb.owlapi.parsers;
+	@SuppressWarnings("unused")
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedInternationalTestBase.class);
 
-	requires dev.ikm.elk.snomed.reasoner;
+	protected String getDir() {
+		return "data/snomed/SnomedCT_InternationalRF2_PRODUCTION_" + getVersion() + "T120000Z/Snapshot/Terminology/";
+	}
 
-	exports dev.ikm.elk.snomed;
-	exports dev.ikm.elk.snomed.model;
+	protected String getEdition() {
+		return "INT";
+	}
 
 }

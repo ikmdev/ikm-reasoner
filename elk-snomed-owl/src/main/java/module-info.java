@@ -1,6 +1,6 @@
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
  * Copyright (C) 2023 Integrated Knowledge Management
  * %%
@@ -17,22 +17,22 @@
  * limitations under the License.
  * #L%
  */
-open module dev.ikm.elk.snomed {
+open module dev.ikm.elk.snomed.owl {
 
 	requires org.slf4j;
 
 	requires org.semanticweb.elk.owl.model;
-//	requires org.semanticweb.elk.owlapi;
+	requires org.semanticweb.elk.owlapi;
 	requires org.semanticweb.elk.reasoner;
 
-//	requires org.semanticweb.owlapi;
-//	requires org.semanticweb.owlapi.apibinding;
-//	requires org.semanticweb.owlapi.impl;
-//	requires org.semanticweb.owlapi.parsers;
+	requires org.semanticweb.owlapi;
+	requires org.semanticweb.owlapi.apibinding;
+	requires org.semanticweb.owlapi.impl;
+	requires org.semanticweb.owlapi.parsers;
 
+	requires dev.ikm.elk.snomed;
 	requires dev.ikm.elk.snomed.reasoner;
 
-	exports dev.ikm.elk.snomed;
-	exports dev.ikm.elk.snomed.model;
+	exports dev.ikm.elk.snomed.owl;
 
 }
