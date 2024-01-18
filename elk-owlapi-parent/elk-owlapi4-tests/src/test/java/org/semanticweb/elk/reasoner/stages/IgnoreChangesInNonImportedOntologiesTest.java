@@ -1,3 +1,5 @@
+package org.semanticweb.elk.reasoner.stages;
+
 /*
  * #%L
  * ELK OWL API Binding
@@ -19,10 +21,6 @@
  * limitations under the License.
  * #L%
  */
-
-package org.semanticweb.elk.reasoner.stages;
-
-
 
 import static org.junit.Assert.assertTrue;
 

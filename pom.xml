@@ -526,5 +526,33 @@ limitations under the License.]]>
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>java-tests-additional-tasks</id>
+			<activation>
+				<file>
+					<exists>${basedir}/src/test/java</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>apply-license-to-test-source</id>
+								<goals>
+									<goal>format</goal>
+								</goals>
+								<phase>generate-sources</phase>
+								<configuration>
+									<skip>true</skip>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

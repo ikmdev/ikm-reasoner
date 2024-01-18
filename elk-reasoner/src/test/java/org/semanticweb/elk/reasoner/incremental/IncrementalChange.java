@@ -1,3 +1,4 @@
+package org.semanticweb.elk.reasoner.incremental;
 /*
  * #%L
  * ELK Reasoner
@@ -19,9 +20,6 @@
  * limitations under the License.
  * #L%
  */
-  
-package org.semanticweb.elk.reasoner.incremental;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
