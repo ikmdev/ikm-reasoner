@@ -1,3 +1,4 @@
+package org.semanticweb.elk.owlapi.proofs;
 /*
  * #%L
  * ELK Proofs Package
