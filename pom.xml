@@ -320,13 +320,17 @@
 					<artifactId>license-maven-plugin</artifactId>
 					<version>4.3</version>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tidy-maven-plugin</artifactId>
+					<version>1.2.0</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tidy-maven-plugin</artifactId>
-				<version>1.2.0</version>
 				<executions>
 					<execution>
 						<id>validate</id>
