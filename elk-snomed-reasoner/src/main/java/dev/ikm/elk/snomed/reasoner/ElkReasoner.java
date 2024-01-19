@@ -300,7 +300,9 @@ public class ElkReasoner {
 						throw new ReasonerInternalException("Failed to shut down ELK!");
 					break;
 				} catch (InterruptedException e) {
-					continue;
+					// TODO Why do Sonar block on this and not the original
+					// continue;
+					throw new ReasonerInternalException(e);
 				}
 			}
 		} catch (ElkRuntimeException e) {
