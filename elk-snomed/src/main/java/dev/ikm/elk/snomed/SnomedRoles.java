@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class SnomedRoles {
 
@@ -72,20 +73,22 @@ public class SnomedRoles {
 	public void load(Path file) throws IOException {
 		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
 		// typeId characteristicTypeId modifierId
-		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) != isa) // typeId
-				.forEach(fields -> {
-					long con = Long.parseLong(fields[4]); // sourceId
-					long destination = Long.parseLong(fields[5]); // destinationId
-					long relationshipGroup = Long.parseLong(fields[6]); // relationshipGroup
-					long typeId = Long.parseLong(fields[7]); // typeId
-					roles.computeIfAbsent(con, x -> new HashSet<>());
-					roles.get(con).add(new Role(destination, relationshipGroup, typeId));
-					// 900000000000011006 |Inferred relationship (core metadata concept)|
+		try (Stream<String> st = Files.lines(file)) {
+			st.skip(1).map(line -> line.split("\\t")) //
+					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+					.filter(fields -> Long.parseLong(fields[7]) != isa) // typeId
+					.forEach(fields -> {
+						long con = Long.parseLong(fields[4]); // sourceId
+						long destination = Long.parseLong(fields[5]); // destinationId
+						long relationshipGroup = Long.parseLong(fields[6]); // relationshipGroup
+						long typeId = Long.parseLong(fields[7]); // typeId
+						roles.computeIfAbsent(con, x -> new HashSet<>());
+						roles.get(con).add(new Role(destination, relationshipGroup, typeId));
+						// 900000000000011006 |Inferred relationship (core metadata concept)|
 //					if (Long.parseLong(fields[8]) != 900000000000011006l)
 //						throw new RuntimeException(fields[8]);
-				});
+					});
+		}
 	}
 
 }
