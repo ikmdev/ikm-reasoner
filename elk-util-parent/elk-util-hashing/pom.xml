@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>elk-util-hashing</artifactId>
+	<parent>
+		<groupId>dev.ikm.elk</groupId>
+		<artifactId>elk-util-parent</artifactId>
+		<version>0.13.0-SNAPSHOT</version>
+	</parent>
 
-    <parent>
-        <groupId>dev.ikm.elk</groupId>
-        <artifactId>elk-util-parent</artifactId>
-        <version>0.13.0-SNAPSHOT</version>
-    </parent>
+	<artifactId>elk-util-hashing</artifactId>
 
-    <name>ELK Utilities for Hashing</name>
-    <description>ELK Utilities for Hashing</description>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>dev.ikm.elk.provider.concurrent</Automatic-Module-Name>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+	<name>ELK Utilities for Hashing</name>
+	<description>ELK Utilities for Hashing</description>
 </project>

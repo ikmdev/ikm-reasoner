@@ -1,45 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>elk-util-common</artifactId>
+	<parent>
+		<groupId>dev.ikm.elk</groupId>
+		<artifactId>elk-util-parent</artifactId>
+		<version>0.13.0-SNAPSHOT</version>
+	</parent>
 
-    <parent>
-        <groupId>dev.ikm.elk</groupId>
-        <artifactId>elk-util-parent</artifactId>
-        <version>0.13.0-SNAPSHOT</version>
-    </parent>
+	<artifactId>elk-util-common</artifactId>
 
-    <name>ELK Common Utilities</name>
-    <description>ELK utilities that are not (yet) organized into independent modules</description>
+	<name>ELK Common Utilities</name>
+	<description>ELK utilities that are not (yet) organized into independent
+		modules</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>elk-util-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dev.ikm.elk</groupId>
-            <artifactId>elk-util-testing</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>dev.ikm.elk.provider.hashing</Automatic-Module-Name>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-testing</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>

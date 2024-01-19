@@ -1,7 +1,7 @@
 /*
  * #%L
  * ELK Reasoner
- *
+ * 
  * $Id$
  * $HeadURL$
  * %%
@@ -10,9 +10,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,13 @@
  * #L%
  */
 /**
- *
+ * 
  */
 package org.semanticweb.elk.reasoner;
 
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
+import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.reasoner.stages.LoggingStageExecutor;
@@ -46,68 +47,57 @@ import org.slf4j.LoggerFactory;
  */
 public class ReasonerFactory {
 
-	final static Logger LOGGER_ = LoggerFactory
-			.getLogger(ReasonerFactory.class);
+	final static Logger LOGGER_ = LoggerFactory.getLogger(ReasonerFactory.class);
 
 	final static ReasonerStageExecutor DEFAULT_STAGE_EXECUTOR = new LoggingStageExecutor();
 
 	final static ReasonerInterrupter DEFAULT_INTERRUPTER = new ReasonerInterrupter();
 
 	public Reasoner createReasoner(AxiomLoader.Factory axiomLoaderFactory) {
-		return createReasoner(axiomLoaderFactory,
-				ReasonerConfiguration.getConfiguration());
+		return createReasoner(axiomLoaderFactory, ReasonerConfiguration.getConfiguration());
 	}
 
-	public Reasoner createReasoner(AxiomLoader.Factory axiomLoaderFactory,
-			ReasonerConfiguration config) {
-		return createReasoner(axiomLoaderFactory, DEFAULT_INTERRUPTER,
-				DEFAULT_STAGE_EXECUTOR, config);
+	public Reasoner createReasoner(AxiomLoader.Factory axiomLoaderFactory, ReasonerConfiguration config) {
+		return createReasoner(axiomLoaderFactory, DEFAULT_INTERRUPTER, DEFAULT_STAGE_EXECUTOR, config);
 	}
 
-	Reasoner createReasoner(AxiomLoader.Factory axiomLoaderFactory,
-			final ReasonerInterrupter interrupter,
+	Reasoner createReasoner(AxiomLoader.Factory axiomLoaderFactory, final ReasonerInterrupter interrupter,
 			ReasonerStageExecutor stageExecutor, ReasonerConfiguration config) {
-		return createReasoner(new ElkObjectEntityRecyclingFactory(),
-				axiomLoaderFactory, interrupter, stageExecutor, config);
+		return createReasoner(new ElkObjectEntityRecyclingFactory(), axiomLoaderFactory, interrupter, stageExecutor,
+				config);
 	}
 
 	@SuppressWarnings("static-method")
-	Reasoner createReasoner(ElkObject.Factory elkFactory,
-			AxiomLoader.Factory axiomLoaderFactory,
-			final ReasonerInterrupter interrupter,
-			ReasonerStageExecutor stageExecutor, ReasonerConfiguration config) {
-		final Reasoner reasoner = createReasoner(elkFactory, interrupter,
-				stageExecutor, config);
+	Reasoner createReasoner(ElkObject.Factory elkFactory, AxiomLoader.Factory axiomLoaderFactory,
+			final ReasonerInterrupter interrupter, ReasonerStageExecutor stageExecutor, ReasonerConfiguration config) {
+		final Reasoner reasoner = createReasoner(elkFactory, interrupter, stageExecutor, config);
 		reasoner.registerAxiomLoader(axiomLoaderFactory);
 		return reasoner;
 	}
 
 	@SuppressWarnings("static-method")
-	public Reasoner createReasoner(final Reasoner reasoner,
-			final ElkObject.Factory elkFactory,
+	public Reasoner createReasoner(final Reasoner reasoner, final ElkObject.Factory elkFactory,
 			final ReasonerConfiguration config) {
-		return createReasoner(elkFactory, reasoner.getInterrupter(),
-				reasoner.getStageExecutor(), config);
+		return createReasoner(elkFactory, reasoner.getInterrupter(), reasoner.getStageExecutor(), config);
 	}
 
 	@SuppressWarnings("static-method")
 	public Reasoner createReasoner(final ReasonerConfiguration config) {
-		return createReasoner(DEFAULT_INTERRUPTER, DEFAULT_STAGE_EXECUTOR,
-				config);
+		return createReasoner(DEFAULT_INTERRUPTER, DEFAULT_STAGE_EXECUTOR, config);
 	}
 
-	static Reasoner createReasoner(final ReasonerInterrupter interrupter,
-			final ReasonerStageExecutor stageExecutor,
+	static Reasoner createReasoner(final ReasonerInterrupter interrupter, final ReasonerStageExecutor stageExecutor,
 			final ReasonerConfiguration config) {
-		return createReasoner(new ElkObjectEntityRecyclingFactory(),
-				interrupter, stageExecutor, config);
+		return createReasoner(new ElkObjectEntityRecyclingFactory(), interrupter, stageExecutor, config);
 	}
 
-	static Reasoner createReasoner(final ElkObject.Factory elkFactory,
-			final ReasonerInterrupter interrupter,
-			final ReasonerStageExecutor stageExecutor,
-			final ReasonerConfiguration config) {
+	static Reasoner createReasoner(final ElkObject.Factory elkFactory, final ReasonerInterrupter interrupter,
+			final ReasonerStageExecutor stageExecutor, final ReasonerConfiguration config) {
 		return new Reasoner(elkFactory, interrupter, stageExecutor, config);
+	}
+
+	public Reasoner createReasoner(ElkObject.Factory elkFactory, ReasonerConfiguration config) {
+		return createReasoner(elkFactory, DEFAULT_INTERRUPTER, DEFAULT_STAGE_EXECUTOR, config);
 	}
 
 }

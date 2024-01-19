@@ -1,0 +1,23 @@
+Prefix(: = <>)
+Prefix(rdf: = <http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+Prefix(rdfs: = <http://www.w3.org/2000/01/rdf-schema#>)
+Prefix(xsd: = <http://www.w3.org/2001/XMLSchema#>)
+Prefix(owl: = <http://www.w3.org/2002/07/owl#>)
+Ontology(
+Declaration(Class (:Root))
+Declaration(Class (:B))
+Declaration(Class (:C))
+Declaration(NamedIndividual (:One))
+Declaration(ObjectProperty (:R1))
+Declaration(ObjectProperty (:R2))
+Declaration(ObjectProperty (:RD))
+EquivalentClasses(:A1 ObjectIntersectionOf(:Root 
+										   ObjectSomeValuesFrom(:R1 :B)
+										   ObjectHasValue(:RD :One)
+										   ))
+EquivalentClasses(:A2 ObjectIntersectionOf(:Root
+										   ObjectSomeValuesFrom(:R1 :B)
+										   ObjectHasValue(:RD :One)
+										   ObjectSomeValuesFrom(:R2 :C)
+										   ))
+)
