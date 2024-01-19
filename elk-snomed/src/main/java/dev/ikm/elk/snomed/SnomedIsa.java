@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 import java.util.Set;
 
 public class SnomedIsa {
@@ -107,15 +108,17 @@ public class SnomedIsa {
 		// typeId characteristicTypeId modifierId
 		//
 		// 116680003 |Is a (attribute)|
-		Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) == isa) // typeId
-				.forEach(fields -> {
-					long con = Long.parseLong(fields[4]); // sourceId
-					long par = Long.parseLong(fields[5]); // destinationId
-					parentsMap.computeIfAbsent(con, x -> new HashSet<>());
-					parentsMap.get(con).add(par);
-				});
+		try (Stream<String> st = Files.lines(file)) {
+			st.skip(1).map(line -> line.split("\\t")) //
+					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+					.filter(fields -> Long.parseLong(fields[7]) == isa) // typeId
+					.forEach(fields -> {
+						long con = Long.parseLong(fields[4]); // sourceId
+						long par = Long.parseLong(fields[5]); // destinationId
+						parentsMap.computeIfAbsent(con, x -> new HashSet<>());
+						parentsMap.get(con).add(par);
+					});
+		}
 	}
 
 	public Set<Long> getParents(long con) {

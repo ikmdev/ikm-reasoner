@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.OWLAPIConfigProvider;
@@ -95,10 +96,12 @@ public class SnomedOwlOntology {
 
 	public static List<String> readAxioms(Path file) throws IOException {
 		// id effectiveTime active moduleId refsetId referencedComponentId owlExpression
-		return Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.map(fields -> fields[6]) //
-				.collect(Collectors.toList());
+		try (Stream<String> st = Files.lines(file)) {
+			return st.skip(1).map(line -> line.split("\\t")) //
+					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+					.map(fields -> fields[6]) //
+					.collect(Collectors.toList());
+		}
 	}
 
 	public static List<String> getPrefixDeclaration(List<String> lines) {
