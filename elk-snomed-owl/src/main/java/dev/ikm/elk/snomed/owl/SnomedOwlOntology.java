@@ -109,7 +109,7 @@ public class SnomedOwlOntology {
 	}
 
 	public static String getOntologyDeclaration(List<String> lines) {
-		return lines.stream().filter(line -> line.startsWith("Ontology")).findFirst().get();
+		return lines.stream().filter(line -> line.startsWith("Ontology")).findFirst().orElseThrow();
 	}
 
 	public static List<String> readOntology(Path file) throws IOException {
