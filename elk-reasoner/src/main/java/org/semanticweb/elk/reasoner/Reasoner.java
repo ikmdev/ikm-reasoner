@@ -1,7 +1,7 @@
 /*
  * #%L
  * ELK Reasoner
- *
+ * 
  * $Id$
  * $HeadURL$
  * %%
@@ -10,9 +10,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,6 +68,8 @@ public class Reasoner extends AbstractReasonerState {
 
 	// logger for this class
 	private static final Logger LOGGER_ = LoggerFactory.getLogger(Reasoner.class);
+	
+	public static boolean processingNecessaryNormalForm = false;
 
 	public static boolean testing() {
 		try {

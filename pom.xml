@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -16,17 +14,14 @@
 	<version>0.13.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>IKM Classifier</name>
+	<name>IKM ELK Reasoner</name>
 	<description>A Java-based OWL EL reasoner</description>
-
 	<url>https://www.ikm.dev</url>
 	<inceptionYear>2023</inceptionYear>
-
 	<organization>
 		<name>Integrated Knowledge Management</name>
 		<url>https://www.ikm.dev</url>
 	</organization>
-
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -35,223 +30,210 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<url>http://www.github.com/ikmdev/ikm-classifier</url>
-	</scm>
-
 	<modules>
+		<module>elk-util-parent</module>
 		<module>elk-owl-parent</module>
 		<module>elk-reasoner</module>
-		<module>elk-util-parent</module>
 		<module>elk-proofs</module>
-		<module>elk-proofs-test</module> <!-- TODO combine with elk-proofs -->
-		<module>elk-owlapi-parent</module> <!-- TODO combine owl-api4 and tests together and simplify -->
-		<module>elk-snomed</module> <!-- TODO seems to just be testing, can be combined with anything else -->
+		<module>elk-proofs-test</module>
+		<module>elk-owlapi-parent</module>
+		<module>elk-snomed</module>
+		<module>elk-snomed-reasoner</module>
+		<module>elk-snomed-owl</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>19</java.version>
+		<java.version>21</java.version>
 		<slf4j.version>2.0.7</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
-
-		<tinkar-jpms-deps.groupId>dev.ikm.jpms</tinkar-jpms-deps.groupId>
-		<tinkar-jpms-deps.version>1.0.15</tinkar-jpms-deps.version>
-
-		<owlapi4.version>4.5.25-ikm-r1</owlapi4.version>
 		<guava.version>31.1-jre-r1</guava.version>
-		<puli.version>0.2.1</puli.version>
-		<slf4j.version>2.0.0-alpha6</slf4j.version>
+		<jsr305.version>3.0.2-r1</jsr305.version>
+		<puli.version>0.2.2</puli.version>
+		<owlapi4.version>4.5.25-ikm-r3</owlapi4.version>
+		<junit4.version>4.13.2</junit4.version>
+		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- internal dependencies -->
 			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-implementation</artifactId>
-				<version>${project.version}</version>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j2-impl</artifactId>
+				<version>${log4j.version}</version>
+				<scope>test</scope>
 			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-model</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-parsing-javacc</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-parsing-javacc</artifactId>
-				<type>test-jar</type>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-reasoner</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-reasoner</artifactId>
-				<type>test-jar</type>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-collections</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-concurrent</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-hashing</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-io</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-logging</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-testing</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-util-testing4</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs-test</artifactId>
-				<type>test-jar</type>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owlapi4</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owl-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<!-- jpms dependencies -->
-			<dependency><!-- TODO this needs to be a ikm group id if we are publishing it -->
-				<groupId>org.liveontologies</groupId>
-				<artifactId>puli</artifactId>
-				<version>${puli.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${tinkar-jpms-deps.groupId}</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-
-			<!-- external dependencies -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-
+			<!-- dev.ikm JPMS dependencies-->
 			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-slf4j2-impl</artifactId>
-				<version>${log4j.version}</version>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
-
 			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${jsr305.version}</version>
+			</dependency>
+			<!-- dev.ikm PULI dependencies-->
+			<dependency>
+				<groupId>dev.ikm.puli</groupId>
+				<artifactId>owlapi-proof</artifactId>
+				<version>${puli.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dev.ikm.puli</groupId>
+				<artifactId>puli</artifactId>
+				<version>${puli.version}</version>
+			</dependency>
+			<!-- dev.ikm OWL API dependencies-->
+			<dependency>
+				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-api</artifactId>
-				<version>${owlapi.version}</version>
+				<version>${owlapi4.version}</version>
 			</dependency>
-
 			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-impl</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
-				<artifactId>owlapi-parsers</artifactId>
-				<version>${owlapi.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>net.sourceforge.owlapi</groupId>
+				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-apibinding</artifactId>
-				<version>${owlapi.version}</version>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dev.ikm.owlapi</groupId>
+				<artifactId>owlapi-impl</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dev.ikm.owlapi</groupId>
+				<artifactId>owlapi-parsers</artifactId>
+				<version>${owlapi4.version}</version>
+			</dependency>
+			<!-- Project dependencies-->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owlapi4</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-implementation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-model</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-parsing-javacc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-owl-parsing-javacc</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-proofs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-proofs-test</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-reasoner</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-reasoner</artifactId>
+				<version>${project.version}</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-snomed</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-snomed-owl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-snomed-reasoner</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-collections</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-concurrent</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-hashing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-io</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-logging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-testing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-util-testing4</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- Test dependencies-->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit4.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit-jupiter-api.version}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<!-- Cross project dependencies -->
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -262,7 +244,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.6.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -272,27 +254,32 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.1.0</version>
+					<version>3.3.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
+					<version>3.11.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.6.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.1.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -302,22 +289,27 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.1.2</version>
+					<version>3.4.5</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.0</version>
+					<version>3.12.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
+					<version>3.2.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -327,32 +319,31 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.15.0</version>
+					<version>2.16.1</version>
+				</plugin>
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>4.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tidy-maven-plugin</artifactId>
+					<version>1.2.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<fork>true</fork>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tidy-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>analyze</id>
+						<id>validate</id>
+						<phase>validate</phase>
 						<goals>
-							<goal>analyze-only</goal>
+							<goal>check</goal>
 						</goals>
-						<configuration>
-							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -371,7 +362,7 @@
 					<execution>
 						<id>first</id>
 						<goals>
-							<!--<goal>update-file-header</goal>-->
+							<goal>update-file-header</goal>
 							<goal>update-project-license</goal>
 						</goals>
 						<phase>process-sources</phase>
@@ -385,38 +376,56 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--			<plugin>-->
-			<!--				<groupId>org.codehaus.mojo</groupId>-->
-			<!--				<artifactId>tidy-maven-plugin</artifactId>-->
-			<!--							<version>1.1.0</version>-->
-			<!--				<executions>-->
-			<!--					<execution>-->
-			<!--						<id>validate</id>-->
-			<!--						<phase>validate</phase>-->
-			<!--						<goals>-->
-			<!--							<goal>check</goal>-->
-			<!--						</goals>-->
-			<!--					</execution>-->
-			<!--				</executions>-->
-			<!--			</plugin>-->
-			<!--			<plugin>-->
-			<!--				<groupId>com.github.ekryd.sortpom</groupId>-->
-			<!--				<artifactId>sortpom-maven-plugin</artifactId>-->
-			<!--				<version>3.0.0</version>-->
-			<!--				<configuration>-->
-			<!--					<sortOrderFile>../sortpom.xml</sortOrderFile>-->
-			<!--					<encoding>${project.build.sourceEncoding}</encoding>-->
-			<!--					<nrOfIndentSpace>-1</nrOfIndentSpace>-->
-			<!--				</configuration>-->
-			<!--				<executions>-->
-			<!--					<execution>-->
-			<!--						<goals>-->
-			<!--							<goal>sort</goal>-->
-			<!--						</goals>-->
-			<!--						<phase>validate</phase>-->
-			<!--					</execution>-->
-			<!--				</executions>-->
-			<!--			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs combine.self="override"></compilerArgs>
+					<fork>true</fork>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<useModulePath>false</useModulePath>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doclint>none</doclint>
+					<source>${java.version}</source>
+					<release>${java.version}</release>
+					<release>${java.version}</release>
+				</configuration>
+				<executions>
+					<execution>
+						<id>jar</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>analyze</id>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
+						<configuration>
+							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -449,11 +458,34 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependency-updates-report</report>
+							<report>plugin-updates-report</report>
+							<report>property-updates-report</report>
+						</reports>
+					</reportSet>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>dependency-updates-aggregate-report</report>
+							<report>plugin-updates-aggregate-report</report>
+							<report>property-updates-aggregate-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 		</plugins>
 	</reporting>
 
-	<!-- override configuration inherited to adjust for complex licensing -->
 	<profiles>
+		<!-- Block these. License changes all files (incorrectly). Jar is a
+		bug.-->
 		<profile>
 			<id>java-source-additional-tasks</id>
 			<activation>
@@ -463,65 +495,15 @@
 			</activation>
 			<build>
 				<plugins>
-					<!-- apply licenses to all java source files
-						Needs to match what LICENSE.txt and ATTRIBUTION.txt says.
-						Also, it needs to not be indented
-						-->
 					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>apply-license-to-source</id>
-								<goals>
-									<goal>format</goal>
-								</goals>
-								<phase>generate-sources</phase>
-								<configuration>
-									<skip>true</skip>
-									<licenseSets>
-										<licenseSet>
-											<!-- Do not change this to <header /> as this will break -->
-											<header></header>
-											<multi>
-												<preamble><![CDATA[This product is dual-licensed under Apache 2.0 License for two organizations due to forking.]]></preamble>
-												<inlineHeader><![CDATA[
-Copyright © ${year} ${owner} (${email})
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.]]>
-												</inlineHeader>
-												<separator>======================================================================</separator>
-												<inlineHeader><![CDATA[
-Copyright © 2011 - 2023 Department of Computer Science, University of Oxford
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.]]>
-												</inlineHeader>
-											</multi>
-										</licenseSet>
-									</licenseSets>
-								</configuration>
-							</execution>
-						</executions>
+						<inherited>false</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<inherited>false</inherited>
 					</plugin>
 				</plugins>
 			</build>
@@ -530,7 +512,7 @@ limitations under the License.]]>
 			<id>java-tests-additional-tasks</id>
 			<activation>
 				<file>
-					<exists>${basedir}/src/test/java</exists>
+					<exists>${basedir}/src/main/java</exists>
 				</file>
 			</activation>
 			<build>
@@ -538,18 +520,7 @@ limitations under the License.]]>
 					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>apply-license-to-test-source</id>
-								<goals>
-									<goal>format</goal>
-								</goals>
-								<phase>generate-sources</phase>
-								<configuration>
-									<skip>true</skip>
-								</configuration>
-							</execution>
-						</executions>
+						<inherited>false</inherited>
 					</plugin>
 				</plugins>
 			</build>

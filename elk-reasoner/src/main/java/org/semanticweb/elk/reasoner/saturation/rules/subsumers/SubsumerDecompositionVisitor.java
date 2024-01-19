@@ -1,5 +1,6 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
+import org.semanticweb.elk.reasoner.DevTrace;
 
 /*
  * #%L
@@ -12,9 +13,9 @@ package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,18 +35,21 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectUnionOf;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * An {@link IndexedClassExpression.Visitor} applying decomposition rules using a
- * given {@link SubsumerDecompositionRuleVisitor} using given
+ * An {@link IndexedClassExpression.Visitor} applying decomposition rules using
+ * a given {@link SubsumerDecompositionRuleVisitor} using given
  * {@link ContextPremises} and producing conclusions using a given
  * {@link ClassInferenceProducer}
  * 
  * @author "Yevgeny Kazakov"
  * 
  */
-public class SubsumerDecompositionVisitor implements
-		IndexedClassExpression.Visitor<Void> {
+public class SubsumerDecompositionVisitor implements IndexedClassExpression.Visitor<Void> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SubsumerDecompositionVisitor.class);
 
 	/**
 	 * the rule visitor used when applying decomposition rules
@@ -62,9 +66,8 @@ public class SubsumerDecompositionVisitor implements
 	 */
 	private final ClassInferenceProducer producer_;
 
-	public SubsumerDecompositionVisitor(
-			SubsumerDecompositionRuleVisitor<?> ruleVisitor,
-			ContextPremises premises, ClassInferenceProducer producer) {
+	public SubsumerDecompositionVisitor(SubsumerDecompositionRuleVisitor<?> ruleVisitor, ContextPremises premises,
+			ClassInferenceProducer producer) {
 		this.ruleVisitor_ = ruleVisitor;
 		this.premises_ = premises;
 		this.producer_ = producer;
@@ -72,45 +75,42 @@ public class SubsumerDecompositionVisitor implements
 
 	@Override
 	public Void visit(IndexedClass element) {
-		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_, element,
-				premises_, producer_);
-		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
-				element, premises_, producer_);
+		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedIndividual element) {
-		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
-				element, premises_, producer_);
+		DevTrace.log(LOG, ">IndexedIndividual {}", element);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		DevTrace.log(LOG, "<IndexedIndividual {}", element);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectComplementOf element) {
-		IndexedObjectComplementOfDecomposition.getInstance().accept(
-				ruleVisitor_, element, premises_, producer_);
+		IndexedObjectComplementOfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectIntersectionOf element) {
-		IndexedObjectIntersectionOfDecomposition.getInstance().accept(
-				ruleVisitor_, element, premises_, producer_);
+		IndexedObjectIntersectionOfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectSomeValuesFrom element) {
-		IndexedObjectSomeValuesFromDecomposition.getInstance().accept(
-				ruleVisitor_, element, premises_, producer_);
+		DevTrace.log(LOG, ">IndexedObjectSomeValuesFrom {}", element);
+		IndexedObjectSomeValuesFromDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		DevTrace.log(LOG, "<IndexedObjectSomeValuesFrom {}", element);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectHasSelf element) {
-		IndexedObjectHasSelfDecomposition.getInstance().accept(ruleVisitor_,
-				element, premises_, producer_);
+		IndexedObjectHasSelfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
@@ -122,6 +122,7 @@ public class SubsumerDecompositionVisitor implements
 
 	@Override
 	public Void visit(IndexedDataHasValue element) {
+		DevTrace.log(LOG, "IndexedDataHasValue {}", element);
 		// not supported
 		return null;
 	}

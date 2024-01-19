@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<artifactId>elk-owlapi4-tests</artifactId>
 
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
@@ -10,12 +8,10 @@
 		<version>0.13.0-SNAPSHOT</version>
 	</parent>
 
+	<artifactId>elk-owlapi4-tests</artifactId>
+
 	<name>ELK OWL API v.4 Binding for Test</name>
 	<description>ELK bindings for OWL API version 4 - Tests</description>
-
-	<properties>
-		<owlapi.version>${owlapi4.version}</owlapi.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -23,39 +19,58 @@
 			<artifactId>elk-owlapi4</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-parsing-javacc</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-parsing-javacc</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-proofs-test</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-reasoner</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-util-testing4</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-test-resources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<phase>verify</phase>
+						<configuration>
+							<classesDirectory>${project.basedir}/src/test/resources</classesDirectory>
+							<classifier>test-resources</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
