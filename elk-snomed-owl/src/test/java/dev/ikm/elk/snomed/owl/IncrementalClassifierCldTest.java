@@ -62,6 +62,8 @@ public class IncrementalClassifierCldTest extends SnomedTestBase {
 
 	@BeforeAll
 	public void init() throws Exception {
+		LOG.info("Init");
+		filesExist();
 		equivalent_classes_isa = classifyEquivalentClasses();
 		sub_class_of_isa = classifySubClassOf();
 	}
