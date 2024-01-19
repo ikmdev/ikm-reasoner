@@ -177,7 +177,7 @@ public class ElkReasoner {
 //		this(ontology, isBufferingMode, elkConfig,
 //				new ReasonerFactory().createReasoner(elkConfig.getElkConfiguration()));
 		this(ontology, isBufferingMode, elkConfig,
-				new ReasonerFactory().createReasoner(ontology.getObjectFactory(),  elkConfig.getElkConfiguration()));
+				new ReasonerFactory().createReasoner(ontology.getObjectFactory(), elkConfig.getElkConfiguration()));
 	}
 
 	OwlxOntology getOWLOntology() {
@@ -288,26 +288,25 @@ public class ElkReasoner {
 	/* Methods required by the OWLReasoner interface */
 
 //	@Override
-	public void dispose() {
+	public void dispose() throws InterruptedException {
 		LOGGER_.trace("dispose()");
 
 		owlOntologymanager_.removeOntologyChangeListener(ontologyChangeListener_);
 		owlOntologymanager_.removeOntologyChangeProgessListener(ontologyChangeProgressListener_);
-		try {
-			for (;;) {
-				try {
-					if (!reasoner_.shutdown())
-						throw new ReasonerInternalException("Failed to shut down ELK!");
-					break;
-				} catch (InterruptedException e) {
-					// TODO Why do Sonar block on this and not the original
-					// continue;
-					throw new ReasonerInternalException(e);
-				}
-			}
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
-		}
+		// TODO Why does Sonar block on this and not the original
+//		try {
+//			for (;;) {
+//				try {
+		if (!reasoner_.shutdown())
+			throw new ReasonerInternalException("Failed to shut down ELK!");
+//					break;
+//				} catch (InterruptedException e) {
+//					 continue;
+//				}
+//			}
+//		} catch (ElkRuntimeException e) {
+//			throw elkConverter_.convert(e);
+//		}
 	}
 
 //	@Override
@@ -1012,8 +1011,7 @@ public class ElkReasoner {
 		LOGGER_.trace("isEntailed(Set<? extends ElkAxiom>)");
 		checkInterrupted();
 		try {
-			Map<ElkAxiom, VerifiableQueryResult> results = reasoner_
-					.checkEntailment(owlAxioms);
+			Map<ElkAxiom, VerifiableQueryResult> results = reasoner_.checkEntailment(owlAxioms);
 			for (final VerifiableQueryResult result : results.values()) {
 				if (!Incompleteness.getValue(result)) {
 					return false;
