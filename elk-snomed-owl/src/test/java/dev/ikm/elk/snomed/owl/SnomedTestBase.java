@@ -55,7 +55,7 @@ public abstract class SnomedTestBase {
 			"sct2_Relationship_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
 	@BeforeEach
-	private void filesExist() {
+	protected void filesExist() {
 		assumeTrue(Files.exists(axioms_file), "No file: " + axioms_file);
 		assumeTrue(Files.exists(rels_file), "No file: " + rels_file);
 		LOG.info("Files exist");

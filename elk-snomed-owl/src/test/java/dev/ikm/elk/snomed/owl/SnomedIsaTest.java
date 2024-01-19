@@ -45,6 +45,7 @@ public class SnomedIsaTest extends SnomedTestBase {
 	@BeforeAll
 	public void init() throws Exception {
 		LOG.info("Init");
+		filesExist();
 		isas = SnomedIsa.init(rels_file);
 	}
 
