@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.23.0</version>
+		<version>1.40.0</version>
 		<relativePath />
 	</parent>
 
@@ -24,11 +24,20 @@
 	</organization>
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<id>ikmdev</id>
+			<name>IKM Development Team</name>
+			<email>support@ikm.dev</email>
+		</developer>
+	</developers>
 
 	<modules>
 		<module>elk-util-parent</module>
@@ -41,6 +50,10 @@
 		<module>elk-snomed-reasoner</module>
 		<module>elk-snomed-owl</module>
 	</modules>
+
+	<scm>
+		<url>http://www.github.com/ikmdev/enrichment-api</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
