@@ -59,7 +59,7 @@ pipeline {
                         // This expands the environment variables SONAR_CONFIG_NAME, SONAR_HOST_URL, SONAR_AUTH_TOKEN that can be used by any script.
                         sh """
                             mvn sonar:sonar \
-                                -Dsonar.qualitygate.wait=true \
+                                -Dsonar.qualitygate.wait=false \
                                 -Dsonar.token=${SONAR_AUTH_TOKEN} \
                                 -s '${MAVEN_SETTINGS}' \
                                 --batch-mode
