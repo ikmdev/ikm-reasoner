@@ -497,8 +497,7 @@
 	</reporting>
 
 	<profiles>
-		<!-- Block these. License changes all files (incorrectly). Jar is a
-		bug.-->
+		<!-- Skip license. License changes all files (incorrectly). -->
 		<profile>
 			<id>java-source-additional-tasks</id>
 			<activation>
@@ -511,12 +510,9 @@
 					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<inherited>false</inherited>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<inherited>false</inherited>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -533,7 +529,9 @@
 					<plugin>
 						<groupId>com.mycila</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<inherited>false</inherited>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
