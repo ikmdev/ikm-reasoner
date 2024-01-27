@@ -521,7 +521,7 @@
 			<id>java-tests-additional-tasks</id>
 			<activation>
 				<file>
-					<exists>${basedir}/src/main/java</exists>
+					<exists>${basedir}/src/test/java</exists>
 				</file>
 			</activation>
 			<build>
