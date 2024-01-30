@@ -288,25 +288,24 @@ public class ElkReasoner {
 	/* Methods required by the OWLReasoner interface */
 
 //	@Override
-	public void dispose() throws InterruptedException {
+	public void dispose() {
 		LOGGER_.trace("dispose()");
 
 		owlOntologymanager_.removeOntologyChangeListener(ontologyChangeListener_);
 		owlOntologymanager_.removeOntologyChangeProgessListener(ontologyChangeProgressListener_);
-		// TODO Why does Sonar block on this and not the original
-//		try {
-//			for (;;) {
-//				try {
+		try {
+			for (;;) {
+				try {
 		if (!reasoner_.shutdown())
 			throw new ReasonerInternalException("Failed to shut down ELK!");
-//					break;
-//				} catch (InterruptedException e) {
-//					 continue;
-//				}
-//			}
-//		} catch (ElkRuntimeException e) {
-//			throw elkConverter_.convert(e);
-//		}
+					break;
+				} catch (InterruptedException e) {
+					continue;
+				}
+			}
+		} catch (ElkRuntimeException e) {
+			throw elkConverter_.convert(e);
+		}
 	}
 
 //	@Override

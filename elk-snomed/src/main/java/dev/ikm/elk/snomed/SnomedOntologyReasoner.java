@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
@@ -84,6 +85,14 @@ public class SnomedOntologyReasoner {
 		return "" + rt.getId();
 	}
 
+	public static long getId(ElkObjectProperty clazz) {
+		return Long.parseLong(clazz.getIri().toString().substring(1));
+	}
+
+	public RoleType getRoleType(ElkObjectProperty clazz) {
+		return snomedOntology.getRoleType(getId(clazz));
+	}
+
 	private void process(RoleType rt) {
 		String iri = getIri(rt);
 		ElkObjectProperty prop = ontology.getElkObjectProperty(iri);
@@ -115,6 +124,14 @@ public class SnomedOntologyReasoner {
 
 	private String getIri(Concept con) {
 		return "" + con.getId();
+	}
+
+	public static long getId(ElkClass clazz) {
+		return Long.parseLong(clazz.getIri().toString().substring(1));
+	}
+
+	public Concept getConcept(ElkClass clazz) {
+		return snomedOntology.getConcept(getId(clazz));
 	}
 
 	private void process(Concept con) {
@@ -192,11 +209,20 @@ public class SnomedOntologyReasoner {
 		return ret;
 	}
 
+	public Set<RoleType> getSuperRoleTypes(RoleType con) {
+		return getSuperObjectProperties(con).stream().map(this::getRoleType)
+				.collect(Collectors.toCollection(HashSet::new));
+	}
+
 	public Set<ElkClass> getSuperClasses(Concept con) {
 		Set<? extends Node<ElkClass>> sups = reasoner.getSuperClasses(ontology.getElkClass(getIri(con)), true);
 		Set<ElkClass> flat = flatten(sups);
 		flat.remove(ontology.getOwlThing());
 		return flat;
+	}
+
+	public Set<Concept> getSuperConcepts(Concept con) {
+		return getSuperClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
 	}
 
 }
