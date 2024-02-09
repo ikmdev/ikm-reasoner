@@ -225,4 +225,48 @@ public class SnomedOntologyReasoner {
 		return getSuperClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
 	}
 
+	public Set<Long> getSuperConcepts(long id) {
+		Concept con = snomedOntology.getConcept(id);
+		if (con == null)
+			return null;
+		return getSuperConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public Set<ElkClass> getSubClasses(Concept con) {
+		Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), true);
+		Set<ElkClass> flat = flatten(subs);
+		flat.remove(ontology.getOwlNothing());
+		return flat;
+	}
+
+	public Set<Concept> getSubConcepts(Concept con) {
+		return getSubClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public Set<Long> getSubConcepts(long id) {
+		Concept con = snomedOntology.getConcept(id);
+		if (con == null)
+			return null;
+		return getSubConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public Set<ElkClass> getEquivalentClasses(Concept con) {
+		Node<ElkClass> eqs = reasoner.getEquivalentClasses(ontology.getElkClass(getIri(con)));
+		Set<ElkClass> flat = new HashSet<>(flatten(eqs));
+		flat.remove(ontology.getOwlThing());
+		flat.remove(ontology.getOwlNothing());
+		return flat;
+	}
+
+	public Set<Concept> getEquivalentConcepts(Concept con) {
+		return getEquivalentClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public Set<Long> getEquivalentConcepts(long id) {
+		Concept con = snomedOntology.getConcept(id);
+		if (con == null)
+			return null;
+		return getEquivalentConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+	}
+
 }
