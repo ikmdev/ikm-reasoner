@@ -49,11 +49,13 @@ class OwlOntologyChangeProcessorVisitor // implements OWLOntologyChangeVisitor
 			axiomInserter_.visit(axiom);
 			if (LOGGER_.isTraceEnabled())
 				LOGGER_.trace("adding " + axiom);
+			return;
 		}
 		if (change.isRemoveAxiom()) {
 			axiomDeleter_.visit(axiom);
 			if (LOGGER_.isTraceEnabled())
 				LOGGER_.trace("removing " + axiom);
+			return;
 		}
 		error_ = new ElkLoadingException("Ontology change " + change.toString() + " is not supported");
 	}
