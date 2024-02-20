@@ -54,6 +54,10 @@ public class Concept {
 	public void addDefinition(Definition definition) {
 		this.definitions.add(definition);
 	}
+	
+	public void removeAllDefinitions() {
+		this.definitions = new ArrayList<>();
+	}
 
 	public List<Definition> getGciDefinitions() {
 		return gciDefinitions;
@@ -61,6 +65,10 @@ public class Concept {
 
 	public void addGciDefinition(Definition definition) {
 		this.gciDefinitions.add(definition);
+	}
+	
+	public void removeAllGciDefinitions() {
+		this.gciDefinitions = new ArrayList<>();
 	}
 
 	public long getId() {
@@ -88,5 +96,7 @@ public class Concept {
 	public String toString() {
 		return "Concept[" + id + "]";
 	}
+
+	
 
 }

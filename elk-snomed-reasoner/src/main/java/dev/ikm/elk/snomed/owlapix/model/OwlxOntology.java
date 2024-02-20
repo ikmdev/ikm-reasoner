@@ -74,6 +74,19 @@ public class OwlxOntology implements OwlxOntologyManager {
 		return ret;
 	}
 
+	public boolean removeAxiom(ElkAxiom axiom) {
+		boolean ret = axioms.remove(axiom);
+		OwlxOntologyChange change = OwlxOntologyChange.createRemoved(this, axiom);
+		for (OwlxOntologyChangeListener listener : change_listeners) {
+			try {
+				listener.ontologiesChanged(List.of(change));
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+		return ret;
+	}
+
 	public OwlxOntology() {
 		super();
 		objectFactory = new ElkObjectEntityRecyclingFactory();
