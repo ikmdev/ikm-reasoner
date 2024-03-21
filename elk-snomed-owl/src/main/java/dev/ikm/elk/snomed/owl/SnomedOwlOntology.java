@@ -23,6 +23,7 @@ package dev.ikm.elk.snomed.owl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.OWLAPIConfigProvider;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParser;
+import org.semanticweb.owlapi.functional.renderer.OWLFunctionalSyntaxRenderer;
 import org.semanticweb.owlapi.io.StringDocumentSource;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -41,7 +43,6 @@ import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
@@ -53,7 +54,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import dev.ikm.elk.snomed.SnomedIds;
-import dev.ikm.elk.snomed.SnomedIsa;
 
 public class SnomedOwlOntology {
 
@@ -100,12 +100,13 @@ public class SnomedOwlOntology {
 			return st.skip(1).map(line -> line.split("\\t")) //
 					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
 					.map(fields -> fields[6]) //
-					.collect(Collectors.toList());
+					.collect(Collectors.toCollection(ArrayList::new));
 		}
 	}
 
 	public static List<String> getPrefixDeclaration(List<String> lines) {
-		return lines.stream().filter(line -> line.startsWith("Prefix")).collect(Collectors.toList());
+		return lines.stream().filter(line -> line.startsWith("Prefix"))
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public static String getOntologyDeclaration(List<String> lines) {
@@ -128,6 +129,11 @@ public class SnomedOwlOntology {
 	public static SnomedOwlOntology createOntology() throws Exception {
 		OWLOntologyManager mgr = OWLManager.createOWLOntologyManager();
 		return new SnomedOwlOntology(mgr);
+	}
+
+	public void writeOntology(Path path) throws Exception {
+		OWLFunctionalSyntaxRenderer fsr = new OWLFunctionalSyntaxRenderer();
+		fsr.render(ontology, Files.newBufferedWriter(path));
 	}
 
 	private void initMaps() {
@@ -194,6 +200,16 @@ public class SnomedOwlOntology {
 		return ontology.getAxioms(prop, Imports.EXCLUDED);
 	}
 
+	public void addAxioms(Set<OWLAxiom> axioms) {
+		OWLOntologyManager mgr = getOntologyManager();
+		mgr.addAxioms(ontology, axioms);
+	}
+
+	public void removeAxioms(Set<OWLAxiom> axioms) {
+		OWLOntologyManager mgr = getOntologyManager();
+		mgr.removeAxioms(ontology, axioms);
+	}
+
 	public void loadOntology(Path file) throws Exception {
 		List<String> lines = readOntology(file);
 		loadOntology(lines);
@@ -210,6 +226,19 @@ public class SnomedOwlOntology {
 		reasoner = rf.createReasoner(ontology);
 		reasoner.flush();
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+	}
+
+	public Set<OWLClass> getEquivalentClasses(OWLClass clazz) {
+		Set<OWLClass> equivalentClasses = reasoner.getEquivalentClasses(clazz).getEntities().stream() //
+				.filter(x -> !x.isTopEntity()) //
+				.filter(x -> !x.isBottomEntity()) //
+				.collect(Collectors.toSet());
+		return equivalentClasses;
+	}
+
+	public Set<Long> getEquivalentClasses(long id) {
+		OWLClass clazz = getOwlClass(id);
+		return getEquivalentClasses(clazz).stream().map(SnomedOwlOntology::getId).collect(Collectors.toSet());
 	}
 
 	public Set<Long> getSuperClasses(long id) {
