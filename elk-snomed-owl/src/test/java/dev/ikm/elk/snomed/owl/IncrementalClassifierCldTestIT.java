@@ -40,13 +40,9 @@ import org.slf4j.LoggerFactory;
 import dev.ikm.elk.snomed.SnomedIsa;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class IncrementalClassifierCldTest extends SnomedTestBase {
+public class IncrementalClassifierCldTestIT extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierCldTest.class);
-
-	protected String getDir() {
-		return "data/snomed/SnomedCT_USEditionRF2_PRODUCTION_20210301T120000Z/Snapshot/Terminology/";
-	}
+	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierCldTestIT.class);
 
 	protected String getVersion() {
 		return "20210301";

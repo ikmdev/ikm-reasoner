@@ -34,24 +34,26 @@ public abstract class SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedTestBase.class);
 
-	private final String home = System.getProperty("user.home");
-
 	protected String getDir() {
-		return "data/snomed/SnomedCT_USEditionRF2_PRODUCTION_20210301T120000Z/Snapshot/Terminology/";
+		return "target/data/snomed-test-data-" + getEditionDir() + "-" + getVersion();
 	}
 
 	protected String getEdition() {
 		return "US1000124";
 	}
 
+	protected String getEditionDir() {
+		return "us";
+	}
+
 	protected String getVersion() {
 		return "20210301";
 	}
 
-	protected Path axioms_file = Paths.get(home, getDir(),
+	protected Path axioms_file = Paths.get(getDir(),
 			"sct2_sRefset_OWLExpressionSnapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
-	protected Path rels_file = Paths.get(home, getDir(),
+	protected Path rels_file = Paths.get(getDir(),
 			"sct2_Relationship_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
 	@BeforeEach

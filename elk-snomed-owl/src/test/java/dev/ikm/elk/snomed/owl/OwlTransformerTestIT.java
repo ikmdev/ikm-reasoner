@@ -31,9 +31,9 @@ import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.DefinitionType;
 
-public class OwlTransformerTest extends SnomedTestBase {
+public class OwlTransformerTestIT extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformerTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformerTestIT.class);
 
 	@Test
 	public void transform() throws Exception {

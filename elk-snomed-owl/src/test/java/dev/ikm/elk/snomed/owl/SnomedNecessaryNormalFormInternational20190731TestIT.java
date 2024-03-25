@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 
-public class SnomedNecessaryNormalFormInternational20190731Test extends SnomedNecessaryNormalFormInternationalTestBase {
+public class SnomedNecessaryNormalFormInternational20190731TestIT extends SnomedNecessaryNormalFormInternationalTestBase {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20190731Test.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20190731TestIT.class);
 
 	protected String getVersion() {
 		return "20190731";

@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>dev.ikm.build</groupId>
+		<artifactId>java-parent</artifactId>
+		<version>1.40.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>dev.ikm.snomed</groupId>
+	<artifactId>snomed-test-data</artifactId>
+	<version>0.1.0</version>
+	<packaging>pom</packaging>
+
+	<name>SNOMED Test Data Artifacts</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+		<!-- Each module needs to set ${snomed.edition} -->
+		<snomed.path>${snomed.edition}/Snapshot/Terminology</snomed.path>
+	</properties>
+
+	<modules>
+		<module>snomed-test-data-intl-20190731</module>
+		<module>snomed-test-data-intl-20200131</module>
+		<module>snomed-test-data-intl-20200731</module>
+		<module>snomed-test-data-intl-20210131</module>
+		<module>snomed-test-data-us-20210301</module>
+		<module>snomed-test-data-us-20230301</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven-assembly-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>snomed-test-data-assemble</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+							<configuration>
+								<appendAssemblyId>false</appendAssemblyId>
+								<archiveBaseDirectory>${user.home}/data/snomed</archiveBaseDirectory>
+								<includeProjectBuildFilters>false</includeProjectBuildFilters>
+								<inlineDescriptors>
+									<inlineDescriptor>
+										<id>snomed-data</id>
+										<formats>
+											<format>zip</format>
+										</formats>
+										<baseDirectory>/</baseDirectory>
+										<fileSets>
+											<fileSet>
+												<directory>${snomed.path}</directory>
+												<outputDirectory>
+													${project.artifactId}</outputDirectory>
+												<filtered>false</filtered>
+											</fileSet>
+										</fileSets>
+									</inlineDescriptor>
+								</inlineDescriptors>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

@@ -31,9 +31,9 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IncrementalClassifierTest extends SnomedTestBase {
+public class IncrementalClassifierTestIT extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierTestIT.class);
 
 	public SnomedOwlOntology classify() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();

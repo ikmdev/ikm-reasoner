@@ -33,14 +33,6 @@ public class SnomedNecessaryNormalFormInternationalTestBase extends SnomedIntern
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternationalTestBase.class);
 
-	protected String getDir() {
-		return "data/snomed/SnomedCT_InternationalRF2_PRODUCTION_" + getVersion() + "T120000Z/Snapshot/Terminology/";
-	}
-
-	protected String getEdition() {
-		return "INT";
-	}
-
 	public NecessaryNormalFormBuilder generate() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
