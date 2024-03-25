@@ -28,12 +28,12 @@ public class SnomedInternationalTestBase extends SnomedTestBase {
 	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedInternationalTestBase.class);
 
-	protected String getDir() {
-		return "data/snomed/SnomedCT_InternationalRF2_PRODUCTION_" + getVersion() + "T120000Z/Snapshot/Terminology/";
-	}
-
 	protected String getEdition() {
 		return "INT";
+	}
+
+	protected String getEditionDir() {
+		return "intl";
 	}
 
 }

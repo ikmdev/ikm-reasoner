@@ -28,19 +28,19 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 
-public class SnomedNecessaryNormalFormInternational20200731Test extends SnomedNecessaryNormalFormInternationalTestBase {
+public class SnomedNecessaryNormalFormInternational20200131TestIT extends SnomedNecessaryNormalFormInternationalTestBase {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20200731Test.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternational20200131TestIT.class);
 
 	protected String getVersion() {
-		return "20200731";
+		return "20200131";
 	}
 
 	@Test
 	public void run() throws Exception {
 		NecessaryNormalFormBuilder nnfb = generate();
-		assertEquals(354256, nnfb.getConcepts().size());
+		assertEquals(352449, nnfb.getConcepts().size());
 		assertEquals(0, nnfb.getMisMatchCount());
 	}
 

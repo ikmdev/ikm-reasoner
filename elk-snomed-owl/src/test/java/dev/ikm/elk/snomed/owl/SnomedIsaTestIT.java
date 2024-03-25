@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 import dev.ikm.elk.snomed.SnomedIsa;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class SnomedIsaTest extends SnomedTestBase {
+public class SnomedIsaTestIT extends SnomedTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedIsaTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedIsaTestIT.class);
 
 	private SnomedIsa isas;
 
