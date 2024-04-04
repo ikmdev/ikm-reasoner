@@ -29,7 +29,7 @@ import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 import dev.ikm.elk.snomed.SnomedOntology;
 import dev.ikm.elk.snomed.SnomedRoles;
 
-public class SnomedNecessaryNormalFormInternationalTestBase extends SnomedInternationalTestBase {
+public abstract class SnomedNecessaryNormalFormInternationalTestBase extends SnomedInternationalTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternationalTestBase.class);
 

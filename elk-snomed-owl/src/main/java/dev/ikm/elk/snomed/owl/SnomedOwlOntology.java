@@ -52,10 +52,14 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.SnomedIds;
 
 public class SnomedOwlOntology {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntology.class);
 
 	public static final long root = SnomedIds.root;
 
@@ -222,10 +226,12 @@ public class SnomedOwlOntology {
 	}
 
 	public void classify() {
+		long beg = System.currentTimeMillis();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
 		reasoner = rf.createReasoner(ontology);
 		reasoner.flush();
 		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+		LOG.info("Classify in: " + (System.currentTimeMillis() - beg) / 1000 + " secs");
 	}
 
 	public Set<OWLClass> getEquivalentClasses(OWLClass clazz) {
