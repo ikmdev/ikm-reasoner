@@ -25,6 +25,7 @@
 		<module>snomed-test-data-intl-20230630</module>
 		<module>snomed-test-data-us-20210301</module>
 		<module>snomed-test-data-us-20230301</module>
+		<module>snomed-test-data-us-20230901</module>
 	</modules>
 
 	<properties>

@@ -23,6 +23,7 @@ package dev.ikm.elk.snomed.owl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public abstract class SnomedInternationalTestBase extends SnomedTestBase {
 
 	@SuppressWarnings("unused")

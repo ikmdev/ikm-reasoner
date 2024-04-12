@@ -213,6 +213,11 @@ public class SnomedOwlOntology {
 		OWLOntologyManager mgr = getOntologyManager();
 		mgr.removeAxioms(ontology, axioms);
 	}
+	
+	public void loadOntology(Set<OWLAxiom> axioms) {
+		addAxioms(axioms);
+		initMaps();
+	}
 
 	public void loadOntology(Path file) throws Exception {
 		List<String> lines = readOntology(file);
