@@ -8,11 +8,11 @@
 		<version>0.1.0</version>
 	</parent>
 
-	<artifactId>snomed-test-data-intl-20200131</artifactId>
+	<artifactId>snomed-test-data-intl-20230630</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
-		<snomed.edition>SnomedCT_InternationalRF2_PRODUCTION_20200131T120000Z</snomed.edition>
+		<snomed.edition>SnomedCT_InternationalRF2_PRODUCTION_20230630T120000Z</snomed.edition>
 	</properties>
 
 	<build>
