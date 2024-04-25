@@ -22,7 +22,14 @@ package dev.ikm.elk.snomed.owl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +51,25 @@ public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntology
 	public void loadOntology() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
-		assertEquals(371575, ontology.getOntology().getAxiomCount());
-		assertEquals(370018, ontology.getOntology().getSignature().size());
-		assertEquals(369879, ontology.getOntology().getClassesInSignature().size());
-		assertEquals(126, ontology.getOntology().getObjectPropertiesInSignature().size());
-		assertEquals(11, ontology.getOntology().getDataPropertiesInSignature().size());
-		assertEquals(2, ontology.getOntology().getDatatypesInSignature().size());
+		OWLOntology oo = ontology.getOntology();
+		assertEquals(371575, oo.getAxiomCount());
+		assertEquals(370018, oo.getSignature().size());
+		assertEquals(369879, oo.getClassesInSignature().size());
+		assertEquals(126, oo.getObjectPropertiesInSignature().size());
+		assertEquals(5, oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).size());
+		oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).forEach(x -> LOG.info("" + x));
+		assertEquals(4, oo.getAxioms(AxiomType.TRANSITIVE_OBJECT_PROPERTY).size());
+		oo.getAxioms(AxiomType.TRANSITIVE_OBJECT_PROPERTY).forEach(x -> LOG.info("" + x));
+		assertEquals(2, oo.getAxioms(AxiomType.REFLEXIVE_OBJECT_PROPERTY).size());
+		oo.getAxioms(AxiomType.REFLEXIVE_OBJECT_PROPERTY).forEach(x -> LOG.info("" + x));
+		assertEquals(
+				Set.of(AxiomType.SUBCLASS_OF, AxiomType.EQUIVALENT_CLASSES, AxiomType.SUB_OBJECT_PROPERTY,
+						AxiomType.SUB_PROPERTY_CHAIN_OF, AxiomType.TRANSITIVE_OBJECT_PROPERTY,
+						AxiomType.REFLEXIVE_OBJECT_PROPERTY, AxiomType.SUB_DATA_PROPERTY),
+				oo.getAxioms().stream().map(OWLAxiom::getAxiomType).distinct()
+						.collect(Collectors.toCollection(HashSet::new)));
+		assertEquals(11, oo.getDataPropertiesInSignature().size());
+		assertEquals(2, oo.getDatatypesInSignature().size());
 		testSignature(ontology);
 	}
 
