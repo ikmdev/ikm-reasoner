@@ -49,8 +49,11 @@
 		<module>elk-snomed</module>
 		<module>elk-snomed-reasoner</module>
 		<module>elk-snomed-owl</module>
-		<!-- See snomed-test-data module to build test data artifacts -->
-		<!-- It's parent is java-build-parent NOT elk-parent -->
+		<!-- Building test data artifacts is skipped by default -->
+		<!-- To build test data artifacts: -->
+		<!-- 	cd snomed-test-data -->
+		<!-- 	mvn clean install -DskipTestDataBuild=false -->
+		<module>snomed-test-data</module>
 	</modules>
 
 	<scm>
