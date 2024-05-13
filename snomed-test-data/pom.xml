@@ -2,12 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- Note parent is NOT elk-parent -->
 	<parent>
-		<groupId>dev.ikm.build</groupId>
-		<artifactId>java-parent</artifactId>
-		<version>1.40.0</version>
-		<relativePath />
+		<groupId>dev.ikm.elk</groupId>
+		<artifactId>elk-parent</artifactId>
+		<version>0.20.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>dev.ikm.snomed</groupId>
@@ -33,6 +31,7 @@
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
 		<!-- Each module needs to set ${snomed.edition} -->
 		<snomed.path>${snomed.edition}/Snapshot/Terminology</snomed.path>
+		<skipTestDataBuild>true</skipTestDataBuild>
 	</properties>
 
 	<build>
@@ -70,30 +69,21 @@
 										</fileSets>
 									</inlineDescriptor>
 								</inlineDescriptors>
+								<skipAssembly>${skipTestDataBuild}</skipAssembly>
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>tidy-maven-plugin</artifactId>
-					<version>1.2.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tidy-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>validate</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<skipUpdateLicense>true</skipUpdateLicense>
+					<skipUpdateProjectLicense>true</skipUpdateProjectLicense>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
