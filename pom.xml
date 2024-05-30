@@ -63,9 +63,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>21</java.version>
-		<slf4j.version>2.0.7</slf4j.version>
+		<slf4j.version>2.0.13</slf4j.version>
 		<slf4j-simple.version>2.0.13</slf4j-simple.version>
-		<log4j.version>3.0.0-alpha1</log4j.version>
 		<guava.version>31.1-jre-r1</guava.version>
 		<jsr305.version>3.0.2-r1</jsr305.version>
 		<owlapi4.version>4.5.25-ikm-r3</owlapi4.version>
@@ -76,12 +75,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-slf4j2-impl</artifactId>
-				<version>${log4j.version}</version>
-				<scope>test</scope>
-			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -259,14 +252,13 @@
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j2-impl</artifactId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>test</scope>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 	</dependencies>
 
