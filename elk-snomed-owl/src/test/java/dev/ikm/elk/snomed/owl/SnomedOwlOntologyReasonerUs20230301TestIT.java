@@ -33,16 +33,16 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntologyReasonerUsTestBase {
+public class SnomedOwlOntologyReasonerUs20230301TestIT extends SnomedOwlOntologyReasonerUsTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUs20230901TestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUs20230301TestIT.class);
 
 	protected String getVersion() {
-		return "20230901";
+		return "20230301";
 	}
 
 	{
-		expected_axiom_cnt = 371582;
+		expected_axiom_cnt = 369237;
 	}
 
 	@Test
@@ -50,9 +50,10 @@ public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntology
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
 		OWLOntology oo = ontology.getOntology();
-		assertEquals(371575, oo.getAxiomCount());
-		assertEquals(370018, oo.getSignature().size());
-		assertEquals(369879, oo.getClassesInSignature().size());
+		assertEquals(369230, oo.getAxiomCount());
+		assertEquals(369230, oo.getLogicalAxiomCount());
+		assertEquals(367704, oo.getSignature().size());
+		assertEquals(367565, oo.getClassesInSignature().size());
 		assertEquals(126, oo.getObjectPropertiesInSignature().size());
 		assertEquals(5, oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).size());
 		oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).forEach(x -> LOG.info("" + x));
@@ -68,6 +69,11 @@ public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntology
 						.collect(Collectors.toCollection(HashSet::new)));
 		assertEquals(11, oo.getDataPropertiesInSignature().size());
 		assertEquals(2, oo.getDatatypesInSignature().size());
+		assertEquals(1174,
+				ontology.getOwlClasses().stream().filter(x -> ontology.getAxioms(x).size() != 1).toList().size());
+		assertEquals(324, getGciCount(ontology));
+		assertEquals(324, ontology.getGciAxioms().size());
+		assertEquals(324, ontology.getOwlClasses().stream().mapToInt(x -> ontology.getGciAxioms(x).size()).sum());
 		testSignature(ontology);
 	}
 

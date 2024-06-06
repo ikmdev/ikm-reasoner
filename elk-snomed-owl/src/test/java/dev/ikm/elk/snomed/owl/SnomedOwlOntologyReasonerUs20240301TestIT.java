@@ -33,16 +33,16 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntologyReasonerUsTestBase {
+public class SnomedOwlOntologyReasonerUs20240301TestIT extends SnomedOwlOntologyReasonerUsTestBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUs20230901TestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUs20240301TestIT.class);
 
 	protected String getVersion() {
-		return "20230901";
+		return "20240301";
 	}
 
 	{
-		expected_axiom_cnt = 371582;
+		expected_axiom_cnt = 374216;
 	}
 
 	@Test
@@ -50,9 +50,9 @@ public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntology
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
 		OWLOntology oo = ontology.getOntology();
-		assertEquals(371575, oo.getAxiomCount());
-		assertEquals(370018, oo.getSignature().size());
-		assertEquals(369879, oo.getClassesInSignature().size());
+		assertEquals(374209, oo.getAxiomCount());
+		assertEquals(372528, oo.getSignature().size());
+		assertEquals(372389, oo.getClassesInSignature().size());
 		assertEquals(126, oo.getObjectPropertiesInSignature().size());
 		assertEquals(5, oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).size());
 		oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).forEach(x -> LOG.info("" + x));
