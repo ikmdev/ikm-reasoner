@@ -8,7 +8,10 @@ import java.util.Set;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
+import org.semanticweb.elk.owl.interfaces.ElkDataHasValue;
+import org.semanticweb.elk.owl.interfaces.ElkDataProperty;
 import org.semanticweb.elk.owl.interfaces.ElkEquivalentClassesAxiom;
+import org.semanticweb.elk.owl.interfaces.ElkLiteral;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.interfaces.ElkObjectPropertyChain;
@@ -50,6 +53,8 @@ public class OwlxOntology implements OwlxOntologyManager {
 	private HashMap<String, ElkClass> elkClasses = new HashMap<>();
 
 	private HashMap<String, ElkObjectProperty> elkObjectProperties = new HashMap<>();
+
+	private HashMap<String, ElkDataProperty> elkDataProperties = new HashMap<>();
 
 	private HashSet<ElkAxiom> axioms = new HashSet<>();
 
@@ -113,6 +118,10 @@ public class OwlxOntology implements OwlxOntologyManager {
 		return elkObjectProperties.computeIfAbsent(name, key -> objectFactory.getObjectProperty(getIri(name)));
 	}
 
+	public ElkDataProperty getElkDataProperty(String name) {
+		return elkDataProperties.computeIfAbsent(name, key -> objectFactory.getDataProperty(getIri(name)));
+	}
+
 	public ElkAxiom getElkSubObjectPropertyOfAxiom(String sub, String sup) {
 		return objectFactory.getSubObjectPropertyOfAxiom(getElkObjectProperty(sub), getElkObjectProperty(sup));
 	}
@@ -129,6 +138,10 @@ public class OwlxOntology implements OwlxOntologyManager {
 
 	public ElkReflexiveObjectPropertyAxiom getElkReflexiveObjectPropertyAxiom(String name) {
 		return objectFactory.getReflexiveObjectPropertyAxiom(getElkObjectProperty(name));
+	}
+
+	public ElkAxiom getElkSubDataPropertyOfAxiom(String sub, String sup) {
+		return objectFactory.getSubDataPropertyOfAxiom(getElkDataProperty(sub), getElkDataProperty(sup));
 	}
 
 	public ElkObjectSomeValuesFrom getElkObjectSomeValuesFrom(String prop, String filler) {
@@ -149,6 +162,10 @@ public class OwlxOntology implements OwlxOntologyManager {
 
 	public ElkAxiom getSubClassOfAxiom(ElkClassExpression expr, String name) {
 		return objectFactory.getSubClassOfAxiom(expr, getElkClass(name));
+	}
+
+	public ElkDataHasValue getDataHasValue(String name, ElkLiteral value) {
+		return objectFactory.getDataHasValue(getElkDataProperty(name), value);
 	}
 
 	public OwlxOntologyManager getOWLOntologyManager() {

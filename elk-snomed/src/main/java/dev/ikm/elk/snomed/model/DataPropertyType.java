@@ -20,35 +20,45 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-public class RoleGroup {
+public class DataPropertyType {
 
-	Set<Role> roles = new HashSet<>();
+	private long id;
 
-	Set<DataProperty> dataProperties = new HashSet<>();
+	private String name;
 
-	public Set<Role> getRoles() {
-		return roles;
+	private List<DataPropertyType> superDataPropertyTypes = new ArrayList<>();
+
+	public DataPropertyType(long id) {
+		this.id = id;
 	}
 
-	public void addRole(Role role) {
-		this.roles.add(role);
+	public long getId() {
+		return id;
 	}
 
-	public Set<DataProperty> getDataProperties() {
-		return dataProperties;
+	public String getName() {
+		return name;
 	}
 
-	public void addDataProperty(DataProperty dataProperty) {
-		this.dataProperties.add(dataProperty);
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<DataPropertyType> getSuperDataPropertyTypes() {
+		return superDataPropertyTypes;
+	}
+
+	public void addSuperDataPropertyType(DataPropertyType superDataPropertyType) {
+		this.superDataPropertyTypes.add(superDataPropertyType);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(roles);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -59,13 +69,13 @@ public class RoleGroup {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RoleGroup other = (RoleGroup) obj;
-		return Objects.equals(roles, other.roles);
+		DataPropertyType other = (DataPropertyType) obj;
+		return id == other.id;
 	}
 
 	@Override
 	public String toString() {
-		return "RoleGroup" + roles + " " + dataProperties;
+		return "DataPropertyType[" + id + "]";
 	}
 
 }

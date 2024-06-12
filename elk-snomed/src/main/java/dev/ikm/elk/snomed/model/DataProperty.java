@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed.model;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,42 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-public class RoleGroup {
+public class DataProperty {
 
-	Set<Role> roles = new HashSet<>();
-
-	Set<DataProperty> dataProperties = new HashSet<>();
-
-	public Set<Role> getRoles() {
-		return roles;
+	public enum ValueType {
+		Decimal, Integer;
 	}
 
-	public void addRole(Role role) {
-		this.roles.add(role);
+	private DataPropertyType dataPropertyType;
+
+	private String value;
+
+	private ValueType valueType;
+
+	public DataProperty(DataPropertyType dataPropertyType, String value, ValueType valueType) {
+		super();
+		this.dataPropertyType = dataPropertyType;
+		this.value = value;
+		this.valueType = valueType;
 	}
 
-	public Set<DataProperty> getDataProperties() {
-		return dataProperties;
+	public DataPropertyType getDataPropertyType() {
+		return dataPropertyType;
 	}
 
-	public void addDataProperty(DataProperty dataProperty) {
-		this.dataProperties.add(dataProperty);
+	public String getValue() {
+		return value;
+	}
+
+	public ValueType getValueType() {
+		return valueType;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(roles);
+		return Objects.hash(dataPropertyType, value, valueType);
 	}
 
 	@Override
@@ -59,13 +66,14 @@ public class RoleGroup {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RoleGroup other = (RoleGroup) obj;
-		return Objects.equals(roles, other.roles);
+		DataProperty other = (DataProperty) obj;
+		return Objects.equals(dataPropertyType, other.dataPropertyType) && Objects.equals(value, other.value)
+				&& valueType == other.valueType;
 	}
 
 	@Override
 	public String toString() {
-		return "RoleGroup" + roles + " " + dataProperties;
+		return "DataProperty[" + this.dataPropertyType.getId() + " -> " + this.value + " " + this.valueType + "]";
 	}
 
 }

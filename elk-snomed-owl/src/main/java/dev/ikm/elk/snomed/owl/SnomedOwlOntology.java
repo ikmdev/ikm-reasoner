@@ -41,6 +41,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -183,9 +184,12 @@ public class SnomedOwlOntology {
 		return ontology.getClassesInSignature();
 	}
 
-	// TODO change to getOwlObjectProperties
-	public Set<OWLObjectProperty> getObjectProperties() {
+	public Set<OWLObjectProperty> getOwlObjectProperties() {
 		return ontology.getObjectPropertiesInSignature();
+	}
+	
+	public Set<OWLDataProperty> getOwlDataProperties() {
+		return ontology.getDataPropertiesInSignature();
 	}
 
 	public Set<OWLClassAxiom> getAxioms(OWLClass clazz) {
@@ -198,6 +202,10 @@ public class SnomedOwlOntology {
 
 	public OWLObjectProperty getOwlObjectProperty(long id) {
 		return objectPropertyMap.get(id);
+	}
+	
+	public static long getId(OWLDataProperty prop) {
+		return Long.parseLong(prop.getIRI().getShortForm());
 	}
 
 	public Set<OWLObjectPropertyAxiom> getAxioms(OWLObjectProperty prop) {

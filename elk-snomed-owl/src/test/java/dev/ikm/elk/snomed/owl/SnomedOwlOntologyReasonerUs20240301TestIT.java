@@ -54,20 +54,23 @@ public class SnomedOwlOntologyReasonerUs20240301TestIT extends SnomedOwlOntology
 		assertEquals(372528, oo.getSignature().size());
 		assertEquals(372389, oo.getClassesInSignature().size());
 		assertEquals(126, oo.getObjectPropertiesInSignature().size());
+		assertEquals(125, oo.getAxioms(AxiomType.SUB_OBJECT_PROPERTY).size());
 		assertEquals(5, oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).size());
 		oo.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF).forEach(x -> LOG.info("" + x));
 		assertEquals(4, oo.getAxioms(AxiomType.TRANSITIVE_OBJECT_PROPERTY).size());
 		oo.getAxioms(AxiomType.TRANSITIVE_OBJECT_PROPERTY).forEach(x -> LOG.info("" + x));
 		assertEquals(2, oo.getAxioms(AxiomType.REFLEXIVE_OBJECT_PROPERTY).size());
 		oo.getAxioms(AxiomType.REFLEXIVE_OBJECT_PROPERTY).forEach(x -> LOG.info("" + x));
+		assertEquals(11, oo.getDataPropertiesInSignature().size());
+		assertEquals(2, oo.getDatatypesInSignature().size());
+		assertEquals(10, oo.getAxioms(AxiomType.SUB_DATA_PROPERTY).size());
+//		oo.getAxioms(AxiomType.SUB_DATA_PROPERTY).forEach(x -> LOG.info("" + x));
 		assertEquals(
 				Set.of(AxiomType.SUBCLASS_OF, AxiomType.EQUIVALENT_CLASSES, AxiomType.SUB_OBJECT_PROPERTY,
 						AxiomType.SUB_PROPERTY_CHAIN_OF, AxiomType.TRANSITIVE_OBJECT_PROPERTY,
 						AxiomType.REFLEXIVE_OBJECT_PROPERTY, AxiomType.SUB_DATA_PROPERTY),
 				oo.getAxioms().stream().map(OWLAxiom::getAxiomType).distinct()
 						.collect(Collectors.toCollection(HashSet::new)));
-		assertEquals(11, oo.getDataPropertiesInSignature().size());
-		assertEquals(2, oo.getDatatypesInSignature().size());
 		testSignature(ontology);
 	}
 

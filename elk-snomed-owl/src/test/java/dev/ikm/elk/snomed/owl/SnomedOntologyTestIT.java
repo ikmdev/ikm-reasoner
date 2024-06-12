@@ -77,12 +77,12 @@ public class SnomedOntologyTestIT extends SnomedTestBase {
 		assertEquals(362853, ontology.getOntology().getLogicalAxiomCount());
 		assertEquals(361462, ontology.getOntology().getSignature().size());
 		assertEquals(361331, ontology.getOwlClasses().size());
-		assertEquals(131, ontology.getObjectProperties().size());
+		assertEquals(131, ontology.getOwlObjectProperties().size());
 		assertEquals(0, ontology.getOntology().getDataPropertiesInSignature().size());
 		assertEquals(0, ontology.getOntology().getDatatypesInSignature().size());
 		Set<OWLEntity> sig = ontology.getOntology().getSignature();
 		sig.removeAll(ontology.getOwlClasses());
-		sig.removeAll(ontology.getObjectProperties());
+		sig.removeAll(ontology.getOwlObjectProperties());
 		sig.removeAll(ontology.getOntology().getDataPropertiesInSignature());
 		sig.stream().forEach(x -> LOG.info("In sig: " + x + " " + x.getClass()));
 		sig.removeAll(ontology.getOntology().getDatatypesInSignature());
