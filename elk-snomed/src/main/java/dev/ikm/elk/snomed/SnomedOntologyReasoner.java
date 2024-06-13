@@ -30,6 +30,11 @@ import java.util.stream.Collectors;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
+import org.semanticweb.elk.owl.interfaces.ElkDataHasValue;
+import org.semanticweb.elk.owl.interfaces.ElkDataProperty;
+import org.semanticweb.elk.owl.interfaces.ElkDatatype;
+import org.semanticweb.elk.owl.interfaces.ElkLiteral;
+import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.interfaces.ElkObjectSomeValuesFrom;
 import org.semanticweb.elk.owl.interfaces.ElkReflexiveObjectPropertyAxiom;
@@ -39,6 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.model.DataProperty;
+import dev.ikm.elk.snomed.model.DataPropertyType;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
@@ -77,6 +84,9 @@ public class SnomedOntologyReasoner {
 		for (RoleType rt : this.snomedOntology.getRoleTypes()) {
 			process(rt);
 		}
+		for (DataPropertyType dt : this.snomedOntology.getDataPropertyTypes()) {
+			process(dt);
+		}
 		for (Concept con : this.snomedOntology.getConcepts()) {
 			process(con);
 		}
@@ -104,7 +114,7 @@ public class SnomedOntologyReasoner {
 
 	private void process(RoleType rt) {
 		String iri = getIri(rt);
-		ElkObjectProperty prop = ontology.getElkObjectProperty(iri);
+		ontology.getElkObjectProperty(iri);
 		HashSet<String> rt_axioms = new HashSet<>();
 		for (RoleType sup : rt.getSuperRoleTypes()) {
 			ElkAxiom axiom = ontology.getElkSubObjectPropertyOfAxiom(iri, getIri(sup));
@@ -129,6 +139,21 @@ public class SnomedOntologyReasoner {
 			LOG.info("Reflexive: " + axiom);
 			rt_axioms.add(axiom.toString());
 		}
+	}
+
+	private void process(DataPropertyType dt) {
+		String iri = getIri(dt);
+		ontology.getElkDataProperty(iri);
+		HashSet<String> dt_axioms = new HashSet<>();
+		for (DataPropertyType sup : dt.getSuperDataPropertyTypes()) {
+			ElkAxiom axiom = ontology.getElkSubDataPropertyOfAxiom(iri, getIri(sup));
+			ontology.addAxiom(axiom);
+			dt_axioms.add(axiom.toString());
+		}
+	}
+
+	private String getIri(DataPropertyType dt) {
+		return "" + dt.getId();
 	}
 
 	private String getIri(Concept con) {
@@ -158,11 +183,13 @@ public class SnomedOntologyReasoner {
 
 	private void process(Concept con, Definition def, boolean isGci) {
 		List<ElkClass> sups = def.getSuperConcepts().stream().map(sup -> ontology.getElkClass(getIri(sup))).toList();
-		List<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles().stream().map(role -> process(role)).toList();
-		List<ElkObjectSomeValuesFrom> groups = def.getRoleGroups().stream().map(role -> process(role)).toList();
+		List<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles().stream().map(x -> process(x)).toList();
+		List<ElkDataHasValue> props = def.getUngroupedDataProperties().stream().map(this::process).toList();
+		List<ElkObjectSomeValuesFrom> groups = def.getRoleGroups().stream().map(x -> process(x)).toList();
 		List<ElkClassExpression> exprs = new ArrayList<>();
 		exprs.addAll(sups);
 		exprs.addAll(roles);
+		exprs.addAll(props);
 		exprs.addAll(groups);
 		ElkClassExpression expr;
 		if (exprs.size() == 1) {
@@ -191,13 +218,27 @@ public class SnomedOntologyReasoner {
 
 	private ElkObjectSomeValuesFrom process(RoleGroup rg) {
 		List<ElkObjectSomeValuesFrom> roles = rg.getRoles().stream().map(role -> process(role)).toList();
+		List<ElkDataHasValue> props = rg.getDataProperties().stream().map(x -> process(x)).toList();
+		ArrayList<ElkClassExpression> exprs = new ArrayList<>();
+		exprs.addAll(roles);
+		exprs.addAll(props);
 		ElkClassExpression expr;
-		if (roles.size() == 1) {
-			expr = roles.getFirst();
+		if (exprs.size() == 1) {
+			expr = exprs.getFirst();
 		} else {
-			expr = ontology.getObjectFactory().getObjectIntersectionOf(roles);
+			expr = ontology.getObjectFactory().getObjectIntersectionOf(exprs);
 		}
 		return ontology.getElkObjectSomeValuesFrom("" + SnomedIds.role_group, expr);
+	}
+
+	private ElkDataHasValue process(DataProperty dataProperty) {
+		Factory f = ontology.getObjectFactory();
+		ElkDatatype datatype = switch (dataProperty.getValueType()) {
+		case Decimal -> f.getXsdDecimal();
+		case Integer -> f.getXsdInteger();
+		};
+		ElkLiteral literal = f.getLiteral(dataProperty.getValue(), datatype);
+		return ontology.getDataHasValue(getIri(dataProperty.getDataPropertyType()), literal);
 	}
 
 	private <T> List<T> flatten(Node<T> node) {

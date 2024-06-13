@@ -1,7 +1,5 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
-import org.semanticweb.elk.reasoner.DevTrace;
-
 /*
  * #%L
  * ELK Reasoner
@@ -24,6 +22,7 @@ import org.semanticweb.elk.reasoner.DevTrace;
  * #L%
  */
 
+import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDataHasValue;
@@ -47,7 +46,8 @@ import org.slf4j.LoggerFactory;
  * @author "Yevgeny Kazakov"
  * 
  */
-public class SubsumerDecompositionVisitor implements IndexedClassExpression.Visitor<Void> {
+public class SubsumerDecompositionVisitor implements
+		IndexedClassExpression.Visitor<Void> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SubsumerDecompositionVisitor.class);
 
@@ -66,8 +66,9 @@ public class SubsumerDecompositionVisitor implements IndexedClassExpression.Visi
 	 */
 	private final ClassInferenceProducer producer_;
 
-	public SubsumerDecompositionVisitor(SubsumerDecompositionRuleVisitor<?> ruleVisitor, ContextPremises premises,
-			ClassInferenceProducer producer) {
+	public SubsumerDecompositionVisitor(
+			SubsumerDecompositionRuleVisitor<?> ruleVisitor,
+			ContextPremises premises, ClassInferenceProducer producer) {
 		this.ruleVisitor_ = ruleVisitor;
 		this.premises_ = premises;
 		this.producer_ = producer;
@@ -75,55 +76,66 @@ public class SubsumerDecompositionVisitor implements IndexedClassExpression.Visi
 
 	@Override
 	public Void visit(IndexedClass element) {
-		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
-		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_, element,
+				premises_, producer_);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedIndividual element) {
 		DevTrace.log(LOG, ">IndexedIndividual {}", element);
-		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		DevTrace.log(LOG, "<IndexedIndividual {}", element);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectComplementOf element) {
-		IndexedObjectComplementOfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
+		IndexedObjectComplementOfDecomposition.getInstance().accept(
+				ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectIntersectionOf element) {
-		IndexedObjectIntersectionOfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		IndexedObjectIntersectionOfDecomposition.getInstance().accept(
+				ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectSomeValuesFrom element) {
-		DevTrace.log(LOG, ">IndexedObjectSomeValuesFrom {}", element);
-		IndexedObjectSomeValuesFromDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
-		DevTrace.log(LOG, "<IndexedObjectSomeValuesFrom {}", element);
+		IndexedObjectSomeValuesFromDecomposition.getInstance().accept(
+				ruleVisitor_, element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectHasSelf element) {
-		IndexedObjectHasSelfDecomposition.getInstance().accept(ruleVisitor_, element, premises_, producer_);
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
+		IndexedObjectHasSelfDecomposition.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedObjectUnionOf element) {
-		// not supported
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		return null;
 	}
 
 	@Override
 	public Void visit(IndexedDataHasValue element) {
 		DevTrace.log(LOG, "IndexedDataHasValue {}", element);
-		// not supported
+		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		return null;
 	}
 

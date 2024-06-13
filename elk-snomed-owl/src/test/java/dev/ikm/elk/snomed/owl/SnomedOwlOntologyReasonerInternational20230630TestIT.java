@@ -39,7 +39,6 @@ public class SnomedOwlOntologyReasonerInternational20230630TestIT
 
 	{
 		expected_axiom_cnt = 363774;
-		expected_miss_cnt = 11853;
 	}
 
 	@Test

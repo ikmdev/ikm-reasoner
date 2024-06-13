@@ -28,12 +28,22 @@ public class RoleGroup {
 
 	Set<Role> roles = new HashSet<>();
 
+	Set<DataProperty> dataProperties = new HashSet<>();
+
 	public Set<Role> getRoles() {
 		return roles;
 	}
 
 	public void addRole(Role role) {
 		this.roles.add(role);
+	}
+
+	public Set<DataProperty> getDataProperties() {
+		return dataProperties;
+	}
+
+	public void addDataProperty(DataProperty dataProperty) {
+		this.dataProperties.add(dataProperty);
 	}
 
 	@Override
@@ -55,7 +65,7 @@ public class RoleGroup {
 
 	@Override
 	public String toString() {
-		return "RoleGroup" + roles.toString();
+		return "RoleGroup" + roles + " " + dataProperties;
 	}
 
 }

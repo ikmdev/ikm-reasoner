@@ -27,19 +27,27 @@ import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.SnomedIds;
 import dev.ikm.elk.snomed.SnomedOntology;
 import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.model.DataProperty;
+import dev.ikm.elk.snomed.model.DataPropertyType;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.DefinitionType;
 import dev.ikm.elk.snomed.model.Role;
@@ -48,9 +56,13 @@ import dev.ikm.elk.snomed.model.RoleType;
 
 public class OwlTransformer {
 
+	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformer.class);
+
 	HashMap<OWLClass, Concept> concepts = new HashMap<>();
 
 	HashMap<OWLObjectProperty, RoleType> roleTypes = new HashMap<>();
+
+	HashMap<OWLDataProperty, DataPropertyType> dataPropertyTypes = new HashMap<>();
 
 	private Concept getConcept(OWLClass clazz) {
 		long id = SnomedOwlOntology.getId(clazz);
@@ -64,8 +76,14 @@ public class OwlTransformer {
 		return roleTypes.get(prop);
 	}
 
+	private DataPropertyType getDataPropertyType(OWLDataProperty prop) {
+		long id = SnomedOwlOntology.getId(prop);
+		dataPropertyTypes.putIfAbsent(prop, new DataPropertyType(id));
+		return dataPropertyTypes.get(prop);
+	}
+
 	public SnomedOntology transform(SnomedOwlOntology ontology) {
-		for (OWLObjectProperty prop : ontology.getObjectProperties()) {
+		for (OWLObjectProperty prop : ontology.getOwlObjectProperties()) {
 			getRoleType(prop);
 		}
 		for (OWLSubObjectPropertyOfAxiom ax : ontology.getOntology().getAxioms(AxiomType.SUB_OBJECT_PROPERTY)) {
@@ -96,6 +114,14 @@ public class OwlTransformer {
 			OWLObjectProperty prop = ax.getProperty().asOWLObjectProperty();
 			getRoleType(prop).setReflexive(true);
 		}
+		for (OWLDataProperty prop : ontology.getOwlDataProperties()) {
+			getDataPropertyType(prop);
+		}
+		for (OWLSubDataPropertyOfAxiom ax : ontology.getOntology().getAxioms(AxiomType.SUB_DATA_PROPERTY)) {
+			OWLDataProperty prop1 = ax.getSubProperty().asOWLDataProperty();
+			OWLDataProperty prop2 = ax.getSuperProperty().asOWLDataProperty();
+			getDataPropertyType(prop1).addSuperDataPropertyType(getDataPropertyType(prop2));
+		}
 		for (OWLClass clazz : ontology.getOwlClasses()) {
 			Concept concept = getConcept(clazz);
 			for (OWLClassAxiom axiom : ontology.getAxioms(clazz)) {
@@ -107,7 +133,7 @@ public class OwlTransformer {
 				concept.addGciDefinition(def);
 			}
 		}
-		return new SnomedOntology(concepts.values(), roleTypes.values());
+		return new SnomedOntology(concepts.values(), roleTypes.values(), dataPropertyTypes.values());
 	}
 
 	private Definition createDefinition(OWLClass concept, OWLClassAxiom axiom, boolean isGci) {
@@ -167,6 +193,10 @@ public class OwlTransformer {
 					def.addUngroupedRole(role);
 				}
 			}
+			case OWLDataHasValue dhv -> {
+				DataProperty data_property = makeDataProperty(dhv);
+				def.addUngroupedDataProperty(data_property);
+			}
 			default -> throw new UnsupportedOperationException(
 					"Unexpected: " + class_expr + " " + class_expr.getClassExpressionType());
 			}
@@ -177,6 +207,18 @@ public class OwlTransformer {
 		RoleType roleType = getRoleType(svf.getProperty().asOWLObjectProperty());
 		Concept concept = getConcept(svf.getFiller().asOWLClass());
 		return new Role(roleType, concept);
+	}
+
+	private DataProperty makeDataProperty(OWLDataHasValue dhv) {
+		DataPropertyType dataPropertyType = getDataPropertyType(dhv.getProperty().asOWLDataProperty());
+		OWLLiteral value = dhv.getFiller();
+		String value_str = value.getDatatype().getIRI().getShortForm();
+		DataProperty.ValueType value_type = switch (value_str) {
+		case "integer" -> DataProperty.ValueType.Integer;
+		case "decimal" -> DataProperty.ValueType.Decimal;
+		default -> throw new UnsupportedOperationException("Unexpected value: " + value_str);
+		};
+		return new DataProperty(dataPropertyType, value.getLiteral(), value_type);
 	}
 
 	private void processRole(RoleGroup rg, OWLObjectSomeValuesFrom svf) {
@@ -191,6 +233,7 @@ public class OwlTransformer {
 			def.addRoleGroup(rg);
 			processRole(rg, svf);
 		}
+		// TODO Should add data property, but this never happens, yet...
 		case OWLObjectIntersectionOf x -> {
 			processRoleGroup(def, x.getOperands());
 		}
@@ -206,6 +249,10 @@ public class OwlTransformer {
 			switch (class_expr) {
 			case OWLObjectSomeValuesFrom svf -> {
 				processRole(rg, svf);
+			}
+			case OWLDataHasValue dhv -> {
+				DataProperty data_property = makeDataProperty(dhv);
+				rg.addDataProperty(data_property);
 			}
 			default -> throw new UnsupportedOperationException(
 					"Unexpected: " + class_expr + " " + class_expr.getClassExpressionType());

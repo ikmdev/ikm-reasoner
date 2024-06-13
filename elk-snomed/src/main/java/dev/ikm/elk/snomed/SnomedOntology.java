@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.model.DataPropertyType;
 import dev.ikm.elk.snomed.model.RoleType;
 
 public class SnomedOntology {
@@ -38,12 +39,20 @@ public class SnomedOntology {
 
 	private List<RoleType> roleTypes;
 
+	private HashMap<Long, DataPropertyType> dataPropertyTypeIdMap;
+
+	private List<DataPropertyType> dataPropertyTypes;
+
 	public Concept getConcept(long id) {
 		return conceptIdMap.get(id);
 	}
 
 	public RoleType getRoleType(long id) {
 		return roleTypeIdMap.get(id);
+	}
+
+	public DataPropertyType getDataPropertyType(long id) {
+		return dataPropertyTypeIdMap.get(id);
 	}
 
 	public List<Concept> getConcepts() {
@@ -54,14 +63,22 @@ public class SnomedOntology {
 		return roleTypes;
 	}
 
-	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes) {
+	public List<DataPropertyType> getDataPropertyTypes() {
+		return dataPropertyTypes;
+	}
+
+	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
+			Collection<DataPropertyType> dataPropertyTypes) {
 		super();
 		this.conceptIdMap = new HashMap<>();
-		this.roleTypeIdMap = new HashMap<>();
 		concepts.forEach(x -> conceptIdMap.put(x.getId(), x));
 		this.concepts = new ArrayList<>(conceptIdMap.values());
+		this.roleTypeIdMap = new HashMap<>();
 		roleTypes.forEach(x -> roleTypeIdMap.put(x.getId(), x));
 		this.roleTypes = new ArrayList<>(roleTypes);
+		this.dataPropertyTypeIdMap = new HashMap<>();
+		dataPropertyTypes.forEach(x -> dataPropertyTypeIdMap.put(x.getId(), x));
+		this.dataPropertyTypes = new ArrayList<>(dataPropertyTypes);
 	}
 
 }

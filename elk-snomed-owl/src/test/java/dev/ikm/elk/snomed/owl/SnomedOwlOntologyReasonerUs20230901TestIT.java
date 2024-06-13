@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntologyReasonerUsTestBase {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUs20230901TestIT.class);
 
 	protected String getVersion() {
@@ -44,7 +43,6 @@ public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntology
 
 	{
 		expected_axiom_cnt = 371582;
-		expected_miss_cnt = 11861;
 	}
 
 	@Test

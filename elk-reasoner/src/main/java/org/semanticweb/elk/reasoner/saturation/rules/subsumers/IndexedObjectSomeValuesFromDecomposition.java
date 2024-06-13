@@ -1,7 +1,5 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
-import org.semanticweb.elk.reasoner.DevTrace;
-
 /*
  * #%L
  * ELK Reasoner
@@ -24,6 +22,7 @@ import org.semanticweb.elk.reasoner.DevTrace;
  * #L%
  */
 
+import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
@@ -62,9 +61,11 @@ public class IndexedObjectSomeValuesFromDecomposition
 	}
 
 	@Override
-	public void apply(IndexedObjectSomeValuesFrom premise, ContextPremises premises, ClassInferenceProducer producer) {
+	public void apply(IndexedObjectSomeValuesFrom premise,
+			ContextPremises premises, ClassInferenceProducer producer) {
 		DevTrace.log(LOG, "produceDecomposedExistentialLink: {}, {}, {}", producer, premises.getRoot(), premise);
-		IndexedObjectSomeValuesFrom.Helper.produceDecomposedExistentialLink(producer, premises.getRoot(), premise);
+		IndexedObjectSomeValuesFrom.Helper.produceDecomposedExistentialLink(
+				producer, premises.getRoot(), premise);
 	}
 
 	@Override
@@ -73,8 +74,9 @@ public class IndexedObjectSomeValuesFromDecomposition
 	}
 
 	@Override
-	public void accept(SubsumerDecompositionRuleVisitor<?> visitor, IndexedObjectSomeValuesFrom premise,
-			ContextPremises premises, ClassInferenceProducer producer) {
+	public void accept(SubsumerDecompositionRuleVisitor<?> visitor,
+			IndexedObjectSomeValuesFrom premise, ContextPremises premises,
+			ClassInferenceProducer producer) {
 		DevTrace.log(LOG, "Visitor: {}", visitor);
 		visitor.visit(this, premise, premises, producer);
 	}
