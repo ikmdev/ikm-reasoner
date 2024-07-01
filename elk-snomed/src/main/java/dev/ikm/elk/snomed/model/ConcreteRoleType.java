@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DataPropertyType {
+public class ConcreteRoleType {
 
 	private long id;
 
 	private String name;
 
-	private List<DataPropertyType> superDataPropertyTypes = new ArrayList<>();
+	private List<ConcreteRoleType> superConcreteRoleTypes = new ArrayList<>();
 
-	public DataPropertyType(long id) {
+	public ConcreteRoleType(long id) {
 		this.id = id;
 	}
 
@@ -48,12 +48,12 @@ public class DataPropertyType {
 		this.name = name;
 	}
 
-	public List<DataPropertyType> getSuperDataPropertyTypes() {
-		return superDataPropertyTypes;
+	public List<ConcreteRoleType> getSuperConcreteRoleTypes() {
+		return superConcreteRoleTypes;
 	}
 
-	public void addSuperDataPropertyType(DataPropertyType superDataPropertyType) {
-		this.superDataPropertyTypes.add(superDataPropertyType);
+	public void addSuperConcreteRoleType(ConcreteRoleType superConcreteRoleType) {
+		this.superConcreteRoleTypes.add(superConcreteRoleType);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public class DataPropertyType {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DataPropertyType other = (DataPropertyType) obj;
+		ConcreteRoleType other = (ConcreteRoleType) obj;
 		return id == other.id;
 	}
 
 	@Override
 	public String toString() {
-		return "DataPropertyType[" + id + "]";
+		return "ConcreteRoleType[" + id + "]";
 	}
 
 }

@@ -57,12 +57,12 @@ public class Definition {
 		this.ungroupedRoles.addRole(role);
 	}
 
-	public Set<DataProperty> getUngroupedDataProperties() {
-		return ungroupedRoles.getDataProperties();
+	public Set<ConcreteRole> getUngroupedConcreteRoles() {
+		return ungroupedRoles.getConcreteRoles();
 	}
 
-	public void addUngroupedDataProperty(DataProperty dataProperty) {
-		this.ungroupedRoles.addDataProperty(dataProperty);
+	public void addUngroupedConcreteRole(ConcreteRole concreteRole) {
+		this.ungroupedRoles.addConcreteRole(concreteRole);
 	}
 
 	public Set<RoleGroup> getRoleGroups() {

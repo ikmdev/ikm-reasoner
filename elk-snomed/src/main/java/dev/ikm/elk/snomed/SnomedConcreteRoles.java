@@ -29,74 +29,79 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class SnomedRoles {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	public static long root = SnomedIds.root;
+public class SnomedConcreteRoles {
 
-	public static long isa = SnomedIds.isa;
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedConcreteRoles.class);
 
-	public static class SnomedRole {
+	public static class SnomedConcreteRole {
 
-		public long destinationId;
+		public String value;
 		public long relationshipGroup;
 		public long typeId;
 
-		public SnomedRole(long destinationId, long relationshipGroup, long typeId) {
+		public SnomedConcreteRole(String value, long relationshipGroup, long typeId) {
 			super();
-			this.destinationId = destinationId;
+			this.value = value;
 			this.relationshipGroup = relationshipGroup;
 			this.typeId = typeId;
 		}
 
 		@Override
 		public String toString() {
-			return "[" + relationshipGroup + "] " + typeId + " -> " + destinationId;
+			return "[" + relationshipGroup + "] " + typeId + " -> " + value;
 		}
 
 	}
 
-	private HashMap<Long, Set<SnomedRole>> roles = new HashMap<>();
+	private HashMap<Long, Set<SnomedConcreteRole>> concreteRoles = new HashMap<>();
 
-	public HashMap<Long, Set<SnomedRole>> getRoles() {
-		return roles;
+	public HashMap<Long, Set<SnomedConcreteRole>> getConcreteRoles() {
+		return concreteRoles;
 	}
 
-	public Set<SnomedRole> getRoles(long con) {
-		return roles.get(con);
+	public Set<SnomedConcreteRole> getConcreteRoles(long con) {
+		return concreteRoles.get(con);
 	}
 
-	public List<SnomedRole> getUngroupedRoles(long con) {
-		if (roles.get(con) == null)
+	public List<SnomedConcreteRole> getUngroupedConcreteRoles(long con) {
+		if (getConcreteRoles(con) == null)
 			return List.of();
-		return roles.get(con).stream().filter(x -> x.relationshipGroup == 0).toList();
+		return getConcreteRoles(con).stream().filter(x -> x.relationshipGroup == 0).toList();
 	}
 
-	public List<SnomedRole> getGroupedRoles(long con) {
-		if (roles.get(con) == null)
+	public List<SnomedConcreteRole> getGroupedConcreteRoles(long con) {
+		if (getConcreteRoles(con) == null)
 			return List.of();
-		return roles.get(con).stream().filter(x -> x.relationshipGroup != 0).toList();
+		return getConcreteRoles(con).stream().filter(x -> x.relationshipGroup != 0).toList();
 	}
 
-	public static SnomedRoles init(Path file) throws IOException {
-		SnomedRoles ret = new SnomedRoles();
-		ret.load(file);
+	public static SnomedConcreteRoles init(Path file) throws IOException {
+		SnomedConcreteRoles ret = new SnomedConcreteRoles();
+		if (Files.exists(file)) {
+			ret.load(file);
+		} else {
+			LOG.info("No values file: " + file);
+		}
 		return ret;
 	}
 
 	public void load(Path file) throws IOException {
-		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
+		// id effectiveTime active moduleId sourceId value relationshipGroup
 		// typeId characteristicTypeId modifierId
 		try (Stream<String> st = Files.lines(file)) {
 			st.skip(1).map(line -> line.split("\\t")) //
 					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-					.filter(fields -> Long.parseLong(fields[7]) != isa) // typeId
+					.filter(fields -> Long.parseLong(fields[7]) != SnomedIds.isa) // typeId
 					.forEach(fields -> {
 						long con = Long.parseLong(fields[4]); // sourceId
-						long destination = Long.parseLong(fields[5]); // destinationId
+						String value = fields[5]; // value
 						long relationshipGroup = Long.parseLong(fields[6]); // relationshipGroup
 						long typeId = Long.parseLong(fields[7]); // typeId
-						roles.computeIfAbsent(con, x -> new HashSet<>());
-						roles.get(con).add(new SnomedRole(destination, relationshipGroup, typeId));
+						concreteRoles.computeIfAbsent(con, x -> new HashSet<>());
+						concreteRoles.get(con).add(new SnomedConcreteRole(value, relationshipGroup, typeId));
 					});
 		}
 	}

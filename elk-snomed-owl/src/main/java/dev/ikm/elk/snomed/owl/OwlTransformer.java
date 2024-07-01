@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 import dev.ikm.elk.snomed.SnomedIds;
 import dev.ikm.elk.snomed.SnomedOntology;
 import dev.ikm.elk.snomed.model.Concept;
-import dev.ikm.elk.snomed.model.DataProperty;
-import dev.ikm.elk.snomed.model.DataPropertyType;
+import dev.ikm.elk.snomed.model.ConcreteRole;
+import dev.ikm.elk.snomed.model.ConcreteRoleType;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.DefinitionType;
 import dev.ikm.elk.snomed.model.Role;
@@ -62,7 +62,7 @@ public class OwlTransformer {
 
 	HashMap<OWLObjectProperty, RoleType> roleTypes = new HashMap<>();
 
-	HashMap<OWLDataProperty, DataPropertyType> dataPropertyTypes = new HashMap<>();
+	HashMap<OWLDataProperty, ConcreteRoleType> dataPropertyTypes = new HashMap<>();
 
 	private Concept getConcept(OWLClass clazz) {
 		long id = SnomedOwlOntology.getId(clazz);
@@ -76,9 +76,9 @@ public class OwlTransformer {
 		return roleTypes.get(prop);
 	}
 
-	private DataPropertyType getDataPropertyType(OWLDataProperty prop) {
+	private ConcreteRoleType getDataPropertyType(OWLDataProperty prop) {
 		long id = SnomedOwlOntology.getId(prop);
-		dataPropertyTypes.putIfAbsent(prop, new DataPropertyType(id));
+		dataPropertyTypes.putIfAbsent(prop, new ConcreteRoleType(id));
 		return dataPropertyTypes.get(prop);
 	}
 
@@ -120,7 +120,7 @@ public class OwlTransformer {
 		for (OWLSubDataPropertyOfAxiom ax : ontology.getOntology().getAxioms(AxiomType.SUB_DATA_PROPERTY)) {
 			OWLDataProperty prop1 = ax.getSubProperty().asOWLDataProperty();
 			OWLDataProperty prop2 = ax.getSuperProperty().asOWLDataProperty();
-			getDataPropertyType(prop1).addSuperDataPropertyType(getDataPropertyType(prop2));
+			getDataPropertyType(prop1).addSuperConcreteRoleType(getDataPropertyType(prop2));
 		}
 		for (OWLClass clazz : ontology.getOwlClasses()) {
 			Concept concept = getConcept(clazz);
@@ -194,8 +194,8 @@ public class OwlTransformer {
 				}
 			}
 			case OWLDataHasValue dhv -> {
-				DataProperty data_property = makeDataProperty(dhv);
-				def.addUngroupedDataProperty(data_property);
+				ConcreteRole data_property = makeDataProperty(dhv);
+				def.addUngroupedConcreteRole(data_property);
 			}
 			default -> throw new UnsupportedOperationException(
 					"Unexpected: " + class_expr + " " + class_expr.getClassExpressionType());
@@ -209,16 +209,16 @@ public class OwlTransformer {
 		return new Role(roleType, concept);
 	}
 
-	private DataProperty makeDataProperty(OWLDataHasValue dhv) {
-		DataPropertyType dataPropertyType = getDataPropertyType(dhv.getProperty().asOWLDataProperty());
+	private ConcreteRole makeDataProperty(OWLDataHasValue dhv) {
+		ConcreteRoleType dataPropertyType = getDataPropertyType(dhv.getProperty().asOWLDataProperty());
 		OWLLiteral value = dhv.getFiller();
 		String value_str = value.getDatatype().getIRI().getShortForm();
-		DataProperty.ValueType value_type = switch (value_str) {
-		case "integer" -> DataProperty.ValueType.Integer;
-		case "decimal" -> DataProperty.ValueType.Decimal;
+		ConcreteRole.ValueType value_type = switch (value_str) {
+		case "integer" -> ConcreteRole.ValueType.Integer;
+		case "decimal" -> ConcreteRole.ValueType.Decimal;
 		default -> throw new UnsupportedOperationException("Unexpected value: " + value_str);
 		};
-		return new DataProperty(dataPropertyType, value.getLiteral(), value_type);
+		return new ConcreteRole(dataPropertyType, value.getLiteral(), value_type);
 	}
 
 	private void processRole(RoleGroup rg, OWLObjectSomeValuesFrom svf) {
@@ -251,8 +251,8 @@ public class OwlTransformer {
 				processRole(rg, svf);
 			}
 			case OWLDataHasValue dhv -> {
-				DataProperty data_property = makeDataProperty(dhv);
-				rg.addDataProperty(data_property);
+				ConcreteRole data_property = makeDataProperty(dhv);
+				rg.addConcreteRole(data_property);
 			}
 			default -> throw new UnsupportedOperationException(
 					"Unexpected: " + class_expr + " " + class_expr.getClassExpressionType());

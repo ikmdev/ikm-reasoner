@@ -51,7 +51,7 @@ public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
 //		SnomedRoles roles = SnomedRoles.init(rels_file);
 		SnomedRoles roles = SnomedRoles.init(Paths.get("nnf-data", "nnf-20231121.txt"));
-		nnfb.generate(roles);
+		nnfb.generate(roles, null);
 //		write(nnfb);
 	}
 

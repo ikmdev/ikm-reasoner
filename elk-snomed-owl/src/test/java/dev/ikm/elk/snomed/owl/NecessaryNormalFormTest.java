@@ -45,9 +45,7 @@ public class NecessaryNormalFormTest {
 	public static void checkPriors(SnomedOwlOntology ontology, NecessaryNormalFormBuilder nnf) {
 		HashSet<Long> priors = new HashSet<>();
 		for (Concept con : nnf.getConcepts()) {
-//			LOG.info("Con: " + con);
 			for (Long sup : ontology.getSuperClasses(con.getId())) {
-//				LOG.info(con + " " + sup);
 				assertTrue(priors.contains(sup));
 			}
 			priors.add(con.getId());
@@ -64,7 +62,6 @@ public class NecessaryNormalFormTest {
 		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, ontology.getSuperClasses(),
 				ontology.getSuperObjectProperties(false));
 		nnfb.init();
-//		assertEquals(5, nnfb.getConcepts().size());
 		LOG.info("Init complete");
 		checkPriors(ontology, nnfb);
 		nnfb.generate();
@@ -76,6 +73,7 @@ public class NecessaryNormalFormTest {
 			LOG.info("\t" + expr.getDefinitionType());
 			expr.getSuperConcepts().forEach(x -> LOG.info("\tSup: " + x.getId()));
 			expr.getUngroupedRoles().forEach(x -> LOG.info("\t" + x));
+			expr.getUngroupedConcreteRoles().forEach(x -> LOG.info("\t" + x));
 			expr.getRoleGroups().forEach(x -> LOG.info("\t" + x));
 		}
 		return nnfb;
@@ -85,6 +83,7 @@ public class NecessaryNormalFormTest {
 	public void ungrouped() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalForm.owl");
+		assertEquals(8, nnfb.getConcepts().size());
 		Definition nnf;
 		nnf = nnfb.getNecessaryNormalForm(202);
 		assertEquals(1, nnf.getUngroupedRoles().size());
@@ -102,6 +101,7 @@ public class NecessaryNormalFormTest {
 	public void grouped() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormGrouped.owl");
+		assertEquals(5, nnfb.getConcepts().size());
 		Definition nnf = nnfb.getNecessaryNormalForm(202);
 		assertEquals(0, nnf.getUngroupedRoles().size());
 		assertEquals(1, nnf.getRoleGroups().size());
@@ -114,6 +114,7 @@ public class NecessaryNormalFormTest {
 	public void subProperty() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormSubProperty.owl");
+		assertEquals(5, nnfb.getConcepts().size());
 		Definition nnf = nnfb.getNecessaryNormalForm(202);
 		assertEquals(1, nnf.getUngroupedRoles().size());
 		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
@@ -124,9 +125,29 @@ public class NecessaryNormalFormTest {
 	public void propertyChain() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormPropertyChain.owl");
+		assertEquals(5, nnfb.getConcepts().size());
 		Definition nnf = nnfb.getNecessaryNormalForm(202);
 		assertEquals(1, nnf.getUngroupedRoles().size());
 		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals(0, nnf.getRoleGroups().size());
+	}
+
+	@Test
+	public void dataHasValue() throws Exception {
+		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
+		NecessaryNormalFormBuilder nnfb = load(ontology, "NecessaryNormalFormDataHasValue.owl");
+		assertEquals(6, nnfb.getConcepts().size());
+		Definition nnf = nnfb.getNecessaryNormalForm(202);
+		assertEquals(1, nnf.getUngroupedRoles().size());
+		assertEquals(1, nnf.getUngroupedConcreteRoles().size());
+		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals("1", nnf.getUngroupedConcreteRoles().iterator().next().getValue());
+		assertEquals(0, nnf.getRoleGroups().size());
+		nnf = nnfb.getNecessaryNormalForm(203);
+		assertEquals(1, nnf.getUngroupedRoles().size());
+		assertEquals(1, nnf.getUngroupedConcreteRoles().size());
+		assertEquals(102, nnf.getUngroupedRoles().iterator().next().getConcept().getId());
+		assertEquals("1", nnf.getUngroupedConcreteRoles().iterator().next().getValue());
 		assertEquals(0, nnf.getRoleGroups().size());
 	}
 

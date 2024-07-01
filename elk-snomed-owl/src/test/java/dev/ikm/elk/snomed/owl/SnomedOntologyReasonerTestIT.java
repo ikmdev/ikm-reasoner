@@ -41,7 +41,7 @@ import dev.ikm.elk.snomed.SnomedOntologyReasoner;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.RoleType;
 
-public class SnomedOntologyReasonerTestIT extends SnomedNecessaryNormalFormInternationalTestBase {
+public class SnomedOntologyReasonerTestIT extends SnomedNecessaryNormalFormTestBase {
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerTestIT.class);
 
 	protected String getVersion() {

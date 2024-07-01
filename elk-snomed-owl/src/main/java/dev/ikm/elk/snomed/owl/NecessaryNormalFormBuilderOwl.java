@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.SnomedIsa;
 import dev.ikm.elk.snomed.SnomedRoles;
-import dev.ikm.elk.snomed.SnomedRoles.Role;
+import dev.ikm.elk.snomed.SnomedRoles.SnomedRole;
 
 public class NecessaryNormalFormBuilderOwl {
 
@@ -535,18 +535,18 @@ public class NecessaryNormalFormBuilderOwl {
 
 	HashSet<OWLClass> grouping_issue_concepts = new HashSet<>();
 
-	private void compare(OWLClass concept, Set<Role> roles, NecessaryNormalForm nnf) {
+	private void compare(OWLClass concept, Set<SnomedRole> roles, NecessaryNormalForm nnf) {
 		if (roles == null)
 			roles = Set.of();
-		List<Role> roles_ungrouped = roles.stream().filter(x -> x.relationshipGroup == 0).toList();
-		Collection<List<Role>> roles_grouped = roles.stream().filter(x -> x.relationshipGroup != 0)
+		List<SnomedRole> roles_ungrouped = roles.stream().filter(x -> x.relationshipGroup == 0).toList();
+		Collection<List<SnomedRole>> roles_grouped = roles.stream().filter(x -> x.relationshipGroup != 0)
 				.collect(Collectors.groupingBy(x -> x.relationshipGroup)).values();
 		boolean mis_match = false;
-		List<Role> mis_match_roles_grouped = new ArrayList<>();
+		List<SnomedRole> mis_match_roles_grouped = new ArrayList<>();
 		Set<OWLObjectSomeValuesFrom> mis_match_props_grouped = new HashSet<>();
 		boolean inc;
 		inc = false;
-		for (Role role : roles_ungrouped) {
+		for (SnomedRole role : roles_ungrouped) {
 			boolean match = nnf.getUngroupedProps().stream().anyMatch(prop -> compare(role, prop));
 			if (!match) {
 				LOG.error("No propU for " + concept + " " + role);
@@ -568,7 +568,7 @@ public class NecessaryNormalFormBuilderOwl {
 		if (inc)
 			mis_match_props_ungrouped_cnt++;
 		inc = false;
-		for (List<Role> role : roles_grouped) {
+		for (List<SnomedRole> role : roles_grouped) {
 			boolean match = nnf.getGroupedProps().stream().anyMatch(prop -> compare(role, prop));
 			if (!match) {
 				LOG.error("No propG for " + concept + " " + role);
@@ -597,8 +597,8 @@ public class NecessaryNormalFormBuilderOwl {
 //			LOG.info("NNFs: " + nnfs.size());
 			LOG.info("Roles:");
 			roles.stream()
-					.sorted(Comparator.comparingLong((Role x) -> x.relationshipGroup)
-							.thenComparingLong((Role x) -> x.typeId).thenComparingLong((Role x) -> x.destinationId))
+					.sorted(Comparator.comparingLong((SnomedRole x) -> x.relationshipGroup)
+							.thenComparingLong((SnomedRole x) -> x.typeId).thenComparingLong((SnomedRole x) -> x.destinationId))
 					.forEach(x -> LOG.info("\t" + x));
 			LOG.info("PropsU:");
 			nnf.getUngroupedProps().forEach(x -> LOG.info("\t" + x));
@@ -625,12 +625,12 @@ public class NecessaryNormalFormBuilderOwl {
 		}
 	}
 
-	private boolean compare(List<Role> roles, Set<OWLObjectSomeValuesFrom> props) {
+	private boolean compare(List<SnomedRole> roles, Set<OWLObjectSomeValuesFrom> props) {
 		return roles.stream().allMatch(role -> props.stream().anyMatch(prop -> compare(role, prop)))
 				&& props.stream().allMatch(prop -> roles.stream().anyMatch(role -> compare(role, prop)));
 	}
 
-	private boolean compare(Role role, OWLObjectSomeValuesFrom prop) {
+	private boolean compare(SnomedRole role, OWLObjectSomeValuesFrom prop) {
 		return role.typeId == SnomedOwlOntology.getId(prop.getProperty().asOWLObjectProperty())
 				&& role.destinationId == SnomedOwlOntology.getId(prop.getFiller().asOWLClass());
 	}
