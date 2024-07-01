@@ -22,27 +22,27 @@ package dev.ikm.elk.snomed.model;
 
 import java.util.Objects;
 
-public class DataProperty {
+public class ConcreteRole {
 
 	public enum ValueType {
 		Decimal, Integer;
 	}
 
-	private DataPropertyType dataPropertyType;
+	private ConcreteRoleType concreteRoleType;
 
 	private String value;
 
 	private ValueType valueType;
 
-	public DataProperty(DataPropertyType dataPropertyType, String value, ValueType valueType) {
+	public ConcreteRole(ConcreteRoleType concreteRoleType, String value, ValueType valueType) {
 		super();
-		this.dataPropertyType = dataPropertyType;
+		this.concreteRoleType = concreteRoleType;
 		this.value = value;
 		this.valueType = valueType;
 	}
 
-	public DataPropertyType getDataPropertyType() {
-		return dataPropertyType;
+	public ConcreteRoleType getConcreteRoleType() {
+		return concreteRoleType;
 	}
 
 	public String getValue() {
@@ -55,7 +55,7 @@ public class DataProperty {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataPropertyType, value, valueType);
+		return Objects.hash(concreteRoleType, value, valueType);
 	}
 
 	@Override
@@ -66,14 +66,14 @@ public class DataProperty {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DataProperty other = (DataProperty) obj;
-		return Objects.equals(dataPropertyType, other.dataPropertyType) && Objects.equals(value, other.value)
+		ConcreteRole other = (ConcreteRole) obj;
+		return Objects.equals(concreteRoleType, other.concreteRoleType) && Objects.equals(value, other.value)
 				&& valueType == other.valueType;
 	}
 
 	@Override
 	public String toString() {
-		return "DataProperty[" + this.dataPropertyType.getId() + " -> " + this.value + " " + this.valueType + "]";
+		return "ConcreteRole[" + this.concreteRoleType.getId() + " -> " + this.value + " " + this.valueType + "]";
 	}
 
 }

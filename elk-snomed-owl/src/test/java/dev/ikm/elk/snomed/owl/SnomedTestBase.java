@@ -56,6 +56,9 @@ public abstract class SnomedTestBase {
 	protected Path rels_file = Paths.get(getDir(),
 			"sct2_Relationship_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
+	protected Path values_file = Paths.get(getDir(),
+			"sct2_RelationshipConcreteValues_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
+
 	@BeforeEach
 	protected void filesExist() {
 		assumeTrue(Files.exists(axioms_file), "No file: " + axioms_file);
@@ -63,6 +66,7 @@ public abstract class SnomedTestBase {
 		LOG.info("Files exist");
 		LOG.info("\t" + axioms_file);
 		LOG.info("\t" + rels_file);
+		LOG.info("\t" + values_file);
 	}
 
 }

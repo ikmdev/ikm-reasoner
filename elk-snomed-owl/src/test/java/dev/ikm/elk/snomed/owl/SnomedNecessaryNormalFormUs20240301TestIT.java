@@ -20,20 +20,28 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SnomedNecessaryNormalFormInternationalTestBase extends SnomedNecessaryNormalFormTestBase {
+import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
+
+public class SnomedNecessaryNormalFormUs20240301TestIT extends SnomedNecessaryNormalFormUsTestBase {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternationalTestBase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormUs20240301TestIT.class);
 
-	protected String getEdition() {
-		return "INT";
+	protected String getVersion() {
+		return "20240301";
 	}
 
-	protected String getEditionDir() {
-		return "intl";
+	@Test
+	public void run() throws Exception {
+		NecessaryNormalFormBuilder nnfb = generate();
+		assertEquals(372389, nnfb.getConcepts().size());
+		assertEquals(0, nnfb.getMisMatchCount());
 	}
 
 }

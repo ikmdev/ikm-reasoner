@@ -23,18 +23,17 @@ package dev.ikm.elk.snomed.owl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Deprecated
-public abstract class SnomedInternationalTestBase extends SnomedTestBase {
+public abstract class SnomedNecessaryNormalFormUsTestBase extends SnomedNecessaryNormalFormTestBase {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedInternationalTestBase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormUsTestBase.class);
 
 	protected String getEdition() {
-		return "INT";
+		return "US1000124";
 	}
 
 	protected String getEditionDir() {
-		return "intl";
+		return "us";
 	}
 
 }

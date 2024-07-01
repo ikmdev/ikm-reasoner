@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import dev.ikm.elk.snomed.model.Concept;
-import dev.ikm.elk.snomed.model.DataPropertyType;
+import dev.ikm.elk.snomed.model.ConcreteRoleType;
 import dev.ikm.elk.snomed.model.RoleType;
 
 public class SnomedOntology {
@@ -39,9 +39,9 @@ public class SnomedOntology {
 
 	private List<RoleType> roleTypes;
 
-	private HashMap<Long, DataPropertyType> dataPropertyTypeIdMap;
+	private HashMap<Long, ConcreteRoleType> concreteRoleTypeIdMap;
 
-	private List<DataPropertyType> dataPropertyTypes;
+	private List<ConcreteRoleType> concreteRoleTypes;
 
 	public Concept getConcept(long id) {
 		return conceptIdMap.get(id);
@@ -51,8 +51,8 @@ public class SnomedOntology {
 		return roleTypeIdMap.get(id);
 	}
 
-	public DataPropertyType getDataPropertyType(long id) {
-		return dataPropertyTypeIdMap.get(id);
+	public ConcreteRoleType getConcreteRoleType(long id) {
+		return concreteRoleTypeIdMap.get(id);
 	}
 
 	public List<Concept> getConcepts() {
@@ -63,12 +63,12 @@ public class SnomedOntology {
 		return roleTypes;
 	}
 
-	public List<DataPropertyType> getDataPropertyTypes() {
-		return dataPropertyTypes;
+	public List<ConcreteRoleType> getConcreteRoleTypes() {
+		return concreteRoleTypes;
 	}
 
 	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
-			Collection<DataPropertyType> dataPropertyTypes) {
+			Collection<ConcreteRoleType> concreteRoleTypes) {
 		super();
 		this.conceptIdMap = new HashMap<>();
 		concepts.forEach(x -> conceptIdMap.put(x.getId(), x));
@@ -76,9 +76,9 @@ public class SnomedOntology {
 		this.roleTypeIdMap = new HashMap<>();
 		roleTypes.forEach(x -> roleTypeIdMap.put(x.getId(), x));
 		this.roleTypes = new ArrayList<>(roleTypes);
-		this.dataPropertyTypeIdMap = new HashMap<>();
-		dataPropertyTypes.forEach(x -> dataPropertyTypeIdMap.put(x.getId(), x));
-		this.dataPropertyTypes = new ArrayList<>(dataPropertyTypes);
+		this.concreteRoleTypeIdMap = new HashMap<>();
+		concreteRoleTypes.forEach(x -> concreteRoleTypeIdMap.put(x.getId(), x));
+		this.concreteRoleTypes = new ArrayList<>(concreteRoleTypes);
 	}
 
 }
