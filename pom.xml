@@ -53,7 +53,7 @@
 		<!-- To build test data artifacts: -->
 		<!-- 	cd snomed-test-data -->
 		<!-- 	mvn clean install -DskipTestDataBuild=false -->
-		<module>snomed-test-data</module>
+<!--		<module>snomed-test-data</module>-->
 	</modules>
 
 	<scm>
