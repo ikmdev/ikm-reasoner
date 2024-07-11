@@ -118,10 +118,6 @@ public class ElkReasoner {
 	private final OntologyChangeProgressListener ontologyChangeProgressListener_;
 	/** ELK object factory used to create any ElkObjects */
 	private final ElkObject.Factory objectFactory_;
-	/** Converter from OWL API to ELK OWL */
-//	private final OwlConverter owlConverter_;
-	/** Converter from ELK OWL to OWL API */
-	private final ElkConverter elkConverter_;
 	/** this object is used to load pending changes */
 	private volatile OwlChangesLoaderFactory bufferedChangesLoader_;
 	/** configurations required for ELK reasoner */
@@ -156,8 +152,6 @@ public class ElkReasoner {
 		this.ontologyChangeProgressListener_ = new OntologyChangeProgressListener();
 		this.owlOntologymanager_.addOntologyChangeProgessListener(ontologyChangeProgressListener_);
 		this.objectFactory_ = internalReasoner.getElkFactory();
-//		this.owlConverter_ = OwlConverter.getInstance();
-		this.elkConverter_ = ElkConverter.getInstance();
 
 		this.config_ = elkConfig.getElkConfiguration();
 		this.isAllowFreshEntities = elkConfig.getFreshEntityPolicy() == FreshEntityPolicy.ALLOW;
@@ -252,11 +246,9 @@ public class ElkReasoner {
 	private IncompleteResult<? extends Node<ElkClass>> getClassNode(ElkClass elkClass)
 			throws FreshEntitiesException, InconsistentOntologyException, ElkException {
 		try {
-//			return reasoner_.getEquivalentClasses(elkClass)
-//					.map(n -> elkConverter_.convertClassNode(n));
 			return reasoner_.getEquivalentClasses(elkClass);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -264,11 +256,9 @@ public class ElkReasoner {
 			final ElkObjectProperty elkClass)
 			throws FreshEntitiesException, InconsistentOntologyException, ElkException {
 		try {
-//			return reasoner_.getObjectPropertyNode(elkClass)
-//					.map(n -> elkConverter_.convertObjectPropertyNode(n));
 			return reasoner_.getObjectPropertyNode(elkClass);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -293,50 +283,43 @@ public class ElkReasoner {
 
 		owlOntologymanager_.removeOntologyChangeListener(ontologyChangeListener_);
 		owlOntologymanager_.removeOntologyChangeProgessListener(ontologyChangeProgressListener_);
-		try {
-			for (;;) {
-				try {
-		if (!reasoner_.shutdown())
-			throw new ReasonerInternalException("Failed to shut down ELK!");
-					break;
-				} catch (InterruptedException e) {
-					continue;
-				}
+		for (;;) {
+			try {
+				if (!reasoner_.shutdown())
+					throw new ReasonerInternalException("Failed to shut down ELK!");
+				break;
+			} catch (InterruptedException e) {
+				continue;
 			}
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
 		}
+
 	}
 
 //	@Override
 	public void flush() {
 		LOGGER_.trace("flush()");
 
-		try {
-			if (ontologyReloadRequired_) {
-				/**
-				 * re-creates a new instance of reasoner for the parameters, since a reasoner
-				 * can do initial load only once
-				 */
-				initReasoner(new ReasonerFactory().createReasoner(reasoner_, objectFactory_, config_));
-				bufferedChangesLoader_ = new OwlChangesLoaderFactory(this.secondaryProgressMonitor_);
-				ontologyReloadRequired_ = false;
-			} else if (bufferedChangesLoader_.isLoadingFinished()) {
-				// no changes
-				return;
-			} else if (isBufferingMode_) {
-				// in buffering mode, new changes need to be buffered
-				// separately in order not to mix them with the flushed
-				// changes that now need to be loaded
-				reasoner_.registerAxiomLoader(bufferedChangesLoader_);
-				bufferedChangesLoader_ = new OwlChangesLoaderFactory(this.secondaryProgressMonitor_);
-			}
-			// notify about the changes
-			for (ChangeListener listener : changeListeners_) {
-				listener.ontologyChanged();
-			}
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+		if (ontologyReloadRequired_) {
+			/**
+			 * re-creates a new instance of reasoner for the parameters, since a reasoner
+			 * can do initial load only once
+			 */
+			initReasoner(new ReasonerFactory().createReasoner(reasoner_, objectFactory_, config_));
+			bufferedChangesLoader_ = new OwlChangesLoaderFactory(this.secondaryProgressMonitor_);
+			ontologyReloadRequired_ = false;
+		} else if (bufferedChangesLoader_.isLoadingFinished()) {
+			// no changes
+			return;
+		} else if (isBufferingMode_) {
+			// in buffering mode, new changes need to be buffered
+			// separately in order not to mix them with the flushed
+			// changes that now need to be loaded
+			reasoner_.registerAxiomLoader(bufferedChangesLoader_);
+			bufferedChangesLoader_ = new OwlChangesLoaderFactory(this.secondaryProgressMonitor_);
+		}
+		// notify about the changes
+		for (ChangeListener listener : changeListeners_) {
+			listener.ontologyChanged();
 		}
 	}
 
@@ -345,9 +328,7 @@ public class ElkReasoner {
 		try {
 			return getClassNode(objectFactory_.getOwlNothing());
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -376,9 +357,7 @@ public class ElkReasoner {
 		try {
 			return getObjectPropertyNode(objectFactory_.getOwlBottomObjectProperty());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -469,13 +448,9 @@ public class ElkReasoner {
 			ReasonerInterruptedException, TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_.getEquivalentClasses(owlConverter_.convert(ce))
-//					.map(n -> elkConverter_.convertClassNode(n));
 			return reasoner_.getEquivalentClasses(ce);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -508,15 +483,11 @@ public class ElkReasoner {
 
 		checkInterrupted();
 		try {
-//			return reasoner_.getObjectPropertyNode(owlConverter_.convert(pe))
-//					.map(n -> elkConverter_.convertObjectPropertyNode(n));
 			return reasoner_.getObjectPropertyNode(pe);
 		} catch (final ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("getEquivalentObjectProperties(ElkObjectPropertyExpression)", e.getMessage());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -556,13 +527,9 @@ public class ElkReasoner {
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_.getInstances(owlConverter_.convert(ce), direct)
-//					.map(nodes -> elkConverter_.convertIndividualNodes(nodes));
 			return reasoner_.getInstances(ce, direct);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -702,13 +669,9 @@ public class ElkReasoner {
 			InconsistentOntologyException, ClassExpressionNotInProfileException {
 		checkInterrupted();
 		try {
-//			return reasoner_.getSubClasses(owlConverter_.convert(ce), direct)
-//					.map(nodes -> elkConverter_.convertClassNodes(nodes));
 			return reasoner_.getSubClasses(ce, direct);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -739,15 +702,9 @@ public class ElkReasoner {
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_
-//					.getSubObjectProperties(owlConverter_.convert(pe), direct)
-//					.map(nodes -> elkConverter_
-//							.convertObjectPropertyNodes(nodes));
 			return reasoner_.getSubObjectProperties(pe, direct);
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -772,15 +729,11 @@ public class ElkReasoner {
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_.getSuperClasses(owlConverter_.convert(ce), direct)
-//					.map(nodes -> elkConverter_.convertClassNodes(nodes));
 			return reasoner_.getSuperClasses(ce, direct);
 		} catch (ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("getSuperClasses(ElkClassExpression, boolean)", e.getMessage());
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -811,18 +764,12 @@ public class ElkReasoner {
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_
-//					.getSuperObjectProperties(owlConverter_.convert(pe), direct)
-//					.map(nodes -> elkConverter_
-//							.convertObjectPropertyNodes(nodes));
 			return reasoner_.getSuperObjectProperties(pe, direct);
 		} catch (final ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("getSuperObjectProperties(ElkObjectPropertyExpression, boolean)",
 					e.getMessage());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -854,9 +801,7 @@ public class ElkReasoner {
 		try {
 			return getClassNode(objectFactory_.getOwlThing());
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -884,9 +829,7 @@ public class ElkReasoner {
 		try {
 			return getObjectPropertyNode(objectFactory_.getOwlTopObjectProperty());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -905,13 +848,9 @@ public class ElkReasoner {
 			TimeOutException {
 		checkInterrupted();
 		try {
-//			return reasoner_.getTypes(owlConverter_.convert(ind), direct)
-//					.map(nodes -> elkConverter_.convertClassNodes(nodes));
 			return reasoner_.getTypes(ind, direct);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -933,11 +872,8 @@ public class ElkReasoner {
 		try {
 			return getClassNode(objectFactory_.getOwlNothing());
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
-
 	}
 
 //	@Override
@@ -962,9 +898,7 @@ public class ElkReasoner {
 		try {
 			return reasoner_.isInconsistent().map(res -> !res);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -982,15 +916,12 @@ public class ElkReasoner {
 			throws ReasonerInterruptedException, UnsupportedEntailmentTypeException, TimeOutException,
 			AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
 		try {
-//			final ElkAxiom elkAxiom = owlConverter_.convert(owlAxiom);
 			QueryResult entailment = reasoner_.checkEntailment(elkAxiom);
 			return new IncompleteResult<Boolean>(entailment.entailmentProved(), entailment.getIncompletenessMonitor());
 		} catch (final ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("isEntailed(ElkAxiom)", e.getMessage());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -1021,16 +952,13 @@ public class ElkReasoner {
 		} catch (final ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("isEntailed(Set<? extends ElkAxiom>)", e.getMessage());
 		} catch (final ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (final ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
 //	@Override
 //	public boolean isEntailmentCheckingSupported(final AxiomType<?> axiomType) {
 	public boolean isEntailmentCheckingSupported(Class<? extends ElkObject> elkAxiomClass) {
-//		Class<? extends ElkObject> elkAxiomClass = OwlConverter.convertType(axiomType.getActualClass());
 		if (elkAxiomClass == null || !ElkAxiom.class.isAssignableFrom(elkAxiomClass)) {
 			// not supported
 			return false;
@@ -1060,9 +988,7 @@ public class ElkReasoner {
 		try {
 			return reasoner_.isSatisfiable(classExpression);
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		}
 	}
 
@@ -1098,9 +1024,7 @@ public class ElkReasoner {
 		} catch (ElkUnsupportedReasoningTaskException e) {
 			throw unsupportedOwlApiMethod("precomputeInferences(inferenceTypes)", e.getMessage());
 		} catch (ElkException e) {
-			throw elkConverter_.convert(e);
-		} catch (ElkRuntimeException e) {
-			throw elkConverter_.convert(e);
+			throw new ElkRuntimeException(e);
 		} finally {
 			this.reasoner_.setProgressMonitor(this.secondaryProgressMonitor_);
 		}
@@ -1157,7 +1081,7 @@ public class ElkReasoner {
 					reasoner_.ensureLoading();
 					loadBeforeChanges_ = false;
 				} catch (ElkException e) {
-					throw elkConverter_.convert(e);
+					throw new ElkRuntimeException(e);
 				}
 			}
 		}

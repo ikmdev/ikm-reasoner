@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed.reasoner;
  * #%L
  * ELK Reasoner for SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,11 @@ package dev.ikm.elk.snomed.reasoner;
  * #L%
  */
 
-import org.semanticweb.elk.exceptions.ElkException;
-import org.semanticweb.elk.exceptions.ElkRuntimeException;
-
+@Deprecated
 public class ElkConverter {
-	
-	// This class can go away with some cleanup in ElkReasoner
-
-	private ElkConverter() {
-		super();
-	}
 
 	public static ElkConverter getInstance() {
-		return new ElkConverter();
-	}
-
-	public ElkRuntimeException convert(ElkRuntimeException e) {
-		return e;
-	}
-
-	public ElkRuntimeException convert(ElkException e) {
-		return new ElkRuntimeException(e);
+		throw new UnsupportedOperationException();
 	}
 
 }
