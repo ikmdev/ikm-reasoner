@@ -1,10 +1,20 @@
+/**
+ * The classes in this package are derived from the OWL API
+ * org.semanticweb.owlapi.model classes.
+ * 
+ * This supports the Elk reasoner without the full OWLAPI implementation.
+ * 
+ * Most of the OWL API model correlates are in elk-owl-model
+ * org.semanticweb.elk.owl.interfaces package.
+ * 
+ */
 package dev.ikm.elk.snomed.owlapix.model;
 
 /*-
  * #%L
  * ELK Reasoner for SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +29,3 @@ package dev.ikm.elk.snomed.owlapix.model;
  * limitations under the License.
  * #L%
  */
-
-/**
- * A few methods from OWLOntologyManager in the OWL API
- * 
- */
-public interface OwlxOntologyManager {
-
-	public void addOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
-
-	public void addOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
-
-	public void removeOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
-
-	public void removeOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
-
-}

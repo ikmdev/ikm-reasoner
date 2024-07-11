@@ -40,7 +40,7 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  *         Management Group
  * @since 3.0.0
  */
-public class TimeOutException extends OwlReasonerRuntimeException {
+public class TimeOutException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;
 

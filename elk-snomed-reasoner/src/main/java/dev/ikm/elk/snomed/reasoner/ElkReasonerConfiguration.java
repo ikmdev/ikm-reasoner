@@ -30,7 +30,7 @@ import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import dev.ikm.elk.snomed.owlapix.reasoner.FreshEntityPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.NullReasonerProgressMonitor;
-import dev.ikm.elk.snomed.owlapix.reasoner.OwlReasonerConfiguration;
+import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
 import dev.ikm.elk.snomed.owlapix.reasoner.ReasonerProgressMonitor;
 import dev.ikm.elk.snomed.owlapix.reasoner.SimpleConfiguration;
 
@@ -43,13 +43,13 @@ import dev.ikm.elk.snomed.owlapix.reasoner.SimpleConfiguration;
  * @author Pavel Klinov pavel.klinov@uni-ulm.de
  * @author Markus Kroetzsch
  */
-public class ElkReasonerConfiguration {
+public class ElkReasonerConfiguration implements OWLReasonerConfiguration {
 
 	private static final long serialVersionUID = 4747024112171682291L;	
 	private final ReasonerConfiguration elkConfig;
-	private final OwlReasonerConfiguration owlConfig;
+	private final OWLReasonerConfiguration owlConfig;
 
-	public ElkReasonerConfiguration(OwlReasonerConfiguration owlConfig,
+	public ElkReasonerConfiguration(OWLReasonerConfiguration owlConfig,
 			ReasonerConfiguration elkConfig) {
 		this.elkConfig = elkConfig;
 		this.owlConfig = owlConfig;
@@ -65,37 +65,37 @@ public class ElkReasonerConfiguration {
 				.getConfiguration());
 	}
 
-	public ElkReasonerConfiguration(OwlReasonerConfiguration genConfig) {
+	public ElkReasonerConfiguration(OWLReasonerConfiguration genConfig) {
 		this(genConfig, ReasonerConfiguration.getConfiguration());
 	}
 
-	public static OwlReasonerConfiguration getDefaultOwlReasonerConfiguration(
+	public static OWLReasonerConfiguration getDefaultOwlReasonerConfiguration(
 			ReasonerProgressMonitor monitor) {
 		return new SimpleConfiguration(monitor, FreshEntityPolicy.ALLOW, 0,
 				IndividualNodeSetPolicy.BY_NAME);
 	}
 	
-	public static OwlReasonerConfiguration getDefaultOwlReasonerConfiguration() {
+	public static OWLReasonerConfiguration getDefaultOwlReasonerConfiguration() {
 		return getDefaultOwlReasonerConfiguration(
 				new NullReasonerProgressMonitor());
 	}
 
-//	@Override
+	@Override
 	public FreshEntityPolicy getFreshEntityPolicy() {
 		return owlConfig.getFreshEntityPolicy();
 	}
 
-//	@Override
+	@Override
 	public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
 		return owlConfig.getIndividualNodeSetPolicy();
 	}
 
-//	@Override
+	@Override
 	public ReasonerProgressMonitor getProgressMonitor() {
 		return owlConfig.getProgressMonitor();
 	}
 
-//	@Override
+	@Override
 	public long getTimeOut() {
 		return owlConfig.getTimeOut();
 	}

@@ -37,22 +37,21 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 /**
+ * Copied from OWLOntologyChangeListener in the OWL API.
+ * 
  * @author Matthew Horridge, The University Of Manchester, Bio-Health
  *         Informatics Group
  * @since 2.0.0
  */
 public interface OwlxOntologyChangeListener {
 
-    /**
-     * Called when some changes have been applied to various ontologies. These
-     * may be an axiom added or an axiom removed changes.
-     * 
-     * @param changes
-     *        A list of changes that have occurred. Each change may be examined
-     *        to determine which ontology it was applied to.
-     * @throws OWLException
-     *         exception
-     */
-    void ontologiesChanged(@Nonnull List<? extends OwlxOntologyChange> changes)
-            throws Exception;
+	/**
+	 * Called when some changes have been applied to various ontologies. These may
+	 * be an axiom added or an axiom removed changes.
+	 * 
+	 * @param changes A list of changes that have occurred. Each change may be
+	 *                examined to determine which ontology it was applied to.
+	 * @throws Exception exception
+	 */
+	void ontologiesChanged(@Nonnull List<? extends OwlxOntologyChange> changes) throws Exception;
 }

@@ -52,7 +52,7 @@ import javax.annotation.Nonnull;
  * @see org.semanticweb.owlapi.reasoner.OWLReasonerFactory
  * @see org.semanticweb.owlapi.reasoner.SimpleConfiguration
  */
-public interface OwlReasonerConfiguration extends Serializable {
+public interface OWLReasonerConfiguration extends Serializable {
 
     /**
      * Gets a progress monitor that the reasoner may update with information

@@ -39,11 +39,20 @@ import java.util.Optional;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 
 /**
+ * Copied from OWLOntologyChange in the OWL API.
+ * 
+ * Now an implementation for the AddAxiom and RemoveAxiom classes in the OWL
+ * API.
+ * 
+ * Added the createAdded and createRemoved static factory methods, and changed
+ * constructor to private.
+ * 
+ * Removed methods not used in Elk that would have required implementation.
+ * 
  * @author Matthew Horridge, The University Of Manchester, Bio-Health
  *         Informatics Group
  * @since 2.0.0
  */
-//public abstract class OWLOntologyChange implements // HasSignature, Serializable {
 public class OwlxOntologyChange implements Serializable {
 
 	private static final long serialVersionUID = 40000L;
@@ -56,7 +65,7 @@ public class OwlxOntologyChange implements Serializable {
 	/**
 	 * @param ontonogy the ontology to which the change is to be applied
 	 */
-//    public OWLOntologyChange(@Nonnull OWLOntology ont) {
+	// changed from public to private
 	private OwlxOntologyChange(OwlxOntology ontology) {
 		Objects.requireNonNull(ontology);
 		this.ontology = ontology;
@@ -91,20 +100,13 @@ public class OwlxOntologyChange implements Serializable {
 	}
 
 	/**
-	 * @param type axiom type to check
-	 * @return true if this is an axiom change and the axiom type is the specified
-	 *         type
-	 */
-//    public boolean isAxiomChange(AxiomType<?> type) {
-//        return getAddedOrRemovedAxiom().filter(ax -> ax.getAxiomType().equals(type)).isPresent();
-//    }
-
-	/**
 	 * Determines if the change will cause the addition or removal of an axiom from
 	 * an ontology.
 	 * 
-	 * @return {@code true} if the change is an {@code OWLAddAxiomChange} or
-	 *         {@code OWLRemoveAxiomChange} otherwise {@code false}.
+	 * In the OWL API returns true if the change is an AddAxiom or RemoveAxiom,
+	 * otherwise false.
+	 * 
+	 * @return {@code true} since this implementation is only add and remove
 	 */
 	public boolean isAxiomChange() {
 		return true;
@@ -149,15 +151,6 @@ public class OwlxOntologyChange implements Serializable {
 	}
 
 	/**
-	 * Determines if this change is an import change and hence causes a change to
-	 * the imports closure of an ontology.
-	 * 
-	 * @return {@code true} if this change is an import change, otherwise
-	 *         {@code false}.
-	 */
-//	public abstract boolean isImportChange();
-
-	/**
 	 * Gets the ontology that the change is/was applied to.
 	 * 
 	 * @return The ontology that the change is applicable to
@@ -166,60 +159,4 @@ public class OwlxOntologyChange implements Serializable {
 		return ontology;
 	}
 
-	/**
-	 * Gets the data (independent of the ontology) associated with this specific
-	 * change.
-	 * 
-	 * @return The {@link OWLOntologyChangeData} associated with this
-	 *         {@code OWLOntologyChange}.
-	 */
-//	@Nonnull
-//	public abstract OWLOntologyChangeData getChangeData();
-
-	/**
-	 * Gets a {@link OWLOntologyChangeRecord} that is derived from this
-	 * {@code OWLOntologyChange}'s {@link OWLOntologyID} and it's
-	 * {@link OWLOntologyChangeData}.
-	 * 
-	 * @return An {@link OWLOntologyChangeRecord} containing an
-	 *         {@link OWLOntologyID} equal to the {@link OWLOntologyID} of this
-	 *         {@code OWLOntologyChange}'s {@link OWLOntology}. Not {@code null} .
-	 */
-//	@Nonnull
-//	public OWLOntologyChangeRecord getChangeRecord() {
-//		return new OWLOntologyChangeRecord(ontology.getOntologyID(), getChangeData());
-//	}
-
-	/**
-	 * Gets the signature of this ontology change. That is, the set of entities
-	 * appearing in objects in this change.
-	 * 
-	 * @return A set of entities that correspond to the signature of this object.
-	 *         The set is a copy, changes are not reflected back.
-	 */
-//	@Override
-//	@Nonnull
-//	public abstract Set<OWLEntity> getSignature();
-
-	/**
-	 * Accepts a visitor
-	 * 
-	 * @param visitor The visitor
-	 */
-//	public abstract void accept(@Nonnull OWLOntologyChangeVisitor visitor);
-
-	/**
-	 * Accepts a visitor
-	 * 
-	 * @param visitor The visitor
-	 * @param <O>     visitor return type
-	 * @return visitor value
-	 */
-//	@Nonnull
-//	public abstract <O> O accept(@Nonnull OWLOntologyChangeVisitorEx<O> visitor);
-
-	/**
-	 * @return the reverse of this change; can be used to create undo changes.
-	 */
-//	public abstract OWLOntologyChange reverseChange();
 }

@@ -37,6 +37,8 @@ import java.io.Serializable;
 import javax.annotation.Nonnull;
 
 /**
+ * Copied from OWLOntologyChangeProgressListener in the OWL API
+ * 
  * Objects that want to listen to the progress of applying changes to an
  * ontology should implement this interface and add themselves as listener to a
  * manager.
@@ -47,18 +49,16 @@ import javax.annotation.Nonnull;
  */
 public interface OwlxOntologyChangeProgressListener extends Serializable {
 
-    /**
-     * @param size
-     *        the start size
-     */
-    void begin(int size);
+	/**
+	 * @param size the start size
+	 */
+	void begin(int size);
 
-    /**
-     * @param change
-     *        the change just applied
-     */
-    void appliedChange(@Nonnull OwlxOntologyChange change);
+	/**
+	 * @param change the change just applied
+	 */
+	void appliedChange(@Nonnull OwlxOntologyChange change);
 
-    /** end of the progress. */
-    void end();
+	/** end of the progress. */
+	void end();
 }

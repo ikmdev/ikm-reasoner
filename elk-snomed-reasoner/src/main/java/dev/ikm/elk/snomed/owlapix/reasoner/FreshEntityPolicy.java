@@ -37,7 +37,7 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  * {@link org.semanticweb.owlapi.model.OWLEntity#isBuiltIn()} and is not contained within the
  * signature of the root ontology imports closure.
  * 
- * @see org.semanticweb.OwlReasonerConfiguration.reasoner.OWLReasonerConfiguration
+ * @see org.semanticweb.OWLReasonerConfiguration.reasoner.OWLReasonerConfiguration
  * @author Matthew Horridge, The University of Manchester, Information Management Group
  * @since 3.0.0
  */

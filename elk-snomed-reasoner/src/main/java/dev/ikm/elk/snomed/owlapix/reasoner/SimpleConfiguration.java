@@ -41,7 +41,7 @@ import javax.annotation.Nonnull;
  *         Management Group
  * @since 3.0.0
  */
-public class SimpleConfiguration implements OwlReasonerConfiguration {
+public class SimpleConfiguration implements OWLReasonerConfiguration {
 
     private static final long serialVersionUID = 40000L;
     @Nonnull

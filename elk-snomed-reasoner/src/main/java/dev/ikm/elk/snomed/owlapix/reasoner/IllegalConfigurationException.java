@@ -36,16 +36,16 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  * @author Matthew Horridge, The University of Manchester, Information Management Group
  * @since 3.0.0
  */
-public class IllegalConfigurationException extends OwlReasonerRuntimeException {
+public class IllegalConfigurationException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;
-    private final OwlReasonerConfiguration configuration;
+    private final OWLReasonerConfiguration configuration;
 
     /**
      * @param cause exception cause
      * @param configuration loading configuration
      */
-    public IllegalConfigurationException(Throwable cause, OwlReasonerConfiguration configuration) {
+    public IllegalConfigurationException(Throwable cause, OWLReasonerConfiguration configuration) {
         super(configurationToString(configuration), cause);
         this.configuration = configuration;
     }
@@ -54,7 +54,7 @@ public class IllegalConfigurationException extends OwlReasonerRuntimeException {
      * @param message exception message
      * @param configuration reasoner configuration
      */
-    public IllegalConfigurationException(String message, OwlReasonerConfiguration configuration) {
+    public IllegalConfigurationException(String message, OWLReasonerConfiguration configuration) {
         super(message + configurationToString(configuration));
         this.configuration = configuration;
     }
@@ -65,17 +65,17 @@ public class IllegalConfigurationException extends OwlReasonerRuntimeException {
      * @param configuration reasoner configuration
      */
     public IllegalConfigurationException(String message, Throwable cause,
-        OwlReasonerConfiguration configuration) {
+        OWLReasonerConfiguration configuration) {
         super(message + configurationToString(configuration), cause);
         this.configuration = configuration;
     }
 
     /** @return reasoner configuration */
-    public OwlReasonerConfiguration getConfiguration() {
+    public OWLReasonerConfiguration getConfiguration() {
         return configuration;
     }
 
-    private static String configurationToString(OwlReasonerConfiguration configuration) {
+    private static String configurationToString(OWLReasonerConfiguration configuration) {
         if (configuration == null) {
             return "";
         }

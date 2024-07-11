@@ -20,9 +20,6 @@
  * limitations under the License.
  * #L%
  */
-/**
- * @author Yevgeny Kazakov, Jun 29, 2011
- */
 package dev.ikm.elk.snomed.reasoner;
 
 import org.slf4j.Logger;
@@ -30,10 +27,18 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.IllegalConfigurationException;
-import dev.ikm.elk.snomed.owlapix.reasoner.OwlReasonerConfiguration;
+import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
 
 /**
- * Factory for the OWLAPI reasoner implementation of the ELK reasoner.
+ * Factory for the OWLAPI reasoner implementation of the ELK reasoner which does
+ * not use the OWLAPI distribution.
+ * 
+ * This file is copied from module elk-owlapi4, package
+ * org.semanticweb.elk.owlapi. Previously implemented OWLReasonerFactory.
+ * 
+ * Now uses OwlxOntology instead of the OWLAPI OWLOntology.
+ * 
+ * The Overide annotations have been commented out.
  * 
  * @author Yevgeny Kazakov
  * @author Markus Kroetzsch
@@ -41,8 +46,7 @@ import dev.ikm.elk.snomed.owlapix.reasoner.OwlReasonerConfiguration;
 public class ElkReasonerFactory {
 
 	// logger for this class
-	private static final Logger LOGGER_ = LoggerFactory
-			.getLogger(ElkReasonerFactory.class);
+	private static final Logger LOGGER_ = LoggerFactory.getLogger(ElkReasonerFactory.class);
 
 //	@Override
 	public String getReasonerName() {
@@ -53,39 +57,31 @@ public class ElkReasonerFactory {
 //	@Override
 	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology) {
 		LOGGER_.trace("createNonBufferingReasoner(OWLOntology)");
-		
 		return createElkReasoner(ontology, false, null);
 	}
 
 //	@Override
 	public ElkReasoner createReasoner(OwlxOntology ontology) {
 		LOGGER_.trace("createReasoner(OWLOntology)");
-		
 		return createElkReasoner(ontology, true, null);
 	}
 
 //	@Override
-	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology,
-			OwlReasonerConfiguration config)
+	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology, OWLReasonerConfiguration config)
 			throws IllegalConfigurationException {
 		LOGGER_.trace("createNonBufferingReasoner(OWLOntology, OWLReasonerConfiguration)");
-		
 		return createElkReasoner(ontology, false, config);
 	}
 
 //	@Override
-	public ElkReasoner createReasoner(OwlxOntology ontology,
-			OwlReasonerConfiguration config)
+	public ElkReasoner createReasoner(OwlxOntology ontology, OWLReasonerConfiguration config)
 			throws IllegalConfigurationException {
 		LOGGER_.trace("createReasoner(OWLOntology, OWLReasonerConfiguration)");
-		
 		return createElkReasoner(ontology, true, config);
 	}
 
-	@SuppressWarnings("static-method")
-	ElkReasoner createElkReasoner(OwlxOntology ontology,
-			boolean isBufferingMode, OwlReasonerConfiguration config)
-			throws IllegalConfigurationException {
+	private ElkReasoner createElkReasoner(OwlxOntology ontology, boolean isBufferingMode,
+			OWLReasonerConfiguration config) throws IllegalConfigurationException {
 		LOGGER_.trace("createElkReasoner(OWLOntology, boolean, OWLReasonerConfiguration)");
 		// here we check if the passed configuration also has ELK's parameters
 		ElkReasonerConfiguration elkReasonerConfig;
@@ -98,7 +94,7 @@ public class ElkReasonerFactory {
 		} else {
 			elkReasonerConfig = new ElkReasonerConfiguration();
 		}
-
 		return new ElkReasoner(ontology, isBufferingMode, elkReasonerConfig);
 	}
+
 }

@@ -37,18 +37,18 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  *         Management Group
  * @since 3.0.0
  */
-public class OwlReasonerRuntimeException extends RuntimeException {
+public class OWLReasonerRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 40000L;
 
     /** default constructor */
-    public OwlReasonerRuntimeException() {}
+    public OWLReasonerRuntimeException() {}
 
     /**
      * @param cause
      *        error cause
      */
-    public OwlReasonerRuntimeException(Throwable cause) {
+    public OWLReasonerRuntimeException(Throwable cause) {
         super(cause);
     }
 
@@ -56,7 +56,7 @@ public class OwlReasonerRuntimeException extends RuntimeException {
      * @param message
      *        error message
      */
-    public OwlReasonerRuntimeException(String message) {
+    public OWLReasonerRuntimeException(String message) {
         super(message);
     }
 
@@ -66,7 +66,7 @@ public class OwlReasonerRuntimeException extends RuntimeException {
      * @param cause
      *        error cause
      */
-    public OwlReasonerRuntimeException(String message, Throwable cause) {
+    public OWLReasonerRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 }

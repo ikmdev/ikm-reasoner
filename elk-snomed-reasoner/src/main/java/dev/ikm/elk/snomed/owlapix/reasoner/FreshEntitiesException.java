@@ -44,13 +44,13 @@ import org.semanticweb.elk.owl.interfaces.ElkEntity;
  * Indicates that a query whose signature contained fresh entities was posed to
  * the reasoner. This exception is only thrown if the fresh entity policy is set
  * appropriately. (See {@link FreshEntityPolicy} and
- * {@link org.semanticweb.OwlReasonerConfiguration.reasoner.OWLReasonerConfiguration}.
+ * {@link org.semanticweb.OWLReasonerConfiguration.reasoner.OWLReasonerConfiguration}.
  * 
  * @author Matthew Horridge, The University of Manchester, Information
  *         Management Group
  * @since 3.0.0
  */
-public class FreshEntitiesException extends OwlReasonerRuntimeException {
+public class FreshEntitiesException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;
     private final Collection<ElkEntity> entities;
