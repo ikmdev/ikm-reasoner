@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
-import dev.ikm.elk.snomed.owlapix.reasoner.IllegalConfigurationException;
 import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
 
 /**
@@ -67,21 +66,19 @@ public class ElkReasonerFactory {
 	}
 
 //	@Override
-	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology, OWLReasonerConfiguration config)
-			throws IllegalConfigurationException {
+	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology, OWLReasonerConfiguration config) {
 		LOGGER_.trace("createNonBufferingReasoner(OWLOntology, OWLReasonerConfiguration)");
 		return createElkReasoner(ontology, false, config);
 	}
 
 //	@Override
-	public ElkReasoner createReasoner(OwlxOntology ontology, OWLReasonerConfiguration config)
-			throws IllegalConfigurationException {
+	public ElkReasoner createReasoner(OwlxOntology ontology, OWLReasonerConfiguration config) {
 		LOGGER_.trace("createReasoner(OWLOntology, OWLReasonerConfiguration)");
 		return createElkReasoner(ontology, true, config);
 	}
 
 	private ElkReasoner createElkReasoner(OwlxOntology ontology, boolean isBufferingMode,
-			OWLReasonerConfiguration config) throws IllegalConfigurationException {
+			OWLReasonerConfiguration config) {
 		LOGGER_.trace("createElkReasoner(OWLOntology, boolean, OWLReasonerConfiguration)");
 		// here we check if the passed configuration also has ELK's parameters
 		ElkReasonerConfiguration elkReasonerConfig;

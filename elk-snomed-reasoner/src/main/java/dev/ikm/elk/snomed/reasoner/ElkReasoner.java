@@ -226,6 +226,7 @@ public class ElkReasoner {
 	 * @return the {@link UnsupportedOperationException} saying that this method is
 	 *         not supported
 	 */
+	@SuppressWarnings("unused")
 	private static UnsupportedOperationException unsupportedOwlApiMethod(String method, String reason) {
 		String message = "OWL API reasoner method is not fully implemented: " + method + ": " + reason;
 		LoggerWrap.log(LOGGER_, LogLevel.WARN, MARKER_UNSUPPORTED_METHOD_, message);

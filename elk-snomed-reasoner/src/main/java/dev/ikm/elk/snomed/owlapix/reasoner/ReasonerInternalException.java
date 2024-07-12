@@ -47,6 +47,7 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  *         Informatics Group
  * @since 3.1.0
  */
+@Deprecated
 public class ReasonerInternalException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;

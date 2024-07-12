@@ -43,6 +43,7 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  *         Management Group
  * @since 3.0.0
  */
+@Deprecated
 public class InconsistentOntologyException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;

@@ -39,6 +39,7 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
  *         Management Group
  * @since 3.0.0
  */
+@Deprecated
 public class UnsupportedEntailmentTypeException extends RuntimeException {
 
     private static final long serialVersionUID = 40000L;

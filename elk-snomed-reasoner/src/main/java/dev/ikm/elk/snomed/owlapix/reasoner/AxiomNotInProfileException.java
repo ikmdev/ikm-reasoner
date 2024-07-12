@@ -41,6 +41,7 @@ import org.semanticweb.elk.owl.iris.ElkIri;
  * @author Matthew Horridge, The University of Manchester, Information Management Group
  * @since 3.0.0
  */
+@Deprecated
 public class AxiomNotInProfileException extends OWLReasonerRuntimeException {
 
     private static final long serialVersionUID = 40000L;
