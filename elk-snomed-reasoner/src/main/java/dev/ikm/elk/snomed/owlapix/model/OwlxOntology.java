@@ -44,7 +44,7 @@ import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
  * #L%
  */
 
-public class OwlxOntology implements OwlxOntologyManager {
+public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 
 	private ElkObjectEntityRecyclingFactory objectFactory;
 
@@ -168,11 +168,11 @@ public class OwlxOntology implements OwlxOntologyManager {
 		return objectFactory.getDataHasValue(getElkDataProperty(name), value);
 	}
 
-	public OwlxOntologyManager getOWLOntologyManager() {
+	public OWLOntologyManager getOWLOntologyManager() {
 		return this;
 	}
 
-	public Set<OwlxOntology> getImportsClosure() {
+	public Set<OWLOntology> getImportsClosure() {
 		return Set.of(this);
 	}
 

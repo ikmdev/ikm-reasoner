@@ -57,7 +57,7 @@ public class OWLOntologyChange implements Serializable {
 
 	private static final long serialVersionUID = 40000L;
 
-	private final OwlxOntology ontology;
+	private final OWLOntology ontology;
 
 	private ElkAxiom addedAxiom;
 	private ElkAxiom removedAxiom;
@@ -66,19 +66,19 @@ public class OWLOntologyChange implements Serializable {
 	 * @param ontonogy the ontology to which the change is to be applied
 	 */
 	// changed from public to private
-	private OWLOntologyChange(OwlxOntology ontology) {
+	private OWLOntologyChange(OWLOntology ontology) {
 		Objects.requireNonNull(ontology);
 		this.ontology = ontology;
 	}
 
-	public static OWLOntologyChange createAdded(OwlxOntology ont, ElkAxiom axiom) {
+	public static OWLOntologyChange createAdded(OWLOntology ont, ElkAxiom axiom) {
 		OWLOntologyChange change = new OWLOntologyChange(ont);
 		Objects.requireNonNull(axiom);
 		change.addedAxiom = axiom;
 		return change;
 	}
 
-	public static OWLOntologyChange createRemoved(OwlxOntology ont, ElkAxiom axiom) {
+	public static OWLOntologyChange createRemoved(OWLOntology ont, ElkAxiom axiom) {
 		OWLOntologyChange change = new OWLOntologyChange(ont);
 		Objects.requireNonNull(axiom);
 		change.removedAxiom = axiom;
@@ -155,7 +155,7 @@ public class OWLOntologyChange implements Serializable {
 	 * 
 	 * @return The ontology that the change is applicable to
 	 */
-	public OwlxOntology getOntology() {
+	public OWLOntology getOntology() {
 		return ontology;
 	}
 

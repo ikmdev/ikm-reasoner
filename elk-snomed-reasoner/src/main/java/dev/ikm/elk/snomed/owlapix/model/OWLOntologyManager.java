@@ -24,7 +24,7 @@ package dev.ikm.elk.snomed.owlapix.model;
  * A few methods from OWLOntologyManager in the OWL API
  * 
  */
-public interface OwlxOntologyManager {
+public interface OWLOntologyManager {
 
 	public void addOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_);
 

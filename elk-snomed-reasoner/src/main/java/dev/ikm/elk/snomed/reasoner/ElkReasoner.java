@@ -64,11 +64,11 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntology;
 import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChange;
 import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChangeListener;
 import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChangeProgressListener;
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyManager;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyManager;
 import dev.ikm.elk.snomed.owlapix.reasoner.BufferingMode;
 import dev.ikm.elk.snomed.owlapix.reasoner.FreshEntityPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
@@ -91,8 +91,8 @@ public class ElkReasoner {
 	private static final Marker MARKER_UNSUPPORTED_METHOD_ = MarkerFactory.getMarker("owlapi.unsupportedMethod");
 
 	// OWL API related objects
-	private final OwlxOntology owlOntology_;
-	private final OwlxOntologyManager owlOntologymanager_;
+	private final OWLOntology owlOntology_;
+	private final OWLOntologyManager owlOntologymanager_;
 	/**
 	 * ELK progress monitor to display progress of main reasoning tasks, e.g.,
 	 * classification
@@ -135,7 +135,7 @@ public class ElkReasoner {
 	 */
 	private boolean ontologyReloadRequired_;
 
-	ElkReasoner(OwlxOntology ontology, boolean isBufferingMode, ElkReasonerConfiguration elkConfig,
+	private ElkReasoner(OWLOntology ontology, boolean isBufferingMode, ElkReasonerConfiguration elkConfig,
 			final Reasoner internalReasoner) {
 		this.owlOntology_ = ontology;
 		this.owlOntologymanager_ = ontology.getOWLOntologyManager();
@@ -163,14 +163,20 @@ public class ElkReasoner {
 		this.ontologyReloadRequired_ = false;
 	}
 
-	ElkReasoner(OwlxOntology ontology, boolean isBufferingMode, ElkReasonerConfiguration elkConfig) {
-//		this(ontology, isBufferingMode, elkConfig,
-//				new ReasonerFactory().createReasoner(elkConfig.getElkConfiguration()));
-		this(ontology, isBufferingMode, elkConfig,
-				new ReasonerFactory().createReasoner(ontology.getObjectFactory(), elkConfig.getElkConfiguration()));
+//	ElkReasoner(OWLOntology ontology, boolean isBufferingMode, ElkReasonerConfiguration elkConfig) {
+//		// this(ontology, isBufferingMode, elkConfig,
+//		// new ReasonerFactory().createReasoner(elkConfig.getElkConfiguration()));
+//		this(ontology, isBufferingMode, elkConfig, new ReasonerFactory()
+//				.createReasoner(((OwlxOntology) ontology).getObjectFactory(), elkConfig.getElkConfiguration()));
+//	}
+
+	public static ElkReasoner createReasoner(OWLOntology ontology, ElkObject.Factory factory) {
+		ElkReasonerConfiguration elkConfig = new ElkReasonerConfiguration();
+		Reasoner reasoner = new ReasonerFactory().createReasoner(factory, elkConfig.getElkConfiguration());
+		return new ElkReasoner(ontology, true, elkConfig, reasoner);
 	}
 
-	OwlxOntology getOWLOntology() {
+	OWLOntology getOWLOntology() {
 		return owlOntology_;
 	}
 
@@ -543,7 +549,7 @@ public class ElkReasoner {
 	}
 
 //	@Override
-	public OwlxOntology getRootOntology() {
+	public OWLOntology getRootOntology() {
 		LOGGER_.trace("getRootOntology()");
 		return owlOntology_;
 	}
@@ -803,9 +809,9 @@ public class ElkReasoner {
 	protected class OntologyChangeListener implements OWLOntologyChangeListener {
 		@Override
 		public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
-			Set<OwlxOntology> importClosure = null;
+			Set<OWLOntology> importClosure = null;
 			for (OWLOntologyChange change : changes) {
-				OwlxOntology changedOntology = change.getOntology();
+				OWLOntology changedOntology = change.getOntology();
 				if (!changedOntology.equals(owlOntology_)) {
 					if (importClosure == null) {
 						importClosure = owlOntology_.getImportsClosure();

@@ -25,7 +25,7 @@ package dev.ikm.elk.snomed.reasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
 
 /**
@@ -42,6 +42,7 @@ import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
  * @author Yevgeny Kazakov
  * @author Markus Kroetzsch
  */
+@Deprecated
 public class ElkReasonerFactory {
 
 	// logger for this class
@@ -54,30 +55,30 @@ public class ElkReasonerFactory {
 	}
 
 //	@Override
-	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology) {
+	public ElkReasoner createNonBufferingReasoner(OWLOntology ontology) {
 		LOGGER_.trace("createNonBufferingReasoner(OWLOntology)");
 		return createElkReasoner(ontology, false, null);
 	}
 
 //	@Override
-	public ElkReasoner createReasoner(OwlxOntology ontology) {
+	public ElkReasoner createReasoner(OWLOntology ontology) {
 		LOGGER_.trace("createReasoner(OWLOntology)");
 		return createElkReasoner(ontology, true, null);
 	}
 
 //	@Override
-	public ElkReasoner createNonBufferingReasoner(OwlxOntology ontology, OWLReasonerConfiguration config) {
+	public ElkReasoner createNonBufferingReasoner(OWLOntology ontology, OWLReasonerConfiguration config) {
 		LOGGER_.trace("createNonBufferingReasoner(OWLOntology, OWLReasonerConfiguration)");
 		return createElkReasoner(ontology, false, config);
 	}
 
 //	@Override
-	public ElkReasoner createReasoner(OwlxOntology ontology, OWLReasonerConfiguration config) {
+	public ElkReasoner createReasoner(OWLOntology ontology, OWLReasonerConfiguration config) {
 		LOGGER_.trace("createReasoner(OWLOntology, OWLReasonerConfiguration)");
 		return createElkReasoner(ontology, true, config);
 	}
 
-	private ElkReasoner createElkReasoner(OwlxOntology ontology, boolean isBufferingMode,
+	private ElkReasoner createElkReasoner(OWLOntology ontology, boolean isBufferingMode,
 			OWLReasonerConfiguration config) {
 		LOGGER_.trace("createElkReasoner(OWLOntology, boolean, OWLReasonerConfiguration)");
 		// here we check if the passed configuration also has ELK's parameters
@@ -91,7 +92,8 @@ public class ElkReasonerFactory {
 		} else {
 			elkReasonerConfig = new ElkReasonerConfiguration();
 		}
-		return new ElkReasoner(ontology, isBufferingMode, elkReasonerConfig);
+//		return new ElkReasoner(ontology, isBufferingMode, elkReasonerConfig);
+		throw new UnsupportedOperationException();
 	}
 
 }

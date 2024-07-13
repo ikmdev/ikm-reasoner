@@ -52,7 +52,6 @@ import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
 import dev.ikm.elk.snomed.reasoner.ElkReasoner;
-import dev.ikm.elk.snomed.reasoner.ElkReasonerFactory;
 
 public class SnomedOntologyReasoner {
 
@@ -89,7 +88,7 @@ public class SnomedOntologyReasoner {
 		for (Concept con : this.snomedOntology.getConcepts()) {
 			process(con);
 		}
-		reasoner = new ElkReasonerFactory().createReasoner(ontology);
+		reasoner = ElkReasoner.createReasoner(ontology, ontology.getObjectFactory());
 		reasoner.flush();
 		try {
 			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
