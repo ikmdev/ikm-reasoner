@@ -37,10 +37,10 @@ import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyChange;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChange;
 
 /**
- * An {@link AxiomLoader} that accumulates the {@link OwlxOntologyChange} and
+ * An {@link AxiomLoader} that accumulates the {@link OWLOntologyChange} and
  * provides them by converting through {@link OwlConverter}.
  * <p>
  * One instance of this class may be registered with the reasoner only
@@ -58,13 +58,13 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 	private final ProgressMonitor progressMonitor;
 
 	/** list to accumulate the unprocessed changes to the ontology */
-	private final LinkedList<OwlxOntologyChange> pendingChanges_;
+	private final LinkedList<OWLOntologyChange> pendingChanges_;
 
 	private Loader loader_ = null;
 
 	OwlChangesLoaderFactory(final ProgressMonitor progressMonitor) {
 		this.progressMonitor = progressMonitor;
-		this.pendingChanges_ = new LinkedList<OwlxOntologyChange>();
+		this.pendingChanges_ = new LinkedList<OWLOntologyChange>();
 	}
 
 	private synchronized void load(final InterruptMonitor interrupter,
@@ -81,7 +81,7 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 			for (;;) {
 				if (interrupter.isInterrupted())
 					break;
-				OwlxOntologyChange change = pendingChanges_.poll();
+				OWLOntologyChange change = pendingChanges_.poll();
 				if (change == null)
 					break;
 				if (!change.isAxiomChange()) {
@@ -114,7 +114,7 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 		return pendingChanges_.isEmpty();
 	}
 
-	synchronized void registerChange(OwlxOntologyChange change) {
+	synchronized void registerChange(OWLOntologyChange change) {
 		LOGGER_.trace("Registering change: {}", change);
 
 		pendingChanges_.add(change);
@@ -122,7 +122,7 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 
 	Set<ElkAxiom> getPendingAxiomAdditions() {
 		Set<ElkAxiom> added = new HashSet<ElkAxiom>();
-		for (OwlxOntologyChange change : pendingChanges_) {
+		for (OWLOntologyChange change : pendingChanges_) {
 			if (change.isAddAxiom()) {
 				added.add(change.getAxiom());
 			}
@@ -132,7 +132,7 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 
 	Set<ElkAxiom> getPendingAxiomRemovals() {
 		Set<ElkAxiom> removed = new HashSet<ElkAxiom>();
-		for (OwlxOntologyChange change : pendingChanges_) {
+		for (OWLOntologyChange change : pendingChanges_) {
 			if (change.isRemoveAxiom()) {
 				removed.add(change.getAxiom());
 			}
@@ -140,7 +140,7 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 		return removed;
 	}
 
-	List<OwlxOntologyChange> getPendingChanges() {
+	List<OWLOntologyChange> getPendingChanges() {
 		return pendingChanges_;
 	}
 

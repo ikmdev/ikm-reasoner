@@ -53,7 +53,7 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
  *         Informatics Group
  * @since 2.0.0
  */
-public class OwlxOntologyChange implements Serializable {
+public class OWLOntologyChange implements Serializable {
 
 	private static final long serialVersionUID = 40000L;
 
@@ -66,20 +66,20 @@ public class OwlxOntologyChange implements Serializable {
 	 * @param ontonogy the ontology to which the change is to be applied
 	 */
 	// changed from public to private
-	private OwlxOntologyChange(OwlxOntology ontology) {
+	private OWLOntologyChange(OwlxOntology ontology) {
 		Objects.requireNonNull(ontology);
 		this.ontology = ontology;
 	}
 
-	public static OwlxOntologyChange createAdded(OwlxOntology ont, ElkAxiom axiom) {
-		OwlxOntologyChange change = new OwlxOntologyChange(ont);
+	public static OWLOntologyChange createAdded(OwlxOntology ont, ElkAxiom axiom) {
+		OWLOntologyChange change = new OWLOntologyChange(ont);
 		Objects.requireNonNull(axiom);
 		change.addedAxiom = axiom;
 		return change;
 	}
 
-	public static OwlxOntologyChange createRemoved(OwlxOntology ont, ElkAxiom axiom) {
-		OwlxOntologyChange change = new OwlxOntologyChange(ont);
+	public static OWLOntologyChange createRemoved(OwlxOntology ont, ElkAxiom axiom) {
+		OWLOntologyChange change = new OWLOntologyChange(ont);
 		Objects.requireNonNull(axiom);
 		change.removedAxiom = axiom;
 		return change;

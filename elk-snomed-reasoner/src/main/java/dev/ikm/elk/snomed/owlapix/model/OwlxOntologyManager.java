@@ -26,12 +26,12 @@ package dev.ikm.elk.snomed.owlapix.model;
  */
 public interface OwlxOntologyManager {
 
-	public void addOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
+	public void addOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_);
 
-	public void addOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
+	public void addOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_);
 
-	public void removeOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_);
+	public void removeOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_);
 
-	public void removeOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_);
+	public void removeOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_);
 
 }

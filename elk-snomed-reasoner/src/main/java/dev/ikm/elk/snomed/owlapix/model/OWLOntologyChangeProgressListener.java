@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
  *         Management Group
  * @since 3.0.0
  */
-public interface OwlxOntologyChangeProgressListener extends Serializable {
+public interface OWLOntologyChangeProgressListener extends Serializable {
 
 	/**
 	 * @param size the start size
@@ -57,7 +57,7 @@ public interface OwlxOntologyChangeProgressListener extends Serializable {
 	/**
 	 * @param change the change just applied
 	 */
-	void appliedChange(@Nonnull OwlxOntologyChange change);
+	void appliedChange(@Nonnull OWLOntologyChange change);
 
 	/** end of the progress. */
 	void end();

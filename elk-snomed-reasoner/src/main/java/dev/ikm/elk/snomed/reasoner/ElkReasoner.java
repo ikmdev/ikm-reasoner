@@ -65,16 +65,21 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyChange;
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyChangeListener;
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyChangeProgressListener;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChange;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChangeListener;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChangeProgressListener;
+import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyManager;
 import dev.ikm.elk.snomed.owlapix.reasoner.BufferingMode;
 import dev.ikm.elk.snomed.owlapix.reasoner.FreshEntityPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
 
 /**
- * {@link OWLReasoner} interface implementation for ELK {@link Reasoner}
+ * Derived from the {@link OWLReasoner} interface implementation for ELK
+ * {@link Reasoner}.
+ * 
+ * Implemented using Elk objects and some OWL API derived classes, eliminating
+ * use of the full OWL API implementation.
  * 
  * @author Yevgeny Kazakov
  * @author Markus Kroetzsch
@@ -87,7 +92,7 @@ public class ElkReasoner {
 
 	// OWL API related objects
 	private final OwlxOntology owlOntology_;
-	private final dev.ikm.elk.snomed.owlapix.model.OwlxOntologyManager owlOntologymanager_;
+	private final OwlxOntologyManager owlOntologymanager_;
 	/**
 	 * ELK progress monitor to display progress of main reasoning tasks, e.g.,
 	 * classification
@@ -493,7 +498,7 @@ public class ElkReasoner {
 	}
 
 //	@Override
-	public List<OwlxOntologyChange> getPendingChanges() {
+	public List<OWLOntologyChange> getPendingChanges() {
 		LOGGER_.trace("getPendingChanges()");
 		return bufferedChangesLoader_.getPendingChanges();
 	}
@@ -795,11 +800,11 @@ public class ElkReasoner {
 		changeListeners_.remove(listener);
 	}
 
-	protected class OntologyChangeListener implements OwlxOntologyChangeListener {
+	protected class OntologyChangeListener implements OWLOntologyChangeListener {
 		@Override
-		public void ontologiesChanged(List<? extends OwlxOntologyChange> changes) {
+		public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
 			Set<OwlxOntology> importClosure = null;
-			for (OwlxOntologyChange change : changes) {
+			for (OWLOntologyChange change : changes) {
 				OwlxOntology changedOntology = change.getOntology();
 				if (!changedOntology.equals(owlOntology_)) {
 					if (importClosure == null) {
@@ -825,7 +830,7 @@ public class ElkReasoner {
 
 	}
 
-	private class OntologyChangeProgressListener implements OwlxOntologyChangeProgressListener {
+	private class OntologyChangeProgressListener implements OWLOntologyChangeProgressListener {
 
 		private static final long serialVersionUID = -609834181047406971L;
 
@@ -843,7 +848,7 @@ public class ElkReasoner {
 		}
 
 		@Override
-		public void appliedChange(OwlxOntologyChange change) {
+		public void appliedChange(OWLOntologyChange change) {
 			// nothing to do
 
 		}

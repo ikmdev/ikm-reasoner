@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
  *         Informatics Group
  * @since 2.0.0
  */
-public interface OwlxOntologyChangeListener {
+public interface OWLOntologyChangeListener {
 
 	/**
 	 * Called when some changes have been applied to various ontologies. These may
@@ -53,5 +53,5 @@ public interface OwlxOntologyChangeListener {
 	 *                examined to determine which ontology it was applied to.
 	 * @throws Exception exception
 	 */
-	void ontologiesChanged(@Nonnull List<? extends OwlxOntologyChange> changes) throws Exception;
+	void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws Exception;
 }
