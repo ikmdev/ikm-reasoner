@@ -40,8 +40,7 @@ import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.ReasonerProgressMonitor;
 
 /**
- * An {@link AxiomLoader} that loads a given {@link OwlxOntology} through
- * {@link OwlConverter}.
+ * An {@link AxiomLoader} that loads a given {@link OWLOntology} 
  * 
  * @author "Yevgeny Kazakov"
  * 
@@ -53,11 +52,6 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	private static final Logger LOGGER_ = LoggerFactory
 			.getLogger(OwlOntologyLoader.class);
 
-	/**
-	 * the converter used to convert OWL axioms into ELK axioms
-	 */
-//	private static final OwlConverter OWL_CONVERTER_ = OwlConverter
-//			.getInstance();
 	/**
 	 * the ontology to be loaded
 	 */
@@ -133,8 +127,6 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 
 			LOGGER_.trace("loading {}", axiom);
 			
-//			if (OWL_CONVERTER_.isRelevantAxiom(axiom))
-//			axiomInserter.visit(OWL_CONVERTER_.convert(axiom));
 			axiomInserter.visit(axiom);
 			
 			axiomsProcessed_++;

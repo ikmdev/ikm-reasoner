@@ -94,7 +94,6 @@ class OwlChangesLoaderFactory implements AxiomLoader.Factory {
 				OwlOntologyChangeProcessorVisitor loader = new OwlOntologyChangeProcessorVisitor(
 						axiomInserter, axiomDeleter);
 
-//				change.accept(loader);
 				loader.process(change);
 				ElkLoadingException error = loader.getError();
 
