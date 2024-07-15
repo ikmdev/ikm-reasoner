@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed.reasoner;
+package dev.ikm.elk.snomed.owlapix.model;
 
 /*-
  * #%L
  * ELK Reasoner for SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +23,17 @@ package dev.ikm.elk.snomed.reasoner;
 import java.util.Set;
 
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
-import org.semanticweb.elk.owl.interfaces.ElkObject;
 
-public class OwlConverter {
+/**
+ * A few methods from OWLOntology in the OWL API
+ * 
+ */
+public interface OWLOntology {
 
-	public static OwlConverter getInstance() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Set<OWLOntology> getImportsClosure();
 
-	public <C extends ElkObject> C convert(C obj) {
-		return obj;
-	}
+	public Set<ElkAxiom> getAxioms();
 
-	public Iterable<? extends ElkAxiom> convertAxiomSet(Set<? extends ElkAxiom> owlAxioms) {
-		return owlAxioms;
-	}
-
-	public boolean isRelevantAxiom(ElkAxiom axiom) {
-		return true;
-	}
+	public OWLOntologyManager getOWLOntologyManager();
 
 }

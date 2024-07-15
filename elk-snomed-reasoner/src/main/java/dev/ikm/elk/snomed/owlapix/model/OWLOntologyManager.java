@@ -1,4 +1,4 @@
-package dev.ikm.elk.snomed.reasoner;
+package dev.ikm.elk.snomed.owlapix.model;
 
 /*-
  * #%L
@@ -20,27 +20,18 @@ package dev.ikm.elk.snomed.reasoner;
  * #L%
  */
 
-import org.semanticweb.elk.exceptions.ElkException;
-import org.semanticweb.elk.exceptions.ElkRuntimeException;
+/**
+ * A few methods from OWLOntologyManager in the OWL API
+ * 
+ */
+public interface OWLOntologyManager {
 
-public class ElkConverter {
-	
-	// This class can go away with some cleanup in ElkReasoner
+	public void addOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_);
 
-	private ElkConverter() {
-		super();
-	}
+	public void addOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_);
 
-	public static ElkConverter getInstance() {
-		return new ElkConverter();
-	}
+	public void removeOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_);
 
-	public ElkRuntimeException convert(ElkRuntimeException e) {
-		return e;
-	}
-
-	public ElkRuntimeException convert(ElkException e) {
-		return new ElkRuntimeException(e);
-	}
+	public void removeOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_);
 
 }

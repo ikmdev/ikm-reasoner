@@ -10,7 +10,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. */
-package dev.ikm.elk.snomed.owlapix.reasoner;
+package dev.ikm.elk.snomed.owlapix.model;
 
 /*-
  * #%L
@@ -32,79 +32,33 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  * #L%
  */
 
-import java.util.Collection;
-import java.util.Collections;
+import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
-import org.semanticweb.elk.owl.interfaces.ElkEntity;
-
-
 /**
- * Indicates that a query whose signature contained fresh entities was posed to
- * the reasoner. This exception is only thrown if the fresh entity policy is set
- * appropriately. (See {@link FreshEntityPolicy} and
- * {@link org.semanticweb.OwlReasonerConfiguration.reasoner.OWLReasonerConfiguration}.
+ * Copied from OWLOntologyChangeProgressListener in the OWL API
+ * 
+ * Objects that want to listen to the progress of applying changes to an
+ * ontology should implement this interface and add themselves as listener to a
+ * manager.
  * 
  * @author Matthew Horridge, The University of Manchester, Information
  *         Management Group
  * @since 3.0.0
  */
-public class FreshEntitiesException extends OwlReasonerRuntimeException {
+public interface OWLOntologyChangeProgressListener extends Serializable {
 
-    private static final long serialVersionUID = 40000L;
-    private final Collection<ElkEntity> entities;
+	/**
+	 * @param size the start size
+	 */
+	void begin(int size);
 
-    /**
-     * @param entities
-     *        fresh entities
-     */
-    public FreshEntitiesException(Collection<ElkEntity> entities) {
-        this(entities, null);
-    }
+	/**
+	 * @param change the change just applied
+	 */
+	void appliedChange(@Nonnull OWLOntologyChange change);
 
-    /**
-     * @param entities
-     *        entities
-     * @param t
-     *        cause
-     */
-    public FreshEntitiesException(Collection<ElkEntity> entities, Throwable t) {
-        super(t);
-        this.entities = entities;
-    }
-
-    /**
-     * @param entity
-     *        fresh entity
-     */
-    public FreshEntitiesException(ElkEntity entity) {
-        this(Collections.singletonList(entity));
-    }
-
-    /**
-     * @param entity
-     *        fresh entity
-     * @param t
-     *        cause
-     */
-    public FreshEntitiesException(ElkEntity entity, Throwable t) {
-        this(Collections.singletonList(entity), t);
-    }
-
-    /**
-     * Gets the entities.
-     * 
-     * @return The entities, none of which are contained in the signature of the
-     *         union of a set of ontologies.
-     */
-    public Collection<ElkEntity> getEntities() {
-        return entities;
-    }
-
-    @Nonnull
-    @Override
-    public String getMessage() {
-        return entities + " not in signature";
-    }
+	/** end of the progress. */
+	void end();
 }

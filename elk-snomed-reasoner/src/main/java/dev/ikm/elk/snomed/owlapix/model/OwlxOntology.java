@@ -44,7 +44,7 @@ import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
  * #L%
  */
 
-public class OwlxOntology implements OwlxOntologyManager {
+public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 
 	private ElkObjectEntityRecyclingFactory objectFactory;
 
@@ -68,8 +68,8 @@ public class OwlxOntology implements OwlxOntologyManager {
 
 	public boolean addAxiom(ElkAxiom axiom) {
 		boolean ret = axioms.add(axiom);
-		OwlxOntologyChange change = OwlxOntologyChange.createAdded(this, axiom);
-		for (OwlxOntologyChangeListener listener : change_listeners) {
+		OWLOntologyChange change = OWLOntologyChange.createAdded(this, axiom);
+		for (OWLOntologyChangeListener listener : change_listeners) {
 			try {
 				listener.ontologiesChanged(List.of(change));
 			} catch (Exception ex) {
@@ -81,8 +81,8 @@ public class OwlxOntology implements OwlxOntologyManager {
 
 	public boolean removeAxiom(ElkAxiom axiom) {
 		boolean ret = axioms.remove(axiom);
-		OwlxOntologyChange change = OwlxOntologyChange.createRemoved(this, axiom);
-		for (OwlxOntologyChangeListener listener : change_listeners) {
+		OWLOntologyChange change = OWLOntologyChange.createRemoved(this, axiom);
+		for (OWLOntologyChangeListener listener : change_listeners) {
 			try {
 				listener.ontologiesChanged(List.of(change));
 			} catch (Exception ex) {
@@ -168,33 +168,33 @@ public class OwlxOntology implements OwlxOntologyManager {
 		return objectFactory.getDataHasValue(getElkDataProperty(name), value);
 	}
 
-	public OwlxOntologyManager getOWLOntologyManager() {
+	public OWLOntologyManager getOWLOntologyManager() {
 		return this;
 	}
 
-	public Set<OwlxOntology> getImportsClosure() {
+	public Set<OWLOntology> getImportsClosure() {
 		return Set.of(this);
 	}
 
 	// OwlxOntologyManager
 
-	private HashSet<OwlxOntologyChangeListener> change_listeners = new HashSet<>();
+	private HashSet<OWLOntologyChangeListener> change_listeners = new HashSet<>();
 
-	public void addOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_) {
+	public void addOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_) {
 		change_listeners.add(ontologyChangeListener_);
 	}
 
-	public void addOntologyChangeProgessListener(OwlxOntologyChangeProgressListener ontologyChangeProgressListener_) {
+	public void addOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void removeOntologyChangeListener(OwlxOntologyChangeListener ontologyChangeListener_) {
+	public void removeOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_) {
 		change_listeners.remove(ontologyChangeListener_);
 	}
 
 	public void removeOntologyChangeProgessListener(
-			OwlxOntologyChangeProgressListener ontologyChangeProgressListener_) {
+			OWLOntologyChangeProgressListener ontologyChangeProgressListener_) {
 		// TODO Auto-generated method stub
 
 	}

@@ -27,10 +27,13 @@ import org.semanticweb.elk.owl.visitors.ElkAxiomProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntologyChange;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChange;
 
-class OwlOntologyChangeProcessorVisitor // implements OWLOntologyChangeVisitor
-{
+/**
+ * Changed from visitor pattern, since this implementation doesn't use AddAxiom
+ * and RemoveAxiom classes.
+ */
+public class OwlOntologyChangeProcessorVisitor {
 
 	private static final Logger LOGGER_ = LoggerFactory.getLogger(OwlOntologyChangeProcessorVisitor.class);
 
@@ -43,7 +46,7 @@ class OwlOntologyChangeProcessorVisitor // implements OWLOntologyChangeVisitor
 		this.axiomDeleter_ = axiomDeleter;
 	}
 
-	public void process(OwlxOntologyChange change) {
+	public void process(OWLOntologyChange change) {
 		ElkAxiom axiom = change.getAxiom();
 		if (change.isAddAxiom()) {
 			axiomInserter_.visit(axiom);

@@ -31,7 +31,6 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.owl.interfaces.ElkDataHasValue;
-import org.semanticweb.elk.owl.interfaces.ElkDataProperty;
 import org.semanticweb.elk.owl.interfaces.ElkDatatype;
 import org.semanticweb.elk.owl.interfaces.ElkLiteral;
 import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
@@ -53,7 +52,6 @@ import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
 import dev.ikm.elk.snomed.reasoner.ElkReasoner;
-import dev.ikm.elk.snomed.reasoner.ElkReasonerFactory;
 
 public class SnomedOntologyReasoner {
 
@@ -90,14 +88,24 @@ public class SnomedOntologyReasoner {
 		for (Concept con : this.snomedOntology.getConcepts()) {
 			process(con);
 		}
-		reasoner = new ElkReasonerFactory().createReasoner(ontology);
+		reasoner = ElkReasoner.createReasoner(ontology, ontology.getObjectFactory());
 		reasoner.flush();
-		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+		try {
+			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY, InferenceType.OBJECT_PROPERTY_HIERARCHY);
+			// TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void flush() {
 		reasoner.flush();
-		reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+		try {
+			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+			// TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private String getIri(RoleType rt) {
@@ -258,10 +266,15 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkObjectProperty> getSuperObjectProperties(RoleType rt) {
-		Set<? extends Node<ElkObjectProperty>> sups = reasoner
-				.getSuperObjectProperties(ontology.getElkObjectProperty(getIri(rt)), true);
-		Set<ElkObjectProperty> ret = flatten(sups);
-		return ret;
+		try {
+			Set<? extends Node<ElkObjectProperty>> sups = reasoner
+					.getSuperObjectProperties(ontology.getElkObjectProperty(getIri(rt)), true);
+			Set<ElkObjectProperty> ret = flatten(sups);
+			return ret;
+			// TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Set<RoleType> getSuperRoleTypes(RoleType con) {
@@ -270,10 +283,14 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getSuperClasses(Concept con) {
-		Set<? extends Node<ElkClass>> sups = reasoner.getSuperClasses(ontology.getElkClass(getIri(con)), true);
-		Set<ElkClass> flat = flatten(sups);
-		flat.remove(ontology.getOwlThing());
-		return flat;
+		try {
+			Set<? extends Node<ElkClass>> sups = reasoner.getSuperClasses(ontology.getElkClass(getIri(con)), true);
+			Set<ElkClass> flat = flatten(sups);
+			flat.remove(ontology.getOwlThing());
+			return flat; // TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Set<Concept> getSuperConcepts(Concept con) {
@@ -288,10 +305,15 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getSubClasses(Concept con) {
-		Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), true);
-		Set<ElkClass> flat = flatten(subs);
-		flat.remove(ontology.getOwlNothing());
-		return flat;
+		try {
+			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), true);
+			Set<ElkClass> flat = flatten(subs);
+			flat.remove(ontology.getOwlNothing());
+			return flat;
+			// TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Set<Concept> getSubConcepts(Concept con) {
@@ -306,11 +328,16 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getEquivalentClasses(Concept con) {
-		Node<ElkClass> eqs = reasoner.getEquivalentClasses(ontology.getElkClass(getIri(con)));
-		Set<ElkClass> flat = new HashSet<>(flatten(eqs));
-		flat.remove(ontology.getOwlThing());
-		flat.remove(ontology.getOwlNothing());
-		return flat;
+		try {
+			Node<ElkClass> eqs = reasoner.getEquivalentClasses(ontology.getElkClass(getIri(con)));
+			Set<ElkClass> flat = new HashSet<>(flatten(eqs));
+			flat.remove(ontology.getOwlThing());
+			flat.remove(ontology.getOwlNothing());
+			return flat;
+			// TODO ElkException
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public Set<Concept> getEquivalentConcepts(Concept con) {

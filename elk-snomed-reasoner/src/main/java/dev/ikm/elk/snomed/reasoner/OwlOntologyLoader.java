@@ -35,12 +35,11 @@ import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
+import dev.ikm.elk.snomed.owlapix.model.OWLOntology;
 import dev.ikm.elk.snomed.owlapix.reasoner.ReasonerProgressMonitor;
 
 /**
- * An {@link AxiomLoader} that loads a given {@link OwlxOntology} through
- * {@link OwlConverter}.
+ * An {@link AxiomLoader} that loads a given {@link OWLOntology} 
  * 
  * @author "Yevgeny Kazakov"
  * 
@@ -53,14 +52,9 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 			.getLogger(OwlOntologyLoader.class);
 
 	/**
-	 * the converter used to convert OWL axioms into ELK axioms
-	 */
-//	private static final OwlConverter OWL_CONVERTER_ = OwlConverter
-//			.getInstance();
-	/**
 	 * the ontology to be loaded
 	 */
-	private final OwlxOntology owlOntology_;
+	private final OWLOntology owlOntology_;
 	/**
 	 * the monitor to report progress of operations
 	 */
@@ -73,7 +67,7 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	/**
 	 * the state of the iterator over ontologies in the import closure
 	 */
-	private Iterator<OwlxOntology> importsClosureIterator_;
+	private Iterator<OWLOntology> importsClosureIterator_;
 	/**
 	 * the number of ontologies in the import closure
 	 */
@@ -97,7 +91,7 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	private int axiomsProcessed_;
 
 	public OwlOntologyLoader(final InterruptMonitor interrupter,
-			OwlxOntology owlOntology, ProgressMonitor progressMonitor) {
+			OWLOntology owlOntology, ProgressMonitor progressMonitor) {
 		super(interrupter);
 		this.owlOntology_ = owlOntology;
 		this.progressMonitor_ = progressMonitor;
@@ -132,8 +126,6 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 
 			LOGGER_.trace("loading {}", axiom);
 			
-//			if (OWL_CONVERTER_.isRelevantAxiom(axiom))
-//			axiomInserter.visit(OWL_CONVERTER_.convert(axiom));
 			axiomInserter.visit(axiom);
 			
 			axiomsProcessed_++;
@@ -158,7 +150,7 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	}
 
 	private void initImportsClosure() {
-		Set<OwlxOntology> importsClosure = owlOntology_.getImportsClosure();
+		Set<OWLOntology> importsClosure = owlOntology_.getImportsClosure();
 		importsClosureIterator_ = importsClosure.iterator();
 		importsClosureCount_ = importsClosure.size();
 		importsClosureProcessed_ = 0;
@@ -169,7 +161,7 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 			axiomsIterator_ = Collections.<ElkAxiom> emptySet().iterator();
 	}
 
-	private void initAxioms(OwlxOntology ontology) {
+	private void initAxioms(OWLOntology ontology) {
 		Set<ElkAxiom> axioms = ontology.getAxioms();
 		axiomsIterator_ = axioms.iterator();
 		axiomsCount_ = axioms.size();
@@ -187,11 +179,11 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 
 	public static class Factory implements AxiomLoader.Factory {
 
-		private final OwlxOntology owlOntology_;
+		private final OWLOntology owlOntology_;
 
 		private final ProgressMonitor progressMonitor_;
 
-		public Factory(final OwlxOntology owlOntology,
+		public Factory(final OWLOntology owlOntology,
 				final ProgressMonitor progressMonitor) {
 			this.owlOntology_ = owlOntology;
 			this.progressMonitor_ = progressMonitor;
