@@ -96,7 +96,7 @@ public class ElkTimer {
 	 * @return a new {@link ElkTimer} for the current thread
 	 */
 	static public ElkTimer getTimerForCurrentThread(String name, int todoFlags) {
-		return new ElkTimer(name, todoFlags, Thread.currentThread().getId());
+		return new ElkTimer(name, todoFlags, Thread.currentThread().threadId());
 	}
 
 	/**
@@ -353,7 +353,7 @@ public class ElkTimer {
 	 */
 	public static long stopNamedTimer(String timerName) {
 		return stopNamedTimer(timerName, RECORD_ALL, Thread.currentThread()
-				.getId());
+				.threadId());
 	}
 
 	/**
@@ -368,7 +368,7 @@ public class ElkTimer {
 	 */
 	public static long stopNamedTimer(String timerName, int todoFlags) {
 		return stopNamedTimer(timerName, todoFlags, Thread.currentThread()
-				.getId());
+				.threadId());
 	}
 
 	/**
@@ -444,7 +444,7 @@ public class ElkTimer {
 	 */
 	public static ElkTimer getNamedTimer(String timerName) {
 		return getNamedTimer(timerName, RECORD_ALL, Thread.currentThread()
-				.getId());
+				.threadId());
 	}
 	
 	/**
@@ -467,7 +467,7 @@ public class ElkTimer {
 	 */
 	public static ElkTimer getNamedTimer(String timerName, int todoFlags) {
 		return getNamedTimer(timerName, todoFlags, Thread.currentThread()
-				.getId());
+				.threadId());
 	}
 
 	/**
@@ -546,8 +546,8 @@ public class ElkTimer {
 	@Override
 	public int hashCode() {
 		int nameHash = name.hashCode();
-		int threadIdHash = new Long(threadId).hashCode();
-		int todoFlagsHash = new Integer(todoFlags).hashCode();
+		int threadIdHash = Long.valueOf(threadId).hashCode();
+		int todoFlagsHash = Integer.valueOf(todoFlags).hashCode();
 		return HashGenerator.combineListHash(nameHash, todoFlagsHash,
 				threadIdHash);
 	}
