@@ -45,7 +45,8 @@
 		<module>elk-reasoner</module>
 		<module>elk-proofs</module>
 		<module>elk-proofs-test</module>
-		<module>elk-owlapi-parent</module>
+		<module>elk-owlapi</module>
+		<module>elk-owlapi-test</module>
 		<module>elk-snomed</module>
 		<module>elk-snomed-reasoner</module>
 		<module>elk-snomed-owl</module>
@@ -126,7 +127,7 @@
 			<!-- Project dependencies-->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-owlapi4</artifactId>
+				<artifactId>elk-owlapi</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
