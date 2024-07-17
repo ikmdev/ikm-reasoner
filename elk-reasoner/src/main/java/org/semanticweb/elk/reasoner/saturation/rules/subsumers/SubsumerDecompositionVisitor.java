@@ -22,7 +22,6 @@ package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDataHasValue;
@@ -85,10 +84,8 @@ public class SubsumerDecompositionVisitor implements
 
 	@Override
 	public Void visit(IndexedIndividual element) {
-		DevTrace.log(LOG, ">IndexedIndividual {}", element);
 		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
 				element, premises_, producer_);
-		DevTrace.log(LOG, "<IndexedIndividual {}", element);
 		return null;
 	}
 
@@ -133,7 +130,6 @@ public class SubsumerDecompositionVisitor implements
 
 	@Override
 	public Void visit(IndexedDataHasValue element) {
-		DevTrace.log(LOG, "IndexedDataHasValue {}", element);
 		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
 				element, premises_, producer_);
 		return null;
