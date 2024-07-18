@@ -29,11 +29,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.liveontologies.puli.Producer;
-import org.liveontologies.puli.statistics.HasStats;
-import org.liveontologies.puli.statistics.NestedStats;
-import org.liveontologies.puli.statistics.ResetStats;
-import org.liveontologies.puli.statistics.Stat;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
@@ -46,6 +41,7 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedAxiomInference;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.ModifiableOntologyIndex;
+import org.semanticweb.elk.reasoner.proof.ReasonerProducer;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
 import org.semanticweb.elk.reasoner.saturation.SaturationStateDummyChangeListener;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
@@ -59,6 +55,10 @@ import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubProperty
 import org.semanticweb.elk.reasoner.stages.PropertyHierarchyCompositionState;
 import org.semanticweb.elk.reasoner.tracing.factories.TracingJobListener;
 import org.semanticweb.elk.util.collections.Evictor;
+import org.semanticweb.elk.util.statistics.HasStats;
+import org.semanticweb.elk.util.statistics.NestedStats;
+import org.semanticweb.elk.util.statistics.ResetStats;
+import org.semanticweb.elk.util.statistics.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory;
  * @author Peter Skocovsky
  */
 public class TraceState
-		implements Producer<ObjectPropertyInference>, TracingProof, HasStats {
+		implements ReasonerProducer<ObjectPropertyInference>, TracingProof, HasStats {
 
 	// logger for this class
 	private static final Logger LOGGER_ = LoggerFactory
@@ -154,7 +154,7 @@ public class TraceState
 					}
 
 					@Override
-					public void contextMarkNonSaturated(final C context) {
+					public void contextMarkedNonSaturated(C context) {
 						// TODO: remove only affected inferences
 						clearClassInferences();
 						clearIndexedAxiomInferences();
@@ -189,6 +189,7 @@ public class TraceState
 	 * Requests inferences of a {@link Conclusion}.
 	 * 
 	 * @param conclusion
+	 *            the {@link Conclusion} for which to request the inferences
 	 * @return {@code true} if they are ready and can be retrieved by
 	 *         {@link #getInferences(Object)}, returns {@code false} if the
 	 *         tracing stage needs to be run before the inferences can be

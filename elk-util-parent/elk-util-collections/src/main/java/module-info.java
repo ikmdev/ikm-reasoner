@@ -24,5 +24,6 @@ open module org.semanticweb.elk.util.collections {
 	exports org.semanticweb.elk.util.collections;
 	exports org.semanticweb.elk.util.collections.chains;
 	exports org.semanticweb.elk.util.collections.entryset;
+	exports org.semanticweb.elk.util.statistics;
 
 }

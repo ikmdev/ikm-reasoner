@@ -1,6 +1,6 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
-/*
+/*-
  * #%L
  * ELK Reasoner Core
  * $Id:$

@@ -34,6 +34,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
+import org.semanticweb.elk.reasoner.saturation.conclusions.classes.DummyClassConclusionVisitor;
+import org.semanticweb.elk.reasoner.saturation.conclusions.classes.SaturationClassConclusionChecker;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.saturation.inferences.ClassInference;
 import org.slf4j.Logger;
@@ -69,10 +73,17 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 	 */
 	private final Queue<EC> notSaturatedContexts_ = new ConcurrentLinkedQueue<EC>();
 
+	
+	/**
+	 * increments before a {@link Context} is marked as non-saturated
+	 */
+	private final AtomicInteger contextSetNonSaturatedUpper_ = new AtomicInteger(
+			0);
+	
 	/**
 	 * increments after a {@link Context} is marked as non-saturated
 	 */
-	private final AtomicInteger contextMarkNonSaturatedLower_ = new AtomicInteger(
+	private final AtomicInteger contextSetNonSaturatedLower_ = new AtomicInteger(
 			0);
 
 	/**
@@ -89,7 +100,7 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 
 	private final ContextFactory<EC> contextFactory;
 
-	private final List<SaturationState.ChangeListener<EC>> listeners_ = new ArrayList<SaturationState.ChangeListener<EC>>();
+	private final List<SaturationState.ChangeListener<? super EC>> listeners_ = new ArrayList<>();
 
 	public AbstractSaturationState(OntologyIndex index,
 			ContextFactory<EC> factory) {
@@ -112,15 +123,24 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 
 			@Override
 			public int size() {
-				return contextMarkNonSaturatedLower_.get()
-						- contextSetSaturatedLower_.get();
+				int nonSaturatedLower = contextSetNonSaturatedLower_.get();
+				int nonSaturatedUpper = contextSetNonSaturatedUpper_.get();
+				if (nonSaturatedLower != nonSaturatedUpper) {
+					LOGGER_.error("Some context are being marked non-saturated!");
+				}
+				int setSaturatedLower = contextSetSaturatedLower_.get();
+				int setSaturatedUpper = contextSetSaturatedUpper_.get();
+				if (setSaturatedLower != setSaturatedUpper) {
+					LOGGER_.error("Some context are being marked saturated!");
+				}
+				return nonSaturatedLower - setSaturatedUpper;
 			}
 		});
 	}
 
 	@Override
 	public int getContextMarkNonSaturatedCount() {
-		return contextMarkNonSaturatedLower_.get();
+		return contextSetNonSaturatedLower_.get();
 	}
 
 	@Override
@@ -136,10 +156,14 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 			if (contextSetSaturatedUpperSnapshot >= saturatedContextLimit) {
 				return;
 			}
-			if (contextSetSaturatedUpperSnapshot >= contextMarkNonSaturatedLower_
+			if (contextSetSaturatedUpperSnapshot >= contextSetNonSaturatedLower_
 					.get()) {
+				int contextSetSaturatedLowerSnapshot = contextSetSaturatedLower_
+						.get();
 				EC next = notSaturatedContexts_.peek();
-				if (next != null) {
+				if (next != null
+						&& contextSetSaturatedLowerSnapshot >= contextSetNonSaturatedUpper_
+								.get()) {
 					LOGGER_.error("{}: was not marked as saturated", next);
 				}
 				return;
@@ -153,11 +177,9 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 			if (next.setSaturated(true)) {
 				LOGGER_.error("{}: was marked as saturated already", next);
 			}
-			LOGGER_.trace("{}: marked as saturated", next);
 			contextSetSaturatedLower_.incrementAndGet();
-			for (int i = 0; i < listeners_.size(); i++) {
-				listeners_.get(i).contextMarkSaturated(next);
-			}
+			LOGGER_.trace("{}: marked as saturated", next);
+			notifyContextMarkedSaturated(next);
 		}
 	}
 
@@ -187,25 +209,47 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 	}
 
 	@Override
-	public boolean addListener(SaturationState.ChangeListener<EC> listener) {
+	public boolean addListener(SaturationState.ChangeListener<? super EC> listener) {
 		return listeners_.add(listener);
 	}
 
 	@Override
-	public boolean removeListener(SaturationState.ChangeListener<EC> listener) {
+	public boolean removeListener(SaturationState.ChangeListener<? super EC> listener) {
 		return listeners_.remove(listener);
 	}
 
 	@Override
 	abstract public EC getContext(IndexedContextRoot root);
-
-	int getChangeListenerCount() {
-		return listeners_.size();
+	
+	void notifyContextsClear() {
+		for (int i = 0; i < listeners_.size(); i++) {
+			listeners_.get(i).contextsClear();
+		}
 	}
-
-	SaturationState.ChangeListener<EC> getChangeListener(int index) {
-		return listeners_.get(index);
+	
+	void notifyContextAddition(EC context) {
+		for (int i = 0; i < listeners_.size(); i++) {
+			listeners_.get(i).contextAddition(context);
+		}
+	}	
+	
+	void notifyContextMarkedSaturated(EC context) {
+		for (int i = 0; i < listeners_.size(); i++) {
+			listeners_.get(i).contextMarkedSaturated(context);
+		}
+	}	
+	
+	void notifyContextMarkedNonSaturated(EC context) {
+		for (int i = 0; i < listeners_.size(); i++) {
+			listeners_.get(i).contextMarkedNonSaturated(context);
+		}
 	}
+	
+	void notifySaturatedContextModified(EC context) {
+		for (int i = 0; i < listeners_.size(); i++) {
+			listeners_.get(i).saturatedContextModified(context);
+		}
+	}	
 
 	abstract void resetContexts();
 
@@ -213,9 +257,6 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 		resetContexts();
 		activeContexts_.clear();
 		notSaturatedContexts_.clear();
-		contextMarkNonSaturatedLower_.set(0);
-		contextSetSaturatedUpper_.set(0);
-		contextSetSaturatedLower_.set(0);
 	}
 
 	/**
@@ -266,29 +307,27 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 			produce(getContext(inference.getDestination()), inference);
 		}
 
-		void markAsNotSaturatedInternal(EC context) {
+		void addNotSaturated(EC context) {
+			contextSetNonSaturatedUpper_.incrementAndGet();
 			LOGGER_.trace("{}: marked as non-saturated", context);
 			notSaturatedContexts_.add(context);
-			contextMarkNonSaturatedLower_.incrementAndGet();
+			contextSetNonSaturatedLower_.incrementAndGet();
 			contextModificationListener_.notifyContextModification(context);
-			for (int i = 0; i < listeners_.size(); i++) {
-				listeners_.get(i).contextMarkNonSaturated(context);
-			}
+			notifyContextMarkedNonSaturated(context);
 		}
 
-		@Override
-		public boolean markAsNotSaturated(IndexedContextRoot root) {
-			EC context = getContext(root);
-
-			if (context == null)
-				return false;
-			// else
+		boolean markAsNotSaturated(EC context) {
 			if (context.setSaturated(false)) {
-				markAsNotSaturatedInternal(context);
+				addNotSaturated(context);
 				return true;
 			}
 			// else
 			return false;
+		}
+		
+		boolean markAsNotSaturated(IndexedContextRoot root) {
+			EC context = getContext(root);
+			return context == null ? false : markAsNotSaturated(context);
 		}
 
 		@Override
@@ -299,6 +338,75 @@ public abstract class AbstractSaturationState<EC extends ExtendedContext>
 		@Override
 		public SaturationState<EC> getSaturationState() {
 			return AbstractSaturationState.this;
+		}
+		
+		@Override
+		public boolean addConclusion(ClassConclusion conclusion) {
+			EC context = getContext(conclusion.getDestination());
+			return conclusion
+					.accept(new DummyClassConclusionVisitor<Boolean>() {
+						@Override
+						protected Boolean defaultVisit(ClassConclusion c) {
+							return addConclusion(context, c);
+						}
+
+						@Override
+						public Boolean visit(ContextInitialization c) {
+							
+							if (context.containsConclusion(c)) {
+								return false;
+							}
+							// Mark context as non-saturated before we
+							// insert, otherwise the context could be found
+							// initialized and non-saturated
+							markAsNotSaturated(context);
+							return addConclusion(context, c);
+						}
+					});
+		}
+
+		boolean addConclusion(EC context, ClassConclusion conclusion) {			
+			if (!context.addConclusion(conclusion)) {
+				LOGGER_.trace("{}: inserting {}: already present", context,
+						conclusion);
+				return false;
+			}
+			// else
+			LOGGER_.trace("{}: inserting {}: success", context, conclusion);
+			checkSaturationFor(conclusion);
+			return true;
+		}
+		
+		@Override
+		public boolean removeConclusion(ClassConclusion conclusion) {
+			EC context = getContext(conclusion.getDestination());
+			if (!context.removeConclusion(conclusion)) {
+				LOGGER_.trace("{}: deleting {}: already absent", context,
+						conclusion);
+				return false;
+			}
+			// else
+			LOGGER_.trace("{}: deleting {}: success", context, conclusion);
+			checkSaturationFor(conclusion);
+			return true;
+		}
+		
+		/**
+		 * Checks if adding or removing the given conclusion can make some
+		 * context non-saturated.
+		 * 
+		 * @param conclusion
+		 */
+		void checkSaturationFor(ClassConclusion conclusion) {
+			EC origin = getContext(conclusion.getTraceRoot());
+			if (!origin.isSaturated()) {
+				return;
+			}
+			if (SaturationClassConclusionChecker.check(conclusion)) {
+				markAsNotSaturated(origin);
+			} else {
+				notifySaturatedContextModified(origin);
+			}
 		}
 
 	}

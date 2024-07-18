@@ -1,12 +1,12 @@
 package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
-/*
+/*-
  * #%L
- * ELK Reasoner
+ * ELK Reasoner Core
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2021 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,22 @@ package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDataHasValue;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedDefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedIndividual;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectComplementOf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectHasSelf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectIntersectionOf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectUnionOf;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedPredefinedClass;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * An {@link IndexedClassExpression.Visitor} applying decomposition rules using
- * a given {@link SubsumerDecompositionRuleVisitor} using given
+ * An {@link IndexedClassExpression.Visitor} applying decomposition rules using a
+ * given {@link SubsumerDecompositionRuleVisitor} using given
  * {@link ContextPremises} and producing conclusions using a given
  * {@link ClassInferenceProducer}
  * 
@@ -47,8 +46,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SubsumerDecompositionVisitor implements
 		IndexedClassExpression.Visitor<Void> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(SubsumerDecompositionVisitor.class);
 
 	/**
 	 * the rule visitor used when applying decomposition rules
@@ -74,14 +71,22 @@ public class SubsumerDecompositionVisitor implements
 	}
 
 	@Override
-	public Void visit(IndexedClass element) {
-		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_, element,
-				premises_, producer_);
+	public Void visit(IndexedDefinedClass element) {
+		IndexedClassDecompositionRule.getInstance().accept(ruleVisitor_,
+				element, premises_, producer_);
 		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,
 				element, premises_, producer_);
 		return null;
 	}
 
+	@Override
+	public Void visit(IndexedPredefinedClass element) {
+		OwlNothingDecompositionRule.getInstance().accept(ruleVisitor_, element,
+				premises_, producer_);
+		return null;
+	}
+	
+	
 	@Override
 	public Void visit(IndexedIndividual element) {
 		ComposedFromDecomposedSubsumerRule.getInstance().accept(ruleVisitor_,

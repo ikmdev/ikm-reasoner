@@ -23,8 +23,6 @@ open module org.semanticweb.elk.reasoner {
 
 	requires org.slf4j;
 
-	requires org.liveontologies.puli;
-
 	requires org.semanticweb.elk.owl.implementation;
 	requires org.semanticweb.elk.owl.model;
 

@@ -78,7 +78,6 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 		io_ = io;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run(final Reasoner reasoner,
 			final OnOffVector<T> changingAxioms, final List<T> staticAxioms,
 			final long seed)
@@ -93,7 +92,7 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 		int changingAxiomsCount = changingAxioms.size();
 		int rounds = getNumberOfRounds(changingAxiomsCount);
 
-		LOGGER_.debug("Running {} rounds with {} random changes", iterations_,
+		LOGGER_.info("Running {} rounds with {} random changes", iterations_,
 				rounds);
 
 		int changeSize = getInitialChangeSize(changingAxiomsCount);
@@ -102,7 +101,7 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 				changingAxioms, changeSize);
 
 		for (int j = 0; j < rounds; j++) {
-			LOGGER_.debug("Generating {} changes of size: {}", iterations_,
+			LOGGER_.info("Generating {} changes of size: {}", iterations_,
 					changeSize);
 
 			changingAxioms.setAllOn();
@@ -194,7 +193,6 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private String getFailureMessage(Reasoner testReasoner,
 			final OnOffVector<T> changingAxioms, final List<T> staticAxioms,
 			long seed) throws ElkException {

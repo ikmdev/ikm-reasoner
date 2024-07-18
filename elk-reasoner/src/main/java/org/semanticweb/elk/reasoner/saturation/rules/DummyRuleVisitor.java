@@ -1,12 +1,12 @@
 package org.semanticweb.elk.reasoner.saturation.rules;
 
-/*
+/*-
  * #%L
- * ELK Reasoner
+ * ELK Reasoner Core
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2024 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@ package org.semanticweb.elk.reasoner.saturation.rules;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedDefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectComplementOf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectHasSelf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectIntersectionOf;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedPredefinedClass;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassInconsistency;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
@@ -63,6 +64,7 @@ import org.semanticweb.elk.reasoner.saturation.rules.subsumers.IndexedObjectSome
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ObjectIntersectionFromFirstConjunctRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ObjectIntersectionFromSecondConjunctRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ObjectUnionFromDisjunctRule;
+import org.semanticweb.elk.reasoner.saturation.rules.subsumers.OwlNothingDecompositionRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.PropagationFromExistentialFillerRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.SuperClassFromSubClassRule;
 import org.slf4j.Logger;
@@ -86,11 +88,18 @@ public class DummyRuleVisitor<O> implements RuleVisitor<O> {
 	/**
 	 * The default implementation of all methods
 	 * 
+	 * @param <P>
+	 *            the type of premises to which the rule can be applied
 	 * @param rule
+	 *            the {@link Rule} to be applied
 	 * @param premise
+	 *            the main premise to which the rule is applied
 	 * @param premises
+	 *            other premises to which the rule is applied
 	 * @param producer
-	 * @return
+	 *            the {@link ClassInferenceProducer} using which the inferences
+	 *            produced by this rule application are handled
+	 * @return the output of the visitor
 	 */
 	protected <P> O defaultVisit(Rule<P> rule, P premise,
 			ContextPremises premises, ClassInferenceProducer producer) {
@@ -148,8 +157,9 @@ public class DummyRuleVisitor<O> implements RuleVisitor<O> {
 	}
 
 	@Override
-	public O visit(ContradictionPropagationRule rule, ClassInconsistency premise,
-			ContextPremises premises, ClassInferenceProducer producer) {
+	public O visit(ContradictionPropagationRule rule,
+			ClassInconsistency premise, ContextPremises premises,
+			ClassInferenceProducer producer) {
 		return defaultVisit(rule, premise, premises, producer);
 
 	}
@@ -176,8 +186,9 @@ public class DummyRuleVisitor<O> implements RuleVisitor<O> {
 	}
 
 	@Override
-	public O visit(IndexedClassDecompositionRule rule, IndexedClass premise,
-			ContextPremises premises, ClassInferenceProducer producer) {
+	public O visit(IndexedClassDecompositionRule rule,
+			IndexedDefinedClass premise, ContextPremises premises,
+			ClassInferenceProducer producer) {
 		return defaultVisit(rule, premise, premises, producer);
 	}
 
@@ -240,6 +251,13 @@ public class DummyRuleVisitor<O> implements RuleVisitor<O> {
 	@Override
 	public O visit(ObjectUnionFromDisjunctRule rule,
 			IndexedClassExpression premise, ContextPremises premises,
+			ClassInferenceProducer producer) {
+		return defaultVisit(rule, premise, premises, producer);
+	}
+
+	@Override
+	public O visit(OwlNothingDecompositionRule rule,
+			IndexedPredefinedClass premise, ContextPremises premises,
 			ClassInferenceProducer producer) {
 		return defaultVisit(rule, premise, premises, producer);
 	}

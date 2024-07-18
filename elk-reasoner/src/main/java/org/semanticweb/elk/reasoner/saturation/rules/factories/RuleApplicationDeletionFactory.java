@@ -31,7 +31,6 @@ import org.semanticweb.elk.reasoner.saturation.SaturationStatistics;
 import org.semanticweb.elk.reasoner.saturation.SaturationUtils;
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.ClassConclusionDeletionVisitor;
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.ClassConclusionOccurrenceCheckingVisitor;
-import org.semanticweb.elk.reasoner.saturation.conclusions.classes.ClassConclusionTracingContextUnsaturationVisitor;
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.RuleApplicationClassConclusionVisitor;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
@@ -43,7 +42,7 @@ import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 /**
  * A {@link RuleApplicationFactory} that deletes the produced
  * {@link ClassConclusion} s from the respective {@link Context} and applies
- * rules, which in turn produce {@link ClassConclusion} s for which this process
+ * rules, which in turn produce {@link ClassConclusion}s for which this process
  * repeats if they have not been processed already. This
  * {@link RuleApplicationFactory} never creates new {@link Context}s.
  * 
@@ -81,7 +80,6 @@ public class RuleApplicationDeletionFactory
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Visitor<Boolean> getInferenceProcessor(
 			Reference<Context> activeContext, RuleVisitor<?> ruleVisitor,
 			SaturationStateWriter<? extends Context> writer,
@@ -110,13 +108,7 @@ public class RuleApplicationDeletionFactory
 												.getContextInitRuleHead(),
 										ruleVisitor, writer),
 								// after processing, delete the conclusion
-								new ClassConclusionDeletionVisitor(
-										activeContext),
-								// and mark the source context of the conclusion
-								// as
-								// non-saturated
-								new ClassConclusionTracingContextUnsaturationVisitor(
-										writer)),
+								new ClassConclusionDeletionVisitor(writer)),
 								localStatistics));
 	}
 }

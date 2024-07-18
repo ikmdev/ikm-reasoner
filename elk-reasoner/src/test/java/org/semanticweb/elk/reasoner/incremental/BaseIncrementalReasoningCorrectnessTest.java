@@ -35,6 +35,8 @@ import org.semanticweb.elk.util.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Iterables;
+
 /**
  * @author Pavel Klinov
  * 
@@ -97,7 +99,15 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 
 			for (int i = 0; i < REPEAT_NUMBER; i++) {
 
+				try {
 				outputChecker.check();
+				} catch (Throwable e) {
+					throw new RuntimeException(
+							"Failed addition: " + Iterables
+									.toString(changingAxioms_.getOnElements()),
+							e);
+				}
+
 
 				changingAxioms_.setAllOff();
 				// delete some axioms
@@ -116,18 +126,32 @@ public abstract class BaseIncrementalReasoningCorrectnessTest<I extends TestInpu
 				getDelegate().applyChanges(changingAxioms_.getOnElements(),
 						IncrementalChangeType.DELETE);
 
-				LOGGER_.debug("===DELETIONS===");
+				LOGGER_.info("===DELETIONS===");
 
+				try {
 				outputChecker.check();
+				} catch (Throwable e) {
+					throw new RuntimeException(
+							"Failed deletion: " + Iterables
+									.toString(changingAxioms_.getOnElements()),
+							e);
+				}
 
 				// add the axioms back
 				getDelegate().applyChanges(getChangingAxioms().getOnElements(),
 						IncrementalChangeType.ADD);
 
-				LOGGER_.debug("===ADDITIONS===");
+				LOGGER_.info("===ADDITIONS===");
 			}
 
+			try {
 			outputChecker.finalCheck();
+			} catch (Throwable e) {
+				throw new RuntimeException(
+						"Failed addition: " + Iterables
+								.toString(changingAxioms_.getOnElements()),
+						e);
+			}			
 
 		} catch (final Throwable e) {
 			throw new RuntimeException(

@@ -1,12 +1,12 @@
 package org.semanticweb.elk.reasoner.indexing.classes;
 
-/*
+/*-
  * #%L
- * ELK Reasoner
+ * ELK Reasoner Core
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2021 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,15 @@ package org.semanticweb.elk.reasoner.indexing.classes;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedAxiom;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpressionList;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDataHasValue;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDeclarationAxiom;
-import org.semanticweb.elk.reasoner.indexing.model.IndexedEquivalentClassesAxiom;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedDefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedDisjointClassesAxiom;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedEquivalentClassesAxiom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedIndividual;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObject;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectComplementOf;
@@ -38,8 +40,11 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectPropertyRangeAxiom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectUnionOf;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedPredefinedClass;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedRangeFiller;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedSubClassOfAxiom;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedSubObject;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedSubObjectPropertyOfAxiom;
 
 /**
@@ -48,6 +53,7 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedSubObjectPropertyOfAxi
  * @author "Yevgeny Kazakov"
  *
  * @param <O>
+ *            the type of the output
  */
 public class DummyIndexedObjectVisitor<O> implements IndexedObject.Visitor<O> {
 
@@ -56,11 +62,27 @@ public class DummyIndexedObjectVisitor<O> implements IndexedObject.Visitor<O> {
 		return null;
 	}
 
+	protected O defaultVisit(IndexedAxiom element) {		
+		return defaultVisit((IndexedObject) element);
+	}
+	
+	protected O defaultVisit(IndexedSubObject element) {
+		return defaultVisit((IndexedObject) element);
+	}
+	
+	protected O defaultVisit(IndexedClassExpression element) {
+		return defaultVisit((IndexedSubObject) element);
+	}
+	
+	protected O defaultVisit(IndexedPropertyChain element) {
+		return defaultVisit((IndexedSubObject) element);
+	}			
+	
 	@Override
-	public O visit(IndexedClass element) {
+	public O visit(IndexedClassExpressionList element) {
 		return defaultVisit(element);
 	}
-
+	
 	@Override
 	public O visit(IndexedComplexPropertyChain element) {
 		return defaultVisit(element);
@@ -77,8 +99,8 @@ public class DummyIndexedObjectVisitor<O> implements IndexedObject.Visitor<O> {
 	}
 
 	@Override
-	public O visit(IndexedEquivalentClassesAxiom axiom) {
-		return defaultVisit(axiom);
+	public O visit(IndexedDefinedClass element) {
+		return defaultVisit(element);
 	}
 
 	@Override
@@ -87,8 +109,8 @@ public class DummyIndexedObjectVisitor<O> implements IndexedObject.Visitor<O> {
 	}
 
 	@Override
-	public O visit(IndexedClassExpressionList element) {
-		return defaultVisit(element);
+	public O visit(IndexedEquivalentClassesAxiom axiom) {
+		return defaultVisit(axiom);
 	}
 
 	@Override
@@ -128,6 +150,11 @@ public class DummyIndexedObjectVisitor<O> implements IndexedObject.Visitor<O> {
 
 	@Override
 	public O visit(IndexedObjectUnionOf element) {
+		return defaultVisit(element);
+	}
+
+	@Override
+	public O visit(IndexedPredefinedClass element) {
 		return defaultVisit(element);
 	}
 

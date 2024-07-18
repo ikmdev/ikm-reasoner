@@ -1,12 +1,12 @@
 package org.semanticweb.elk.reasoner.saturation;
 
-/*
+/*-
  * #%L
- * ELK Reasoner
+ * ELK Reasoner Core
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2021 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package org.semanticweb.elk.reasoner.saturation;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.saturation.inferences.ClassInference;
 
@@ -59,11 +59,6 @@ public class SaturationStateWriterWrap<C extends Context> implements
 	}
 
 	@Override
-	public boolean markAsNotSaturated(IndexedContextRoot root) {
-		return mainWriter.markAsNotSaturated(root);
-	}
-
-	@Override
 	public void resetContexts() {
 		mainWriter.resetContexts();
 	}
@@ -71,6 +66,16 @@ public class SaturationStateWriterWrap<C extends Context> implements
 	@Override
 	public SaturationState<? extends C> getSaturationState() {
 		return mainWriter.getSaturationState();
+	}
+
+	@Override
+	public boolean addConclusion(ClassConclusion conclusion) {
+		return mainWriter.addConclusion(conclusion);
+	}
+
+	@Override
+	public boolean removeConclusion(ClassConclusion conclusion) {
+		return mainWriter.removeConclusion(conclusion);
 	}
 
 }

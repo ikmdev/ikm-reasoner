@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import org.liveontologies.puli.statistics.NestedStats;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.loading.AxiomLoader;
@@ -91,6 +90,7 @@ import org.semanticweb.elk.reasoner.tracing.TracingInference;
 import org.semanticweb.elk.reasoner.tracing.TracingProof;
 import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.concurrent.computation.ConcurrentExecutor;
+import org.semanticweb.elk.util.statistics.NestedStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -361,25 +361,26 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * Incremental mode should be changed only during completing loading.
 	 * 
 	 * @throws ElkException
+	 *             if loading cannot be competed successfully
 	 */
 	public synchronized void ensureLoading() throws ElkException {
 
-		if (!isLoadingFinished()) {
-			if (isIncrementalMode()) {
-				if (!stageManager.incrementalAdditionStage.isCompleted()) {
-					complete(stageManager.incrementalAdditionStage);
-				}
-			} else {
-				if (!stageManager.contextInitializationStage.isCompleted()) {
-					complete(stageManager.contextInitializationStage);
-				}
-			}
-			LOGGER_.trace("Reset axiom loading");
-			stageManager.inputLoadingStage.invalidateRecursive();
-			// Invalidate stages at the beginnings of the dependency chains.
-			stageManager.contextInitializationStage.invalidateRecursive();
-			stageManager.incrementalCompletionStage.invalidateRecursive();
+		if (isLoadingFinished()) {
+			return;
 		}
+
+		// ensure that all pending incremental stages are completed
+		complete(stageManager.incrementalAdditionStage);
+
+		if (!isIncrementalMode()) {
+			// reset saturation
+			complete(stageManager.contextInitializationStage);
+		}
+		LOGGER_.trace("Reset axiom loading");
+		stageManager.inputLoadingStage.invalidateRecursive();
+		// Invalidate stages at the beginnings of the dependency chains.
+		stageManager.contextInitializationStage.invalidateRecursive();
+		stageManager.incrementalCompletionStage.invalidateRecursive();
 
 		complete(stageManager.inputLoadingStage);
 
@@ -390,6 +391,7 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * invalidates stages that depend on the saturation if it changed.
 	 * 
 	 * @throws ElkException
+	 *             if the operation cannot be competed successfully
 	 */
 	private void restoreSaturation() throws ElkException {
 
@@ -406,9 +408,10 @@ public abstract class AbstractReasonerState implements TracingProof {
 			complete(stageManager.contextInitializationStage);
 		}
 
-		if (changed) {
-			stageManager.consistencyCheckingStage.invalidateRecursive();
+		if (!changed) {
+			return;
 		}
+		stageManager.consistencyCheckingStage.invalidateRecursive();
 
 	}
 
@@ -511,8 +514,6 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 */
 	private void restoreTaxonomy()
 			throws ElkInconsistentOntologyException, ElkException {
-
-		ruleAndConclusionStats.reset();
 
 		// also restores saturation and cleans the taxonomy if necessary
 		restoreConsistencyCheck();
@@ -1003,6 +1004,19 @@ public abstract class AbstractReasonerState implements TracingProof {
 				.getIncompletenessMonitor(classExpression));
 	}
 
+	
+	/**
+	 * Complete the entailment checking stage and the stages it depends on, if
+	 * it has not been done yet.
+	 * 
+	 * @throws ElkException
+	 *             if the reasoning process cannot be completed successfully
+	 */
+	private void restoreEntailmentCheck() throws ElkException {
+		restoreConsistencyCheck();
+		complete(stageManager.entailmentQueryStage);
+	}
+	
 	/**
 	 * Decides whether the supplied {@code axioms} are entailed by the currently
 	 * loaded ontology.
@@ -1012,17 +1026,13 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * @return A map from each queried axiom to the
 	 *         {@link VerifiableQueryResult} for that axiom.
 	 * @throws ElkException
+	 *             if the reasoning process cannot be completed successfully
 	 */
 	public synchronized Map<ElkAxiom, VerifiableQueryResult> checkEntailment(
 			final Iterable<? extends ElkAxiom> axioms) throws ElkException {
 
-		entailmentQueryState.registerQueries(axioms);
-
-		restoreSaturation();
-
-		stageManager.entailmentQueryStage.invalidateRecursive();
-		complete(stageManager.entailmentQueryStage);
-
+		entailmentQueryState.registerQueries(axioms);		
+		restoreEntailmentCheck();
 		return entailmentQueryState.isEntailed(axioms);
 	}
 
@@ -1034,6 +1044,7 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 *            The queries axiom.
 	 * @return the {@link VerifiableQueryResult} for the queried axiom.
 	 * @throws ElkException
+	 *             if the reasoning process cannot be completed successfully
 	 */
 	public synchronized VerifiableQueryResult checkEntailment(
 			final ElkAxiom axiom) throws ElkException {

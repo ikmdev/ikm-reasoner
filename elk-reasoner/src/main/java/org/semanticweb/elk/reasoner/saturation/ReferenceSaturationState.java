@@ -146,16 +146,16 @@ class ReferenceSaturationState
 
 	@Override
 	void resetContexts() {
-		if (contextCount.get() == 0)
+		int cc = contextCount.get();
+		if (cc == 0)
 			// everything is already done
 			return;
 		// else
-		for (ExtendedContext context : getContexts()) {
-			context.getRoot().resetContext();			
-		}
-		contextCount.set(0);
-		for (int i = 0; i < getChangeListenerCount(); i++) {
-			getChangeListener(i).contextsClear();
+		if (contextCount.compareAndSet(cc, 0)) {
+			for (ExtendedContext context : getContexts()) {
+				context.getRoot().resetContext();
+			}
+			notifyContextsClear();
 		}
 	}
 
@@ -165,9 +165,7 @@ class ReferenceSaturationState
 				.setContextIfAbsent(context);
 		if (previous == null) {
 			contextCount.incrementAndGet();
-			for (int i = 0; i < getChangeListenerCount(); i++) {
-				getChangeListener(i).contextAddition(context);
-			}
+			notifyContextAddition(context);
 		}
 		return previous;
 	}
