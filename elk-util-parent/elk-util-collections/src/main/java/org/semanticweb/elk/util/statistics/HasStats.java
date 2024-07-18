@@ -1,12 +1,12 @@
-package org.semanticweb.elk;
+package org.semanticweb.elk.util.statistics;
 
-/*
+/*-
  * #%L
- * ELK Common Utilities
+ * ELK Utilities Collections
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2024 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,8 @@ package org.semanticweb.elk;
  * #L%
  */
 
-/**
- * A {@link Reference} whose value can be modified
- * 
- * @author Yevgeny Kazakov
- *
- * @param <O>
- *            the type of the value of this {@link Reference}
- * 
- */
-public interface ModifiableReference<O> extends Reference<O> {
+public interface HasStats {
 
-	/**
-	 * Sets a reference to the given object; after this method returns,
-	 * {@link #get()} should return this object
-	 * 
-	 * @param object
-	 *            the object to which this {@link Reference} should point
-	 */
-	void set(O object);
+	Object getStats();
 
 }

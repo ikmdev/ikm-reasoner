@@ -1,12 +1,12 @@
-package org.semanticweb.elk;
+package org.semanticweb.elk.util.collections.entryset;
 
-/*
+/*-
  * #%L
- * ELK Common Utilities
+ * ELK Utilities Collections
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2015 Department of Computer Science, University of Oxford
+ * Copyright (C) 2011 - 2021 Department of Computer Science, University of Oxford
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,19 @@ package org.semanticweb.elk;
  */
 
 /**
- * A {@link Reference} whose value can be modified
+ * A generic version of {@link StructuralObject} that can be used to define
+ * different types of the structural objects. This allows a more specific
+ * conversion of structurally equal objects to the required types.
  * 
  * @author Yevgeny Kazakov
  *
- * @param <O>
- *            the type of the value of this {@link Reference}
- * 
+ * @param <T>
+ *            the type of the structural object
  */
-public interface ModifiableReference<O> extends Reference<O> {
+public interface GenericStructuralObject<T extends GenericStructuralObject<T>>
+		extends StructuralObject {
 
-	/**
-	 * Sets a reference to the given object; after this method returns,
-	 * {@link #get()} should return this object
-	 * 
-	 * @param object
-	 *            the object to which this {@link Reference} should point
-	 */
-	void set(O object);
+	@Override
+	T structuralEquals(Object other);
 
 }
