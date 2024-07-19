@@ -23,18 +23,15 @@ package org.semanticweb.elk.owl.inferences;
 
 import static org.junit.Assume.assumeTrue;
 
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.loading.TestLoader;
@@ -50,14 +47,13 @@ import org.semanticweb.elk.reasoner.tracing.ComprehensiveSubsumptionTracingTests
 import org.semanticweb.elk.reasoner.tracing.TracingTestVisitor;
 import org.semanticweb.elk.reasoner.tracing.TracingTests;
 import org.semanticweb.elk.testing.ConfigurationUtils;
+import org.semanticweb.elk.testing.ElkTestUtils;
 import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing.UrlTestInput;
-
 import org.semanticweb.elk.testing4.PolySuite4;;
-
 
 /**
  * Tests tracing and axiom binding for all atomic subsumption inferences in all
@@ -101,15 +97,7 @@ public class ProofTest {
 		Reasoner reasoner = TestReasonerUtils.createTestReasoner(loader);
 
 		try {
-			// reasoner.getTaxonomy();
-			// ElkClass sub = elkFactory.getClass(new ElkFullIri("StiffNeck"));
-			// ElkClass sup = elkFactory
-			// .getClass(new ElkFullIri("PropertyOfPhenomenon"));
-			//
-			// getTestingVisitor(reasoner, ontology).subsumptionTest(sub, sup);
-
 			TracingTests tests = getProvabilityTests(reasoner);
-
 			tests.accept(getTestingVisitor(reasoner, ontology));
 		} finally {
 			reasoner.shutdown();

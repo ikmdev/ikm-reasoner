@@ -27,7 +27,6 @@ package org.semanticweb.elk.reasoner;
 
 import org.semanticweb.elk.loading.AxiomLoader;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
-import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.reasoner.stages.LoggingStageExecutor;
