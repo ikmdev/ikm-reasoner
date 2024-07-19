@@ -41,6 +41,7 @@ open module org.semanticweb.elk.reasoner {
 	exports org.semanticweb.elk.reasoner.indexing.classes;
 	exports org.semanticweb.elk.reasoner.indexing.model;
 	exports org.semanticweb.elk.reasoner.query;
+	exports org.semanticweb.elk.reasoner.proof;
 	exports org.semanticweb.elk.reasoner.saturation.conclusions.model;
 	exports org.semanticweb.elk.reasoner.saturation.inferences;
 	exports org.semanticweb.elk.reasoner.saturation.properties.inferences;

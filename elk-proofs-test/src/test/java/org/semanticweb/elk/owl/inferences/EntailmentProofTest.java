@@ -105,7 +105,7 @@ public class EntailmentProofTest
 			try {
 				entailedIS = urls.get(1).openStream();
 
-				final Set<ElkAxiom> query = TestReasonerUtils
+				final Collection<ElkAxiom> query = TestReasonerUtils
 						.loadAxioms(entailedIS);
 
 				final Collection<QueryTestManifest<ElkAxiom, ElkQueryDerivabilityTestOutput>> manifests = new ArrayList<QueryTestManifest<ElkAxiom, ElkQueryDerivabilityTestOutput>>(
