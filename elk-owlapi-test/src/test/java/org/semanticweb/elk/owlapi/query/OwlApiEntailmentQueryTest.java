@@ -51,13 +51,7 @@ public class OwlApiEntailmentQueryTest
 		extends BaseQueryTest<OWLAxiom, OwlEntailmentQueryTestOutput> {
 
 	// @formatter:off
-	static final String[] IGNORE_LIST = {
-			ElkTestUtils.TEST_INPUT_LOCATION + "/query/class/Disjunctions.owl",// Disjuctions not fully supported
-			ElkTestUtils.TEST_INPUT_LOCATION + "/query/class/OneOf.owl",// Disjuctions not fully supported
-			ElkTestUtils.TEST_INPUT_LOCATION + "/query/class/UnsupportedQueryIndexing.owl",// Unsupported class expression
-			ElkTestUtils.TEST_INPUT_LOCATION + "/query/entailment/AssertionRanges.owl",// Ranges not supported with assertions
-			ElkTestUtils.TEST_INPUT_LOCATION + "/query/entailment/HasValueRanges.owl",// Ranges not supported with ObjectHasValue
-		};
+	static final String[] IGNORE_LIST = {};
 	// @formatter:on
 
 	static {
