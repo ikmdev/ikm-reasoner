@@ -92,7 +92,7 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 		int changingAxiomsCount = changingAxioms.size();
 		int rounds = getNumberOfRounds(changingAxiomsCount);
 
-		LOGGER_.info("Running {} rounds with {} random changes", iterations_,
+		LOGGER_.debug("Running {} rounds with {} random changes", iterations_,
 				rounds);
 
 		int changeSize = getInitialChangeSize(changingAxiomsCount);
@@ -101,7 +101,7 @@ public class RandomWalkIncrementalClassificationRunner<T> {
 				changingAxioms, changeSize);
 
 		for (int j = 0; j < rounds; j++) {
-			LOGGER_.info("Generating {} changes of size: {}", iterations_,
+			LOGGER_.debug("Generating {} changes of size: {}", iterations_,
 					changeSize);
 
 			changingAxioms.setAllOn();
