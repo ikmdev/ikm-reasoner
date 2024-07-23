@@ -368,12 +368,13 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<verbose>false</verbose>
 					<addSvnKeyWords>false</addSvnKeyWords>
 					<extraExtensions>
 						<g>java</g>
 						<jj>java</jj>
 					</extraExtensions>
+					<ignoreNoFileToScan>true</ignoreNoFileToScan>
+					<verbose>false</verbose>
 				</configuration>
 				<executions>
 					<execution>
