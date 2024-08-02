@@ -58,7 +58,6 @@ import org.semanticweb.elk.owl.predefined.ElkPolarity;
 import org.semanticweb.elk.owl.predefined.PredefinedElkClassFactory;
 import org.semanticweb.elk.reasoner.completeness.Feature;
 import org.semanticweb.elk.reasoner.completeness.OccurrenceListener;
-import org.semanticweb.elk.reasoner.indexing.classes.ModifiableIndexedObjectBaseFactory;
 import org.semanticweb.elk.reasoner.indexing.classes.ResolvingModifiableIndexedObjectFactory;
 import org.semanticweb.elk.reasoner.indexing.classes.UpdatingModifiableIndexedObjectFactory;
 import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedClassExpression;
@@ -114,15 +113,22 @@ public class ElkPolarityExpressionConverterImpl
 	 * @param polarity
 	 *            the {@link ElkPolarity} associated with this
 	 *            {@link ElkPolarityExpressionConverter}
-	 * @param elkFactory 
+	 * @param elkFactory
+	 *            {@link PredefinedElkClassFactory} for creating built-in OWL 2
+	 *            classes
 	 * @param factory
 	 *            the {@link ModifiableIndexedObject.Factory} for creating
 	 *            {@link ModifiableIndexedObject}s of the given polarity
-	 * @param complementaryFactory 
-	 * @param occurrenceTracker 
+	 * @param complementaryFactory
+	 *            the {@link ModifiableIndexedObject.Factory} for creating
+	 *            {@link ModifiableIndexedObject}s of the complementary polarity
+	 * @param occurrenceTracker
+	 *            {@link OccurrenceListener} to keep track about the number of
+	 *            occurrences of the objects created by the factories
 	 * @param increment
 	 *            indicates whether the converted expressions must be inserted
-	 *            (> 0) or deleted (< 0) and with which multiplicity
+	 *            {@code (> 0)} or deleted {@code (< 0)} and with which
+	 *            multiplicity
 	 */
 	public ElkPolarityExpressionConverterImpl(ElkPolarity polarity,
 			PredefinedElkClassFactory elkFactory,
@@ -145,13 +151,20 @@ public class ElkPolarityExpressionConverterImpl
 	 * {@link ModifiableIndexedObject.Factory} for creating the
 	 * {@link ModifiableIndexedObject}s (of the dual polarity). This converter
 	 * returns itself as the complementary converter.
-	 * @param elkFactory 
 	 * 
+	 * @param elkFactory
+	 *            {@link PredefinedElkClassFactory} for creating built-in OWL 2
+	 *            classes
 	 * @param dualFactory
 	 *            {@link ModifiableIndexedObject.Factory} used for creating the
 	 *            {@link ModifiableIndexedObject}s of this converter
-	 * @param occurrrenceTracker 
-	 * @param increment 
+	 * @param occurrrenceTracker
+	 *            {@link OccurrenceListener} to keep track about the number of
+	 *            occurrences of the objects created by the factories
+	 * @param increment
+	 *            indicates whether the converted expressions must be inserted
+	 *            {@code (> 0)} or deleted {@code (< 0)} and with which
+	 *            multiplicity
 	 * 
 	 */
 	public ElkPolarityExpressionConverterImpl(
@@ -173,7 +186,11 @@ public class ElkPolarityExpressionConverterImpl
 	 * {@link ModifiableIndexedObject}s.
 	 * 
 	 * @param elkFactory
+	 *            {@link PredefinedElkClassFactory} for creating built-in OWL 2
+	 *            classes
 	 * @param index
+	 *            a {@link ModifiableOntologyIndex} in which the converted
+	 *            {@link ModifiableIndexedObject}s are created
 	 */
 	public ElkPolarityExpressionConverterImpl(
 			PredefinedElkClassFactory elkFactory,
@@ -191,15 +208,21 @@ public class ElkPolarityExpressionConverterImpl
 	 * converter.
 	 * 
 	 * @param elkFactory
+	 *            {@link PredefinedElkClassFactory} for creating built-in OWL 2
+	 *            classes
 	 * @param index
+	 *            a {@link ModifiableOntologyIndex} in which the converted
+	 *            {@link ModifiableIndexedObject}s are created
 	 * @param increment
+	 *            indicates whether the converted expressions must be inserted
+	 *            {@code (> 0)} or deleted {@code (< 0)} and with which
+	 *            multiplicity
 	 */
 	public ElkPolarityExpressionConverterImpl(
 			final PredefinedElkClassFactory elkFactory,
 			final ModifiableOntologyIndex index, final int increment) {
 		this(elkFactory,
-				new UpdatingModifiableIndexedObjectFactory(
-						new ModifiableIndexedObjectBaseFactory(), index,
+				new UpdatingModifiableIndexedObjectFactory(index,
 						OccurrenceIncrement.getDualIncrement(increment)),
 				index, increment);
 	}

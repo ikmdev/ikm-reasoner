@@ -56,6 +56,7 @@ import dev.ikm.elk.snomed.model.RoleType;
 
 public class OwlTransformer {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformer.class);
 
 	HashMap<OWLClass, Concept> concepts = new HashMap<>();

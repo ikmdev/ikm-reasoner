@@ -31,6 +31,8 @@ import org.semanticweb.elk.reasoner.saturation.context.Context;
  * @author Yevgeny Kazakov
  *
  * @param <C>
+ *            the type of contexts observed by this
+ *            {@link SaturationState.ChangeListener}
  */
 public class SaturationStateDummyChangeListener<C extends Context>
 		implements SaturationState.ChangeListener<C> {
@@ -46,13 +48,19 @@ public class SaturationStateDummyChangeListener<C extends Context>
 	}
 
 	@Override
-	public void contextMarkSaturated(C context) {
+	public void contextMarkedSaturated(C context) {
 		// does nothing by default
 	}
 
 	@Override
-	public void contextMarkNonSaturated(C context) {
+	public void contextMarkedNonSaturated(C context) {
 		// does nothing by default
+	}
+
+	@Override
+	public void saturatedContextModified(C context) {
+		// does nothing by default
+		
 	}
 
 }

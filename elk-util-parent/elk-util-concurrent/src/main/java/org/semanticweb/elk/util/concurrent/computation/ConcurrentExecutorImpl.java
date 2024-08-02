@@ -120,7 +120,6 @@ class ConcurrentExecutorImpl implements ConcurrentExecutor {
 
 		JobThreadFactory(String prefix) {
 			this.group_ = new ThreadGroup(prefix);
-			group_.setDaemon(true);
 		}
 
 		@Override

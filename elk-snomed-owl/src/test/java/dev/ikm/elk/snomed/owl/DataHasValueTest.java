@@ -27,7 +27,6 @@ import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
-import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.owlapi.OWLAPIConfigProvider;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParser;
@@ -69,20 +68,15 @@ public class DataHasValueTest {
 	}
 
 	private OWLReasoner loadClassifyPrint(String file) throws Exception {
-		try {
-			DevTrace.trace = true;
-			LOG.info(file);
-			OWLReasoner reasoner = loadAndClassify(file);
-			for (OWLClass clazz : reasoner.getRootOntology().getClassesInSignature()) {
-				LOG.info("Cl: " + clazz.getIRI());
-				for (OWLClass sup : reasoner.getSuperClasses(clazz, true).getFlattened()) {
-					LOG.info("Sup: " + clazz.getIRI().getShortForm() + " " + sup.getIRI().getShortForm());
-				}
+		LOG.info(file);
+		OWLReasoner reasoner = loadAndClassify(file);
+		for (OWLClass clazz : reasoner.getRootOntology().getClassesInSignature()) {
+			LOG.info("Cl: " + clazz.getIRI());
+			for (OWLClass sup : reasoner.getSuperClasses(clazz, true).getFlattened()) {
+				LOG.info("Sup: " + clazz.getIRI().getShortForm() + " " + sup.getIRI().getShortForm());
 			}
-			return reasoner;
-		} finally {
-			DevTrace.trace = false;
 		}
+		return reasoner;
 	}
 
 	public void loadClassifyPrintTest(String file) throws Exception {

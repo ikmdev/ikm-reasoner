@@ -44,4 +44,9 @@ public class ReferenceImpl<O> implements ModifiableReference<O> {
 		this.object_ = object;
 	}
 
+	@Override
+	public String toString() {
+		return String.valueOf(object_);
+	}
+
 }

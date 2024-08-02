@@ -46,6 +46,7 @@ import org.semanticweb.elk.reasoner.completeness.OccurrenceListener;
 import org.semanticweb.elk.reasoner.completeness.OccurrenceRegistry;
 import org.semanticweb.elk.reasoner.completeness.OccurrencesInClassExpressionQuery;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
+import org.semanticweb.elk.reasoner.indexing.classes.OntologyIndexDummyChangeListener;
 import org.semanticweb.elk.reasoner.indexing.conversion.ElkIndexingUnsupportedException;
 import org.semanticweb.elk.reasoner.indexing.conversion.ElkPolarityExpressionConverter;
 import org.semanticweb.elk.reasoner.indexing.conversion.ElkPolarityExpressionConverterImpl;
@@ -206,32 +207,39 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 				elkFactory, ontologyIndex);
 		this.conclusionFactory_ = conclusionFactory;
 		this.incompletenessManager_ = incompletenessManager;
+		ontologyIndex.addListener(new OntologyIndexDummyChangeListener() {
+
+			@Override
+			public void classRemoval(final IndexedClass cls) {
+				removeRelated(cls);
+			}
+
+		});
 		saturationState
 				.addListener(new SaturationStateDummyChangeListener<C>() {
 
+					
 					@Override
-					public void contextMarkNonSaturated(final C context) {
+					public void contextMarkedNonSaturated(C context) {
+						contextModified(context.getRoot());
+					}
+					
+					@Override
+					public void saturatedContextModified(C context) {
+						contextModified(context.getRoot());
+					}
+
+					public void contextModified(IndexedContextRoot root) {						
 						/*
 						 * Saturation and context clean should not happen at the
 						 * same time, so this should be thread-safe.
-						 */
-						final IndexedContextRoot root = context.getRoot();
-						synchronized (queriesByRelated_) {
-							if (root instanceof IndexedClass) {
-								final IndexedClass ic = (IndexedClass) root;
-
-								final Collection<IndexedClassExpression> queryClasses = queriesByRelated_
-										.remove(ic.getElkEntity());
-								if (queryClasses != null) {
-									for (final IndexedClassExpression queryClass : queryClasses) {
-										markNotComputed(queryClass);
-									}
-								}
-
-							} else if (root instanceof IndexedClassExpression) {
-								final IndexedClassExpression ice = (IndexedClassExpression) root;
-								markNotComputed(ice);
-							}
+						 */													
+						if (root instanceof IndexedClass) {							
+							removeRelated((IndexedClass) root);
+							
+						} else if (root instanceof IndexedClassExpression) {
+							final IndexedClassExpression ice = (IndexedClassExpression) root;
+							markNotComputed(ice);
 						}
 					}
 
@@ -241,6 +249,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 							state.isComputed = false;
 							state.node = null;
 						}
+						LOGGER_.trace("Clear related classes");
 						queriesByRelated_.clear();
 					}
 
@@ -287,6 +296,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 		if (state == null || !state.isComputed) {
 			return null;
 		}
+		LOGGER_.trace("{}: reset query result", queryClass);
 		state.isComputed = false;
 		if (state.node != null) {
 			removeAllRelated(queryClass, state.node);
@@ -511,7 +521,6 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 	private void addAllRelated(final IndexedClassExpression queryClass,
 			final QueryNode<ElkClass> queryNode) {
-		synchronized (queriesByRelated_) {
 			// equivalent
 			for (final ElkClass related : queryNode) {
 				addRelated(queryClass, related);
@@ -523,45 +532,57 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 					addRelated(queryClass, related);
 				}
 			}
-		}
 	}
 
+	private void removeRelated(IndexedClass related) {
+		final Collection<IndexedClassExpression> queryClasses = queriesByRelated_
+				.remove(related.getElkEntity());
+		if (queryClasses != null) {
+			synchronized (queryClasses) {
+				for (final IndexedClassExpression queryClass : queryClasses) {
+					markNotComputed(queryClass);
+				}
+			}
+		}
+	}
+	
 	private void addRelated(final IndexedClassExpression queryClass,
 			final ElkClass related) {
-		// Synchronized on queriesByRelated_ by caller.
 		Collection<IndexedClassExpression> queryClasses = queriesByRelated_
 				.get(related);
 		if (queryClasses == null) {
 			queryClasses = new ArrayHashSet<IndexedClassExpression>();
 			queriesByRelated_.put(related, queryClasses);
+			LOGGER_.trace("{} add related class: {}", queryClass, related);
 		}
-		queryClasses.add(queryClass);
+		synchronized (queryClasses) {
+			queryClasses.add(queryClass);
+		}
 	}
 
 	private void removeAllRelated(final IndexedClassExpression queryClass,
 			final QueryNode<ElkClass> queryNode) {
-		synchronized (queriesByRelated_) {
-			// equivalent
-			for (final ElkClass related : queryNode) {
+		// equivalent
+		for (final ElkClass related : queryNode) {
+			removeRelated(queryClass, related);
+		}
+		// superclasses
+		for (final Node<ElkClass> superNode : queryNode.getDirectSuperNodes()) {
+			for (final ElkClass related : superNode) {
 				removeRelated(queryClass, related);
-			}
-			// superclasses
-			for (final Node<ElkClass> superNode : queryNode
-					.getDirectSuperNodes()) {
-				for (final ElkClass related : superNode) {
-					removeRelated(queryClass, related);
-				}
 			}
 		}
 	}
 
 	private void removeRelated(final IndexedClassExpression queryClass,
 			final ElkClass related) {
-		// Synchronized on queriesByRelated_ by caller.
 		Collection<IndexedClassExpression> queryClasses = queriesByRelated_
 				.get(related);
 		if (queryClasses != null) {
-			queryClasses.remove(queryClass);
+			synchronized (queryClasses) {
+				queryClasses.remove(queryClass);
+			}
+			LOGGER_.trace("{} remove related class: {}", queryClass, related);
 			if (queryClasses.isEmpty()) {
 				queriesByRelated_.remove(related);
 			}
@@ -596,6 +617,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 	/**
 	 * @param classExpression
+	 *            the {@link ElkClassExpression} to be checked
 	 * @return whether the supplied class expression was indexed as a query.
 	 */
 	public boolean isIndexed(final ElkClassExpression classExpression) {
@@ -605,6 +627,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 	/**
 	 * @param classExpression
+	 *            the {@link ElkClassExpression} to be checked
 	 * @return whether the query result for the supplied class expression was
 	 *         already computed.
 	 */

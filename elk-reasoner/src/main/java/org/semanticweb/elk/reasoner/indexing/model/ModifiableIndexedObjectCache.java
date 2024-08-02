@@ -31,34 +31,42 @@ package org.semanticweb.elk.reasoner.indexing.model;
 public interface ModifiableIndexedObjectCache extends IndexedObjectCache {
 
 	/**
-	 * 
-	 * @param input
-	 *            an {@link CachedIndexedObject}
-	 * @return a structurally equal {@link CachedIndexedObject} of the same type
-	 *         as the input containing in this {@link IndexedObjectCache} or
-	 *         {@code null} if there is no such an object
-	 */
-	<T extends CachedIndexedObject<T>> T resolve(CachedIndexedObject<T> input);
-
-	/**
-	 * Adds a given {@link CachedIndexedObject} to this
+	 * Adds a given {@link StructuralIndexedSubObject} to this
 	 * {@link IndexedObjectCache}; this method should be used only if no
-	 * {@link CachedIndexedObject} that is structurally equal to the given one
-	 * occurs in this {@link IndexedObjectCache}
+	 * {@link StructuralIndexedSubObject} that is structurally equal to the given
+	 * one occurs in this {@link IndexedObjectCache}
 	 * 
 	 * @param input
-	 *            the {@link CachedIndexedObject} to be added
+	 *            the {@link StructuralIndexedSubObject} to be added
+	 * 
 	 */
-	void add(CachedIndexedObject<?> input);
+	void add(StructuralIndexedSubObject<?> input);
 
 	/**
 	 * Removes an object structurally equal to the given one from this
 	 * {@link IndexedObjectCache}, if there is such an object
 	 * 
 	 * @param input
-	 *            the {@link CachedIndexedObject} for which to remove the
+	 *            the {@link StructuralIndexedSubObject} for which to remove the
 	 *            structurally equal object
+	 * 
 	 */
-	void remove(CachedIndexedObject<?> input);
+	void remove(StructuralIndexedSubObject<?> input);
+
+	/**
+	 * Returns an object structurally equal to the given occurring in this
+	 * {@link IndexedObjectCache}
+	 * 
+	 * @param <T>
+	 *            the type of the objects to be resolved
+	 * 
+	 * @param input
+	 *            the {@link StructuralIndexedSubObject} to be resolved
+	 * @return an {@link IndexedSubObject} that is structurally equal to the
+	 *         given one occurs in this {@link IndexedObjectCache}, if there is
+	 *         one, or {@code null} if there is no such object
+	 * 
+	 */
+	<T extends StructuralIndexedSubObject<T>> T resolve(T input);
 
 }

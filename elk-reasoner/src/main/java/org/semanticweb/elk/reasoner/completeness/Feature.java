@@ -61,6 +61,8 @@ public enum Feature {
 	//
 	DATATYPE_DEFINITION("DatatypeDefinition"),
 	//
+	DIFFERENT_INDIVIDUALS("DifferentIndividuals"),
+	//
 	DISJOINT_CLASSES("DisjointClasses"),
 	//
 	DISJOINT_DATA_PROPERTIES("DisjointDataProperties"),
@@ -96,6 +98,8 @@ public enum Feature {
 	OBJECT_EXACT_CARDINALITY("ObjectExactCardinality"),
 	//
 	OBJECT_HAS_SELF_NEGATIVE("ObjectHasSelf", Polarity.NEGATIVE),
+	//
+	OBJECT_HAS_VALUE_POSITIVE("ObjectHasValue", Polarity.POSITIVE),
 	//
 	OBJECT_INVERSE_OF("ObjectInverseOf"),
 	//

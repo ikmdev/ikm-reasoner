@@ -29,10 +29,8 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.predefined.PredefinedElkEntityFactory;
 import org.semanticweb.elk.reasoner.completeness.Feature;
 import org.semanticweb.elk.reasoner.completeness.OccurrenceListener;
-import org.semanticweb.elk.reasoner.indexing.model.CachedIndexedOwlNothing;
-import org.semanticweb.elk.reasoner.indexing.model.CachedIndexedOwlThing;
-import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedClassExpression;
+import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedDefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.ModifiableOntologyIndex;
 import org.semanticweb.elk.reasoner.indexing.model.OccurrenceIncrement;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
@@ -66,47 +64,10 @@ public class DirectIndex extends ModifiableIndexedObjectCacheImpl
 		// owl:Thing and owl:Nothing always occur
 		OccurrenceIncrement addition = OccurrenceIncrement
 				.getNeutralIncrement(1);
-		getOwlThing().updateOccurrenceNumbers(this, addition);
-		getOwlNothing().updateOccurrenceNumbers(this, addition);
-		getOwlTopObjectProperty().updateOccurrenceNumbers(this, addition);
-		getOwlBottomObjectProperty().updateOccurrenceNumbers(this, addition);
-		// register listeners for occurrences
-		getOwlThing().addListener(new CachedIndexedOwlThing.ChangeListener() {
-
-			@Override
-			public void negativeOccurrenceAppeared() {
-				for (int i = 0; i < listeners_.size(); i++) {
-					listeners_.get(i).negativeOwlThingAppeared();
-				}
-			}
-
-			@Override
-			public void negativeOccurrenceDisappeared() {
-				for (int i = 0; i < listeners_.size(); i++) {
-					listeners_.get(i).negativeOwlThingDisappeared();
-				}
-
-			}
-
-		});
-		getOwlNothing()
-				.addListener(new CachedIndexedOwlNothing.ChangeListener() {
-
-					@Override
-					public void positiveOccurrenceAppeared() {
-						for (int i = 0; i < listeners_.size(); i++) {
-							listeners_.get(i).positiveOwlNothingAppeared();
-						}
-					}
-
-					@Override
-					public void positiveOccurrenceDisappeared() {
-						for (int i = 0; i < listeners_.size(); i++) {
-							listeners_.get(i).positiveOwlNothingDisappeared();
-						}
-
-					}
-				});
+		getOwlThing().getIndexingAction(this, addition).apply();		
+		getOwlNothing().getIndexingAction(this, addition).apply();
+		getOwlTopObjectProperty().getIndexingAction(this, addition).apply();
+		getOwlBottomObjectProperty().getIndexingAction(this, addition).apply();
 	}
 
 	/* read-only methods required by the interface */
@@ -141,23 +102,13 @@ public class DirectIndex extends ModifiableIndexedObjectCacheImpl
 	}
 
 	@Override
-	public final boolean hasNegativeOwlThing() {
-		return getOwlThing().occursNegatively();
-	}
-
-	@Override
-	public final boolean hasPositiveOwlNothing() {
-		return getOwlNothing().occursPositively();
-	}
-
-	@Override
-	public boolean tryAddDefinition(ModifiableIndexedClass target,
+	public boolean tryAddDefinition(ModifiableIndexedDefinedClass target,
 			ModifiableIndexedClassExpression definition, ElkAxiom reason) {
 		return target.setDefinition(definition, reason);
 	}
 
 	@Override
-	public boolean tryRemoveDefinition(ModifiableIndexedClass target,
+	public boolean tryRemoveDefinition(ModifiableIndexedDefinedClass target,
 			ModifiableIndexedClassExpression definition, ElkAxiom reason) {
 		if (target.getDefinition() != definition
 				|| !target.getDefinitionReason().equals(reason))

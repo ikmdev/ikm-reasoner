@@ -44,19 +44,16 @@ import org.semanticweb.elk.testing.TestUtils;
  */
 public class ConfigurationFactoryTest {
 
-//	@SuppressWarnings("static-method")
 	@BeforeEach
 	public void setUp() {
 		TestUtils.createTestEnvironment(new File(""));
 	}
 
-//	@SuppressWarnings("static-method")
 	@AfterEach
 	public void cleanUp() {
 		TestUtils.cleanUp(new File(""));
 	}
 
-//	@SuppressWarnings("static-method")
 	@Test
 	public void getDefaultConfiguration() {
 		BaseConfiguration defaultConfig = new ConfigurationFactory().getConfiguration("elk", BaseConfiguration.class);
@@ -64,7 +61,6 @@ public class ConfigurationFactoryTest {
 		assertEquals(3, defaultConfig.getParameterNames().size());
 	}
 
-//	@SuppressWarnings("static-method")
 	@Test
 	public void getDefaultConfigurationWithPrefix() {
 		BaseConfiguration defaultConfig = new ConfigurationFactory().getConfiguration("elk.reasoner",
@@ -93,7 +89,6 @@ public class ConfigurationFactoryTest {
 		}
 	}
 
-//	@SuppressWarnings("static-method")
 	@Test
 	public void roundtrip() throws ConfigurationException, IOException {
 		ConfigurationFactory factory = new ConfigurationFactory();

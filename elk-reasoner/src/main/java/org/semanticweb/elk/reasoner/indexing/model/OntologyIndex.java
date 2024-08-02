@@ -55,21 +55,10 @@ public interface OntologyIndex extends IndexedObjectCache {
 	LinkedContextInitRule getContextInitRuleHead();
 
 	/**
-	 * @return {@code true} if {@code owl:Thing} occurs negatively in the
-	 *         ontology represented by this {@link OntologyIndex}
-	 */
-	boolean hasNegativeOwlThing();
-
-	/**
-	 * @return {@code true} if {@code owl:Nothing} occurs positively in the
-	 *         ontology represented by this {@link OntologyIndex}
-	 */
-	boolean hasPositiveOwlNothing();
-
-	/**
 	 * Registers a given {@link ChangeListener} with this {@link OntologyIndex}
 	 * 
 	 * @param listener
+	 *            the {@link ChangeListener} to be added
 	 * @return {@code true} if the operation was successful and {@code false}
 	 *         otherwise; if {@code false} is return, the listener was not
 	 *         registered
@@ -80,6 +69,7 @@ public interface OntologyIndex extends IndexedObjectCache {
 	 * Removes a given {@link ChangeListener} from this {@link OntologyIndex}
 	 * 
 	 * @param listener
+	 *            the {@link ChangeListener} to be removed
 	 * @return {@code true} if the operation was successful and {@code false}
 	 *         otherwise; if {@code false} is return, the listener was not
 	 *         removed
@@ -101,14 +91,6 @@ public interface OntologyIndex extends IndexedObjectCache {
 				ElkAxiom reason);
 
 		void contextInitRuleHeadSet(LinkedContextInitRule rule);
-
-		void negativeOwlThingAppeared();
-
-		void negativeOwlThingDisappeared();
-
-		void positiveOwlNothingAppeared();
-
-		void positiveOwlNothingDisappeared();
 
 	}
 

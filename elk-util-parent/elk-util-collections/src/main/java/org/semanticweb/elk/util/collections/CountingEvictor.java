@@ -24,7 +24,7 @@ package org.semanticweb.elk.util.collections;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.liveontologies.puli.statistics.Stat;
+import org.semanticweb.elk.util.statistics.Stat;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
@@ -99,6 +99,8 @@ public class CountingEvictor<E> extends RecencyEvictor<E> {
 		 * If not provided, defaults to {@link #DEFAULT_EVICT_BEFORE_ADD_COUNT}.
 		 * 
 		 * @param evictBeforeAddCount
+		 *            The number of times an element must be added so that it is
+		 *            not evicted immediately.
 		 * @return This builder.
 		 * @throws IllegalArgumentException
 		 *             When the argument is negative.

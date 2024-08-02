@@ -21,7 +21,7 @@
  */
 package org.semanticweb.elk.reasoner.tracing;
 
-import org.liveontologies.puli.Proof;
+import org.semanticweb.elk.reasoner.proof.ReasonerProof;
 
 /**
  * An object which can be used to retrieve {@link TracingInference}s producing a
@@ -33,6 +33,6 @@ import org.liveontologies.puli.Proof;
  *            The type of the inferences.
  */
 public interface GenericTracingProof<I extends TracingInference>
-		extends Proof<I> {
+		extends ReasonerProof<I> {
 	// Restriction to tracing inferences.
 }

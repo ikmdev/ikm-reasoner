@@ -67,7 +67,11 @@ public class ElkAbbreviatedIri extends ElkIri {
 	}
 
 	/**
-	 * Returns (a+b).hashCode() without actually concatenating the strings.
+	 * @param a
+	 *            fist string to be concatenated
+	 * @param b
+	 *            second string to be concatenated
+	 * @return (a+b).hashCode() without actually concatenating the strings.
 	 */
 	protected static int concatHashCode(String a, String b) {
 		int hash = a.hashCode();
@@ -86,6 +90,8 @@ public class ElkAbbreviatedIri extends ElkIri {
 	 * 
 	 * @param visitor
 	 *            the visitor that can work with this object type
+	 * @param <O>
+ *            the output type of the visitor           
 	 * @return the output of the visitor
 	 */
 	public <O> O accept(ElkAbbreviatedIriVisitor<O> visitor) {

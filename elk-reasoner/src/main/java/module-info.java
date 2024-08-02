@@ -23,8 +23,6 @@ open module org.semanticweb.elk.reasoner {
 
 	requires org.slf4j;
 
-	requires org.liveontologies.puli;
-
 	requires org.semanticweb.elk.owl.implementation;
 	requires org.semanticweb.elk.owl.model;
 
@@ -43,6 +41,7 @@ open module org.semanticweb.elk.reasoner {
 	exports org.semanticweb.elk.reasoner.indexing.classes;
 	exports org.semanticweb.elk.reasoner.indexing.model;
 	exports org.semanticweb.elk.reasoner.query;
+	exports org.semanticweb.elk.reasoner.proof;
 	exports org.semanticweb.elk.reasoner.saturation.conclusions.model;
 	exports org.semanticweb.elk.reasoner.saturation.inferences;
 	exports org.semanticweb.elk.reasoner.saturation.properties.inferences;

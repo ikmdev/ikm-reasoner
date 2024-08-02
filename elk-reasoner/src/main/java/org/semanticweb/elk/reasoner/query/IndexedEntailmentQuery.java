@@ -23,13 +23,12 @@ package org.semanticweb.elk.reasoner.query;
 
 import java.util.Collection;
 
-import org.liveontologies.puli.Proof;
 import org.semanticweb.elk.reasoner.entailments.model.Entailment;
 import org.semanticweb.elk.reasoner.entailments.model.EntailmentInference;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
+import org.semanticweb.elk.reasoner.proof.ReasonerProof;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SaturationConclusion;
-import org.semanticweb.elk.reasoner.saturation.context.Context;
 
 /**
  * @author Peter Skocovsky
@@ -52,17 +51,23 @@ public interface IndexedEntailmentQuery<E extends Entailment> {
 
 	/**
 	 * Explains why the queried entailment is entailed. If it is not entailed,
-	 * it is not provable by the inferences from the returned proof.
+	 * the resulting proof is empty.
 	 * 
 	 * @param atMostOne
-	 *            Whether at most one explanation should be returned.
+	 *            {@code true} to return at most one explanation and
+	 *            {@code false} to return all explanations
 	 * @param saturationState
+	 *            the {@linkplain SaturationState} from which the
+	 *            {@link SaturationConclusion}s are obtained
 	 * @param conclusionFactory
-	 * @return An evidence that the queried entailment is entailed.
+	 *            a {@link SaturationConclusion.Factory} to create conclusions
+	 *            used in the {@link ReasonerProof}
+	 * @return A {@link ReasonerProof} for this query.
 	 * @throws ElkQueryException
+	 *             if the explanation process fails
 	 */
-	<C extends Context> Proof<EntailmentInference> getEvidence(
-			boolean atMostOne, SaturationState<C> saturationState,
+	ReasonerProof<EntailmentInference> getEvidence(boolean atMostOne,
+			SaturationState<?> saturationState,
 			SaturationConclusion.Factory conclusionFactory)
 			throws ElkQueryException;
 

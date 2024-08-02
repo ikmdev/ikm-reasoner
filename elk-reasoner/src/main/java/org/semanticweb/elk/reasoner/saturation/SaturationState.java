@@ -29,6 +29,7 @@ import java.util.Collection;
 
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 
 /**
@@ -80,9 +81,8 @@ public interface SaturationState<C extends Context> {
 	/**
 	 * @return the value of the counter that is incremented right after a
 	 *         context becomes marked as non-saturated, e.g., as the result of
-	 *         calling
-	 *         {@link SaturationStateWriter#markAsNotSaturated(IndexedContextRoot)}.
-	 *         The value never decreases and is never greater than the value of
+	 *         adding or removing {@link ClassConclusion}s. The value never
+	 *         decreases and is never greater than the value of
 	 *         #getContextSetSaturatedCount().
 	 */
 	int getContextMarkNonSaturatedCount();
@@ -114,6 +114,8 @@ public interface SaturationState<C extends Context> {
 
 	/**
 	 * @param contextModificationListener
+	 *            the {@link ContextModificationListener} that is used to
+	 *            report for changes in the saturation
 	 * @return a new {@link SaturationStateWriter} that can only modify
 	 *         {@link Context}s in this {@link SaturationState}, but cannot
 	 *         create new ones. When a {@link Context} is modified by the
@@ -146,7 +148,11 @@ public interface SaturationState<C extends Context> {
 
 	/**
 	 * @param contextCreationListener
+	 *            the {@link ContextCreationListener} that is used to report
+	 *            when {@link Context}s are created
 	 * @param contextModificationListener
+	 *            the {@link ContextModificationListener} that is used to report
+	 *            for changes in the saturation
 	 * @return a new {@link SaturationStateWriter} that can modify as well as
 	 *         create new {@link Context}s in this {@link SaturationState}. When
 	 *         a {@link Context} is modified by the
@@ -185,21 +191,23 @@ public interface SaturationState<C extends Context> {
 	 * {@link SaturationState}
 	 * 
 	 * @param listener
+	 *            a {@link ChangeListener} to be added
 	 * @return {@code true} if the operation was successful and {@code false}
 	 *         otherwise; if {@code false} is return, the listener was not
 	 *         registered
 	 */
-	public boolean addListener(ChangeListener<C> listener);
+	public boolean addListener(ChangeListener<? super C> listener);
 
 	/**
 	 * Removes a given {@link ChangeListener} from this {@link SaturationState}
 	 * 
 	 * @param listener
+	 *            a {@link ChangeListener} to be removed
 	 * @return {@code true} if the operation was successful and {@code false}
 	 *         otherwise; if {@code false} is return, the listener was not
 	 *         removed
 	 */
-	public boolean removeListener(ChangeListener<C> listener);
+	public boolean removeListener(ChangeListener<? super C> listener);
 
 	/**
 	 * The listener for changes in {@link SaturationState}
@@ -212,11 +220,13 @@ public interface SaturationState<C extends Context> {
 	public interface ChangeListener<C extends Context> {
 
 		/**
-		 * Is triggered immediately after a give context is added to the
-		 * {@link SaturationState}, i.e., it appears
+		 * Is triggered immediately after a given {@link Context} is added to
+		 * the {@link SaturationState}, i.e., it appears
 		 * {@link SaturationState#getContexts()}.
 		 * 
 		 * @param context
+		 *            the {@link Context} that was added
+		 * 
 		 */
 		void contextAddition(C context);
 
@@ -233,8 +243,9 @@ public interface SaturationState<C extends Context> {
 		 * {@link SaturationState#getNotSaturatedContexts()}.
 		 * 
 		 * @param context
+		 *            the {@link Context} that was marked as saturated
 		 */
-		void contextMarkSaturated(C context);
+		void contextMarkedSaturated(C context);
 
 		/**
 		 * Is triggered immediately after the given context is marked as
@@ -242,8 +253,24 @@ public interface SaturationState<C extends Context> {
 		 * {@link SaturationState#getNotSaturatedContexts()}.
 		 * 
 		 * @param context
+		 *            the {@link Context} that was marked as non-saturated
 		 */
-		void contextMarkNonSaturated(C context);
+		void contextMarkedNonSaturated(C context);
+		
+		
+		/**
+		 * Is triggered for a {@link Context} of this {@link SaturationState} a
+		 * {@link ClassConclusion} with the same
+		 * {@link ClassConclusion#getTraceRoot()} as {@link Context#getRoot()}
+		 * has been added or removed while {@link Context#isSaturated()}
+		 * remained {@code true}. This can happen, for example, as a result of
+		 * updating the saturation after changes to the ontology.
+		 * 
+		 * @param context
+		 *            the {@link Context} for which the event was triggered
+		 * 
+		 */
+		void saturatedContextModified(C context);
 
 	}
 
