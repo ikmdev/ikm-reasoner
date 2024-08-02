@@ -157,6 +157,11 @@ public class RuleCounter {
 	long countObjectUnionFromDisjunctRule;
 
 	/**
+	 * counter for {@link OwlNothingDecompositionRule}
+	 */
+	long countOwlNothingDecompositionRule;
+	
+	/**
 	 * counter for {@link OwlThingContextInitRule}
 	 */
 	long countOwlThingContextInitRule;
@@ -207,9 +212,10 @@ public class RuleCounter {
 	long countEquivalentClassSecondFromFirstRule;
 
 	/**
-	 * Add the values the corresponding values of the given counter
+	 * Add the values to the corresponding values of the given counter
 	 * 
 	 * @param counter
+	 *            the counter to which the values should be added
 	 */
 	public synchronized void add(RuleCounter counter) {
 		countOwlThingContextInitRule += counter.countOwlThingContextInitRule;
@@ -221,6 +227,7 @@ public class RuleCounter {
 		countSuperClassFromSubClassRule += counter.countSuperClassFromSubClassRule;
 		countPropagationFromExistentialFillerRule += counter.countPropagationFromExistentialFillerRule;
 		countObjectUnionFromDisjunctRule += counter.countObjectUnionFromDisjunctRule;
+		countOwlNothingDecompositionRule += counter.countOwlNothingDecompositionRule;
 		countBackwardLinkChainFromBackwardLinkRule += counter.countBackwardLinkChainFromBackwardLinkRule;
 		countSubsumerBackwardLinkRule += counter.countSubsumerBackwardLinkRule;
 		countContradictionOverBackwardLinkRule += counter.countContradictionOverBackwardLinkRule;
@@ -252,6 +259,7 @@ public class RuleCounter {
 				+ countSuperClassFromSubClassRule
 				+ countPropagationFromExistentialFillerRule
 				+ countObjectUnionFromDisjunctRule
+				+ countOwlNothingDecompositionRule
 				+ countBackwardLinkChainFromBackwardLinkRule
 				+ countSubsumerBackwardLinkRule
 				+ countContradictionOverBackwardLinkRule
@@ -287,6 +295,7 @@ public class RuleCounter {
 		countSuperClassFromSubClassRule = 0;
 		countPropagationFromExistentialFillerRule = 0;
 		countObjectUnionFromDisjunctRule = 0;
+		countOwlNothingDecompositionRule = 0;
 		countBackwardLinkChainFromBackwardLinkRule = 0;
 		countSubsumerBackwardLinkRule = 0;
 		countContradictionOverBackwardLinkRule = 0;

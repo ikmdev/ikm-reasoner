@@ -19,10 +19,6 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>dev.ikm.puli</groupId>
-			<artifactId>puli</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-model</artifactId>
 		</dependency>
@@ -74,20 +70,4 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-						<phase>test</phase>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

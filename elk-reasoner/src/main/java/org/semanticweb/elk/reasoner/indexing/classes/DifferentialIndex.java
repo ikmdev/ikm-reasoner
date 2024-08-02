@@ -32,14 +32,16 @@ import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.predefined.PredefinedElkEntityFactory;
 import org.semanticweb.elk.reasoner.indexing.conversion.ElkUnexpectedIndexingException;
-import org.semanticweb.elk.reasoner.indexing.model.CachedIndexedObject;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedDefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedEntity;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedIndividual;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
-import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedClass;
+import org.semanticweb.elk.reasoner.indexing.model.IndexedPredefinedClass;
 import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedClassExpression;
+import org.semanticweb.elk.reasoner.indexing.model.ModifiableIndexedDefinedClass;
+import org.semanticweb.elk.reasoner.indexing.model.StructuralIndexedSubObject;
 import org.semanticweb.elk.reasoner.saturation.rules.Rule;
 import org.semanticweb.elk.reasoner.saturation.rules.contextinit.ChainableContextInitRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ChainableSubsumerRule;
@@ -95,9 +97,9 @@ public class DifferentialIndex extends DirectIndex {
 			entityDeletionListener_ = new EntityDeletionListener();
 
 	/**
-	 * Pending deletions of {@link CachedIndexedObject}s
+	 * Pending deletions of {@link StructuralIndexedSubObject}s
 	 */
-	private Set<CachedIndexedObject<?>> todoDeletions_;
+	private Set<StructuralIndexedSubObject<?>> todoDeletions_;
 
 	/**
 	 * The added and removed initialization {@link Rule}s
@@ -111,10 +113,10 @@ public class DifferentialIndex extends DirectIndex {
 	private Map<ModifiableIndexedClassExpression, ChainableSubsumerRule> addedContextRuleHeadByClassExpressions_,
 			removedContextRuleHeadByClassExpressions_;
 
-	private Map<ModifiableIndexedClass, ModifiableIndexedClassExpression> addedDefinitions_,
+	private Map<ModifiableIndexedDefinedClass, ModifiableIndexedClassExpression> addedDefinitions_,
 			removedDefinitions_;
 
-	private Map<ModifiableIndexedClass, ElkAxiom> addedDefinitionReasons_,
+	private Map<ModifiableIndexedDefinedClass, ElkAxiom> addedDefinitionReasons_,
 			removedDefinitionReasons_;
 
 	public DifferentialIndex(final PredefinedElkEntityFactory elkFactory) {
@@ -134,39 +136,34 @@ public class DifferentialIndex extends DirectIndex {
 	}
 
 	public void initClassChanges() {
-		this.addedClasses_ = new ArrayHashSet<ElkClass>(32);
-		this.removedClasses_ = new ArrayHashSet<ElkClass>(32);
+		this.addedClasses_ = new ArrayHashSet<>(32);
+		this.removedClasses_ = new ArrayHashSet<>(32);
 	}
 
 	public void initIndividualChanges() {
-		this.addedIndividuals_ = new ArrayHashSet<ElkNamedIndividual>(32);
-		this.removedIndividuals_ = new ArrayHashSet<ElkNamedIndividual>(32);
+		this.addedIndividuals_ = new ArrayHashSet<>(32);
+		this.removedIndividuals_ = new ArrayHashSet<>(32);
 	}
 
 	public void initObjectPropertyChanges() {
-		this.addedObjectProperties_ = new ArrayHashSet<ElkObjectProperty>(32);
-		this.removedObjectProperties_ = new ArrayHashSet<ElkObjectProperty>(32);
+		this.addedObjectProperties_ = new ArrayHashSet<>(32);
+		this.removedObjectProperties_ = new ArrayHashSet<>(32);
 	}
 
 	public void initAdditions() {
 		this.addedContextInitRules_ = null;
-		this.addedContextRuleHeadByClassExpressions_ = new ArrayHashMap<ModifiableIndexedClassExpression, ChainableSubsumerRule>(
-				32);
-		this.addedDefinitions_ = new ArrayHashMap<ModifiableIndexedClass, ModifiableIndexedClassExpression>(
-				32);
-		this.addedDefinitionReasons_ = new ArrayHashMap<ModifiableIndexedClass, ElkAxiom>(
-				32);
+		this.addedContextRuleHeadByClassExpressions_ = new ArrayHashMap<>(32);
+		this.addedDefinitions_ = new ArrayHashMap<>(32);
+		this.addedDefinitionReasons_ = new ArrayHashMap<>(32);
 	}
 
 	public void initDeletions() {
 		this.removedContextInitRules_ = null;
-		this.todoDeletions_ = new ArrayHashSet<CachedIndexedObject<?>>(1024);
-		this.removedContextRuleHeadByClassExpressions_ = new ArrayHashMap<ModifiableIndexedClassExpression, ChainableSubsumerRule>(
-				32);
-		this.removedDefinitions_ = new ArrayHashMap<ModifiableIndexedClass, ModifiableIndexedClassExpression>(
-				32);
-		this.removedDefinitionReasons_ = new ArrayHashMap<ModifiableIndexedClass, ElkAxiom>(
-				32);
+		this.todoDeletions_ = new ArrayHashSet<StructuralIndexedSubObject<?>>(
+				1024);
+		this.removedContextRuleHeadByClassExpressions_ = new ArrayHashMap<>(32);
+		this.removedDefinitions_ = new ArrayHashMap<>(32);
+		this.removedDefinitionReasons_ = new ArrayHashMap<>(32);
 	}
 
 	/* read-only methods */
@@ -176,7 +173,7 @@ public class DifferentialIndex extends DirectIndex {
 	/* read-write methods */
 
 	@Override
-	public void add(CachedIndexedObject<?> input) {
+	public void add(StructuralIndexedSubObject<?> input) {
 		if (!incrementalMode) {
 			super.add(input);
 			return;
@@ -192,7 +189,7 @@ public class DifferentialIndex extends DirectIndex {
 	}
 
 	@Override
-	public void remove(CachedIndexedObject<?> input) {
+	public void remove(StructuralIndexedSubObject<?> input) {
 		if (!incrementalMode) {
 			super.remove(input);
 			return;
@@ -206,12 +203,21 @@ public class DifferentialIndex extends DirectIndex {
 
 	private class EntityInsertionListener implements IndexedEntity.Visitor<Void> {
 
-		@Override
-		public Void visit(IndexedClass element) {
+		Void defaultVisit(IndexedClass element) {
 			ElkClass entity = element.getElkEntity();
 			if (!removedClasses_.remove(entity))
 				addedClasses_.add(entity);
 			return null;
+		}
+		
+		@Override
+		public Void visit(IndexedDefinedClass element) {
+			return defaultVisit(element);
+		}
+		
+		@Override
+		public Void visit(IndexedPredefinedClass element) {
+			return defaultVisit(element);
 		}
 
 		@Override
@@ -234,12 +240,21 @@ public class DifferentialIndex extends DirectIndex {
 
 	private class EntityDeletionListener implements IndexedEntity.Visitor<Void> {
 
-		@Override
-		public Void visit(IndexedClass element) {
+		Void defaultVisit(IndexedClass element) {
 			ElkClass entity = element.getElkEntity();
 			if (!addedClasses_.remove(entity))
 				removedClasses_.add(entity);
 			return null;
+		}
+		
+		@Override
+		public Void visit(IndexedDefinedClass element) {
+			return defaultVisit(element);
+		}
+		
+		@Override
+		public Void visit(IndexedPredefinedClass element) {
+			return defaultVisit(element);
 		}
 
 		@Override
@@ -296,7 +311,7 @@ public class DifferentialIndex extends DirectIndex {
 	}
 
 	@Override
-	public boolean tryAddDefinition(ModifiableIndexedClass target,
+	public boolean tryAddDefinition(ModifiableIndexedDefinedClass target,
 			ModifiableIndexedClassExpression definition, ElkAxiom reason) {
 		if (!incrementalMode)
 			return super.tryAddDefinition(target, definition, reason);
@@ -325,7 +340,7 @@ public class DifferentialIndex extends DirectIndex {
 	}
 
 	@Override
-	public boolean tryRemoveDefinition(ModifiableIndexedClass target,
+	public boolean tryRemoveDefinition(ModifiableIndexedDefinedClass target,
 			ModifiableIndexedClassExpression definition, ElkAxiom reason) {
 		if (!incrementalMode)
 			return super.tryRemoveDefinition(target, definition, reason);
@@ -420,7 +435,7 @@ public class DifferentialIndex extends DirectIndex {
 	/**
 	 * @return the added definitions for {@link IndexedClass}es
 	 */
-	public Map<? extends IndexedClass, ? extends IndexedClassExpression> getAddedDefinitions() {
+	public Map<? extends IndexedDefinedClass, ? extends IndexedClassExpression> getAddedDefinitions() {
 		return this.addedDefinitions_;
 	}
 
@@ -428,14 +443,14 @@ public class DifferentialIndex extends DirectIndex {
 	 * @return the {@link ElkAxiom}s from which the added definitions for the
 	 *         corresponding {@link IndexedClass}es originate
 	 */
-	public Map<? extends IndexedClass, ? extends ElkAxiom> getAddedDefinitionReasons() {
+	public Map<? extends IndexedDefinedClass, ? extends ElkAxiom> getAddedDefinitionReasons() {
 		return this.addedDefinitionReasons_;
 	}
 
 	/**
 	 * @return the removed definitions for {@link IndexedClass}es
 	 */
-	public Map<? extends IndexedClass, ? extends IndexedClassExpression> getRemovedDefinitions() {
+	public Map<? extends IndexedDefinedClass, ? extends IndexedClassExpression> getRemovedDefinitions() {
 		return this.removedDefinitions_;
 	}
 
@@ -443,7 +458,7 @@ public class DifferentialIndex extends DirectIndex {
 	 * @return the {@link ElkAxiom}s from which the removed definitions for the
 	 *         corresponding {@link IndexedClass}es originate
 	 */
-	public Map<? extends IndexedClass, ? extends ElkAxiom> getRemovedDefinitionReasons() {
+	public Map<? extends IndexedDefinedClass, ? extends ElkAxiom> getRemovedDefinitionReasons() {
 		return this.removedDefinitionReasons_;
 	}
 
@@ -475,7 +490,7 @@ public class DifferentialIndex extends DirectIndex {
 	 * registration
 	 */
 	public void clearDeletedRules() {
-		for (CachedIndexedObject<?> deletion : todoDeletions_) {
+		for (StructuralIndexedSubObject<?> deletion : todoDeletions_) {
 			LOGGER_.trace("{}: comitting removal", deletion);
 			super.remove(deletion);
 		}
@@ -513,7 +528,7 @@ public class DifferentialIndex extends DirectIndex {
 				nextClassExpressionRule = nextClassExpressionRule.next();
 			}
 		}
-		for (ModifiableIndexedClass target : addedDefinitions_.keySet()) {
+		for (ModifiableIndexedDefinedClass target : addedDefinitions_.keySet()) {
 			ModifiableIndexedClassExpression definition = addedDefinitions_
 					.get(target);
 			ElkAxiom reason = addedDefinitionReasons_.get(target);

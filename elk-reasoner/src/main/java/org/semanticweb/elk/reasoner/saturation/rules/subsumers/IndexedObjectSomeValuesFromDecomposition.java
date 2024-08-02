@@ -22,14 +22,11 @@ package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
  * #L%
  */
 
-import org.semanticweb.elk.reasoner.DevTrace;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link SubsumerDecompositionRule} that processes
@@ -42,10 +39,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author "Yevgeny Kazakov"
  */
-public class IndexedObjectSomeValuesFromDecomposition
-		extends AbstractSubsumerDecompositionRule<IndexedObjectSomeValuesFrom> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(IndexedObjectSomeValuesFromDecomposition.class);
+public class IndexedObjectSomeValuesFromDecomposition extends
+		AbstractSubsumerDecompositionRule<IndexedObjectSomeValuesFrom> {
 
 	public static final String NAME = "IndexedObjectSomeValuesFrom Decomposition";
 
@@ -63,7 +58,6 @@ public class IndexedObjectSomeValuesFromDecomposition
 	@Override
 	public void apply(IndexedObjectSomeValuesFrom premise,
 			ContextPremises premises, ClassInferenceProducer producer) {
-		DevTrace.log(LOG, "produceDecomposedExistentialLink: {}, {}, {}", producer, premises.getRoot(), premise);
 		IndexedObjectSomeValuesFrom.Helper.produceDecomposedExistentialLink(
 				producer, premises.getRoot(), premise);
 	}
@@ -77,7 +71,6 @@ public class IndexedObjectSomeValuesFromDecomposition
 	public void accept(SubsumerDecompositionRuleVisitor<?> visitor,
 			IndexedObjectSomeValuesFrom premise, ContextPremises premises,
 			ClassInferenceProducer producer) {
-		DevTrace.log(LOG, "Visitor: {}", visitor);
 		visitor.visit(this, premise, premises, producer);
 	}
 

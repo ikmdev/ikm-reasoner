@@ -29,7 +29,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.liveontologies.puli.Proof;
 import org.semanticweb.elk.reasoner.entailments.impl.IndividualInconsistencyEntailsOntologyInconsistencyImpl;
 import org.semanticweb.elk.reasoner.entailments.impl.OntologyInconsistencyImpl;
 import org.semanticweb.elk.reasoner.entailments.impl.OwlThingInconsistencyEntailsOntologyInconsistencyImpl;
@@ -44,6 +43,7 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedIndividual;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
+import org.semanticweb.elk.reasoner.proof.ReasonerProof;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
 import org.semanticweb.elk.reasoner.saturation.SaturationStateDummyChangeListener;
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.SaturationConclusionBaseFactory;
@@ -81,12 +81,6 @@ public class ConsistencyCheckingState {
 	private final IndexedObjectProperty topProperty_;
 
 	/**
-	 * {@code true} if the ontology is consistent due to some syntactic
-	 * sufficient conditions
-	 */
-	private boolean isTriviallyConsistent_ = false;
-
-	/**
 	 * {@code true} if inconsistency is derived for {@code owl:Thing}
 	 */
 	private volatile boolean isOwlThingInconsistent_ = false;
@@ -115,8 +109,7 @@ public class ConsistencyCheckingState {
 		this.topProperty_ = index.getOwlTopObjectProperty();
 		toDoEntities_ = new ConcurrentLinkedQueue<IndexedClassEntity>(
 				index.getIndividuals());
-		toDoEntities_.add(index.getOwlThing());
-		isTriviallyConsistent_ = !index.hasPositiveOwlNothing();
+		toDoEntities_.add(index.getOwlThing());		
 		// listening to changes in the ontology
 		index.addListener(new OntologyIndexDummyChangeListener() {
 
@@ -128,16 +121,6 @@ public class ConsistencyCheckingState {
 			@Override
 			public void individualRemoval(IndexedIndividual ind) {
 				inconsistentIndividuals_.remove(ind);
-			}
-
-			@Override
-			public void positiveOwlNothingAppeared() {
-				isTriviallyConsistent_ = false;
-			}
-
-			@Override
-			public void positiveOwlNothingDisappeared() {
-				isTriviallyConsistent_ = true;
 			}
 
 		});
@@ -154,7 +137,7 @@ public class ConsistencyCheckingState {
 					}
 
 					@Override
-					public void contextMarkNonSaturated(C context) {
+					public void contextMarkedNonSaturated(C context) {
 						IndexedContextRoot root = context.getRoot();
 						if (root instanceof IndexedIndividual) {
 							IndexedIndividual ind = (IndexedIndividual) root;
@@ -167,7 +150,7 @@ public class ConsistencyCheckingState {
 					}
 
 					@Override
-					public void contextMarkSaturated(C context) {
+					public void contextMarkedSaturated(C context) {
 
 						IndexedContextRoot root = context.getRoot();
 						if (!context.containsConclusion(
@@ -211,9 +194,14 @@ public class ConsistencyCheckingState {
 
 	/**
 	 * @param saturationState
-	 * @param propertHierarchyState 
+	 *            a {@link SaturationState} containing information about derived
+	 *            class axioms
+	 * @param propertHierarchyState
+	 *            a {@link PropertyHierarchyCompositionState} containing
+	 *            information about derived property axioms
+	 * 
 	 * @return a new {@link ConsistencyCheckingState} associated with the given
-	 *         {@link SaturationState}
+	 *         {@link SaturationState} and {@link PropertyHierarchyCompositionState}
 	 */
 	public static ConsistencyCheckingState create(
 			SaturationState<?> saturationState,
@@ -242,19 +230,16 @@ public class ConsistencyCheckingState {
 			Context context = saturationState_.getContext(next);
 			if (context != null && context.isSaturated()) {
 				itr.remove();
-			} else {
-				size++;
+				continue;
 			}
+			size++;
 		}
 		return size;
 	}
-
+	
 	public Collection<? extends IndexedClassEntity> getTestEntitites() {
-		if (isTriviallyConsistent_) {
-			return Collections.emptyList();
-		}
 		int size = pruneToDo();
-		// since getting the size of the queue is a linear operation,
+		// since getting the size of the queue is not a linear operation,
 		// use the computed size
 		return Operations.getCollection(toDoEntities_, size);
 	}
@@ -329,12 +314,11 @@ public class ConsistencyCheckingState {
 	 *            Whether at most one explanation should be returned.
 	 * @return An evidence of entailment of ontology inconsistency.
 	 */
-	public Proof<? extends EntailmentInference> getEvidence(
+	public ReasonerProof<? extends EntailmentInference> getEvidence(
 			final boolean atMostOne) {
 
-		return new Proof<EntailmentInference>() {
+		return new ReasonerProof<EntailmentInference>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public Collection<OntologyInconsistencyEntailmentInference> getInferences(
 					final Object conclusion) {

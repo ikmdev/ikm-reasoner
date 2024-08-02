@@ -32,24 +32,26 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
  * #L%
  */
 
+import dev.ikm.elk.snomed.reasoner.ElkReasoner;
+
 /**
  * Used to indicate the buffering mode of a reasoner. See
- * {@link OWLReasoner#getBufferingMode()}.
+ * {@link ElkReasoner#getBufferingMode()}.
  * 
  * @author Matthew Horridge, The University of Manchester, Information
  *         Management Group
  * @since 3.0.0
  */
 public enum BufferingMode {
-    /**
-     * Represents a mode where ontology changes are buffered inside an
-     * OWLReasoner. The reasoner only considers the changes when the buffer is
-     * flushed with the {@link OWLReasoner#flush()} method.
-     */
-    BUFFERING,
-    /**
-     * Represents a mode where ontology changes are not buffered inside an
-     * OWLReasoner. The reasoner considers all changes immediately.
-     */
-    NON_BUFFERING
+	/**
+	 * Represents a mode where ontology changes are buffered inside an OWLReasoner.
+	 * The reasoner only considers the changes when the buffer is flushed with the
+	 * {@link ElkReasoner#flush()} method.
+	 */
+	BUFFERING,
+	/**
+	 * Represents a mode where ontology changes are not buffered inside an
+	 * OWLReasoner. The reasoner considers all changes immediately.
+	 */
+	NON_BUFFERING
 }
