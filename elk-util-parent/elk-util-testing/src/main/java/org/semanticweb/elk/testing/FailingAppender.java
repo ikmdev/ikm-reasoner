@@ -26,12 +26,13 @@ package org.semanticweb.elk.testing;
 //import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * An {@link Appender} that throws {@link LoggingException} on received messages.
+ * An Appender that throws LoggingException on received messages.
  * 
  * @author "Yevgeny Kazakov"
  * 
  */
-public class FailingAppender // extends AppenderSkeleton 
+@Deprecated
+public class FailingAppender // extends AppenderSkeleton
 {
 
 //	@Override

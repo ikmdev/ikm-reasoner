@@ -116,6 +116,16 @@ public class Reasoner extends AbstractReasonerState {
 	/**
 	 * Constructor. In most cases, Reasoners should be created by the
 	 * {@link ReasonerFactory}.
+	 * 
+	 * @param elkFactory
+	 *            the factory used to create new {@link ElkObject}s
+	 * @param interrupter
+	 *            the object that notifies and propagates the information about
+	 *            interruption
+	 * @param stageExecutor
+	 *            the executor for various stages of the reasoner
+	 * @param config
+	 *            the reasoner configuration
 	 */
 	protected Reasoner(ElkObject.Factory elkFactory, final ReasonerInterrupter interrupter,
 			ReasonerStageExecutor stageExecutor, ReasonerConfiguration config) {
@@ -135,6 +145,8 @@ public class Reasoner extends AbstractReasonerState {
 	 * potentially long-running operations.
 	 * 
 	 * @param progressMonitor
+	 *            {@link ProgressMonitor} to be used to keep track of the
+	 *            progress
 	 */
 	public synchronized void setProgressMonitor(
 			ProgressMonitor progressMonitor) {
@@ -149,6 +161,8 @@ public class Reasoner extends AbstractReasonerState {
 	 * declared (but not used in any axiom).
 	 * 
 	 * @param allow
+	 *            {@code true} if fresh entitiies should be allowed and
+	 *            {@code false} otherwise
 	 */
 	public synchronized void setAllowFreshEntities(boolean allow) {
 		allowFreshEntities = allow;
@@ -170,19 +184,24 @@ public class Reasoner extends AbstractReasonerState {
 	}
 
 	/**
-	 * Sets the number of working threads. Shouldn't be used during reasoning.
+	 * Sets the number of working threads to be used for reasoner computations.
 	 * 
 	 * @param workerNo
+	 *            the number of working threads to be used for reasoner
+	 *            computations.
+	 * 
 	 */
 	public synchronized void setNumberOfWorkers(int workerNo) {
 		workerNo_ = workerNo;
 	}
 
 	/**
-	 * This supposed to be the central place where the reasoner gets its
-	 * configuration options
+	 * Set {@link ReasonerConfiguration} options to be used for this
+	 * {@link Reasoner}
 	 * 
 	 * @param config
+	 *            {@link ReasonerConfiguration} from which the {@link Reasoner}
+	 *            options should be loaded
 	 */
 	public synchronized void setConfigurationOptions(
 			ReasonerConfiguration config) {
@@ -255,6 +274,8 @@ public class Reasoner extends AbstractReasonerState {
 	 *            an {@link ElkClass} for which to find a {@link TaxonomyNode}
 	 * @return the {@link TaxonomyNode} for the given {@link ElkClass}
 	 * 
+	 * @throws ElkException
+	 *             if the result cannot be computed
 	 */
 	protected IncompleteResult<? extends TaxonomyNode<ElkClass>> getTaxonomyNode(
 			ElkClass elkClass) throws ElkException {
@@ -276,6 +297,8 @@ public class Reasoner extends AbstractReasonerState {
 	 * Helper method to get an {@link InstanceNode} from the taxonomy.
 	 * 
 	 * @param elkNamedIndividual
+	 *            a {@link ElkNamedIndividual} for which to find an
+	 *            {@link InstanceNode}
 	 * @return the {@link InstanceNode} for the given {@link ElkNamedIndividual}
 	 * @throws ElkException
 	 *             if the result cannot be computed
@@ -300,6 +323,7 @@ public class Reasoner extends AbstractReasonerState {
 	 * Helper method to get a {@link TypeNode} from the taxonomy.
 	 * 
 	 * @param elkClass
+	 *            an {@link ElkClass} for which to find a {@link TypeNode}
 	 * @return the {@link TypeNode} for the given {@link ElkClass}
 	 * @throws ElkException
 	 *             if the result cannot be computed
@@ -328,6 +352,8 @@ public class Reasoner extends AbstractReasonerState {
 	 *            {@link TaxonomyNode}
 	 * @return the {@link TaxonomyNode} for the given {@link ElkObjectProperty}
 	 * 
+	 * @throws ElkException
+	 *             if the result cannot be computed
 	 */
 	protected IncompleteResult<? extends TaxonomyNode<ElkObjectProperty>> getObjectPropertyTaxonomyNode(
 			final ElkObjectProperty elkProperty) throws ElkException {

@@ -42,11 +42,8 @@ public interface IndexedObject {
 	 */
 	interface Visitor<O>
 			extends
-				IndexedClassExpression.Visitor<O>,
-				IndexedPropertyChain.Visitor<O>,
 				IndexedAxiom.Visitor<O>,
-				IndexedEntity.Visitor<O>,
-				IndexedClassExpressionList.Visitor<O>,
+				IndexedSubObject.Visitor<O>,
 				IndexedContextRoot.Visitor<O> {
 
 		// combined interface

@@ -75,7 +75,7 @@ import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
 
 /**
- * Derived from the {@link OWLReasoner} interface implementation for ELK
+ * Derived from the OWLReasoner interface implementation for ELK
  * {@link Reasoner}.
  * 
  * Implemented using Elk objects and some OWL API derived classes, eliminating
@@ -876,10 +876,10 @@ public class ElkReasoner {
 		/**
 		 * Called when the ontology maintained by the reasoner has changed and the
 		 * changes were made visible to the reasoner (e.g., by calling
-		 * {@link OWLReasoner#flush()}). This signals that the logical entailments
+		 * {@link flush()}). This signals that the logical entailments
 		 * produced by the reasoner may change. Note that if the reasoner buffering mode
 		 * is {@link BufferingMode#NON_BUFFERING} then this method is called only after
-		 * {@link OWLReasoner#flush()} is called.
+		 * {@link flush()} is called.
 		 */
 		void ontologyChanged();
 

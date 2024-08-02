@@ -37,7 +37,8 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.SubPropertyChai
  *         pavel.klinov@uni-ulm.de
  * 
  * @author Yevgeny Kazakov
- * @param <O> 
+ * @param <O>
+ *            the type of the output of the visitor
  */
 public class DummyObjectPropertyConclusionVisitor<O>
 		implements
@@ -47,7 +48,8 @@ public class DummyObjectPropertyConclusionVisitor<O>
 	 * The default implementation of all methods
 	 * 
 	 * @param conclusion
-	 * @return
+	 *            the visited {@link ObjectPropertyConclusion}
+	 * @return the output of the visitor
 	 */
 	protected O defaultVisit(ObjectPropertyConclusion conclusion) {
 		return null;

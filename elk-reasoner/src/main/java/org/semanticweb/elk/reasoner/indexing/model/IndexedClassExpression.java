@@ -34,7 +34,8 @@ import org.semanticweb.elk.reasoner.saturation.rules.subsumers.LinkedSubsumerRul
  * @author "Yevgeny Kazakov"
  * @author Pavel Klinov
  */
-public interface IndexedClassExpression extends IndexedContextRoot {
+public interface IndexedClassExpression
+		extends IndexedSubObject, IndexedContextRoot {
 
 	/**
 	 * @return the first composition rule assigned to this
@@ -43,15 +44,7 @@ public interface IndexedClassExpression extends IndexedContextRoot {
 	 *         {@link LinkRule#next()}
 	 */
 	LinkedSubsumerRule getCompositionRuleHead();
-
-	/**
-	 * @return {@code true} if this {@link IndexedClassExpression} occurs in the
-	 *         ontology
-	 */
-	boolean occurs();
-
-	String printOccurrenceNumbers();
-
+	
 	/**
 	 * The visitor pattern for instances
 	 * 
@@ -60,15 +53,8 @@ public interface IndexedClassExpression extends IndexedContextRoot {
 	 * @param <O>
 	 *            the type of the output
 	 */
-	interface Visitor<O>
-			extends
-				IndexedClassEntity.Visitor<O>,
-				IndexedDataHasValue.Visitor<O>,
-				IndexedObjectComplementOf.Visitor<O>,
-				IndexedObjectHasSelf.Visitor<O>,
-				IndexedObjectIntersectionOf.Visitor<O>,
-				IndexedObjectSomeValuesFrom.Visitor<O>,
-				IndexedObjectUnionOf.Visitor<O> {
+	interface Visitor<O> extends IndexedClassEntity.Visitor<O>,
+			IndexedComplexClassExpression.Visitor<O> {
 
 		// combined interface
 
