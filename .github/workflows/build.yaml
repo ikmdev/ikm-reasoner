@@ -12,7 +12,7 @@ env:
 jobs:
   build-job:
     name: Build Job
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     if: github.repository_owner == 'ikmdev'
     steps:
       - uses: actions/setup-java@v4
