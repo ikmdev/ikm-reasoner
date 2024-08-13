@@ -63,7 +63,7 @@
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<guava.version>31.1-jre-r1</guava.version>
 		<jsr305.version>3.0.2-r1</jsr305.version>
-		<owlapi4.version>4.5.25-ikm-r3</owlapi4.version>
+		<owlapi4.version>4.7.0</owlapi4.version>
 		<puli.version>0.3.0-ikm-r1</puli.version>
 		<junit4.version>4.13.2</junit4.version>
 		<junit-jupiter-api.version>5.6.3</junit-jupiter-api.version>
