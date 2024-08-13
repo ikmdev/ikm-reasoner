@@ -39,16 +39,18 @@ jobs:
           java-version: '21'
 
       - name: Get Current Version
+        id: get_current_version
         run: |
-          echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$POM_VERSION"
 
       - name: Print Version
-        run: echo ${{env.POM_VERSION}}
+        run: echo ${{steps.get_current_version.outputs.POM_VERSION}}
 
       - name: Verify Is SNAPSHOT Version
-        if: ${{ !contains(env.POM_VERSION, '-SNAPSHOT')}}
+        if: ${{ !contains(steps.get_current_version.outputs.POM_VERSION, '-SNAPSHOT')}}
         run: |
-          echo "ERROR: Version is set to incompatible version ${{env.POM_VERSION}}. Only SNAPSHOT development versions can be converted to a release version."
+          echo "ERROR: Version is set to incompatible version ${{steps.get_current_version.outputs.POM_VERSION}}. Only SNAPSHOT development versions can be converted to a release version."
           exit 1
 
       - name: Split version code
@@ -70,7 +72,8 @@ jobs:
       - name: Increment Snapshot Version
         id: nextSnapshotVersion
         run: |
-          echo "SnapshotVersion=${{steps.splitVersionMinor.outputs._0}}.$((${{steps.splitVersionMinor.outputs._1}} + 1)).${{steps.splitVersionMinor.outputs._2}}-SNAPSHOT" >> $GITHUB_OUTPUT
+          SnapshotVersion="${{steps.splitVersionMinor.outputs._0}}.$((${{steps.splitVersionMinor.outputs._1}} + 1)).${{steps.splitVersionMinor.outputs._2}}-SNAPSHOT"
+          echo "::set-output name=version::$SnapshotVersion"
 
       - name: Print Information
         run: |
