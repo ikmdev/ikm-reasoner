@@ -41,8 +41,8 @@ jobs:
       - name: Get Current Version
         id: get_current_version
         run: |
-          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=version::$POM_VERSION"
+          echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=POM_VERSION::$POM_VERSION"
 
       - name: Print Version
         run: echo ${{steps.get_current_version.outputs.POM_VERSION}}
@@ -73,7 +73,7 @@ jobs:
         id: nextSnapshotVersion
         run: |
           SnapshotVersion="${{steps.splitVersionMinor.outputs._0}}.$((${{steps.splitVersionMinor.outputs._1}} + 1)).${{steps.splitVersionMinor.outputs._2}}-SNAPSHOT"
-          echo "::set-output name=version::$SnapshotVersion"
+          echo "::set-output name=SnapshotVersion::$SnapshotVersion"
 
       - name: Print Information
         run: |
