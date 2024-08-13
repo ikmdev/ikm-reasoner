@@ -17,7 +17,7 @@ env:
 jobs:
   initilization:
     name: Initilization
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       NEXT_SNAPSHOT_VERSION: ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}
       RELEASE_VERSION: ${{steps.splitCurrentVersion.outputs._0}}
@@ -38,20 +38,10 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Set up Node.js (for XML parsing)
-        uses: actions/setup-node@v4
-        with:
-            node-version: '16'
-  
-      - name: Install XML2JS
-        run: npm install xml2js
-  
       - name: Extract Version
         id: get_current_version
         run: |
-            # Extract the current version from pom.xml
-            POM_VERSION=$(grep -oPm1 "(?<=<version>)[^<]+" pom.xml)
-            echo "::set-output name=POM_VERSION::$POM_VERSION"
+            echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
       - name: Print Maven POM project version
         run: |
