@@ -89,6 +89,12 @@ jobs:
     permissions:
       contents: write
     steps:
+          - name: Setup Java
+            uses: actions/setup-java@v4
+            with:
+             distribution: 'adopt'
+             java-version: '21'
+             
           - name: Build IKMDEV Code
             uses: ikmdev/maven-release-action@main
             with:
