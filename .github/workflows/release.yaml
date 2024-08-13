@@ -38,11 +38,19 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Get Current Version
+    #   - name: Get Current Version
+    #     id: get_current_version
+    #     run: |
+    #       POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    #       echo "::set-output name=POM_VERSION::$POM_VERSION"
+
+      - name: get-pom-version
         id: get_current_version
+        uses: PERES-Richard/maven-get-version-action@v3.0.0
+
+      - name: Print Maven POM project version
         run: |
-          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=POM_VERSION::$POM_VERSION"
+          echo "version = ${{ steps.get_current_version.outputs.version }}"
 
       - name: Print Version
         run: echo ${{steps.get_current_version.outputs.POM_VERSION}}
