@@ -57,7 +57,7 @@ jobs:
         uses: xom9ikk/split@v1.1
         id: splitCurrentVersion
         with:
-          string: ${{env.POM_VERSION}}
+          string: ${{steps.get_current_version.outputs.POM_VERSION}}
           separator: '-'
           limit: -1
 
