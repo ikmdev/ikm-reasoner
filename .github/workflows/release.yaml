@@ -16,6 +16,8 @@ jobs:
     name: Release Job
     runs-on: self-hosted
     if: github.repository_owner == 'ikmdev'
+    permissions:
+      contents: write
     steps:
           - name: Build IKMDEV Code
             uses: ikmdev/maven-release-action@main
