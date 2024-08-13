@@ -17,7 +17,7 @@ env:
 jobs:
   initilization:
     name: Initilization
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       NEXT_SNAPSHOT_VERSION: ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}
       RELEASE_VERSION: ${{steps.splitCurrentVersion.outputs._0}}
