@@ -9,6 +9,8 @@ on:
 env:
     BRANCH_NAME: ${{github.ref_name}}
     IKMDEVOPS_PAT: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
+    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    GPG_PASSPHRASE: ${{secrets.SELF_HOSTED_GPG_PASSPHRASE}}
     
 
 jobs:
@@ -24,5 +26,7 @@ jobs:
             with:
               branch_name: ${{env.BRANCH_NAME}}
               ikmdevops_pat: ${{env.IKMDEVOPS_PAT}}
+              github_token: ${{env.GITHUB_TOKEN}}
+              gpg_passphrase: ${{env.GPG_PASSPHRASE}}
 
         
