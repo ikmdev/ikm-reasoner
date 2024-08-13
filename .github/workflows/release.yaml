@@ -46,10 +46,6 @@ jobs:
       - name: Print Maven POM project version
         run: |
           echo "version = ${{ steps.get_current_version.outputs.POM_VERSION }}"
-          exit 1
-
-      - name: Print Version
-        run: echo ${{steps.get_current_version.outputs.POM_VERSION}}
 
       - name: Verify Is SNAPSHOT Version
         if: ${{ !contains(steps.get_current_version.outputs.POM_VERSION, '-SNAPSHOT')}}
