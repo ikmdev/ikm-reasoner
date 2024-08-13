@@ -51,6 +51,7 @@ jobs:
       - name: Print Maven POM project version
         run: |
           echo "version = ${{ steps.get_current_version.outputs.version }}"
+          exit 1
 
       - name: Print Version
         run: echo ${{steps.get_current_version.outputs.POM_VERSION}}
