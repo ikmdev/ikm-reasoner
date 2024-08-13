@@ -84,7 +84,7 @@ jobs:
   release-job:
     name: Release Job
     needs: initilization
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     if: github.repository_owner == 'ikmdev'
     permissions:
       contents: write
@@ -98,5 +98,7 @@ jobs:
               gpg_passphrase: ${{env.GPG_PASSPHRASE}}
               next_snapshot_version: ${{needs.initilization.outputs.NEXT_SNAPSHOT_VERSION}}
               release_version: ${{needs.initilization.outputs.RELEASE_VERSION}}
+              ossrh_username: ${{secrets.OSSRH_TOKEN_USER}}
+              ossrh_token: ${{secrets.OSSRH_TOKEN_PASS}}
 
         
