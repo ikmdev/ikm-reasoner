@@ -1,0 +1,22 @@
+name: Release Workflow
+
+run-name: "Releasing ${{ github.event.repository.name }} #${{github.run_number}}"
+
+# Trigger workflow manually
+on:
+  workflow_dispatch:
+
+env:
+    BRANCH_NAME: ${{github.ref_name}}
+
+jobs:
+  build-job:
+    name: Release Job
+    runs-on: self-hosted
+    if: github.repository_owner == 'ikmdev'
+    steps:
+          - name: Build IKMDEV Code
+            uses: ikmdev/maven-release-action@main
+            with:
+              branch_name: ${{env.BRANCH_NAME}}
+        
