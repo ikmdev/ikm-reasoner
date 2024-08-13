@@ -8,14 +8,79 @@ on:
 
 env:
     BRANCH_NAME: ${{github.ref_name}}
+    TRUNK_BRANCH: 'main'
     IKMDEVOPS_PAT: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     GPG_PASSPHRASE: ${{secrets.SELF_HOSTED_GPG_PASSPHRASE}}
     
 
 jobs:
-  build-job:
+  initilization:
+    name: Initilization
+    runs-on: ubuntu-24.04
+    outputs:
+      NEXT_SNAPSHOT_VERSION: ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}
+      RELEASE_VERSION: ${{steps.splitCurrentVersion.outputs._0}}
+
+    steps:
+      - name: Verify Branch
+        if: env.BRANCH_NAME != env.TRUNK_BRANCH_NAME
+        run: |
+          echo "ERROR: Attempting to release from branch ${{env.BRANCH_NAME}}. Release from ${{env.TRUNK_BRANCH_NAME}} branch only"
+          exit 1
+
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '21'
+
+      - name: Get Current Version
+        run: |
+          echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Print Version
+        run: echo ${{env.POM_VERSION}}
+
+      - name: Verify Is SNAPSHOT Version
+        if: ${{ !contains(env.POM_VERSION, '-SNAPSHOT')}}
+        run: |
+          echo "ERROR: Version is set to incompatible version ${{env.POM_VERSION}}. Only SNAPSHOT development versions can be converted to a release version."
+          exit 1
+
+      - name: Split version code
+        uses: xom9ikk/split@v1.1
+        id: splitCurrentVersion
+        with:
+          string: ${{env.POM_VERSION}}
+          separator: '-'
+          limit: -1
+
+      - name: Split version code - Separate By .
+        uses: xom9ikk/split@v1.1
+        id: splitVersionMinor
+        with:
+          string: ${{steps.splitCurrentVersion.outputs._0}}
+          separator: .
+          limit: -1
+
+      - name: Increment Snapshot Version
+        id: nextSnapshotVersion
+        run: |
+          echo "SnapshotVersion=${{steps.splitVersionMinor.outputs._0}}.$((${{steps.splitVersionMinor.outputs._1}} + 1)).${{steps.splitVersionMinor.outputs._2}}-SNAPSHOT" >> $GITHUB_OUTPUT
+
+      - name: Print Information
+        run: |
+          echo "Release Version -- ${{steps.splitCurrentVersion.outputs._0}}"
+          echo "Snapshot Version -- ${{steps.nextSnapshotVersion.outputs.SnapshotVersion}}"
+
+
+  release-job:
     name: Release Job
+    needs: initilization
     runs-on: self-hosted
     if: github.repository_owner == 'ikmdev'
     permissions:
@@ -28,5 +93,7 @@ jobs:
               ikmdevops_pat: ${{env.IKMDEVOPS_PAT}}
               github_token: ${{env.GITHUB_TOKEN}}
               gpg_passphrase: ${{env.GPG_PASSPHRASE}}
+              next_snapshot_version: ${{needs.initilization.outputs.NEXT_SNAPSHOT_VERSION}}
+              release_version: ${{needs.initilization.outputs.RELEASE_VERSION}}
 
         
