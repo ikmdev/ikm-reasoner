@@ -38,19 +38,24 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-    #   - name: Get Current Version
-    #     id: get_current_version
-    #     run: |
-    #       POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-    #       echo "::set-output name=POM_VERSION::$POM_VERSION"
-
-      - name: get-pom-version
+      - name: Set up Node.js (for XML parsing)
+        uses: actions/setup-node@v4
+        with:
+            node-version: '16'
+  
+      - name: Install XML2JS
+        run: npm install xml2js
+  
+      - name: Extract Version
         id: get_current_version
-        uses: PERES-Richard/maven-get-version-action@v3.0.0
+        run: |
+            # Extract the current version from pom.xml
+            POM_VERSION=$(grep -oPm1 "(?<=<version>)[^<]+" pom.xml)
+            echo "::set-output name=POM_VERSION::$POM_VERSION"
 
       - name: Print Maven POM project version
         run: |
-          echo "version = ${{ steps.get_current_version.outputs.version }}"
+          echo "version = ${{ steps.get_current_version.outputs.POM_VERSION }}"
           exit 1
 
       - name: Print Version
