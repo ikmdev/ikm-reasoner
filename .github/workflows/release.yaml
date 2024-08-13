@@ -41,7 +41,7 @@ jobs:
       - name: Get Current Version
         id: get_current_version
         run: |
-          echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "::set-output name=POM_VERSION::$POM_VERSION"
 
       - name: Print Version
