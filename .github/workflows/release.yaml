@@ -36,7 +36,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: 'zulu'
           java-version: '21'
 
       - name: Extract Version
@@ -93,7 +93,7 @@ jobs:
           - name: Setup Java
             uses: actions/setup-java@v4
             with:
-             distribution: 'adopt'
+             distribution: 'zulu'
              java-version: '21'
 
           - name: Build IKMDEV Code
@@ -124,7 +124,7 @@ jobs:
         - name: Setup Java
           uses: actions/setup-java@v4
           with:
-              distribution: 'adopt'
+              distribution: 'zulu'
               java-version: '21'
           
     
@@ -146,6 +146,8 @@ jobs:
                   -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                   -DskipTests \
                   -DskipITs \
+                  -Dmaven.main.skip \
+                  -Dmaven.test.skip \
                   -s ${{env.MAVEN_SETTING}} \
                   -DrepositoryId='maven-releases' \
                   -DrepositoryIdOSSRH='true' \
