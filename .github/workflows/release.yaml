@@ -119,6 +119,12 @@ jobs:
           uses: actions/checkout@v4
           with:
             ref: ${{needs.release-job.outputs.RELEASE_VERSION}}
+
+        - name: Setup Java
+          uses: actions/setup-java@v4
+          with:
+              distribution: 'adopt'
+              java-version: '21'
           
     
         - name: Maven Build
