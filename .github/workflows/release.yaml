@@ -12,6 +12,7 @@ env:
     IKMDEVOPS_PAT: ${{secrets.IKMDEVOPS_PAT_TOKEN}}
     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     GPG_PASSPHRASE: ${{secrets.SELF_HOSTED_GPG_PASSPHRASE}}
+    MAVEN_SETTING: '/home/ec2-user/maven/.m2/settings.xml'
     
 
 jobs:
@@ -94,9 +95,9 @@ jobs:
             with:
              distribution: 'adopt'
              java-version: '21'
-             
+
           - name: Build IKMDEV Code
-            uses: ikmdev/maven-release-action@main
+            uses: ikmdev/maven-release-action@testing
             with:
               branch_name: ${{env.BRANCH_NAME}}
               ikmdevops_pat: ${{env.IKMDEVOPS_PAT}}
@@ -107,4 +108,40 @@ jobs:
               ossrh_username: ${{secrets.OSSRH_TOKEN_USER}}
               ossrh_token: ${{secrets.OSSRH_TOKEN_PASS}}
 
-        
+  publish:
+     name: Publish Job
+     needs: release-job
+     runs-on: self-hosted
+     if: github.repository_owner == 'ikmdev'
+     steps:
+             
+        - name: Checkout Code Repository
+          uses: actions/checkout@v4
+          with:
+            ref: ${{needs.release-job.outputs.RELEASE_VERSION}}
+          
+    
+        - name: Maven Build
+          run: |
+            /home/ec2-user/.sdkman/candidates/maven/current/bin/mvn --version
+            /home/ec2-user/.sdkman/candidates/maven/current/bin/mvn clean install \
+              --batch-mode \
+              -e \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              -PcodeQuality
+    
+    
+        - name: Publish To OSSRH (Maven Central Staging)
+          run: |
+              /home/ec2-user/.sdkman/candidates/maven/current/bin/mvn deploy \
+                  --batch-mode \
+                  -e \
+                  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                  -DskipTests \
+                  -DskipITs \
+                  -Dmaven.main.skip \
+                  -Dmaven.test.skip \
+                  -s ${{env.MAVEN_SETTING}} \
+                  -DrepositoryId='maven-releases' \
+                  -DrepositoryIdOSSRH='true' \
+                  -PstageOSSRH -Dgpg.passphrase=${{secrets.SELF_HOSTED_GPG_PASSPHRASE}}     
