@@ -339,11 +339,6 @@
 					<version>2.16.1</version>
 				</plugin>
 				<plugin>
-					<groupId>com.mycila</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>4.3</version>
-				</plugin>
-				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>tidy-maven-plugin</artifactId>
 					<version>1.2.0</version>
@@ -499,46 +494,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-	<profiles>
-		<!-- Skip license. License changes all files (incorrectly). -->
-		<profile>
-			<id>java-source-additional-tasks</id>
-			<activation>
-				<file>
-					<exists>${basedir}/src/main/java</exists>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.mycila</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>java-tests-additional-tasks</id>
-			<activation>
-				<file>
-					<exists>${basedir}/src/test/java</exists>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.mycila</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
