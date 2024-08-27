@@ -86,26 +86,8 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	public void init() {
-//		snomedOntology = new OwlTransformer().transform(snomedOwlOntology);
 		initConcepts();
 		initRoles();
-//		for (OWLAxiom ax : snomedOwlOntology.getOntology().getAxioms()) {
-//			switch (ax.getAxiomType().getName()) {
-//			case "SubClassOf" -> {
-//			}
-//			case "EquivalentClasses" -> {
-//			}
-//			case "SubObjectPropertyOf" -> {
-//			}
-//			case "SubPropertyChainOf" -> {
-//			}
-//			case "TransitiveObjectProperty" -> {
-//			}
-//			case "ReflexiveObjectProperty" -> {
-//			}
-//			default -> throw new UnsupportedOperationException("Unexpected: " + ax + " " + ax.getAxiomType());
-//			}
-//		}
 	}
 
 	private void initConcepts() {
