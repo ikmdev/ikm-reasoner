@@ -20,6 +20,7 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,20 @@ import dev.ikm.elk.snomed.SnomedRoles;
 public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTestBase.class);
+
+	@Test
+	public void checkPriors() throws Exception {
+		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
+		ontology.loadOntology(axioms_file);
+		ontology.classify();
+		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
+		snomedOntologyReasoner.flush();
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
+		nnfb.init();
+		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
+	}
 
 	public NecessaryNormalFormBuilder generate() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
