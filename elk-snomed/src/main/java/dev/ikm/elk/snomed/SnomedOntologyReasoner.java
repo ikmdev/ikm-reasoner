@@ -75,6 +75,10 @@ public class SnomedOntologyReasoner {
 		return sor;
 	}
 
+	public List<ElkAxiom> getConceptAxioms(long id) {
+		return conceptIdAxiomMap.get(id);
+	}
+
 	private void init(SnomedOntology snomedOntology) {
 		this.snomedOntology = snomedOntology;
 		ontology = new OwlxOntology();
@@ -341,8 +345,12 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getSubClasses(Concept con) {
+		return getSubClasses(con, true);
+	}
+
+	public Set<ElkClass> getSubClasses(Concept con, boolean direct) {
 		try {
-			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), true);
+			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), direct);
 			Set<ElkClass> flat = flatten(subs);
 			flat.remove(ontology.getOwlNothing());
 			return flat;
@@ -353,14 +361,22 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getSubConcepts(Concept con) {
-		return getSubClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+		return getSubConcepts(con, true);
+	}
+
+	public Set<Concept> getSubConcepts(Concept con, boolean direct) {
+		return getSubClasses(con, direct).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	public Set<Long> getSubConcepts(long id) {
+		return getSubConcepts(id, true);
+	}
+
+	public Set<Long> getSubConcepts(long id, boolean direct) {
 		Concept con = snomedOntology.getConcept(id);
 		if (con == null)
 			return null;
-		return getSubConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+		return getSubConcepts(con, direct).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	public Set<ElkClass> getEquivalentClasses(Concept con) {

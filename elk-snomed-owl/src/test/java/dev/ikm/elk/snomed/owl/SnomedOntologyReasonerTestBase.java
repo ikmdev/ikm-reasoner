@@ -68,7 +68,7 @@ public class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 			ArrayList<Long> misses = new ArrayList<>();
 			int miss_cnt = 0;
 			SnomedIsa isas = SnomedIsa.init(rels_file);
-			for (Long id : isas.getConcepts()) {
+			for (Long id : isas.getOrderedConcepts()) {
 				Concept con = snomedOntology.getConcept(id);
 				if (isas.hasAncestor(id, SnomedIds.concept_model_object_attribute))
 					continue;

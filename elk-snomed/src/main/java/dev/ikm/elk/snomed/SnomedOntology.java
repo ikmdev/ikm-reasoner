@@ -23,10 +23,15 @@ package dev.ikm.elk.snomed;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRoleType;
+import dev.ikm.elk.snomed.model.Definition;
+import dev.ikm.elk.snomed.model.Role;
+import dev.ikm.elk.snomed.model.RoleGroup;
 import dev.ikm.elk.snomed.model.RoleType;
 
 public class SnomedOntology {
@@ -79,6 +84,50 @@ public class SnomedOntology {
 		this.concreteRoleTypeIdMap = new HashMap<>();
 		concreteRoleTypes.forEach(x -> concreteRoleTypeIdMap.put(x.getId(), x));
 		this.concreteRoleTypes = new ArrayList<>(concreteRoleTypes);
+	}
+
+	public HashSet<Concept> getDependentOnConcepts(Concept concept) {
+		return getDependentOnConcepts(concept, true, true);
+	}
+
+	public HashSet<Long> getDependentOnConcepts(long concept) {
+		return getDependentOnConcepts(concept, true, true);
+	}
+
+	public HashSet<Long> getDependentOnConcepts(long concept, boolean includeSuperConcepts, boolean includeGcis) {
+		return getDependentOnConcepts(getConcept(concept), includeSuperConcepts, includeGcis).stream()
+				.map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public HashSet<Concept> getDependentOnConcepts(Concept concept, boolean includeSuperConcepts, boolean includeGcis) {
+		HashSet<Concept> deps = new HashSet<>();
+		for (Definition def : concept.getDefinitions()) {
+			deps.addAll(getDependentOnConcepts(def, includeSuperConcepts));
+		}
+		if (includeGcis) {
+			for (Definition def : concept.getGciDefinitions()) {
+				deps.addAll(getDependentOnConcepts(def, includeSuperConcepts));
+			}
+		}
+		return deps;
+	}
+
+	public HashSet<Concept> getDependentOnConcepts(Definition def, boolean includeSuperConcepts) {
+		HashSet<Concept> deps = new HashSet<>();
+		if (includeSuperConcepts) {
+			for (Concept sup : def.getSuperConcepts()) {
+				deps.add(sup);
+			}
+		}
+		for (Role role : def.getUngroupedRoles()) {
+			deps.add(role.getConcept());
+		}
+		for (RoleGroup rg : def.getRoleGroups()) {
+			for (Role role : rg.getRoles()) {
+				deps.add(role.getConcept());
+			}
+		}
+		return deps;
 	}
 
 }
