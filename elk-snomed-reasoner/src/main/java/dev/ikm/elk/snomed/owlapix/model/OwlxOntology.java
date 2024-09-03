@@ -165,11 +165,15 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 	}
 
 	public ElkSubClassOfAxiom getSubClassOfAxiom(String name, ElkClassExpression expr) {
-		return objectFactory.getSubClassOfAxiom(getElkClass(name), expr);
+		return getSubClassOfAxiom(getElkClass(name), expr);
 	}
 
-	public ElkAxiom getSubClassOfAxiom(ElkClassExpression expr, String name) {
-		return objectFactory.getSubClassOfAxiom(expr, getElkClass(name));
+	public ElkSubClassOfAxiom getSubClassOfAxiom(ElkClassExpression expr, String name) {
+		return getSubClassOfAxiom(expr, getElkClass(name));
+	}
+
+	public ElkSubClassOfAxiom getSubClassOfAxiom(ElkClassExpression subExpr, ElkClassExpression supExpr) {
+		return objectFactory.getSubClassOfAxiom(subExpr, supExpr);
 	}
 
 	public ElkDataHasValue getDataHasValue(String name, ElkLiteral value) {
