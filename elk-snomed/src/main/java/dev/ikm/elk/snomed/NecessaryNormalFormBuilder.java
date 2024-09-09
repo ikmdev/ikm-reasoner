@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,17 @@ package dev.ikm.elk.snomed;
  * limitations under the License.
  * #L%
  */
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.semanticweb.elk.reasoner.Reasoner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.SnomedConcreteRoles.SnomedConcreteRole;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRole;
 import dev.ikm.elk.snomed.model.Definition;
@@ -139,32 +136,28 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	public void generate() {
-		generate(null, null);
+		generate(null);
 	}
 
-	// TODO move this out, so that generate takes conceptComparer as an arg
-	private ConceptComparer concept_camparer = null;
+	private ConceptComparer conceptComparer = null;
 
 	public int getMisMatchCount() {
-		return concept_camparer.getMisMatchCount();
+		return conceptComparer.getMisMatchCount();
 	}
 
-	public void generate(SnomedRoles roles, SnomedConcreteRoles concrete_roles) {
-		if (roles != null)
-			concept_camparer = new ConceptComparer(roles, concrete_roles);
-		Reasoner.processingNecessaryNormalForm = true;
+	public void generate(ConceptComparer concept_comparer) {
+		this.conceptComparer = concept_comparer;
 		int cnt = 0;
 		for (Concept concept : concepts) {
 			if (++cnt % 50000 == 0)
 				LOG.info("Generate: " + cnt);
 			Definition def = generateNNF(concept, false);
-			if (concept_camparer != null)
-				concept_camparer.compare(concept, def);
+			if (concept_comparer != null)
+				concept_comparer.compare(concept, def);
 		}
 		LOG.info("Generate: " + cnt);
-		Reasoner.processingNecessaryNormalForm = false;
-		if (concept_camparer != null)
-			concept_camparer.logErrors();
+		if (concept_comparer != null)
+			concept_comparer.logErrors();
 	}
 
 	public Definition generateNNF(Concept con, boolean useDefining) {

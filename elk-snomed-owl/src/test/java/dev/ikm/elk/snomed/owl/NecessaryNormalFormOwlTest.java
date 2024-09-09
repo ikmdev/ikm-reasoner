@@ -42,7 +42,6 @@ public class NecessaryNormalFormOwlTest {
 	public static void checkPriors(SnomedOwlOntology ontology, NecessaryNormalFormBuilderOwl nnf) {
 		HashSet<OWLClass> priors = new HashSet<>();
 		for (OWLClass con : nnf.getConcepts()) {
-//			LOG.info("Con: " + con);
 			for (OWLClass sup : ontology.getSuperClasses(con)) {
 //				LOG.info(con + " " + sup);
 				assertTrue(priors.contains(sup));
@@ -59,7 +58,6 @@ public class NecessaryNormalFormOwlTest {
 		LOG.info("Classify complete");
 		NecessaryNormalFormBuilderOwl nnfb = new NecessaryNormalFormBuilderOwl(ontology);
 		nnfb.init();
-//		assertEquals(5, nnfb.getConcepts().size());
 		LOG.info("Init complete");
 		checkPriors(ontology, nnfb);
 		nnfb.generate();
