@@ -44,7 +44,7 @@ public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 		ontology.classify();
 		LOG.info("Classify complete");
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
-		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.createNecessaryNormalFormBuilder(snomedOntology,
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				ontology.getSuperClasses(), ontology.getSuperObjectProperties(false));
 		assertEquals(361331, nnfb.getConcepts().size());
 		LOG.info("Init complete");

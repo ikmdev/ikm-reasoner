@@ -44,7 +44,7 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
-		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.createNecessaryNormalFormBuilder(snomedOntology,
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
 		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
 	}
@@ -77,7 +77,7 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
-		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.createNecessaryNormalFormBuilder(snomedOntology,
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
 		LOG.info("Init complete");
 		SnomedRoles roles = SnomedRoles.init(rels_file);
