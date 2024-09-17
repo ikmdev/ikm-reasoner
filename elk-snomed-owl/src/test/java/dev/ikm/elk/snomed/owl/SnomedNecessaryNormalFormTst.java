@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.ConceptComparer;
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 import dev.ikm.elk.snomed.SnomedOntology;
 import dev.ikm.elk.snomed.SnomedRoles;
@@ -43,15 +44,15 @@ public class SnomedNecessaryNormalFormTst extends SnomedTestBase {
 		ontology.classify();
 		LOG.info("Classify complete");
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, ontology.getSuperClasses(),
-				ontology.getSuperObjectProperties(false));
-		nnfb.init();
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
+				ontology.getSuperClasses(), ontology.getSuperObjectProperties(false));
 		assertEquals(361331, nnfb.getConcepts().size());
 		LOG.info("Init complete");
 		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
 //		SnomedRoles roles = SnomedRoles.init(rels_file);
 		SnomedRoles roles = SnomedRoles.init(Paths.get("nnf-data", "nnf-20231121.txt"));
-		nnfb.generate(roles, null);
+		ConceptComparer cc = new ConceptComparer(roles, null);
+		nnfb.generate(cc);
 //		write(nnfb);
 	}
 
