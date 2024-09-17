@@ -16,10 +16,10 @@ jobs:
       runs-on: self-hosted
       if: github.event.workflow_run.conclusion == 'success' && github.repository_owner == 'ikmdev'
       steps:
-      # - uses: actions/setup-java@v4
-      #   with:
-      #           java-version: '21'
-      #           distribution: 'zulu'
+      - uses: actions/setup-java@v4
+        with:
+                java-version: '21'
+                distribution: 'zulu'
 
 
       - name: Deploy Artifacts To Nexus
