@@ -106,6 +106,14 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 		return objectFactory.getOwlNothing();
 	}
 
+	public ElkObjectProperty getOwlTopObjectProperty() {
+		return objectFactory.getOwlTopObjectProperty();
+	}
+
+	public ElkObjectProperty getOwlBottomObjectProperty() {
+		return objectFactory.getOwlBottomObjectProperty();
+	}
+
 	private ElkAbbreviatedIri getIri(String name) {
 		return new ElkAbbreviatedIri(prefix, name);
 	}
@@ -157,11 +165,15 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 	}
 
 	public ElkSubClassOfAxiom getSubClassOfAxiom(String name, ElkClassExpression expr) {
-		return objectFactory.getSubClassOfAxiom(getElkClass(name), expr);
+		return getSubClassOfAxiom(getElkClass(name), expr);
 	}
 
-	public ElkAxiom getSubClassOfAxiom(ElkClassExpression expr, String name) {
-		return objectFactory.getSubClassOfAxiom(expr, getElkClass(name));
+	public ElkSubClassOfAxiom getSubClassOfAxiom(ElkClassExpression expr, String name) {
+		return getSubClassOfAxiom(expr, getElkClass(name));
+	}
+
+	public ElkSubClassOfAxiom getSubClassOfAxiom(ElkClassExpression subExpr, ElkClassExpression supExpr) {
+		return objectFactory.getSubClassOfAxiom(subExpr, supExpr);
 	}
 
 	public ElkDataHasValue getDataHasValue(String name, ElkLiteral value) {
@@ -193,8 +205,7 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 		change_listeners.remove(ontologyChangeListener_);
 	}
 
-	public void removeOntologyChangeProgessListener(
-			OWLOntologyChangeProgressListener ontologyChangeProgressListener_) {
+	public void removeOntologyChangeProgessListener(OWLOntologyChangeProgressListener ontologyChangeProgressListener_) {
 		// TODO Auto-generated method stub
 
 	}

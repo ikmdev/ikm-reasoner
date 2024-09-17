@@ -59,14 +59,19 @@ public abstract class SnomedTestBase {
 	protected Path values_file = Paths.get(getDir(),
 			"sct2_RelationshipConcreteValues_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
 
+	protected Path descriptions_file = Paths.get(getDir(),
+			"sct2_Description_Snapshot-en_" + getEdition() + "_" + getVersion() + ".txt");
+
 	@BeforeEach
 	protected void filesExist() {
 		assumeTrue(Files.exists(axioms_file), "No file: " + axioms_file);
 		assumeTrue(Files.exists(rels_file), "No file: " + rels_file);
+		assumeTrue(Files.exists(descriptions_file), "No file: " + descriptions_file);
 		LOG.info("Files exist");
 		LOG.info("\t" + axioms_file);
 		LOG.info("\t" + rels_file);
 		LOG.info("\t" + values_file);
+		LOG.info("\t" + descriptions_file);
 	}
 
 }

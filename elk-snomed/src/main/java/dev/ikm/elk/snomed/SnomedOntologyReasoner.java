@@ -75,6 +75,10 @@ public class SnomedOntologyReasoner {
 		return sor;
 	}
 
+	public List<ElkAxiom> getConceptAxioms(long id) {
+		return conceptIdAxiomMap.get(id);
+	}
+
 	private void init(SnomedOntology snomedOntology) {
 		this.snomedOntology = snomedOntology;
 		ontology = new OwlxOntology();
@@ -266,10 +270,15 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkObjectProperty> getSuperObjectProperties(RoleType rt) {
+		return getSuperObjectProperties(rt, true);
+	}
+
+	public Set<ElkObjectProperty> getSuperObjectProperties(RoleType rt, boolean direct) {
 		try {
 			Set<? extends Node<ElkObjectProperty>> sups = reasoner
-					.getSuperObjectProperties(ontology.getElkObjectProperty(getIri(rt)), true);
+					.getSuperObjectProperties(ontology.getElkObjectProperty(getIri(rt)), direct);
 			Set<ElkObjectProperty> ret = flatten(sups);
+			ret.remove(ontology.getOwlTopObjectProperty());
 			return ret;
 			// TODO ElkException
 		} catch (Exception e) {
@@ -277,9 +286,30 @@ public class SnomedOntologyReasoner {
 		}
 	}
 
-	public Set<RoleType> getSuperRoleTypes(RoleType con) {
-		return getSuperObjectProperties(con).stream().map(this::getRoleType)
+	public Set<RoleType> getSuperRoleTypes(RoleType rt) {
+		return getSuperRoleTypes(rt, true);
+	}
+
+	public Set<RoleType> getSuperRoleTypes(RoleType rt, boolean direct) {
+		return getSuperObjectProperties(rt, direct).stream().map(this::getRoleType)
 				.collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public Set<Long> getSuperRoleTypes(long id, boolean direct) {
+		RoleType rt = snomedOntology.getRoleType(id);
+		if (rt == null)
+			return null;
+		return getSuperRoleTypes(rt, direct).stream().map(RoleType::getId)
+				.collect(Collectors.toCollection(HashSet::new));
+	}
+
+	public HashMap<Long, Set<Long>> getSuperRoleTypes(boolean direct) {
+		HashMap<Long, Set<Long>> superRoleTypes = new HashMap<>();
+		for (RoleType rt : snomedOntology.getRoleTypes()) {
+			long id = rt.getId();
+			superRoleTypes.put(id, getSuperRoleTypes(id, direct));
+		}
+		return superRoleTypes;
 	}
 
 	public Set<ElkClass> getSuperClasses(Concept con) {
@@ -287,7 +317,8 @@ public class SnomedOntologyReasoner {
 			Set<? extends Node<ElkClass>> sups = reasoner.getSuperClasses(ontology.getElkClass(getIri(con)), true);
 			Set<ElkClass> flat = flatten(sups);
 			flat.remove(ontology.getOwlThing());
-			return flat; // TODO ElkException
+			return flat;
+			// TODO ElkException
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -304,9 +335,22 @@ public class SnomedOntologyReasoner {
 		return getSuperConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
 	}
 
+	public HashMap<Long, Set<Long>> getSuperConcepts() {
+		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
+		for (Concept concept : snomedOntology.getConcepts()) {
+			long id = concept.getId();
+			superConcepts.put(id, getSuperConcepts(id));
+		}
+		return superConcepts;
+	}
+
 	public Set<ElkClass> getSubClasses(Concept con) {
+		return getSubClasses(con, true);
+	}
+
+	public Set<ElkClass> getSubClasses(Concept con, boolean direct) {
 		try {
-			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), true);
+			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), direct);
 			Set<ElkClass> flat = flatten(subs);
 			flat.remove(ontology.getOwlNothing());
 			return flat;
@@ -317,14 +361,22 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getSubConcepts(Concept con) {
-		return getSubClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+		return getSubConcepts(con, true);
+	}
+
+	public Set<Concept> getSubConcepts(Concept con, boolean direct) {
+		return getSubClasses(con, direct).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	public Set<Long> getSubConcepts(long id) {
+		return getSubConcepts(id, true);
+	}
+
+	public Set<Long> getSubConcepts(long id, boolean direct) {
 		Concept con = snomedOntology.getConcept(id);
 		if (con == null)
 			return null;
-		return getSubConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+		return getSubConcepts(con, direct).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	public Set<ElkClass> getEquivalentClasses(Concept con) {

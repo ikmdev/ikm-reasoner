@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 import dev.ikm.elk.snomed.SnomedOntology;
+import dev.ikm.elk.snomed.SnomedOntologyReasoner;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.RoleGroup;
@@ -57,10 +58,14 @@ public class NecessaryNormalFormTest {
 		List<String> lines = Files.readAllLines(Paths.get("src/test/resources", file));
 		ontology.loadOntology(lines);
 		ontology.classify();
-		LOG.info("Classify complete");
+		LOG.info("Load complete");
+		//
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, ontology.getSuperClasses(),
-				ontology.getSuperObjectProperties(false));
+		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
+		snomedOntologyReasoner.flush();
+		LOG.info("Classify complete");
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
 		nnfb.init();
 		LOG.info("Init complete");
 		checkPriors(ontology, nnfb);

@@ -20,6 +20,7 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,19 +28,33 @@ import org.slf4j.LoggerFactory;
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 import dev.ikm.elk.snomed.SnomedConcreteRoles;
 import dev.ikm.elk.snomed.SnomedOntology;
+import dev.ikm.elk.snomed.SnomedOntologyReasoner;
 import dev.ikm.elk.snomed.SnomedRoles;
 
 public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTestBase.class);
 
-	public NecessaryNormalFormBuilder generate() throws Exception {
+	@Test
+	public void checkPriors() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
 		ontology.classify();
-		LOG.info("Classify complete");
-		//
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
+		snomedOntologyReasoner.flush();
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
+		nnfb.init();
+		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
+	}
+
+	public NecessaryNormalFormBuilder generate() throws Exception {
+		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
+		ontology.loadOntology(axioms_file);
+//		ontology.classify();
+		LOG.info("Load complete");
+		//
 		for (OWLAxiom ax : ontology.getOntology().getAxioms()) {
 			switch (ax.getAxiomType().getName()) {
 			case "SubClassOf" -> {
@@ -60,8 +75,11 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 			}
 		}
 		//
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, ontology.getSuperClasses(),
-				ontology.getSuperObjectProperties(false));
+		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
+		snomedOntologyReasoner.flush();
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
 		nnfb.init();
 		LOG.info("Init complete");
 //		NecessaryNormalFormTest.checkPriors(ontology, nnfb);

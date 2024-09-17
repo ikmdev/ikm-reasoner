@@ -40,7 +40,7 @@ public class SnomedIsa {
 
 	private HashMap<Long, Set<Long>> childrenMap = new HashMap<>();
 
-	private ArrayList<Long> concepts = new ArrayList<>();
+	private ArrayList<Long> orderedConcepts = new ArrayList<>();
 
 	public HashMap<Long, Set<Long>> getParentsMap() {
 		return parentsMap;
@@ -50,8 +50,8 @@ public class SnomedIsa {
 		return childrenMap;
 	}
 
-	public ArrayList<Long> getConcepts() {
-		return concepts;
+	public ArrayList<Long> getOrderedConcepts() {
+		return orderedConcepts;
 	}
 
 	public static SnomedIsa init(Path file) throws IOException {
@@ -70,7 +70,7 @@ public class SnomedIsa {
 
 	private void init() {
 		initChildren();
-		initConcepts();
+		initOrderedConcepts();
 	}
 
 	private void initChildren() {
@@ -83,22 +83,22 @@ public class SnomedIsa {
 		}
 	}
 
-	private void initConcepts() {
+	private void initOrderedConcepts() {
 		HashSet<Long> visited = new HashSet<>();
-		concepts.add(root);
+		orderedConcepts.add(root);
 		visited.add(root);
-		initConcepts(root, visited);
+		initOrderedConcepts(root, visited);
 	}
 
-	private void initConcepts(long con, HashSet<Long> visited) {
+	private void initOrderedConcepts(long con, HashSet<Long> visited) {
 		for (long sub : getChildren(con)) {
 			boolean sups_visited = getParents(sub).stream().allMatch(x -> visited.contains(x));
 			if (sups_visited) {
 				if (!visited.contains(sub)) {
-					concepts.add(sub);
+					orderedConcepts.add(sub);
 					visited.add(sub);
 				}
-				initConcepts(sub, visited);
+				initOrderedConcepts(sub, visited);
 			}
 		}
 	}
@@ -167,6 +167,38 @@ public class SnomedIsa {
 
 	public boolean hasChild(long con, long child) {
 		return getChildren(con).contains(child);
+	}
+		
+	public HashSet<Long> getDescendants(long con) {
+		HashSet<Long> visited = new HashSet<>();
+		this.getDescendants(con, visited);
+		return visited;
+	}
+
+	private void getDescendants(long con, HashSet<Long> visited) {
+		for (long child : this.getChildren(con)) {
+			if (visited.contains(child))
+				continue;
+			visited.add(child);
+			getDescendants(child, visited);
+		}
+	}
+
+	public boolean hasDescendant(long con, long descendant) {
+		return hasDescendant(con, descendant, new HashSet<>());
+	}
+
+	private boolean hasDescendant(long con, long descendant, HashSet<Long> visited) {
+		if (hasChild(con, descendant))
+			return true;
+		for (long child : getChildren(con)) {
+			if (visited.contains(child))
+				continue;
+			if (hasDescendant(child, descendant, visited))
+				return true;
+			visited.add(child);
+		}
+		return false;
 	}
 
 }

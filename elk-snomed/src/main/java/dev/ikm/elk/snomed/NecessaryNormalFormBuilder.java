@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.semanticweb.elk.reasoner.Reasoner;
 import org.slf4j.Logger;
@@ -86,34 +85,14 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	public void init() {
-//		snomedOntology = new OwlTransformer().transform(snomedOwlOntology);
 		initConcepts();
 		initRoles();
-//		for (OWLAxiom ax : snomedOwlOntology.getOntology().getAxioms()) {
-//			switch (ax.getAxiomType().getName()) {
-//			case "SubClassOf" -> {
-//			}
-//			case "EquivalentClasses" -> {
-//			}
-//			case "SubObjectPropertyOf" -> {
-//			}
-//			case "SubPropertyChainOf" -> {
-//			}
-//			case "TransitiveObjectProperty" -> {
-//			}
-//			case "ReflexiveObjectProperty" -> {
-//			}
-//			default -> throw new UnsupportedOperationException("Unexpected: " + ax + " " + ax.getAxiomType());
-//			}
-//		}
 	}
 
 	private void initConcepts() {
-//		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
 		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
 		for (Concept concept : snomedOntology.getConcepts()) {
 			long id = concept.getId();
-//			superConcepts.put(id, snomedOwlOntology.getSuperClasses(id));
 			dependentOnConcepts.put(id, getDependentOnConcepts(concept));
 		}
 		isa = SnomedIsa.init(superConcepts);
@@ -123,7 +102,8 @@ public class NecessaryNormalFormBuilder {
 
 	private void sortConcepts(HashMap<Long, Set<Long>> dependentOnConcepts) {
 		SnomedIsa deps = SnomedIsa.init(dependentOnConcepts);
-		deps.getConcepts().stream().map(id -> snomedOntology.getConcept(id)).forEach(clazz -> concepts.add(clazz));
+		deps.getOrderedConcepts().stream().map(id -> snomedOntology.getConcept(id))
+				.forEach(clazz -> concepts.add(clazz));
 	}
 
 	private final boolean log_roles = false;
@@ -151,21 +131,11 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private HashSet<Long> getDependentOnConcepts(Concept concept) {
-		HashSet<Long> dependentOnConcepts = new HashSet<>();
+		HashSet<Long> deps = new HashSet<>();
 		long id = concept.getId();
-		dependentOnConcepts.addAll(superConcepts.get(id));
-		for (Definition def : concept.getDefinitions()) {
-			List<RoleGroup> rgs = new ArrayList<>(def.getRoleGroups());
-			for (Role role : def.getUngroupedRoles()) {
-				dependentOnConcepts.add(role.getConcept().getId());
-			}
-			for (RoleGroup rg : rgs) {
-				for (Role role : rg.getRoles()) {
-					dependentOnConcepts.add(role.getConcept().getId());
-				}
-			}
-		}
-		return dependentOnConcepts;
+		deps.addAll(superConcepts.get(id));
+		deps.addAll(snomedOntology.getDependentOnConcepts(id, false, false));
+		return deps;
 	}
 
 	public void generate() {
@@ -189,7 +159,7 @@ public class NecessaryNormalFormBuilder {
 		for (Concept concept : concepts) {
 			if (++cnt % 50000 == 0)
 				LOG.info("Generate: " + cnt);
-			necessaryNormalForm.put(concept, getNNF(concept));
+			generateNNF(concept, false);
 			if (roles != null)
 				compare(concept, roles, concrete_roles);
 		}
@@ -205,7 +175,7 @@ public class NecessaryNormalFormBuilder {
 		}
 	}
 
-	private Definition getNNF(Concept con) {
+	public Definition generateNNF(Concept con, boolean useDefining) {
 		Definition def = new Definition();
 		if (con.getDefinitions().stream().map(Definition::getDefinitionType)
 				.anyMatch(dt -> dt.equals(DefinitionType.EquivalentConcept))) {
@@ -213,8 +183,12 @@ public class NecessaryNormalFormBuilder {
 		} else {
 			def.setDefinitionType(DefinitionType.SubConcept);
 		}
-		List<Concept> sups = superConcepts.get(con.getId()).stream().map(x -> snomedOntology.getConcept(x)).distinct()
-				.collect(Collectors.toCollection(ArrayList::new));
+		List<Concept> sups;
+		if (useDefining) {
+			sups = con.getDefinitions().stream().flatMap(x -> x.getSuperConcepts().stream()).distinct().toList();
+		} else {
+			sups = superConcepts.get(con.getId()).stream().map(x -> snomedOntology.getConcept(x)).distinct().toList();
+		}
 		sups.forEach(sup -> def.addSuperConcept(sup));
 		for (Concept sup : sups) {
 			for (Role role : necessaryNormalForm.get(sup).getUngroupedRoles()) {
@@ -237,6 +211,7 @@ public class NecessaryNormalFormBuilder {
 			});
 		});
 		simplify(def);
+		necessaryNormalForm.put(con, def);
 		return def;
 	}
 
@@ -280,15 +255,49 @@ public class NecessaryNormalFormBuilder {
 				.map(x -> new Role(x, svf.getConcept())).toList();
 	}
 
+	/*
+	 * Return true if con1 is subsumed by con2
+	 */
+	public boolean isSubsumedBy(SnomedIsa definingIsa, SnomedOntology fullOntology, Concept con1, Concept con2) {
+		if (con1.equals(con2))
+			throw new RuntimeException(con1 + " " + con2);
+		Definition def1 = getNecessaryNormalForm(con1);
+		Definition def2 = getNecessaryNormalForm(con2);
+//		LOG.info("s1:" + def1.getSuperConcepts());
+//		LOG.info("s2:" + def2.getSuperConcepts());
+		HashSet<Long> ancestors2 = definingIsa.getAncestors(con2.getId());
+		ancestors2.add(con2.getId());
+		ancestors2.removeIf(anc2 -> anc2 != SnomedIds.root && fullOntology.getConcept(anc2).getDefinitions()
+				.getFirst().getDefinitionType() == DefinitionType.EquivalentConcept);
+		if (!ancestors2.stream().allMatch(anc2 -> definingIsa.hasAncestor(con1.getId(), anc2)))
+			return false;
+//		LOG.info("r1:" + def1.getUngroupedRoles());
+//		LOG.info("r2:" + def2.getUngroupedRoles());
+		if (!def2.getUngroupedRoles().stream().allMatch(
+				role2 -> def1.getUngroupedRoles().stream().anyMatch(role1 -> isSubClassOfEntailed(role1, role2))))
+			return false;
+//		LOG.info("rg1:" + def1.getRoleGroups());
+//		LOG.info("rg2:" + def2.getRoleGroups());
+		if (!def2.getRoleGroups().stream()
+				.allMatch(rg2 -> def1.getRoleGroups().stream().anyMatch(rg1 -> isSubsumedBy(rg1, rg2))))
+			return false;
+		return true;
+	}
+
 	private boolean isSubsumedBy(Concept con1, Concept con2) {
 		if (con1.equals(con2))
 			return true;
 		return isa.hasAncestor(con1.getId(), con2.getId());
 	}
 
-	private boolean isSubsumedBy(Role svf1, Role svf2) {
-		return superRolesTypes.get(svf1.getRoleType()).contains(svf2.getRoleType())
-				&& isSubsumedBy(svf1.getConcept(), svf2.getConcept());
+	private boolean isSubsumedBy(Role role1, Role role2) {
+		return superRolesTypes.get(role1.getRoleType()).contains(role2.getRoleType())
+				&& isSubsumedBy(role1.getConcept(), role2.getConcept());
+	}
+
+	private boolean isSubsumedBy(RoleGroup rg1, RoleGroup rg2) {
+		return rg2.getRoles().stream()
+				.allMatch(role2 -> rg1.getRoles().stream().anyMatch(role1 -> isSubClassOfEntailed(role1, role2)));
 	}
 
 	private boolean isSubClassOfEntailed(Role role1, Role role2) {
@@ -551,7 +560,8 @@ public class NecessaryNormalFormBuilder {
 				&& sno_role.destinationId == nnf_role.getConcept().getId();
 	}
 
-	private boolean compareConcrete(List<SnomedConcreteRoles.SnomedConcreteRole> sno_roles, Set<ConcreteRole> nnf_roles) {
+	private boolean compareConcrete(List<SnomedConcreteRoles.SnomedConcreteRole> sno_roles,
+			Set<ConcreteRole> nnf_roles) {
 		return sno_roles.stream()
 				.allMatch(sno_role -> nnf_roles.stream().anyMatch(nnf_role -> compare(sno_role, nnf_role)))
 				&& nnf_roles.stream()

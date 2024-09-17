@@ -51,18 +51,20 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 
 	@Test
 	public void size() throws Exception {
-		assertEquals(361461, isas.getConcepts().size());
+		assertEquals(361461, isas.getOrderedConcepts().size());
 	}
 
 	@Test
 	public void root() {
-		assertTrue(isas.getParents(SnomedIsa.root).isEmpty());
-		assertTrue(isas.getAncestors(SnomedIsa.root).isEmpty());
+		assertEquals(0, isas.getParents(SnomedIsa.root).size());
+		assertEquals(0, isas.getAncestors(SnomedIsa.root).size());
+		assertEquals(19, isas.getChildren(SnomedIsa.root).size());
+		assertEquals(361461 - 1, isas.getDescendants(SnomedIsa.root).size());
 	}
 
 	@Test
 	public void hasAncestor() {
-		for (long con : isas.getConcepts()) {
+		for (long con : isas.getOrderedConcepts()) {
 			for (long ancestor : isas.getAncestors(con)) {
 				assertTrue(isas.hasAncestor(con, ancestor));
 				assertFalse(isas.hasAncestor(ancestor, con));
@@ -72,7 +74,7 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 
 	@Test
 	public void hasParent() {
-		for (long con : isas.getConcepts()) {
+		for (long con : isas.getOrderedConcepts()) {
 			for (long parent : isas.getParents(con)) {
 				assertTrue(isas.hasParent(con, parent));
 				assertFalse(isas.hasParent(parent, con));
@@ -82,16 +84,32 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 			}
 		}
 	}
-	
+
+	@Test
+	public void hasDescendant() {
+		int cnt = 0;
+		for (long con : isas.getOrderedConcepts()) {
+			if (isas.getDescendants(con).size() > 1000) {
+				cnt++;
+				continue;
+			}
+			for (long desc : isas.getDescendants(con)) {
+				assertTrue(isas.hasDescendant(con, desc));
+				assertFalse(isas.hasDescendant(desc, con));
+			}
+		}
+		LOG.info("Skipped: " + cnt);
+	}
+
 	@Test
 	public void hasChild() {
-		for (long con : isas.getConcepts()) {
+		for (long con : isas.getOrderedConcepts()) {
 			for (long child : isas.getChildren(con)) {
 				assertTrue(isas.hasChild(con, child));
 				assertFalse(isas.hasChild(child, con));
-//				assertTrue(isas.hasAncestor(con, parent));
-//				assertFalse(isas.hasAncestor(parent, con));
-//				assertTrue(isas.getAncestors(con).contains(parent));
+				assertTrue(isas.hasDescendant(con, child));
+				assertFalse(isas.hasDescendant(child, con));
+				assertTrue(isas.getDescendants(con).contains(child));
 			}
 		}
 	}
@@ -99,7 +117,7 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 	@Test
 	public void checkPriors() {
 		HashSet<Long> priors = new HashSet<>();
-		for (long con : isas.getConcepts()) {
+		for (long con : isas.getOrderedConcepts()) {
 			for (long sup : isas.getParents(con)) {
 				assertTrue(priors.contains(sup));
 			}

@@ -130,7 +130,7 @@ public class NecessaryNormalFormBuilderOwl {
 
 	private void sortConcepts(HashMap<Long, Set<Long>> dependentOnConcepts) {
 		SnomedIsa deps = SnomedIsa.init(dependentOnConcepts);
-		deps.getConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
+		deps.getOrderedConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
 	}
 
 	private void initRoles() {
