@@ -48,6 +48,8 @@ public class SnomedOntology {
 
 	private List<ConcreteRoleType> concreteRoleTypes;
 
+	private SnomedDescriptions descriptions;
+
 	public Concept getConcept(long id) {
 		return conceptIdMap.get(id);
 	}
@@ -72,6 +74,14 @@ public class SnomedOntology {
 		return concreteRoleTypes;
 	}
 
+	public SnomedDescriptions getDescriptions() {
+		return descriptions;
+	}
+
+	public void setDescriptions(SnomedDescriptions descriptions) {
+		this.descriptions = descriptions;
+	}
+
 	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
 			Collection<ConcreteRoleType> concreteRoleTypes) {
 		super();
@@ -84,6 +94,12 @@ public class SnomedOntology {
 		this.concreteRoleTypeIdMap = new HashMap<>();
 		concreteRoleTypes.forEach(x -> concreteRoleTypeIdMap.put(x.getId(), x));
 		this.concreteRoleTypes = new ArrayList<>(concreteRoleTypes);
+	}
+
+	public String getFsn(long concept) {
+		if (descriptions != null)
+			return descriptions.getFsn(concept);
+		return "<" + concept + ">";
 	}
 
 	public HashSet<Concept> getDependentOnConcepts(Concept concept) {

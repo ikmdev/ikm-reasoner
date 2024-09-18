@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.ConceptComparer;
 import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
 import dev.ikm.elk.snomed.SnomedConcreteRoles;
 import dev.ikm.elk.snomed.SnomedOntology;
@@ -43,16 +44,14 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
-		nnfb.init();
 		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
 	}
 
 	public NecessaryNormalFormBuilder generate() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
 		ontology.loadOntology(axioms_file);
-//		ontology.classify();
 		LOG.info("Load complete");
 		//
 		for (OWLAxiom ax : ontology.getOntology().getAxioms()) {
@@ -78,16 +77,15 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology,
+		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
-		nnfb.init();
 		LOG.info("Init complete");
-//		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
 		SnomedRoles roles = SnomedRoles.init(rels_file);
 		SnomedConcreteRoles values = SnomedConcreteRoles.init(values_file);
 		LOG.info("Generate");
 		long beg = System.currentTimeMillis();
-		nnfb.generate(roles, values);
+		ConceptComparer cc = new ConceptComparer(roles, values);
+		nnfb.generate(cc);
 		LOG.info("Generate in " + ((System.currentTimeMillis() - beg) / 1000));
 		return nnfb;
 	}
