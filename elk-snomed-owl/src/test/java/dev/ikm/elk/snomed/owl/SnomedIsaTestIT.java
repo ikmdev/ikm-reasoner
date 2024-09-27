@@ -33,6 +33,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.SnomedIds;
 import dev.ikm.elk.snomed.SnomedIsa;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -56,10 +57,10 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 
 	@Test
 	public void root() {
-		assertEquals(0, isas.getParents(SnomedIsa.root).size());
-		assertEquals(0, isas.getAncestors(SnomedIsa.root).size());
-		assertEquals(19, isas.getChildren(SnomedIsa.root).size());
-		assertEquals(361461 - 1, isas.getDescendants(SnomedIsa.root).size());
+		assertEquals(0, isas.getParents(SnomedIds.root).size());
+		assertEquals(0, isas.getAncestors(SnomedIds.root).size());
+		assertEquals(19, isas.getChildren(SnomedIds.root).size());
+		assertEquals(361461 - 1, isas.getDescendants(SnomedIds.root).size());
 	}
 
 	@Test
