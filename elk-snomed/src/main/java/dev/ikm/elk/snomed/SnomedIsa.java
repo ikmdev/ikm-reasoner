@@ -27,14 +27,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class SnomedIsa {
-
-	public static long root = SnomedIds.root;
-
-	public static long isa = SnomedIds.isa;
 
 	private HashMap<Long, Set<Long>> parentsMap = new HashMap<>();
 
@@ -54,23 +50,31 @@ public class SnomedIsa {
 		return orderedConcepts;
 	}
 
+	private SnomedIsa() {
+		super();
+	}
+
 	public static SnomedIsa init(Path file) throws IOException {
 		SnomedIsa ret = new SnomedIsa();
 		ret.load(file);
-		ret.init();
+		ret.init(SnomedIds.root);
 		return ret;
 	}
 
 	public static SnomedIsa init(HashMap<Long, Set<Long>> isas) {
+		return init(isas, SnomedIds.root);
+	}
+
+	public static SnomedIsa init(HashMap<Long, Set<Long>> isas, long root) {
 		SnomedIsa ret = new SnomedIsa();
 		ret.parentsMap = isas;
-		ret.init();
+		ret.init(root);
 		return ret;
 	}
 
-	private void init() {
+	private void init(long root) {
 		initChildren();
-		initOrderedConcepts();
+		initOrderedConcepts(root);
 	}
 
 	private void initChildren() {
@@ -83,7 +87,7 @@ public class SnomedIsa {
 		}
 	}
 
-	private void initOrderedConcepts() {
+	private void initOrderedConcepts(long root) {
 		HashSet<Long> visited = new HashSet<>();
 		orderedConcepts.add(root);
 		visited.add(root);
@@ -111,7 +115,7 @@ public class SnomedIsa {
 		try (Stream<String> st = Files.lines(file)) {
 			st.skip(1).map(line -> line.split("\\t")) //
 					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-					.filter(fields -> Long.parseLong(fields[7]) == isa) // typeId
+					.filter(fields -> Long.parseLong(fields[7]) == SnomedIds.isa) // typeId
 					.forEach(fields -> {
 						long con = Long.parseLong(fields[4]); // sourceId
 						long par = Long.parseLong(fields[5]); // destinationId
@@ -154,9 +158,9 @@ public class SnomedIsa {
 		for (long parent : getParents(con)) {
 			if (visited.contains(parent))
 				continue;
+			visited.add(parent);
 			if (hasAncestor(parent, ancestor, visited))
 				return true;
-			visited.add(parent);
 		}
 		return false;
 	}
@@ -168,7 +172,7 @@ public class SnomedIsa {
 	public boolean hasChild(long con, long child) {
 		return getChildren(con).contains(child);
 	}
-		
+
 	public HashSet<Long> getDescendants(long con) {
 		HashSet<Long> visited = new HashSet<>();
 		this.getDescendants(con, visited);
@@ -194,9 +198,9 @@ public class SnomedIsa {
 		for (long child : getChildren(con)) {
 			if (visited.contains(child))
 				continue;
+			visited.add(child);
 			if (hasDescendant(child, descendant, visited))
 				return true;
-			visited.add(child);
 		}
 		return false;
 	}

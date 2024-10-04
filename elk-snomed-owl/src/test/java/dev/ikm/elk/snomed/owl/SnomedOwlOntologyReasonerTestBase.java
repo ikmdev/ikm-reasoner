@@ -45,6 +45,7 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.SnomedIds;
 import dev.ikm.elk.snomed.SnomedIsa;
 
 public abstract class SnomedOwlOntologyReasonerTestBase extends SnomedTestBase {
@@ -134,7 +135,7 @@ public abstract class SnomedOwlOntologyReasonerTestBase extends SnomedTestBase {
 			long id = SnomedOwlOntology.getId(clazz);
 			Set<Long> sups = ontology.getSuperClasses(id);
 			Set<Long> parents = isas.getParents(id);
-			if (id == SnomedIsa.root) {
+			if (id == SnomedIds.root) {
 				assertTrue(parents.isEmpty());
 			} else {
 				assertNotNull(parents);

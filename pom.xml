@@ -373,6 +373,30 @@
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>analyze</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>display-dependency-updates</goal>
+							<goal>display-plugin-updates</goal>
+						</goals>
+						<configuration>
+							<ruleSet>
+								<ignoreVersions>
+									<ignoreVersion>
+										<type>regex</type>
+										<version>.+(alpha|beta).*</version>
+									</ignoreVersion>
+								</ignoreVersions>
+							</ruleSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tidy-maven-plugin</artifactId>
 				<executions>
 					<execution>

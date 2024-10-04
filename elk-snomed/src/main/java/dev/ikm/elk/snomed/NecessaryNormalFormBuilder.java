@@ -48,6 +48,8 @@ public class NecessaryNormalFormBuilder {
 
 	private SnomedIsa isa;
 
+	private long root;
+
 	private HashMap<RoleType, Set<RoleType>> superRolesTypes = new HashMap<>();
 
 	private HashMap<Concept, Definition> necessaryNormalForm = new HashMap<>();
@@ -79,15 +81,20 @@ public class NecessaryNormalFormBuilder {
 		return necessaryNormalForm.get(con);
 	}
 
-	private NecessaryNormalFormBuilder(SnomedOntology snomedOntology) {
+	private NecessaryNormalFormBuilder(SnomedOntology snomedOntology, long root) {
 		super();
 		this.snomedOntology = snomedOntology;
-
+		this.root = root;
 	}
 
 	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
 			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes) {
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology);
+		return create(snomedOntology, superConcepts, superRoleTypes, SnomedIds.root);
+	}
+
+	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
+			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes, long root) {
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, root);
 		nnfb.initConcepts(superConcepts);
 		nnfb.initRoles(superRoleTypes);
 		nnfb.nnfSubsumption = new NNFSubsumption(nnfb.isa, nnfb.superRolesTypes, nnfb.necessaryNormalForm);
@@ -95,13 +102,13 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private void initConcepts(HashMap<Long, Set<Long>> superConcepts) {
-		isa = SnomedIsa.init(superConcepts);
+		isa = SnomedIsa.init(superConcepts, root);
 		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
 		for (Concept concept : snomedOntology.getConcepts()) {
 			dependentOnConcepts.put(concept.getId(), getDependentOnConcepts(concept));
 		}
 		{
-			SnomedIsa deps = SnomedIsa.init(dependentOnConcepts);
+			SnomedIsa deps = SnomedIsa.init(dependentOnConcepts, root);
 			deps.getOrderedConcepts().stream().map(id -> snomedOntology.getConcept(id))
 					.forEach(con -> concepts.add(con));
 		}

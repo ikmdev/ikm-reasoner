@@ -83,7 +83,7 @@ public class SnomedOntologyReasonerTestIT extends SnomedNecessaryNormalFormTestB
 						.map(cl -> Long.parseLong(cl.getIri().toString().substring(1)))
 						.collect(Collectors.toCollection(HashSet::new));
 				Set<Long> parents = isas.getParents(id);
-				if (id == SnomedIsa.root) {
+				if (id == SnomedIds.root) {
 					assertTrue(parents.isEmpty());
 				} else {
 					assertNotNull(parents);
