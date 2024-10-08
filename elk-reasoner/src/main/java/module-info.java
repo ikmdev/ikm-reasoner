@@ -19,7 +19,7 @@
  */
 open module org.semanticweb.elk.reasoner {
 
-	requires com.google.common;
+	requires dev.ikm.jpms.google.common;
 
 	requires org.slf4j;
 
