@@ -19,7 +19,7 @@
  */
 open module org.semanticweb.elk.owlapi {
 
-	requires com.google.common;
+	requires dev.ikm.jpms.google.common;
 
 	requires org.slf4j;
 
