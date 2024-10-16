@@ -48,7 +48,8 @@ public class RoleGroup {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(roles);
+		return Objects.hash(concreteRoles, roles);
+//		return Objects.hash( roles);
 	}
 
 	@Override
@@ -60,12 +61,20 @@ public class RoleGroup {
 		if (getClass() != obj.getClass())
 			return false;
 		RoleGroup other = (RoleGroup) obj;
-		return Objects.equals(roles, other.roles);
+		return Objects.equals(concreteRoles, other.concreteRoles) && Objects.equals(roles, other.roles);
+//		return Objects.equals(roles, other.roles);
 	}
 
 	@Override
 	public String toString() {
 		return "RoleGroup" + roles + " " + concreteRoles;
+	}
+
+	public RoleGroup copy() {
+		RoleGroup rg = new RoleGroup();
+		rg.concreteRoles.addAll(this.concreteRoles);
+		rg.roles.addAll(this.roles);
+		return rg;
 	}
 
 }

@@ -21,6 +21,7 @@ package dev.ikm.elk.snomed.model;
  */
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Definition {
@@ -71,6 +72,34 @@ public class Definition {
 
 	public void addRoleGroup(RoleGroup roleGroup) {
 		this.roleGroups.add(roleGroup);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(definitionType, roleGroups, superConcepts, ungroupedRoles);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Definition other = (Definition) obj;
+		return definitionType == other.definitionType && Objects.equals(roleGroups, other.roleGroups)
+				&& Objects.equals(superConcepts, other.superConcepts)
+				&& Objects.equals(ungroupedRoles, other.ungroupedRoles);
+	}
+
+	public Definition copy() {
+		Definition def = new Definition();
+		def.definitionType = this.definitionType;
+		def.roleGroups.addAll(this.roleGroups.stream().map(x -> x.copy()).toList());
+		def.superConcepts.addAll(this.superConcepts);
+		def.ungroupedRoles = this.ungroupedRoles.copy();
+		return def;
 	}
 
 }
