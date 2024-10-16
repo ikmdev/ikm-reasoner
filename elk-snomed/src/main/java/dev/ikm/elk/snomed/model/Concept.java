@@ -39,6 +39,14 @@ public class Concept {
 		this.id = id;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -54,7 +62,7 @@ public class Concept {
 	public void addDefinition(Definition definition) {
 		this.definitions.add(definition);
 	}
-	
+
 	public void removeAllDefinitions() {
 		this.definitions = new ArrayList<>();
 	}
@@ -66,13 +74,9 @@ public class Concept {
 	public void addGciDefinition(Definition definition) {
 		this.gciDefinitions.add(definition);
 	}
-	
+
 	public void removeAllGciDefinitions() {
 		this.gciDefinitions = new ArrayList<>();
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	@Override
@@ -96,7 +100,5 @@ public class Concept {
 	public String toString() {
 		return "Concept[" + id + "]";
 	}
-
-	
 
 }
