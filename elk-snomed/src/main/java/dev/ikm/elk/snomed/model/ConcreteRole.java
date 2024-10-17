@@ -25,7 +25,7 @@ import java.util.Objects;
 public class ConcreteRole {
 
 	public enum ValueType {
-		Decimal, Integer;
+		Decimal, Double, Float, Integer, String;
 	}
 
 	private ConcreteRoleType concreteRoleType;
