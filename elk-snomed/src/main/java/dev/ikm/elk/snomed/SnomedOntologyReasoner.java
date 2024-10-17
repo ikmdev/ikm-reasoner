@@ -251,7 +251,10 @@ public class SnomedOntologyReasoner {
 		Factory f = ontology.getObjectFactory();
 		ElkDatatype datatype = switch (concreteRole.getValueType()) {
 		case Decimal -> f.getXsdDecimal();
+		case Double -> f.getXsdDouble();
+		case Float -> f.getXsdFloat();
 		case Integer -> f.getXsdInteger();
+		case String -> f.getXsdString();
 		};
 		ElkLiteral literal = f.getLiteral(concreteRole.getValue(), datatype);
 		return ontology.getDataHasValue(getIri(concreteRole.getConcreteRoleType()), literal);
