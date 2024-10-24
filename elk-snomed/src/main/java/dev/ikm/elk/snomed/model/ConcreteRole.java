@@ -73,7 +73,7 @@ public class ConcreteRole {
 
 	@Override
 	public String toString() {
-		return "ConcreteRole[" + this.concreteRoleType.getId() + " -> " + this.value + " " + this.valueType + "]";
+		return "ConcreteRole[" + concreteRoleType + " -> " + this.value + " " + this.valueType + "]";
 	}
 
 }

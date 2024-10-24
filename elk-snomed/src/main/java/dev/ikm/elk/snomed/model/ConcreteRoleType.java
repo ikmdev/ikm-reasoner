@@ -79,7 +79,7 @@ public class ConcreteRoleType {
 
 	@Override
 	public String toString() {
-		return "ConcreteRoleType[" + id + "]";
+		return "ConcreteRoleType[" + id + (name != null ? " " + name : "") + "]";
 	}
 
 }

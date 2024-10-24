@@ -98,7 +98,7 @@ public class Concept {
 
 	@Override
 	public String toString() {
-		return "Concept[" + id + "]";
+		return "Concept[" + id + (name != null ? " " + name : "") + "]";
 	}
 
 }
