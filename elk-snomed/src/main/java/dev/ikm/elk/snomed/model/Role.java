@@ -61,7 +61,7 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Role[" + this.roleType.getId() + " -> " + this.concept.getId() + "]";
+		return "Role[" + roleType + " -> " + concept + "]";
 	}
 
 }

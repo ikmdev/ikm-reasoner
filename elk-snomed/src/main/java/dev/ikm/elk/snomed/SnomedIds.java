@@ -34,6 +34,9 @@ public class SnomedIds {
 	// 762705008 |Concept model object attribute (attribute)|
 	public static final long concept_model_object_attribute = 762705008;
 
+	// 762706009 |Concept model data attribute (attribute)|
+	public static final long concept_model_data_attribute = 762706009;
+
 	// 731000124108 |US National Library of Medicine maintained module (core
 	// metadata concept)|
 	public static final long us_nlm_module = 731000124108l;
