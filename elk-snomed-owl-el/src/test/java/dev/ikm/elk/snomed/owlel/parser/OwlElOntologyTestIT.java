@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
-public class OwlElOntologyTest {
+public class OwlElOntologyTestIT {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OwlElOntologyTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OwlElOntologyTestIT.class);
 
 	@Test
 	public void load() throws IOException {
 		OwlElOntology ontology = new OwlElOntology();
-		ontology.load(SnomedOfsParserTest.file);
+		ontology.load(SnomedOfsParserTestIT.file);
 		assertEquals("http://snomed.info/sct/900000000000207008", ontology.getIri());
 		assertEquals(369438, ontology.getAxioms().size());
 	}

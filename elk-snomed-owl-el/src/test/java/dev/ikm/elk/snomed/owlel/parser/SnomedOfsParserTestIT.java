@@ -38,9 +38,9 @@ import dev.ikm.elk.snomed.owlel.SnomedOwlExpressions;
 import dev.ikm.elk.snomed.owlel.model.OwlElObject;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.OntologyExpressionContext;
 
-public class SnomedOfsParserTest {
+public class SnomedOfsParserTestIT {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOfsParserTest.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOfsParserTestIT.class);
 
 	public static Path file = Paths.get("target/data", "snomed-test-data-intl-20241001",
 			"sct2_sRefset_OWLExpressionSnapshot_INT_20241001.txt");
