@@ -1,8 +1,10 @@
+package dev.ikm.elk.snomed.owlel.model;
+
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * elk-snomed-owl-el
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +19,30 @@
  * limitations under the License.
  * #L%
  */
-open module dev.ikm.elk.snomed {
 
-	requires org.slf4j;
+public class OwlElTypedLiteral extends OwlElObject {
 
-	requires org.semanticweb.elk.owl.model;
-	requires org.semanticweb.elk.reasoner;
+	private String lexicalForm;
 
-	requires dev.ikm.elk.snomed.owlel;
-	requires dev.ikm.elk.snomed.reasoner;
+	private String datatype;
 
-	exports dev.ikm.elk.snomed;
-	exports dev.ikm.elk.snomed.model;
+	public String getLiteral() {
+		return lexicalForm;
+	}
+
+	public String getDatatype() {
+		return datatype;
+	}
+
+	public OwlElTypedLiteral(String lexicalForm, String datatype) {
+		super();
+		this.lexicalForm = lexicalForm;
+		this.datatype = datatype;
+	}
+
+	@Override
+	public String toString() {
+		return lexicalForm + "^^" + datatype;
+	}
 
 }

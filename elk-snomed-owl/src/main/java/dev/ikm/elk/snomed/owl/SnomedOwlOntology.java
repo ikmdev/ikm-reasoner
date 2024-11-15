@@ -62,10 +62,13 @@ public class SnomedOwlOntology {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntology.class);
 
+	@Deprecated
 	public static final long root = SnomedIds.root;
 
+	@Deprecated
 	public static final long isa = SnomedIds.isa;
 
+	@Deprecated
 	public static final long role_group = SnomedIds.role_group;
 
 	private OWLOntology ontology;
@@ -187,7 +190,7 @@ public class SnomedOwlOntology {
 	public Set<OWLObjectProperty> getOwlObjectProperties() {
 		return ontology.getObjectPropertiesInSignature();
 	}
-	
+
 	public Set<OWLDataProperty> getOwlDataProperties() {
 		return ontology.getDataPropertiesInSignature();
 	}
@@ -203,7 +206,7 @@ public class SnomedOwlOntology {
 	public OWLObjectProperty getOwlObjectProperty(long id) {
 		return objectPropertyMap.get(id);
 	}
-	
+
 	public static long getId(OWLDataProperty prop) {
 		return Long.parseLong(prop.getIRI().getShortForm());
 	}
@@ -221,7 +224,7 @@ public class SnomedOwlOntology {
 		OWLOntologyManager mgr = getOntologyManager();
 		mgr.removeAxioms(ontology, axioms);
 	}
-	
+
 	public void loadOntology(Set<OWLAxiom> axioms) {
 		addAxioms(axioms);
 		initMaps();
