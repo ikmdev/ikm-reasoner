@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed;
 
 /*-
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,61 +20,51 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashSet;
+
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.ConceptComparer;
-import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
-import dev.ikm.elk.snomed.SnomedConcreteRoles;
-import dev.ikm.elk.snomed.SnomedOntology;
-import dev.ikm.elk.snomed.SnomedOntologyReasoner;
-import dev.ikm.elk.snomed.SnomedRoles;
+import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTestBase.class);
 
+	public static void checkPriors(SnomedOntologyReasoner ontology, NecessaryNormalFormBuilder nnf) {
+		HashSet<Long> priors = new HashSet<>();
+		for (Concept con : nnf.getConcepts()) {
+			for (Long sup : ontology.getSuperConcepts(con.getId())) {
+				assertTrue(priors.contains(sup));
+			}
+			priors.add(con.getId());
+		}
+	}
+
 	@Test
 	public void checkPriors() throws Exception {
-		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
-		ontology.loadOntology(axioms_file);
-		ontology.classify();
-		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		OwlElOntology ontology = new OwlElOntology();
+		ontology.load(axioms_file);
+//		ontology.classify();
+		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
-		NecessaryNormalFormTest.checkPriors(ontology, nnfb);
+		checkPriors(snomedOntologyReasoner, nnfb);
 	}
 
 	public NecessaryNormalFormBuilder generate() throws Exception {
-		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
-		ontology.loadOntology(axioms_file);
+		OwlElOntology ontology = new OwlElOntology();
+		ontology.load(axioms_file);
+
 		LOG.info("Load complete");
 		//
-		for (OWLAxiom ax : ontology.getOntology().getAxioms()) {
-			switch (ax.getAxiomType().getName()) {
-			case "SubClassOf" -> {
-			}
-			case "EquivalentClasses" -> {
-			}
-			case "SubObjectPropertyOf" -> {
-			}
-			case "SubPropertyChainOf" -> {
-			}
-			case "TransitiveObjectProperty" -> {
-			}
-			case "ReflexiveObjectProperty" -> {
-			}
-			case "SubDataPropertyOf" -> {
-			}
-			default -> throw new UnsupportedOperationException("Unexpected: " + ax + " " + ax.getAxiomType());
-			}
-		}
-		//
-		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,

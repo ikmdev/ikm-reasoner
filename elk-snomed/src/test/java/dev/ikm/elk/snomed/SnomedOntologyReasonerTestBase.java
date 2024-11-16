@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed;
 
 /*-
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.SnomedIds;
-import dev.ikm.elk.snomed.SnomedIsa;
-import dev.ikm.elk.snomed.SnomedOntology;
-import dev.ikm.elk.snomed.SnomedOntologyReasoner;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.RoleType;
+import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 
@@ -47,9 +44,9 @@ public class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 
 	@Test
 	public void classify() throws Exception {
-		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();
-		ontology.loadOntology(axioms_file);
-		SnomedOntology snomedOntology = new OwlTransformer().transform(ontology);
+		OwlElOntology ontology = new OwlElOntology();
+		ontology.load(axioms_file);
+		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
 			if (!rt.getSuperRoleTypes().stream().map(RoleType::getId).toList().equals(List.of(762705008l))) {

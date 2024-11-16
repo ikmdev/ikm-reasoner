@@ -1,4 +1,4 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed;
 
 /*-
  * #%L
