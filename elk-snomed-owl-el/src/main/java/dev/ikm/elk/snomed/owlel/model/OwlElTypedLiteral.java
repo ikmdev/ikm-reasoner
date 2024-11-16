@@ -36,13 +36,13 @@ public class OwlElTypedLiteral extends OwlElObject {
 
 	public OwlElTypedLiteral(String lexicalForm, String datatype) {
 		super();
-		this.lexicalForm = lexicalForm;
+		this.lexicalForm = lexicalForm.replaceFirst("^\"", "").replaceFirst("\"$", "");
 		this.datatype = datatype;
 	}
 
 	@Override
 	public String toString() {
-		return lexicalForm + "^^" + datatype;
+		return "\"" + lexicalForm + "\"" + "^^" + datatype;
 	}
 
 }
