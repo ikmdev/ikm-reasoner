@@ -38,6 +38,7 @@ import dev.ikm.elk.snomed.SnomedOntologyReasoner;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.RoleGroup;
+import dev.ikm.elk.snomed.owl.SnomedOwlOntology;
 
 public class NecessaryNormalFormTest {
 

@@ -1,8 +1,10 @@
+package dev.ikm.elk.snomed;
+
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +19,21 @@
  * limitations under the License.
  * #L%
  */
-open module dev.ikm.elk.snomed {
 
-	requires org.slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	requires org.semanticweb.elk.owl.model;
-	requires org.semanticweb.elk.reasoner;
+public abstract class SnomedOntologyReasonerUsTestBase extends SnomedOntologyReasonerTestBase {
 
-	requires dev.ikm.elk.snomed.owlel;
-	requires dev.ikm.elk.snomed.reasoner;
+	@SuppressWarnings("unused")
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerUsTestBase.class);
 
-	exports dev.ikm.elk.snomed;
-	exports dev.ikm.elk.snomed.model;
+	protected String getEdition() {
+		return "US1000124";
+	}
+
+	protected String getEditionDir() {
+		return "us";
+	}
 
 }
