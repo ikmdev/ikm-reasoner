@@ -23,17 +23,15 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SnomedOntologyReasonerUsTestBase extends SnomedOntologyReasonerTestBase {
+public class SnomedOntologyReasonerInternational20240101TestIT extends SnomedOntologyReasonerTestBase
+		implements SnomedVersionInternational {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerUsTestBase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerInternational20240101TestIT.class);
 
-	protected String getEdition() {
-		return "US1000124";
-	}
-
-	protected String getEditionDir() {
-		return "us";
+	@Override
+	public String getVersion() {
+		return "20240101";
 	}
 
 }

@@ -23,16 +23,17 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public abstract class SnomedNecessaryNormalFormInternationalTestBase extends SnomedNecessaryNormalFormTestBase {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormInternationalTestBase.class);
 
-	protected String getEdition() {
+	public String getEdition() {
 		return "INT";
 	}
 
-	protected String getEditionDir() {
+	public String getEditionDir() {
 		return "intl";
 	}
 

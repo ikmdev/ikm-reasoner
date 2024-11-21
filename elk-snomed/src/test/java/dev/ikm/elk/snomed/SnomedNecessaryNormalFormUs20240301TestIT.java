@@ -26,15 +26,20 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.NecessaryNormalFormBuilder;
-
-public class SnomedNecessaryNormalFormUs20240301TestIT extends SnomedNecessaryNormalFormUsTestBase {
+public class SnomedNecessaryNormalFormUs20240301TestIT extends SnomedNecessaryNormalFormTestBase
+		implements SnomedVersionUs {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormUs20240301TestIT.class);
 
-	protected String getVersion() {
+	@Override
+	public String getVersion() {
 		return "20240301";
+	}
+
+	@Override
+	public String getInternationalVersion() {
+		return "20240101";
 	}
 
 	@Test

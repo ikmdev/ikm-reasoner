@@ -2,9 +2,9 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,29 +20,18 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedNecessaryNormalFormInternational20200131TestIT extends SnomedNecessaryNormalFormTestBase
+public class SnomedOntologyReasonerInternational20230630TestIT extends SnomedOntologyReasonerTestBase
 		implements SnomedVersionInternational {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SnomedNecessaryNormalFormInternational20200131TestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerInternational20230630TestIT.class);
 
 	@Override
 	public String getVersion() {
-		return "20200131";
-	}
-
-	@Test
-	public void run() throws Exception {
-		NecessaryNormalFormBuilder nnfb = generate();
-		assertEquals(352449, nnfb.getConcepts().size());
-		assertEquals(0, nnfb.getMisMatchCount());
+		return "20230630";
 	}
 
 }

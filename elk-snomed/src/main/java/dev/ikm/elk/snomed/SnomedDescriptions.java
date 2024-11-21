@@ -94,4 +94,17 @@ public class SnomedDescriptions {
 		}
 	}
 
+	public static String getVersion(Path file) throws IOException {
+		// id effectiveTime active moduleId conceptId languageCode typeId term
+		// caseSignificanceId
+		try (Stream<String> st = Files.lines(file)) {
+			 return st.skip(1).map(line -> line.split("\\t")) //
+					.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+					.filter(fields -> Long.parseLong(fields[4]) == SnomedIds.root) // conceptId
+					.map(fields -> fields[7]) // term
+					.filter(term -> term.startsWith("SNOMED Clinical Terms version:")) //
+					.findFirst().get();
+		}
+	}
+
 }

@@ -23,12 +23,14 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedOntologyReasonerInternational20200731TestIT extends SnomedOntologyReasonerInternationalTestBase {
+public class SnomedOntologyReasonerInternational20200731TestIT extends SnomedOntologyReasonerTestBase
+		implements SnomedVersionInternational {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerInternational20200731TestIT.class);
 
-	protected String getVersion() {
+	@Override
+	public String getVersion() {
 		return "20200731";
 	}
 
