@@ -2,9 +2,9 @@ package dev.ikm.elk.snomed.owl;
 
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,16 +40,21 @@ import org.slf4j.LoggerFactory;
 import dev.ikm.elk.snomed.SnomedIsa;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class IncrementalClassifierCldTestIT extends SnomedTestBase {
+public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierCldTestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierCldUs20230301TestIT.class);
 
-	protected String getVersion() {
-		return "20210301";
+	@Override
+	public String getVersion() {
+		return "20230301";
+	}
+
+	@Override
+	public String getInternationalVersion() {
+		return "20221231";
 	}
 
 	// 413839001 |Chronic lung disease (disorder)|
-
 	public static final long cld_id = 413839001;
 
 	private SnomedIsa equivalent_classes_isa;

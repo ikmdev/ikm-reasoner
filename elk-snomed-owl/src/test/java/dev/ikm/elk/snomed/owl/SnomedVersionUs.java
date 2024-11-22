@@ -20,19 +20,15 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public interface SnomedVersionUs extends SnomedVersion {
 
-public abstract class SnomedOwlOntologyReasonerUsTestBase extends SnomedOwlOntologyReasonerTestBase {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntologyReasonerUsTestBase.class);
-
-	protected String getEdition() {
+	@Override
+	default String getEdition() {
 		return "US1000124";
 	}
 
-	protected String getEditionDir() {
+	@Override
+	default String getEditionDir() {
 		return "us";
 	}
 
