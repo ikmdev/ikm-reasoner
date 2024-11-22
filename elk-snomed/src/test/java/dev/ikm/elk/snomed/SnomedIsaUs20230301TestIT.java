@@ -1,4 +1,4 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed;
 
 /*-
  * #%L
@@ -33,13 +33,20 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.SnomedIds;
-import dev.ikm.elk.snomed.SnomedIsa;
-
 @TestInstance(Lifecycle.PER_CLASS)
-public class SnomedIsaTestIT extends SnomedTestBase {
+public class SnomedIsaUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedIsaTestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedIsaUs20230301TestIT.class);
+
+	@Override
+	public String getVersion() {
+		return "20230301";
+	}
+
+	@Override
+	public String getInternationalVersion() {
+		return "20221231";
+	}
 
 	private SnomedIsa isas;
 
@@ -52,7 +59,7 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 
 	@Test
 	public void size() throws Exception {
-		assertEquals(361461, isas.getOrderedConcepts().size());
+		assertEquals(367700, isas.getOrderedConcepts().size());
 	}
 
 	@Test
@@ -60,7 +67,17 @@ public class SnomedIsaTestIT extends SnomedTestBase {
 		assertEquals(0, isas.getParents(SnomedIds.root).size());
 		assertEquals(0, isas.getAncestors(SnomedIds.root).size());
 		assertEquals(19, isas.getChildren(SnomedIds.root).size());
-		assertEquals(361461 - 1, isas.getDescendants(SnomedIds.root).size());
+		assertEquals(367700 - 1, isas.getDescendants(SnomedIds.root).size());
+	}
+
+	@Test
+	public void attribute() {
+		assertEquals(10, isas.getDescendants(SnomedIds.concept_model_data_attribute).size());
+		assertEquals(125, isas.getDescendants(SnomedIds.concept_model_object_attribute).size());
+		assertEquals(new SnomedNecessaryNormalFormUs20230301TestIT().expected_concept_cnt,
+				isas.getDescendants(SnomedIds.root).size() + 1
+						- isas.getDescendants(SnomedIds.concept_model_data_attribute).size()
+						- isas.getDescendants(SnomedIds.concept_model_object_attribute).size());
 	}
 
 	@Test

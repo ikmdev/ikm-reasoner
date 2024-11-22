@@ -37,7 +37,7 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTestBase.class);
 
-	protected int expected_concept_cnt = -1;
+	public int expected_concept_cnt = -1;
 
 	public static void checkPriors(SnomedOntologyReasoner ontology, NecessaryNormalFormBuilder nnf) {
 		HashSet<Long> priors = new HashSet<>();
