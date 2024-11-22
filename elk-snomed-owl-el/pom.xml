@@ -10,6 +10,8 @@
 
 	<artifactId>elk-snomed-owl-el</artifactId>
 
+	<name>SNOMED OWL EL Profile Model and Parser</name>
+
 	<properties>
 		<skipITs>true</skipITs>
 		<snomed-test-data.groupid>dev.ikm.snomed</snomed-test-data.groupid>

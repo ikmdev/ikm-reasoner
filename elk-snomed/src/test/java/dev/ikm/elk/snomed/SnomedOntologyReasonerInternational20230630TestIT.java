@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration with SNOMED using OWL API
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%

@@ -1,10 +1,8 @@
 package dev.ikm.elk.snomed.owlel;
 
-import java.util.ArrayList;
-
 /*-
  * #%L
- * elk-snomed-owl-el
+ * SNOMED OWL EL Profile Model and Parser
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
@@ -22,6 +20,7 @@ import java.util.ArrayList;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

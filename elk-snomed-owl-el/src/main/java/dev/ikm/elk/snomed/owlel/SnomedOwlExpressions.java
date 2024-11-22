@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed.owlel;
 
 /*-
  * #%L
- * elk-snomed-owl-el
+ * SNOMED OWL EL Profile Model and Parser
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
@@ -29,13 +29,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SnomedOwlExpressions {
-
-//	public static Stream<String> stream(Path file) throws IOException {
-//		// id effectiveTime active moduleId refsetId referencedComponentId owlExpression
-//		return Files.lines(file).skip(1).map(line -> line.split("\\t")) //
-//				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-//				.map(fields -> fields[6]);
-//	}
 
 	public static List<String> read(Path file) throws IOException {
 		// id effectiveTime active moduleId refsetId referencedComponentId owlExpression
