@@ -65,13 +65,13 @@
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<!-- test dependencies -->
 		<junit4.version>4.13.2</junit4.version>
-		<junit.version>5.11.2</junit.version><!-- defined in parent -->
+		<junit.version>5.11.3</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
-		<guava.version>33.3.0-jre-r2</guava.version>
+		<guava.version>33.3.0-jre-r3</guava.version>
 		<jsr305.version>3.0.2-r7</jsr305.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi4.version>4.7.5</owlapi4.version>
+		<owlapi4.version>4.7.6</owlapi4.version>
 		<!-- dev.ikm.puli dependencies -->
 		<puli.version>0.6.0</puli.version>
 		<!-- other dependencies -->

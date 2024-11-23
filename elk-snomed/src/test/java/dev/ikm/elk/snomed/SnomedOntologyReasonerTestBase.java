@@ -38,7 +38,7 @@ import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
-public class SnomedOntologyReasonerTestBase extends SnomedTestBase {
+public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerTestBase.class);
 
@@ -49,7 +49,8 @@ public class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
-			if (!rt.getSuperRoleTypes().stream().map(RoleType::getId).toList().equals(List.of(762705008l))) {
+			if (!rt.getSuperRoleTypes().stream().map(RoleType::getId).toList()
+					.equals(List.of(SnomedIds.concept_model_object_attribute))) {
 				LOG.info("" + rt);
 				rt.getSuperRoleTypes().forEach(sup -> LOG.info("\tSup 1: " + sup));
 				sor.getSuperObjectProperties(rt).forEach(sup -> LOG.info("\tSup 2: " + sup));

@@ -23,20 +23,19 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SnomedNecessaryNormalFormInternational20200731TestIT extends SnomedNecessaryNormalFormTestBase
-		implements SnomedVersionInternational {
+public class SnomedOntologyReasonerUs20230301TestIT extends SnomedOntologyReasonerTestBase implements SnomedVersionUs {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SnomedNecessaryNormalFormInternational20200731TestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerUs20230301TestIT.class);
 
 	@Override
 	public String getVersion() {
-		return "20200731";
+		return "20230301";
 	}
 
-	{
-		expected_concept_cnt = 354256;
+	@Override
+	public String getInternationalVersion() {
+		return "20221231";
 	}
 
 }

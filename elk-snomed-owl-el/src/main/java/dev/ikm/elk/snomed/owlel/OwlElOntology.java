@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed.owlel;
 
 /*-
  * #%L
- * elk-snomed-owl-el
+ * SNOMED OWL EL Profile Model and Parser
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%

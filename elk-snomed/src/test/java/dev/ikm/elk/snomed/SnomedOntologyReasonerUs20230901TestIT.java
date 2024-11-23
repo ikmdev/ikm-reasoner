@@ -2,7 +2,7 @@ package dev.ikm.elk.snomed;
 
 /*-
  * #%L
- * ELK Integration with SNOMED using OWL API
+ * ELK Integration with SNOMED
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
@@ -23,17 +23,19 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SnomedOntologyReasonerUsTestBase extends SnomedOntologyReasonerTestBase {
+public class SnomedOntologyReasonerUs20230901TestIT extends SnomedOntologyReasonerTestBase implements SnomedVersionUs {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerUsTestBase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerUs20230901TestIT.class);
 
-	protected String getEdition() {
-		return "US1000124";
+	@Override
+	public String getVersion() {
+		return "20230901";
 	}
 
-	protected String getEditionDir() {
-		return "us";
+	@Override
+	public String getInternationalVersion() {
+		return "20230630";
 	}
 
 }

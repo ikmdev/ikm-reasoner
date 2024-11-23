@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,15 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SnomedNecessaryNormalFormUsTestBase extends SnomedNecessaryNormalFormTestBase {
+public class SnomedOntologyReasonerInternational20240101TestIT extends SnomedOntologyReasonerTestBase
+		implements SnomedVersionInternational {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormUsTestBase.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasonerInternational20240101TestIT.class);
 
-	protected String getEdition() {
-		return "US1000124";
-	}
-
-	protected String getEditionDir() {
-		return "us";
+	@Override
+	public String getVersion() {
+		return "20240101";
 	}
 
 }

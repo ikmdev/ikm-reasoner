@@ -2,9 +2,9 @@ package dev.ikm.elk.snomed.owl;
 
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,19 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IncrementalClassifierTestIT extends SnomedTestBase {
+public class IncrementalClassifierUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 
-	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierTestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierUs20230301TestIT.class);
+
+	@Override
+	public String getVersion() {
+		return "20230301";
+	}
+
+	@Override
+	public String getInternationalVersion() {
+		return "20221231";
+	}
 
 	public SnomedOwlOntology classify() throws Exception {
 		SnomedOwlOntology ontology = SnomedOwlOntology.createOntology();

@@ -1,6 +1,6 @@
 /*-
  * #%L
- * elk-snomed-owl-el
+ * SNOMED OWL EL Profile Model and Parser
  * %%
  * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-open module dev.ikm.elk.snomed.owlel{
+open module dev.ikm.elk.snomed.owlel {
 
 	requires org.slf4j;
 	requires dev.ikm.jpms.antlr4.runtime;

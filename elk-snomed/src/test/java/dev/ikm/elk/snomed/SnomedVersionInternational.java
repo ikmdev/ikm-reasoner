@@ -20,23 +20,21 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class SnomedNecessaryNormalFormInternational20200731TestIT extends SnomedNecessaryNormalFormTestBase
-		implements SnomedVersionInternational {
-
-	@SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory
-			.getLogger(SnomedNecessaryNormalFormInternational20200731TestIT.class);
+public interface SnomedVersionInternational extends SnomedVersion {
 
 	@Override
-	public String getVersion() {
-		return "20200731";
+	default String getEdition() {
+		return "INT";
 	}
 
-	{
-		expected_concept_cnt = 354256;
+	@Override
+	default String getEditionDir() {
+		return "intl";
+	}
+
+	@Override
+	default String getInternationalVersion() {
+		return getVersion();
 	}
 
 }

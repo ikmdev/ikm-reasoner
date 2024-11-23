@@ -1,5 +1,7 @@
 package dev.ikm.elk.snomed;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -35,6 +37,8 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedNecessaryNormalFormTestBase.class);
 
+	public int expected_concept_cnt = -1;
+
 	public static void checkPriors(SnomedOntologyReasoner ontology, NecessaryNormalFormBuilder nnf) {
 		HashSet<Long> priors = new HashSet<>();
 		for (Concept con : nnf.getConcepts()) {
@@ -58,12 +62,10 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		checkPriors(snomedOntologyReasoner, nnfb);
 	}
 
-	public NecessaryNormalFormBuilder generate() throws Exception {
+	private NecessaryNormalFormBuilder generate1() throws Exception {
 		OwlElOntology ontology = new OwlElOntology();
 		ontology.load(axioms_file);
-
 		LOG.info("Load complete");
-		//
 		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
@@ -78,6 +80,13 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		nnfb.generate(cc);
 		LOG.info("Generate in " + ((System.currentTimeMillis() - beg) / 1000));
 		return nnfb;
+	}
+
+	@Test
+	public void generate() throws Exception {
+		NecessaryNormalFormBuilder nnfb = generate1();
+		assertEquals(expected_concept_cnt, nnfb.getConcepts().size());
+		assertEquals(0, nnfb.getMisMatchCount());
 	}
 
 }

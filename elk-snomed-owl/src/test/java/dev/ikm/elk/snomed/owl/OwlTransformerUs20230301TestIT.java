@@ -2,9 +2,9 @@ package dev.ikm.elk.snomed.owl;
 
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK Integration with SNOMED using OWL API
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2024 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,19 @@ import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.DefinitionType;
 
-public class OwlTransformerTestIT extends SnomedTestBase {
+public class OwlTransformerUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformerTestIT.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OwlTransformerUs20230301TestIT.class);
+
+	@Override
+	public String getVersion() {
+		return "20230301";
+	}
+
+	@Override
+	public String getInternationalVersion() {
+		return "20221231";
+	}
 
 	@Test
 	public void transform() throws Exception {
@@ -44,8 +54,8 @@ public class OwlTransformerTestIT extends SnomedTestBase {
 		OwlTransformer ot = new OwlTransformer();
 		SnomedOntology so = ot.transform(ontology);
 		LOG.info("Transform complete");
-		assertEquals(361331, so.getConcepts().size());
-		assertEquals(131, so.getRoleTypes().size());
+		assertEquals(367565, so.getConcepts().size());
+		assertEquals(126, so.getRoleTypes().size());
 		{
 			// 86299006 |Tetralogy of Fallot (disorder)|
 			Concept con = so.getConcept(86299006);
@@ -53,6 +63,7 @@ public class OwlTransformerTestIT extends SnomedTestBase {
 			assertEquals(DefinitionType.EquivalentConcept, def.getDefinitionType());
 			assertEquals(1, def.getSuperConcepts().size());
 			assertEquals(0, def.getUngroupedRoles().size());
+			assertEquals(0, def.getUngroupedConcreteRoles().size());
 			assertEquals(4, def.getRoleGroups().size());
 		}
 		{
@@ -62,9 +73,10 @@ public class OwlTransformerTestIT extends SnomedTestBase {
 			Definition def = con.getDefinitions().getFirst();
 			assertEquals(DefinitionType.EquivalentConcept, def.getDefinitionType());
 			assertEquals(1, def.getSuperConcepts().size());
-			assertEquals(3, def.getUngroupedRoles().size());
+			assertEquals(2, def.getUngroupedRoles().size());
+			assertEquals(1, def.getUngroupedConcreteRoles().size());
 			assertEquals(1, def.getRoleGroups().size());
-			assertEquals(6, def.getRoleGroups().iterator().next().getRoles().size());
+			assertEquals(4, def.getRoleGroups().iterator().next().getRoles().size());
 		}
 		{
 			// 10000006 |Radiating chest pain (finding)|
@@ -73,6 +85,7 @@ public class OwlTransformerTestIT extends SnomedTestBase {
 			assertEquals(DefinitionType.SubConcept, def.getDefinitionType());
 			assertEquals(2, def.getSuperConcepts().size());
 			assertEquals(0, def.getUngroupedRoles().size());
+			assertEquals(0, def.getUngroupedConcreteRoles().size());
 			assertEquals(0, def.getRoleGroups().size());
 		}
 	}
