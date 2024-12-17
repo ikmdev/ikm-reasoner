@@ -65,7 +65,7 @@
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<!-- test dependencies -->
 		<junit4.version>4.13.2</junit4.version>
-		<junit.version>5.11.3</junit.version><!-- defined in parent -->
+		<junit.version>5.11.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
 		<guava.version>33.3.0-jre-r3</guava.version>
