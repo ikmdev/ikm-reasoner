@@ -36,13 +36,39 @@ public class SnomedOfsParser {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOfsParser.class);
 
+	@SuppressWarnings("serial")
+	public static class SyntaxError extends RuntimeException {
+
+		private String input;
+
+		private int position;
+
+		private String msg;
+
+		public SyntaxError(String input, int position, String msg) {
+			super();
+			this.input = input;
+			this.position = position;
+			this.msg = msg;
+		}
+
+		@Override
+		public String getMessage() {
+			return "Syntax error\n" //
+					+ "Input: " + input + "\n" //
+					+ "     : " + " ".repeat(position) + "^" + "\n" //
+					+ "At " + position + ": " + msg;
+		}
+
+	}
+
 	private OwlElObjectFactory factory;
 
 	private SnomedOfsGrammarParser parser;
 
-	private RecognitionException syntaxError;
+	private SyntaxError syntaxError;
 
-	public RecognitionException getSyntaxError() {
+	public SyntaxError getSyntaxError() {
 		return syntaxError;
 	}
 
@@ -58,10 +84,8 @@ public class SnomedOfsParser {
 			@Override
 			public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
 					int charPositionInLine, String msg, RecognitionException e) {
-				LOG.error("Input: " + input);
-				LOG.error("At " + charPositionInLine + " " + msg);
-				LOG.error("");
-				syntaxError = e;
+				syntaxError = new SyntaxError(input, charPositionInLine, msg);
+				LOG.error("" + syntaxError);
 			}
 		});
 		OntologyExpressionContext context = parser.ontologyExpression();

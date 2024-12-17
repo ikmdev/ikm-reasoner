@@ -25,6 +25,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dev.ikm.elk.snomed.owlel.model.OwlElAxiom;
 import dev.ikm.elk.snomed.owlel.model.OwlElClass;
 import dev.ikm.elk.snomed.owlel.model.OwlElDataProperty;
@@ -35,6 +38,8 @@ import dev.ikm.elk.snomed.owlel.model.OwlElPrefixDeclaration;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsParser;
 
 public class OwlElOntology {
+
+	private static final Logger LOG = LoggerFactory.getLogger(OwlElOntology.class);
 
 	private OwlElObjectFactory factory = new OwlElObjectFactory();
 
@@ -66,10 +71,12 @@ public class OwlElOntology {
 		return axioms.stream().filter(clazz::isInstance).map(clazz::cast).toList();
 	}
 
-	public void load(Path file) throws IOException {
-		for (String expr : SnomedOwlExpressions.read(file)) {
+	public void load(List<String> exprs) {
+		for (String expr : exprs) {
 			SnomedOfsParser parser = new SnomedOfsParser(factory);
 			OwlElObject obj = parser.buildExpression(expr);
+			if (parser.getSyntaxError() != null)
+				throw new UnsupportedOperationException(parser.getSyntaxError());
 			switch (obj) {
 			case OwlElOntologyDeclaration x -> iri = x.getIri();
 			case OwlElPrefixDeclaration x -> {
@@ -78,6 +85,10 @@ public class OwlElOntology {
 			default -> throw new IllegalArgumentException("Unexpected value: " + obj);
 			}
 		}
+	}
+
+	public void load(Path file) throws IOException {
+		load(SnomedOwlExpressions.read(file));
 	}
 
 }

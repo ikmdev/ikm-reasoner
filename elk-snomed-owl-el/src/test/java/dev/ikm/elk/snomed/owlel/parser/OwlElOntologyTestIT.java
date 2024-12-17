@@ -23,6 +23,7 @@ package dev.ikm.elk.snomed.owlel.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -40,6 +41,17 @@ public class OwlElOntologyTestIT {
 		ontology.load(SnomedOfsParserTestIT.file);
 		assertEquals("http://snomed.info/sct/900000000000207008", ontology.getIri());
 		assertEquals(369438, ontology.getAxioms().size());
+	}
+
+	@Test
+	public void loadParseError() {
+		OwlElOntology ontology = new OwlElOntology();
+		try {
+			ontology.load(List.of("Ontology(:=123)"));
+		} catch (Exception ex) {
+			assertEquals(UnsupportedOperationException.class, ex.getClass());
+			assertEquals(SnomedOfsParser.SyntaxError.class, ex.getCause().getClass());
+		}
 	}
 
 }

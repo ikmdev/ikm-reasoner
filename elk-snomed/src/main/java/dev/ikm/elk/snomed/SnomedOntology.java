@@ -33,6 +33,7 @@ import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
 import dev.ikm.elk.snomed.model.RoleType;
+import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public class SnomedOntology {
 
@@ -144,6 +145,13 @@ public class SnomedOntology {
 			}
 		}
 		return deps;
+	}
+
+	public static SnomedOntology load(List<String> exprs) {
+		OwlElOntology ontology = new OwlElOntology();
+		ontology.load(exprs);
+		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
+		return snomedOntology;
 	}
 
 }

@@ -103,7 +103,7 @@ iri : fullIRI | abbreviatedIRI ;
 // Token definitions
 CHARS_SEQ : CHARS+ ;
 
-fragment CHARS : [A-Z] | [a-z] | [0-9] | '-' | '_' ;
+fragment CHARS : [A-Z] | [a-z] | [0-9] | '-' | '_' | '[' | ']' ;
 
 // https://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/#sparqlGrammar
 // [71]  	PNAME_NS	  ::=  	PN_PREFIX? ':'
