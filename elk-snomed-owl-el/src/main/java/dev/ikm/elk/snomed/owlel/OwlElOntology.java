@@ -39,6 +39,7 @@ import dev.ikm.elk.snomed.owlel.parser.SnomedOfsParser;
 
 public class OwlElOntology {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(OwlElOntology.class);
 
 	private OwlElObjectFactory factory = new OwlElObjectFactory();

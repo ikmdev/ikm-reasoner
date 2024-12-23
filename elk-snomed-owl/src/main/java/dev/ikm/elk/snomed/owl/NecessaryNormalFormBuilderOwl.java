@@ -47,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.SnomedIds;
 import dev.ikm.elk.snomed.SnomedIsa;
 import dev.ikm.elk.snomed.SnomedRoles;
 import dev.ikm.elk.snomed.SnomedRoles.SnomedRole;
@@ -186,7 +187,7 @@ public class NecessaryNormalFormBuilderOwl {
 			OWLClassExpression def = getDefinition(concept, axiom);
 			Set<OWLObjectSomeValuesFrom> props = processDefinition(def);
 			for (OWLObjectSomeValuesFrom prop : props) {
-				if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedOwlOntology.role_group) {
+				if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedIds.role_group) {
 					OWLClassExpression gr_expr = prop.getFiller();
 					Set<OWLObjectSomeValuesFrom> gr_props = processDefinition(gr_expr);
 					for (OWLObjectSomeValuesFrom gr_prop : gr_props) {
@@ -306,7 +307,7 @@ public class NecessaryNormalFormBuilderOwl {
 		OWLClassExpression def = getDefinition(concept, axiom);
 		Set<OWLObjectSomeValuesFrom> props = processDefinition(def);
 		for (OWLObjectSomeValuesFrom prop : props) {
-			if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedOwlOntology.role_group) {
+			if (SnomedOwlOntology.getId(prop.getProperty().getNamedProperty()) == SnomedIds.role_group) {
 				OWLClassExpression gr_expr = prop.getFiller();
 				Set<OWLObjectSomeValuesFrom> gr_props = processDefinition(gr_expr);
 				simplify(gr_props);
@@ -596,9 +597,8 @@ public class NecessaryNormalFormBuilderOwl {
 			mis_match_cnt++;
 //			LOG.info("NNFs: " + nnfs.size());
 			LOG.info("Roles:");
-			roles.stream()
-					.sorted(Comparator.comparingLong((SnomedRole x) -> x.relationshipGroup)
-							.thenComparingLong((SnomedRole x) -> x.typeId).thenComparingLong((SnomedRole x) -> x.destinationId))
+			roles.stream().sorted(Comparator.comparingLong((SnomedRole x) -> x.relationshipGroup)
+					.thenComparingLong((SnomedRole x) -> x.typeId).thenComparingLong((SnomedRole x) -> x.destinationId))
 					.forEach(x -> LOG.info("\t" + x));
 			LOG.info("PropsU:");
 			nnf.getUngroupedProps().forEach(x -> LOG.info("\t" + x));
