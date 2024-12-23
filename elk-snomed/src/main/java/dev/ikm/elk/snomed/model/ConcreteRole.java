@@ -23,8 +23,6 @@ package dev.ikm.elk.snomed.model;
 import java.util.Objects;
 
 public class ConcreteRole {
-	
-	public static boolean convert_to_float_for_compare = false;
 
 	public enum ValueType {
 		Decimal, Double, Float, Integer, String;
@@ -41,10 +39,6 @@ public class ConcreteRole {
 		this.concreteRoleType = concreteRoleType;
 		this.value = value;
 		this.valueType = valueType;
-		if (convert_to_float_for_compare && this.valueType == ValueType.Decimal) {
-			this.value = Float.valueOf(value).toString();
-			this.valueType = ValueType.Float;
-		}
 	}
 
 	public ConcreteRoleType getConcreteRoleType() {
