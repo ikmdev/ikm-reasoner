@@ -33,6 +33,7 @@ import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public class OwlElOntologyTestIT {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(OwlElOntologyTestIT.class);
 
 	@Test
