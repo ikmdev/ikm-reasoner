@@ -29,8 +29,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 class EvictorTestUtils {
 
@@ -124,7 +123,7 @@ class EvictorTestUtils {
 		// Retaining even elements evicts the odd ones.
 		evicted = evictor.addAndEvict(10, new Predicate<Integer>() {
 			@Override
-			public boolean apply(final Integer element) {
+			public boolean test(final Integer element) {
 				return element % 2 == 0;
 			}
 		});

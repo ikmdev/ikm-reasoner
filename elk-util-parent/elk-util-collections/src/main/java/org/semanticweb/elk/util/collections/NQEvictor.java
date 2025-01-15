@@ -26,10 +26,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.util.statistics.Stat;
-
-import com.google.common.base.Predicate;
 
 /**
  * Acts as a sequence of {@link RecencyEvictor} (called levels) where if element
@@ -138,7 +137,7 @@ public class NQEvictor<E> extends AbstractEvictor<E> {
 		final Iterator<E> iterator = firstLevel.keySet().iterator();
 		while (iterator.hasNext() && firstLevel.size() > goalCapacity) {
 			final E element = iterator.next();
-			if (!retain.apply(element)) {
+			if (!retain.test(element)) {
 				evicted.add(element);
 				iterator.remove();
 			}

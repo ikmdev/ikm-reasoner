@@ -26,10 +26,9 @@ import static org.semanticweb.elk.util.collections.EvictorTestUtils.checkNothing
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
-
-import com.google.common.base.Predicate;
 
 public class CountingEvictorTest {
 
@@ -125,7 +124,7 @@ public class CountingEvictorTest {
 			final int addedElement = element;
 			evicted = evictor.addAndEvict(element, new Predicate<Integer>() {
 				@Override
-				public boolean apply(final Integer e) {
+				public boolean test(final Integer e) {
 					return e <= addedElement;
 				}
 			});
@@ -156,7 +155,7 @@ public class CountingEvictorTest {
 		checkEvicted(Arrays.asList(10), evicted);
 		evicted = evictor.addAndEvict(10, new Predicate<Integer>() {
 			@Override
-			public boolean apply(final Integer e) {
+			public boolean test(final Integer e) {
 				return e <= 10;
 			}
 		});

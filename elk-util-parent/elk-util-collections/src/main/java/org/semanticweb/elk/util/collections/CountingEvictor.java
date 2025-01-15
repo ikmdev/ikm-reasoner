@@ -23,10 +23,10 @@ package org.semanticweb.elk.util.collections;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.util.statistics.Stat;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
 /**

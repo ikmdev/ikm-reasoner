@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 public class Stats {
@@ -249,16 +248,17 @@ public class Stats {
 	}
 
 	private static <E extends AnnotatedElement> Iterable<E> getAnnotatedElements(
-			final Class<? extends Annotation> presentAnnotation,
-			final E[] elements) {
-		return Iterables.filter(Arrays.asList(elements), new Predicate<E>() {
-
-			@Override
-			public boolean apply(final E element) {
-				return element.isAnnotationPresent(presentAnnotation);
-			}
-
-		});
+			final Class<? extends Annotation> presentAnnotation, final E[] elements) {
+//		return Iterables.filter(Arrays.asList(elements), new Predicate<E>() {
+//
+//			@Override
+//			public boolean test(final E element) {
+//				return element.isAnnotationPresent(presentAnnotation);
+//			}
+//
+//		});
+		return () -> Arrays.stream(elements).filter(element -> element.isAnnotationPresent(presentAnnotation))
+				.iterator();
 	}
 
 	private static <E extends AnnotatedElement & Member> String getStatName(

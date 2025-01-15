@@ -28,6 +28,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.loading.AbstractEntailmentQueryLoader;
 import org.semanticweb.elk.loading.ElkLoadingException;
@@ -61,8 +62,6 @@ import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Predicate;
 
 /**
  * Keeps track of axioms that were queried for entailment.
@@ -354,7 +353,7 @@ public class EntailmentQueryState implements EntailmentQueryLoader.Factory {
 
 	private final Predicate<QueryState> doNotEvict_ = new Predicate<QueryState>() {
 		@Override
-		public boolean apply(final QueryState state) {
+		public boolean test(final QueryState state) {
 			return state.isLocked() || lastQueries_.contains(state.getQuery());
 		}
 	};
