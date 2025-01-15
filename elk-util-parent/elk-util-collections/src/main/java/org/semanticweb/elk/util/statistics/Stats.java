@@ -33,9 +33,9 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -70,8 +70,8 @@ public class Stats {
 
 	public static Iterable<Map.Entry<String, Object>> getStats(
 			final Object hasStats, final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStats);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStats);
+		Objects.requireNonNull(statNamePrefix);
 		if (hasStats instanceof Class) {
 			return getStats((Class<?>) hasStats, null, statNamePrefix);
 		} else {
@@ -82,8 +82,8 @@ public class Stats {
 	public static Iterable<Map.Entry<String, Object>> getStats(
 			final Class<?> hasStatsClass, final Object hasStats,
 			final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStatsClass);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStatsClass);
+		Objects.requireNonNull(statNamePrefix);
 
 		final Iterable<Field> statFields = getAnnotatedElements(Stat.class,
 				hasStatsClass.getFields());
@@ -138,7 +138,7 @@ public class Stats {
 	}
 
 	public static void resetStats(final Object hasStats) {
-		Preconditions.checkNotNull(hasStats);
+		Objects.requireNonNull(hasStats);
 		if (hasStats instanceof Class) {
 			resetStats((Class<?>) hasStats, null);
 		} else {
@@ -148,7 +148,7 @@ public class Stats {
 
 	public static void resetStats(final Class<?> hasStatsClass,
 			final Object hasStats) {
-		Preconditions.checkNotNull(hasStatsClass);
+		Objects.requireNonNull(hasStatsClass);
 
 		final Iterable<Method> resetMethods = getAnnotatedElements(
 				ResetStats.class, hasStatsClass.getMethods());
@@ -174,8 +174,8 @@ public class Stats {
 	private static Iterable<Map.Entry<String, Object>> getNested(
 			final Class<?> hasStatsClass, final Object hasStats,
 			final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStatsClass);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStatsClass);
+		Objects.requireNonNull(statNamePrefix);
 
 		final Iterable<Field> nestedFields = getAnnotatedElements(
 				NestedStats.class, hasStatsClass.getFields());

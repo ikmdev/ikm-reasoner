@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.semanticweb.elk.util.statistics.Stat;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
 /**
@@ -92,7 +92,7 @@ public class NQEvictor<E> extends AbstractEvictor<E> {
 
 	@Override
 	public Iterator<E> evict(final Predicate<E> retain) {
-		Preconditions.checkNotNull(retain);
+		Objects.requireNonNull(retain);
 
 		/*
 		 * Elements evicted from some level are added to the lower level. Only
