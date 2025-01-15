@@ -23,15 +23,13 @@ open module org.semanticweb.elk.owlapi {
 
 	requires org.slf4j;
 
-	requires org.liveontologies.owlapi.proof;
-	requires org.liveontologies.puli;
 
 	requires org.semanticweb.owlapi;
 	requires org.semanticweb.owlapi.impl;
 	requires org.semanticweb.owlapi.apibinding;
 
 	requires org.semanticweb.elk.owl.model;
-	requires org.semanticweb.elk.proofs;
+	requires org.semanticweb.elk.reasoner;
 	requires org.semanticweb.elk.util.common;
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.io;

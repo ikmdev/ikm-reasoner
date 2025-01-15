@@ -43,8 +43,6 @@
 		<module>elk-util-parent</module>
 		<module>elk-owl-parent</module>
 		<module>elk-reasoner</module>
-		<module>elk-proofs</module>
-		<module>elk-proofs-test</module>
 		<module>elk-owlapi</module>
 		<module>elk-owlapi-test</module>
 		<module>elk-snomed-owl-el</module>
@@ -72,8 +70,6 @@
 		<jsr305.version>3.0.2-r7</jsr305.version>
 		<!-- dev.ikm.owlapi dependencies -->
 		<owlapi4.version>4.7.6</owlapi4.version>
-		<!-- dev.ikm.puli dependencies -->
-		<puli.version>0.6.0</puli.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -163,17 +159,6 @@
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-parsers</artifactId>
 				<version>${owlapi4.version}</version>
-			</dependency>
-			<!-- dev.ikm.puli dependencies -->
-			<dependency>
-				<groupId>dev.ikm.puli</groupId>
-				<artifactId>owlapi-proof</artifactId>
-				<version>${puli.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>dev.ikm.puli</groupId>
-				<artifactId>puli</artifactId>
-				<version>${puli.version}</version>
 			</dependency>
 			<!-- Project dependencies-->
 			<dependency>
