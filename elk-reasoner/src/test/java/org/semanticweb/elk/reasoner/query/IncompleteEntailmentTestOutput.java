@@ -27,8 +27,6 @@ import java.util.Set;
 
 import org.semanticweb.elk.testing.DiffableOutput;
 
-import com.google.common.collect.Sets;
-
 /**
  * A possibly incomplete entailment results consisting of positive
  * 
@@ -78,9 +76,11 @@ public class IncompleteEntailmentTestOutput<E, O extends IncompleteEntailmentTes
 
 	@Override
 	public void reportMissingElementsOf(O other, Listener<E> listener) {
-		for (E element : Sets.intersection(getNegativeEntailments(),
-				other.getPositiveEntailments())) {
-			listener.missing(element);
+//		for (E element : Sets.intersection(getNegativeEntailments(),
+//				other.getPositiveEntailments())) {
+		for (E element : getNegativeEntailments()) {
+			if (other.getPositiveEntailments().contains(element))
+				listener.missing(element);
 		}
 	}
 
