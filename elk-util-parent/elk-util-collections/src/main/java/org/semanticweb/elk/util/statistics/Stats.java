@@ -34,9 +34,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
+import org.semanticweb.elk.util.collections.Iterables;
 
 public class Stats {
 
@@ -45,7 +45,7 @@ public class Stats {
 	private Stats() {
 		// Forbid instantiation of a utility class.
 	}
-
+	
 	public static Map<String, Object> copyIntoMap(final Object hasStats,
 			Map<String, Object> result) {
 		if (result == null) {
@@ -77,6 +77,9 @@ public class Stats {
 			return getStats(hasStats.getClass(), hasStats, statNamePrefix);
 		}
 	}
+	
+	
+	
 
 	public static Iterable<Map.Entry<String, Object>> getStats(
 			final Class<?> hasStatsClass, final Object hasStats,
