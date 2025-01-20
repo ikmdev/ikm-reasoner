@@ -25,11 +25,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.Multimap;
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 /**
  * An implementation of {@link ModifiableTracingProof} backed by a
@@ -48,8 +48,8 @@ public class ModifiableTracingProofImpl<I extends TracingInference>
 	private static final Logger LOGGER_ = LoggerFactory
 			.getLogger(ModifiableTracingProofImpl.class);
 
-	private final Multimap<Conclusion, I> inferenceMap_ = ArrayListMultimap
-			.create();
+	private final MutableMultimap<Conclusion, I> inferenceMap_ = FastListMultimap
+			.newMultimap();
 
 	@Override
 	public void produce(I inference) {
@@ -72,7 +72,7 @@ public class ModifiableTracingProofImpl<I extends TracingInference>
 
 	@Override
 	public Set<? extends Conclusion> getAllConclusions() {
-		return inferenceMap_.keySet();
+		return inferenceMap_.keySet().toSet();
 	}
 
 	@Override

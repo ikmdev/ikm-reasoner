@@ -66,6 +66,7 @@
 		<junit.version>5.11.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
+		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
 		<guava.version>33.3.0-jre-r3</guava.version>
 		<jsr305.version>3.0.2-r7</jsr305.version>
 		<!-- dev.ikm.owlapi dependencies -->
@@ -128,6 +129,11 @@
 				<groupId>dev.ikm.jpms</groupId>
 				<artifactId>antlr4-runtime</artifactId>
 				<version>${antlr4-runtime.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dev.ikm.jpms</groupId>
+				<artifactId>eclipse-collections</artifactId>
+				<version>${eclipse-collections.version}</version>
 			</dependency>
 			<dependency><!-- <groupId>com.google.guava</groupId>-->
 				<groupId>dev.ikm.jpms</groupId>

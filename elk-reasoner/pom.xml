@@ -16,6 +16,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>dev.ikm.jpms</groupId>
+			<artifactId>eclipse-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>dev.ikm.jpms</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
 		<dependency>
