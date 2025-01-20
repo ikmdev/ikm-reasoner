@@ -40,8 +40,7 @@ import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifestWithOutput;
 import org.semanticweb.elk.testing4.PolySuite4;
-
-import com.google.common.collect.ImmutableMap;
+import org.semanticweb.elk.util.collections.ImmutableMapBuilder;
 
 @RunWith(PolySuite4.class)
 public class ElkClassExpressionDirectInstancesQueryTest extends
@@ -64,14 +63,14 @@ public class ElkClassExpressionDirectInstancesQueryTest extends
 
 					@Override
 					protected Map<String, String> additionalConfigWithOutput() {
-						return ImmutableMap.<String, String> builder().put(
+						return ImmutableMapBuilder.<String, String> builder().put(
 								ReasonerConfiguration.CLASS_EXPRESSION_QUERY_EVICTOR,
 								"NQEvictor(0, 0.75)").build();
 					}
 
 					@Override
 					protected Map<String, String> additionalConfigWithInterrupts() {
-						return ImmutableMap.<String, String> builder().put(
+						return ImmutableMapBuilder.<String, String> builder().put(
 								ReasonerConfiguration.CLASS_EXPRESSION_QUERY_EVICTOR,
 								"NQEvictor(0, 0.75)").build();
 					}
