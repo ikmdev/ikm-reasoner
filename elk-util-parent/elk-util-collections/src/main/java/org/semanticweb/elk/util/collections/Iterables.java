@@ -26,8 +26,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.google.common.collect.Iterators;
-
 public class Iterables {
 
 	/**
