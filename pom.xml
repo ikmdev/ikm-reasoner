@@ -134,11 +134,6 @@
 				<artifactId>eclipse-collections</artifactId>
 				<version>${eclipse-collections.version}</version>
 			</dependency>
-			<dependency><!-- <groupId>com.google.code.findbugs</groupId>-->
-				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>${jsr305.version}</version>
-			</dependency>
 			<!-- dev.ikm.owlapi dependencies -->
 			<dependency>
 				<groupId>dev.ikm.owlapi</groupId>
@@ -184,17 +179,6 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>elk-owl-parsing-javacc</artifactId>
-				<version>${project.version}</version>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs-test</artifactId>
 				<version>${project.version}</version>
 				<type>test-jar</type>
 			</dependency>
@@ -546,7 +530,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<skippedModules>
-						elk-util-testing4,elk-proofs-test,elk-owlapi-test</skippedModules>
+						elk-util-testing4,elk-owlapi-test</skippedModules>
 					<doclint>none</doclint>
 				</configuration>
 				<reportSets>
