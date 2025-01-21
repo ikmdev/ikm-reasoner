@@ -80,7 +80,6 @@ import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Keeps track of class expressions that were queried for satisfiability,
  * equivalent classes, super-classes or sub-classes.

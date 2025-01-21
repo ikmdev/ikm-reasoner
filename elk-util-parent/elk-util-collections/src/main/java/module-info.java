@@ -19,8 +19,6 @@
  */
 open module org.semanticweb.elk.util.collections {
 
-	requires dev.ikm.jpms.google.common;
-
 	exports org.semanticweb.elk.util.collections;
 	exports org.semanticweb.elk.util.collections.chains;
 	exports org.semanticweb.elk.util.collections.entryset;

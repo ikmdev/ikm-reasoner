@@ -15,10 +15,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>dev.ikm.owlapi</groupId>
 			<artifactId>owlapi-api</artifactId>
 		</dependency>

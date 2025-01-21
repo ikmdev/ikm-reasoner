@@ -35,6 +35,9 @@ public class Iterators {
 	 * <p>
 	 * The returned iterator supports {@code remove()} when the corresponding input
 	 * iterator supports it.
+	 * 
+	 * <p>
+	 * Replacement for guava method
 	 */
 	public static <T extends Object> Iterator<T> concat(Iterator<T> iter1, Iterator<T> iter2) {
 		return Stream.concat(StreamSupport.stream(Spliterators.spliteratorUnknownSize(iter1, 0), false),

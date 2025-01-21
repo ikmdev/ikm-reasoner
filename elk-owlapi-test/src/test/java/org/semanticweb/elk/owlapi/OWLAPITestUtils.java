@@ -83,12 +83,4 @@ public class OWLAPITestUtils {
 				FailingReasonerInterrupter.INSTANCE);
 	}
 
-//	public static ElkProver createProver(ElkReasoner reasoner) {
-//		return new ElkProver(reasoner);
-//	}
-//
-//	public static ElkProver createProver(OWLOntology ontology) {
-//		return createProver(createReasoner(ontology));
-//	}
-
 }

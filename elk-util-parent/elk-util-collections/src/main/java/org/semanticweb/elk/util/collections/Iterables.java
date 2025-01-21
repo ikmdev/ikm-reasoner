@@ -66,8 +66,9 @@ public class Iterables {
 	 * <p>
 	 * <b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
 	 * Streams.concat(...)}.
-	 *
-	 * @throws NullPointerException if any of the provided iterables is null
+	 * 
+	 * <p>
+	 * Replacement for guava method
 	 */
 	@SafeVarargs
 	public static <T extends Object> Iterable<T> concat(Iterable<T>... inputs) {
@@ -89,6 +90,9 @@ public class Iterables {
 	 * <p>
 	 * <b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
 	 * streamOfStreams.flatMap(s -> s)}.
+	 * 
+	 * <p>
+	 * Replacement for guava method
 	 */
 	public static <T extends Object> Iterable<T> concat(Iterable<Iterable<T>> inputs) {
 		return () -> StreamSupport.stream(inputs.spliterator(), false)
@@ -102,6 +106,9 @@ public class Iterables {
 	 * .toString(Iterables.toArray(iterable))}). Note that for <i>most</i>
 	 * implementations of {@link Collection}, {@code collection.toString()} also
 	 * gives the same result, but that behavior is not generally guaranteed.
+	 * 
+	 * <p>
+	 * Replacement for guava method
 	 */
 	public static String toString(Iterable<?> iterable) {
 		return Arrays.toString(StreamSupport.stream(iterable.spliterator(), false).toArray());

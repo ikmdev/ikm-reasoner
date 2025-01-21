@@ -36,7 +36,6 @@ import org.semanticweb.elk.util.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Pavel Klinov
  * 

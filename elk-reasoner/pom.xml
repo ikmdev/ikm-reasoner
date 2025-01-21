@@ -19,10 +19,6 @@
 			<artifactId>eclipse-collections</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-model</artifactId>
 		</dependency>

@@ -67,7 +67,6 @@
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
 		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
-		<guava.version>33.3.0-jre-r3</guava.version>
 		<jsr305.version>3.0.2-r7</jsr305.version>
 		<!-- dev.ikm.owlapi dependencies -->
 		<owlapi4.version>4.7.6</owlapi4.version>
@@ -134,11 +133,6 @@
 				<groupId>dev.ikm.jpms</groupId>
 				<artifactId>eclipse-collections</artifactId>
 				<version>${eclipse-collections.version}</version>
-			</dependency>
-			<dependency><!-- <groupId>com.google.guava</groupId>-->
-				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
 			</dependency>
 			<dependency><!-- <groupId>com.google.code.findbugs</groupId>-->
 				<groupId>dev.ikm.jpms</groupId>

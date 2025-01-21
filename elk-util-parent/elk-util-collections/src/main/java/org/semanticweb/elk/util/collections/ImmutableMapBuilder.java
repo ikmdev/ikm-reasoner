@@ -24,6 +24,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Replacement for guava ImmutableMap.builder()
+ * 
+ * @param <K>
+ * @param <V>
+ */
 public class ImmutableMapBuilder<K, V> {
 
 	private LinkedHashMap<K, V> map = new LinkedHashMap<>();
