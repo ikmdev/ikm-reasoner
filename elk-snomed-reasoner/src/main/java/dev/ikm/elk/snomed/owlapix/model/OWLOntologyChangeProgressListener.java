@@ -34,8 +34,6 @@ package dev.ikm.elk.snomed.owlapix.model;
 
 import java.io.Serializable;
 
-import javax.annotation.Nonnull;
-
 /**
  * Copied from OWLOntologyChangeProgressListener in the OWL API
  * 
@@ -57,7 +55,7 @@ public interface OWLOntologyChangeProgressListener extends Serializable {
 	/**
 	 * @param change the change just applied
 	 */
-	void appliedChange(@Nonnull OWLOntologyChange change);
+	void appliedChange(OWLOntologyChange change);
 
 	/** end of the progress. */
 	void end();

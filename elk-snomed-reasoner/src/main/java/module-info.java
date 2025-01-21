@@ -19,8 +19,6 @@
  */
 open module dev.ikm.elk.snomed.reasoner {
 
-	requires dev.ikm.jpms.javax.annotation;
-
 	requires org.slf4j;
 
 	requires org.semanticweb.elk.owl.implementation;
