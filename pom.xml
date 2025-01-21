@@ -522,6 +522,16 @@
 						</goals>
 						<configuration>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+							<ignoredUnusedDeclaredDependencies>
+								<ignoredUnusedDeclaredDependency>
+									org.apache.logging.log4j:*</ignoredUnusedDeclaredDependency>
+								<ignoredUnusedDeclaredDependency>org.slf4j:*</ignoredUnusedDeclaredDependency>
+							</ignoredUnusedDeclaredDependencies>
+							<ignoredNonTestScopedDependencies>
+								<ignoredNonTestScopedDependency>
+									org.apache.logging.log4j:*</ignoredNonTestScopedDependency>
+								<ignoredNonTestScopedDependency>org.slf4j:*</ignoredNonTestScopedDependency>
+							</ignoredNonTestScopedDependencies>
 						</configuration>
 					</execution>
 				</executions>
@@ -536,7 +546,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<skippedModules>
-						elk-util-testing4,elk-proofs-test,elk-owlapi4-tests</skippedModules>
+						elk-util-testing4,elk-proofs-test,elk-owlapi-test</skippedModules>
 					<doclint>none</doclint>
 				</configuration>
 				<reportSets>

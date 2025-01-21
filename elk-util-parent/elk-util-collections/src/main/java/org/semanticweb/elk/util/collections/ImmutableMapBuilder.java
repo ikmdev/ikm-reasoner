@@ -39,8 +39,7 @@ public class ImmutableMapBuilder<K, V> {
 	}
 
 	/**
-	 * Returns a new builder. The generated builder is equivalent to the builder
-	 * created by the {@link Builder} constructor.
+	 * Returns a new builder.
 	 */
 	public static <K, V> ImmutableMapBuilder<K, V> builder() {
 		return new ImmutableMapBuilder<>();

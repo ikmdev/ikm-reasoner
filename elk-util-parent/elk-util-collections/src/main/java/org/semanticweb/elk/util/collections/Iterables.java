@@ -30,18 +30,7 @@ public class Iterables {
 
 	/**
 	 * Returns a view containing the result of applying {@code function} to each
-	 * element of {@code
-	 * fromIterable}.
-	 *
-	 * <p>
-	 * The returned iterable's iterator supports {@code remove()} if
-	 * {@code fromIterable}'s iterator does. After a successful {@code remove()}
-	 * call, {@code fromIterable} no longer contains the corresponding element.
-	 *
-	 * <p>
-	 * If the input {@code Iterable} is known to be a {@code List} or other
-	 * {@code Collection}, consider {@link Lists#transform} and
-	 * {@link Collections2#transform}.
+	 * element of {@code fromIterable}.
 	 *
 	 * <p>
 	 * <b>{@code Stream} equivalent:</b> {@link Stream#map}
@@ -60,12 +49,7 @@ public class Iterables {
 	 * The input iterators are not polled until necessary.
 	 *
 	 * <p>
-	 * The returned iterable's iterator supports {@code remove()} when the
-	 * corresponding input iterator supports it.
-	 *
-	 * <p>
-	 * <b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
-	 * Streams.concat(...)}.
+	 * <b>{@code Stream} equivalent:</b> {@code Streams.concat(...)}.
 	 * 
 	 * <p>
 	 * Replacement for guava method
@@ -82,12 +66,6 @@ public class Iterables {
 	 * The input iterators are not polled until necessary.
 	 *
 	 * <p>
-	 * The returned iterable's iterator supports {@code remove()} when the
-	 * corresponding input iterator supports it. The methods of the returned
-	 * iterable may throw {@code
-	 * NullPointerException} if any of the input iterators is null.
-	 *
-	 * <p>
 	 * <b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
 	 * streamOfStreams.flatMap(s -> s)}.
 	 * 
@@ -102,10 +80,11 @@ public class Iterables {
 	/**
 	 * Returns a string representation of {@code iterable}, with the format
 	 * {@code [e1, e2, ..., en]} (that is, identical to {@link java.util.Arrays
-	 * Arrays}{@code
-	 * .toString(Iterables.toArray(iterable))}). Note that for <i>most</i>
-	 * implementations of {@link Collection}, {@code collection.toString()} also
-	 * gives the same result, but that behavior is not generally guaranteed.
+	 * Arrays}{@code .toString(Iterables.toArray(iterable))}).
+	 * 
+	 * Note that for <i>most</i> implementations of {@link Collection},
+	 * {@code collection.toString()} also gives the same result, but that behavior
+	 * is not generally guaranteed.
 	 * 
 	 * <p>
 	 * Replacement for guava method

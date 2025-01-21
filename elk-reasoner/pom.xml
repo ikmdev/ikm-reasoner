@@ -20,11 +20,11 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owl-model</artifactId>
+			<artifactId>elk-owl-implementation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owl-implementation</artifactId>
+			<artifactId>elk-owl-model</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

@@ -14,12 +14,32 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>dev.ikm.jpms</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-owl-implementation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-owl-model</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-reasoner</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>jsr305</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-concurrent</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-util-logging</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
