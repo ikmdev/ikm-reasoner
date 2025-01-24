@@ -52,7 +52,7 @@
 	</modules>
 
 	<scm>
-		<url>http://www.github.com/ikmdev/enrichment-api</url>
+		<url>https://github.com/ikmdev/ikm-reasoner</url>
 	</scm>
 
 	<properties>
@@ -67,9 +67,8 @@
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
 		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
-		<jsr305.version>3.0.2-r7</jsr305.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi4.version>4.7.6</owlapi4.version>
+		<owlapi4.version>4.8.0</owlapi4.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -115,12 +114,6 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit4.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<!-- dev.ikm.jpms dependencies -->
