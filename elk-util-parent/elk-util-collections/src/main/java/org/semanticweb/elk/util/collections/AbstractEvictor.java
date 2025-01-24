@@ -22,20 +22,19 @@
 package org.semanticweb.elk.util.collections;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public abstract class AbstractEvictor<E> implements Evictor<E> {
 
 	@Override
 	public Iterator<E> evict() {
-		return evict(Predicates.<E> alwaysFalse());
+		return evict(x -> false);
 	}
 
 	@Override
 	public Iterator<E> addAndEvict(final E element) {
-		return addAndEvict(element, Predicates.<E> alwaysFalse());
+		return addAndEvict(element, x -> false);
 	}
 
 	@Override

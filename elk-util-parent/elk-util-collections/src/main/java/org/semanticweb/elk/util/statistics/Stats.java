@@ -33,11 +33,10 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import org.semanticweb.elk.util.collections.Iterables;
 
 public class Stats {
 
@@ -46,7 +45,7 @@ public class Stats {
 	private Stats() {
 		// Forbid instantiation of a utility class.
 	}
-
+	
 	public static Map<String, Object> copyIntoMap(final Object hasStats,
 			Map<String, Object> result) {
 		if (result == null) {
@@ -70,20 +69,23 @@ public class Stats {
 
 	public static Iterable<Map.Entry<String, Object>> getStats(
 			final Object hasStats, final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStats);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStats);
+		Objects.requireNonNull(statNamePrefix);
 		if (hasStats instanceof Class) {
 			return getStats((Class<?>) hasStats, null, statNamePrefix);
 		} else {
 			return getStats(hasStats.getClass(), hasStats, statNamePrefix);
 		}
 	}
+	
+	
+	
 
 	public static Iterable<Map.Entry<String, Object>> getStats(
 			final Class<?> hasStatsClass, final Object hasStats,
 			final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStatsClass);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStatsClass);
+		Objects.requireNonNull(statNamePrefix);
 
 		final Iterable<Field> statFields = getAnnotatedElements(Stat.class,
 				hasStatsClass.getFields());
@@ -138,7 +140,7 @@ public class Stats {
 	}
 
 	public static void resetStats(final Object hasStats) {
-		Preconditions.checkNotNull(hasStats);
+		Objects.requireNonNull(hasStats);
 		if (hasStats instanceof Class) {
 			resetStats((Class<?>) hasStats, null);
 		} else {
@@ -148,7 +150,7 @@ public class Stats {
 
 	public static void resetStats(final Class<?> hasStatsClass,
 			final Object hasStats) {
-		Preconditions.checkNotNull(hasStatsClass);
+		Objects.requireNonNull(hasStatsClass);
 
 		final Iterable<Method> resetMethods = getAnnotatedElements(
 				ResetStats.class, hasStatsClass.getMethods());
@@ -174,8 +176,8 @@ public class Stats {
 	private static Iterable<Map.Entry<String, Object>> getNested(
 			final Class<?> hasStatsClass, final Object hasStats,
 			final String statNamePrefix) {
-		Preconditions.checkNotNull(hasStatsClass);
-		Preconditions.checkNotNull(statNamePrefix);
+		Objects.requireNonNull(hasStatsClass);
+		Objects.requireNonNull(statNamePrefix);
 
 		final Iterable<Field> nestedFields = getAnnotatedElements(
 				NestedStats.class, hasStatsClass.getFields());
@@ -249,16 +251,17 @@ public class Stats {
 	}
 
 	private static <E extends AnnotatedElement> Iterable<E> getAnnotatedElements(
-			final Class<? extends Annotation> presentAnnotation,
-			final E[] elements) {
-		return Iterables.filter(Arrays.asList(elements), new Predicate<E>() {
-
-			@Override
-			public boolean apply(final E element) {
-				return element.isAnnotationPresent(presentAnnotation);
-			}
-
-		});
+			final Class<? extends Annotation> presentAnnotation, final E[] elements) {
+//		return Iterables.filter(Arrays.asList(elements), new Predicate<E>() {
+//
+//			@Override
+//			public boolean test(final E element) {
+//				return element.isAnnotationPresent(presentAnnotation);
+//			}
+//
+//		});
+		return () -> Arrays.stream(elements).filter(element -> element.isAnnotationPresent(presentAnnotation))
+				.iterator();
 	}
 
 	private static <E extends AnnotatedElement & Member> String getStatName(

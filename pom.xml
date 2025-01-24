@@ -43,8 +43,6 @@
 		<module>elk-util-parent</module>
 		<module>elk-owl-parent</module>
 		<module>elk-reasoner</module>
-		<module>elk-proofs</module>
-		<module>elk-proofs-test</module>
 		<module>elk-owlapi</module>
 		<module>elk-owlapi-test</module>
 		<module>elk-snomed-owl-el</module>
@@ -54,7 +52,7 @@
 	</modules>
 
 	<scm>
-		<url>http://www.github.com/ikmdev/enrichment-api</url>
+		<url>https://github.com/ikmdev/ikm-reasoner</url>
 	</scm>
 
 	<properties>
@@ -68,12 +66,9 @@
 		<junit.version>5.11.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r1</antlr4-runtime.version>
-		<guava.version>33.3.0-jre-r3</guava.version>
-		<jsr305.version>3.0.2-r7</jsr305.version>
+		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi4.version>4.7.6</owlapi4.version>
-		<!-- dev.ikm.puli dependencies -->
-		<puli.version>0.6.0</puli.version>
+		<owlapi4.version>4.8.0</owlapi4.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -121,27 +116,16 @@
 				<version>${junit4.version}</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-api</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
 			<!-- dev.ikm.jpms dependencies -->
 			<dependency><!-- <groupId>org.antlr</groupId>-->
 				<groupId>dev.ikm.jpms</groupId>
 				<artifactId>antlr4-runtime</artifactId>
 				<version>${antlr4-runtime.version}</version>
 			</dependency>
-			<dependency><!-- <groupId>com.google.guava</groupId>-->
+			<dependency>
 				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency><!-- <groupId>com.google.code.findbugs</groupId>-->
-				<groupId>dev.ikm.jpms</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>${jsr305.version}</version>
+				<artifactId>eclipse-collections</artifactId>
+				<version>${eclipse-collections.version}</version>
 			</dependency>
 			<!-- dev.ikm.owlapi dependencies -->
 			<dependency>
@@ -163,17 +147,6 @@
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-parsers</artifactId>
 				<version>${owlapi4.version}</version>
-			</dependency>
-			<!-- dev.ikm.puli dependencies -->
-			<dependency>
-				<groupId>dev.ikm.puli</groupId>
-				<artifactId>owlapi-proof</artifactId>
-				<version>${puli.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>dev.ikm.puli</groupId>
-				<artifactId>puli</artifactId>
-				<version>${puli.version}</version>
 			</dependency>
 			<!-- Project dependencies-->
 			<dependency>
@@ -199,17 +172,6 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>elk-owl-parsing-javacc</artifactId>
-				<version>${project.version}</version>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>elk-proofs-test</artifactId>
 				<version>${project.version}</version>
 				<type>test-jar</type>
 			</dependency>
@@ -537,6 +499,16 @@
 						</goals>
 						<configuration>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+							<ignoredUnusedDeclaredDependencies>
+								<ignoredUnusedDeclaredDependency>
+									org.apache.logging.log4j:*</ignoredUnusedDeclaredDependency>
+								<ignoredUnusedDeclaredDependency>org.slf4j:*</ignoredUnusedDeclaredDependency>
+							</ignoredUnusedDeclaredDependencies>
+							<ignoredNonTestScopedDependencies>
+								<ignoredNonTestScopedDependency>
+									org.apache.logging.log4j:*</ignoredNonTestScopedDependency>
+								<ignoredNonTestScopedDependency>org.slf4j:*</ignoredNonTestScopedDependency>
+							</ignoredNonTestScopedDependencies>
 						</configuration>
 					</execution>
 				</executions>
@@ -551,7 +523,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<skippedModules>
-						elk-util-testing4,elk-proofs-test,elk-owlapi4-tests</skippedModules>
+						elk-util-testing4,elk-owlapi-test</skippedModules>
 					<doclint>none</doclint>
 				</configuration>
 				<reportSets>

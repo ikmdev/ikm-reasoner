@@ -49,10 +49,6 @@ public abstract class OwlApiReasoningTestDelegate<O>
 		return reasoner_;
 	}
 
-	public ElkProver getProver() {
-		return OWLAPITestUtils.createProver(reasoner_);
-	}
-
 	@Override
 	public void initWithOutput() throws Exception {
 		final InputStream input = getManifest().getInput().getUrl()

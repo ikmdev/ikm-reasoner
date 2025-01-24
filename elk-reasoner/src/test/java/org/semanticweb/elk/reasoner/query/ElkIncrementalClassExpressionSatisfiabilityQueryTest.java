@@ -33,8 +33,7 @@ import org.semanticweb.elk.testing.PolySuite.Config;
 import org.semanticweb.elk.testing.PolySuite.Configuration;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing4.PolySuite4;
-
-import com.google.common.collect.ImmutableMap;
+import org.semanticweb.elk.util.collections.ImmutableMapBuilder;
 
 @RunWith(PolySuite4.class)
 public class ElkIncrementalClassExpressionSatisfiabilityQueryTest extends
@@ -65,14 +64,14 @@ public class ElkIncrementalClassExpressionSatisfiabilityQueryTest extends
 
 					@Override
 					protected Map<String, String> additionalConfigIncremental() {
-						return ImmutableMap.<String, String> builder().put(
+						return ImmutableMapBuilder.<String, String> builder().put(
 								ReasonerConfiguration.CLASS_EXPRESSION_QUERY_EVICTOR,
 								"NQEvictor(0, 0.75)").build();
 					}
 
 					@Override
 					protected Map<String, String> additionalConfigWithInterrupts() {
-						return ImmutableMap.<String, String> builder().put(
+						return ImmutableMapBuilder.<String, String> builder().put(
 								ReasonerConfiguration.CLASS_EXPRESSION_QUERY_EVICTOR,
 								"NQEvictor(0, 0.75)").build();
 					}

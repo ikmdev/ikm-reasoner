@@ -28,17 +28,16 @@ import java.util.Map;
 import org.semanticweb.elk.util.collections.CapacityBalancingEvictor;
 import org.semanticweb.elk.util.collections.CountingEvictor;
 import org.semanticweb.elk.util.collections.Evictor;
+import org.semanticweb.elk.util.collections.ImmutableMapBuilder;
 import org.semanticweb.elk.util.collections.NQEvictor;
 import org.semanticweb.elk.util.collections.RecencyEvictor;
-
-import com.google.common.collect.ImmutableMap;
 
 public class EvictorBuilder {
 
 	public static final Map<String, Class<?>> EVICTOR_CLASS_SHORTCUT;
 
 	static {
-		final ImmutableMap.Builder<String, Class<?>> builder = ImmutableMap
+		final ImmutableMapBuilder<String, Class<?>> builder = ImmutableMapBuilder
 				.builder();
 		put(builder, RecencyEvictor.class);
 		put(builder, CapacityBalancingEvictor.class);
@@ -48,7 +47,7 @@ public class EvictorBuilder {
 	}
 
 	private static void put(
-			final ImmutableMap.Builder<String, Class<?>> builder,
+			final ImmutableMapBuilder<String, Class<?>> builder,
 			final Class<?> value) {
 		builder.put(value.getSimpleName(), value);
 	}

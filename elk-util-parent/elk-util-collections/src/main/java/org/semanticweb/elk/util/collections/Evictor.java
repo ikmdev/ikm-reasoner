@@ -22,10 +22,9 @@
 package org.semanticweb.elk.util.collections;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.util.statistics.HasStats;
-
-import com.google.common.base.Predicate;
 
 /**
  * Keeps track of added elements and informs of which of these elements were

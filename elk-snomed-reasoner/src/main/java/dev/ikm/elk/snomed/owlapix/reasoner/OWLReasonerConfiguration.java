@@ -34,15 +34,13 @@ package dev.ikm.elk.snomed.owlapix.reasoner;
 
 import java.io.Serializable;
 
-import javax.annotation.Nonnull;
-
 /**
  * An OWLReasonerConfiguration can be used to customise the setup of a reasoner
  * at reasoner creation time via an
- * org.semanticweb.owlapi.reasoner.OWLReasonerFactory. Specific
- * reasoners may define their own configuration objects with configuration
- * options particular to the reasoner. There are also a set of general options
- * defined by this configuration object. <br>
+ * org.semanticweb.owlapi.reasoner.OWLReasonerFactory. Specific reasoners may
+ * define their own configuration objects with configuration options particular
+ * to the reasoner. There are also a set of general options defined by this
+ * configuration object. <br>
  * Note that once a reasoner has been created, changing fields (via setter
  * methods or directly) on the configuration object will have no effect.
  * 
@@ -50,8 +48,8 @@ import javax.annotation.Nonnull;
  *         Management Group
  * @since 3.0.0
  * 
- * See org.semanticweb.owlapi.reasoner.OWLReasonerFactory
- * See org.semanticweb.owlapi.reasoner.SimpleConfiguration
+ *        See org.semanticweb.owlapi.reasoner.OWLReasonerFactory See
+ *        org.semanticweb.owlapi.reasoner.SimpleConfiguration
  */
 public interface OWLReasonerConfiguration extends Serializable {
 
@@ -62,27 +60,25 @@ public interface OWLReasonerConfiguration extends Serializable {
 	 * @return A progress monitor. By default this returns
 	 *         {@link NullReasonerProgressMonitor}
 	 */
-	@Nonnull
 	ReasonerProgressMonitor getProgressMonitor();
 
-    /**
-     * Gets the timeout in milliseconds for basic single reasoner operations
-     * (satisfiability check time out). If the value is equal to
-     * {@link Long#MAX_VALUE} then this means that the reasoner should never
-     * time out. <br>
-     * The reasoner will monitor the elapsed time during a satisfiability check
-     * (attempt to build a model for example) and if the elapsed time exceeds
-     * the timeout then it will abort the test as soon as possible and terminate
-     * all reasoning. A org.semanticweb.owlapi.reasoner.TimeOutException
-     * will be thrown in the thread that invoked the last reasoner operation. <br>
-     * Note that this is not a timeout for method calls such as "getSubClasses",
-     * which may involve many satisfiability (or other basic reasoning task)
-     * checks, the sum of which may well exceed the timeout.
-     * 
-     * @return The time out in milliseconds. By default this is set to the value
-     *         of {@link Long#MAX_VALUE}, which means the reasoner SHOULD NOT
-     *         timeout.
-     */
+	/**
+	 * Gets the timeout in milliseconds for basic single reasoner operations
+	 * (satisfiability check time out). If the value is equal to
+	 * {@link Long#MAX_VALUE} then this means that the reasoner should never time
+	 * out. <br>
+	 * The reasoner will monitor the elapsed time during a satisfiability check
+	 * (attempt to build a model for example) and if the elapsed time exceeds the
+	 * timeout then it will abort the test as soon as possible and terminate all
+	 * reasoning. A org.semanticweb.owlapi.reasoner.TimeOutException will be thrown
+	 * in the thread that invoked the last reasoner operation. <br>
+	 * Note that this is not a timeout for method calls such as "getSubClasses",
+	 * which may involve many satisfiability (or other basic reasoning task) checks,
+	 * the sum of which may well exceed the timeout.
+	 * 
+	 * @return The time out in milliseconds. By default this is set to the value of
+	 *         {@link Long#MAX_VALUE}, which means the reasoner SHOULD NOT timeout.
+	 */
 	long getTimeOut();
 
 	/**
@@ -91,7 +87,6 @@ public interface OWLReasonerConfiguration extends Serializable {
 	 * 
 	 * @return The fresh entity policy.
 	 */
-	@Nonnull
 	FreshEntityPolicy getFreshEntityPolicy();
 
 	/**
@@ -103,6 +98,5 @@ public interface OWLReasonerConfiguration extends Serializable {
 	 *         individuals that are the same as each other are not grouped into the
 	 *         same node within a node set.
 	 */
-	@Nonnull
 	IndividualNodeSetPolicy getIndividualNodeSetPolicy();
 }

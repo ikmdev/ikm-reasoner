@@ -34,8 +34,6 @@ package dev.ikm.elk.snomed.owlapix.model;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 /**
  * Copied from OWLOntologyChangeListener in the OWL API.
  * 
@@ -53,5 +51,5 @@ public interface OWLOntologyChangeListener {
 	 *                examined to determine which ontology it was applied to.
 	 * @throws Exception exception
 	 */
-	void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws Exception;
+	void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws Exception;
 }

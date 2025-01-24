@@ -25,8 +25,7 @@ package org.semanticweb.elk.reasoner.proof;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.google.common.base.Preconditions;
+import java.util.Objects;
 
 /**
  * The union of multiple proofs. Inferences from this proof deriving some
@@ -46,7 +45,7 @@ class ReasonerProofUnion<I extends ReasonerInference<?>>
 
 	public ReasonerProofUnion(
 			final Iterable<? extends ReasonerProof<? extends I>> proofs) {
-		Preconditions.checkNotNull(proofs);
+		Objects.requireNonNull(proofs);
 		this.proofs_ = proofs;
 	}
 

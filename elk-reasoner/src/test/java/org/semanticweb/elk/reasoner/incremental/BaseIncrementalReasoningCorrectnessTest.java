@@ -31,11 +31,10 @@ import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.testing.TestInput;
 import org.semanticweb.elk.testing.TestManifest;
 import org.semanticweb.elk.testing4.PolySuite4;
+import org.semanticweb.elk.util.collections.Iterables;
 import org.semanticweb.elk.util.logging.LogLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Iterables;
 
 /**
  * @author Pavel Klinov

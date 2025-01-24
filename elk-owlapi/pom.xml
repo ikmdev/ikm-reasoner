@@ -15,10 +15,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>dev.ikm.jpms</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>dev.ikm.owlapi</groupId>
 			<artifactId>owlapi-api</artifactId>
 		</dependency>
@@ -31,24 +27,12 @@
 			<artifactId>owlapi-apibinding</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>dev.ikm.puli</groupId>
-			<artifactId>owlapi-proof</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>dev.ikm.puli</groupId>
-			<artifactId>puli</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owl-model</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-reasoner</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-proofs</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

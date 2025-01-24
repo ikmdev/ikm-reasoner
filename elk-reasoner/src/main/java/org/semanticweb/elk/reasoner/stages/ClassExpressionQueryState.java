@@ -30,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.loading.AbstractClassQueryLoader;
 import org.semanticweb.elk.loading.ClassQueryLoader;
@@ -78,8 +79,6 @@ import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Predicate;
 
 /**
  * Keeps track of class expressions that were queried for satisfiability,
@@ -457,7 +456,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 	private final Predicate<ElkClassExpression> doNotEvict_ = new Predicate<ElkClassExpression>() {
 		@Override
-		public boolean apply(final ElkClassExpression ce) {
+		public boolean test(final ElkClassExpression ce) {
 			return lastQueries_.contains(ce);
 		}
 	};

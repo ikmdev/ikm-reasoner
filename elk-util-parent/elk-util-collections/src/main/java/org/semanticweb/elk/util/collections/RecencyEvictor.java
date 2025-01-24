@@ -26,11 +26,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.semanticweb.elk.util.statistics.Stat;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 
 /**
  * Evicts least recent elements after the <em>capacity</em> is exceeded.
@@ -68,7 +68,7 @@ public class RecencyEvictor<E> extends AbstractEvictor<E> {
 
 	@Override
 	public Iterator<E> evict(final Predicate<E> retain) {
-		Preconditions.checkNotNull(retain);
+		Objects.requireNonNull(retain);
 
 		if (elements_.size() <= capacity_) {
 			// Evict nothing.
@@ -82,7 +82,7 @@ public class RecencyEvictor<E> extends AbstractEvictor<E> {
 		final Iterator<E> iterator = elements_.keySet().iterator();
 		while (iterator.hasNext() && elements_.size() > goalCapacity) {
 			final E element = iterator.next();
-			if (!retain.apply(element)) {
+			if (!retain.test(element)) {
 				evicted.add(element);
 				iterator.remove();
 			}
