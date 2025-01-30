@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.util.statistics.Stat;
 
 /**
@@ -43,7 +44,7 @@ import org.semanticweb.elk.util.statistics.Stat;
  */
 public class CountingEvictor<E> extends RecencyEvictor<E> {
 
-	private final Map<E, ElementRecord> elementRecords_ = new ArrayHashMap<E, ElementRecord>();
+	private final Map<E, ElementRecord> elementRecords_ = new UnifiedMap<E, ElementRecord>();
 	private final RecencyEvictor<E> immediatelyEvicted_ = new RecencyEvictor<E>(
 			0, 0.0);
 

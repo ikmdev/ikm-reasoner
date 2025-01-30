@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpressionList;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
@@ -36,8 +37,8 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.classes.BackwardLinkI
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.ContextInitializationImpl;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
-import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassInconsistency;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.DisjointSubsumer;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.Propagation;
@@ -52,7 +53,6 @@ import org.semanticweb.elk.reasoner.saturation.inferences.ClassInference;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.BackwardLinkChainFromBackwardLinkRule;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.ContradictionOverBackwardLinkRule;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.LinkableBackwardLinkRule;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
 import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.chains.AbstractChain;
 import org.semanticweb.elk.util.collections.chains.Chain;
@@ -212,8 +212,7 @@ public class ContextImpl implements ExtendedContext {
 
 	SubContext getCreateSubContext(IndexedObjectProperty subRoot) {
 		if (subContextsByObjectProperty_ == null)
-			subContextsByObjectProperty_ = new ArrayHashMap<IndexedObjectProperty, SubContext>(
-					3);
+			subContextsByObjectProperty_ = new UnifiedMap<IndexedObjectProperty, SubContext>(3);
 		SubContext result = subContextsByObjectProperty_.get(subRoot);
 		if (result == null) {
 			result = new SubContextImpl();
@@ -389,7 +388,7 @@ public class ContextImpl implements ExtendedContext {
 		@Override
 		public Boolean visit(DisjointSubsumer conclusion) {
 			if (disjointnessAxioms_ == null) {
-				disjointnessAxioms_ = new ArrayHashMap<IndexedClassExpressionList, Set<Integer>>();
+				disjointnessAxioms_ = new UnifiedMap<IndexedClassExpressionList, Set<Integer>>();
 			}
 			IndexedClassExpressionList disjoint = conclusion.getDisjointExpressions();
 			int position = conclusion.getPosition();

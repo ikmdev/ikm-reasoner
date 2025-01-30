@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.hashing.InstanceTaxonomyEqualator;
 import org.semanticweb.elk.reasoner.taxonomy.hashing.InstanceTaxonomyHasher;
@@ -35,7 +36,6 @@ import org.semanticweb.elk.reasoner.taxonomy.model.NodeStore;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNodeFactory;
 import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
 
 /**
  * An {@link InstanceTaxonomy} consisting of a single {@link TypeNode} = top
@@ -69,8 +69,7 @@ public class SingletoneInstanceTaxonomy<T extends ElkEntity, I extends ElkEntity
 			final ComparatorKeyProvider<? super I> individualKeyProvider) {
 		super(keyProvider, allMembers, nodeFactory);
 		this.individualKeyProvider_ = individualKeyProvider;
-		this.instanceNodeLookup = new ArrayHashMap<Object, InstanceNode<T, I>>(
-				node.getAllInstanceNodes().size());
+		this.instanceNodeLookup = new UnifiedMap<Object, InstanceNode<T, I>>(node.getAllInstanceNodes().size());
 		for (InstanceNode<T, I> instanceNode : node.getAllInstanceNodes()) {
 			for (I instance : instanceNode) {
 				instanceNodeLookup.put(individualKeyProvider_.getKey(instance),

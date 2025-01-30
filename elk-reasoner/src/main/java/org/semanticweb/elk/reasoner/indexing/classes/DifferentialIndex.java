@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
@@ -45,7 +46,6 @@ import org.semanticweb.elk.reasoner.indexing.model.StructuralIndexedSubObject;
 import org.semanticweb.elk.reasoner.saturation.rules.Rule;
 import org.semanticweb.elk.reasoner.saturation.rules.contextinit.ChainableContextInitRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ChainableSubsumerRule;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
 import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.collections.chains.AbstractChain;
@@ -152,18 +152,17 @@ public class DifferentialIndex extends DirectIndex {
 
 	public void initAdditions() {
 		this.addedContextInitRules_ = null;
-		this.addedContextRuleHeadByClassExpressions_ = new ArrayHashMap<>(32);
-		this.addedDefinitions_ = new ArrayHashMap<>(32);
-		this.addedDefinitionReasons_ = new ArrayHashMap<>(32);
+		this.addedContextRuleHeadByClassExpressions_ = new UnifiedMap<>(32);
+		this.addedDefinitions_ = new UnifiedMap<>(32);
+		this.addedDefinitionReasons_ = new UnifiedMap<>(32);
 	}
 
 	public void initDeletions() {
 		this.removedContextInitRules_ = null;
-		this.todoDeletions_ = new ArrayHashSet<StructuralIndexedSubObject<?>>(
-				1024);
-		this.removedContextRuleHeadByClassExpressions_ = new ArrayHashMap<>(32);
-		this.removedDefinitions_ = new ArrayHashMap<>(32);
-		this.removedDefinitionReasons_ = new ArrayHashMap<>(32);
+		this.todoDeletions_ = new ArrayHashSet<StructuralIndexedSubObject<?>>(1024);
+		this.removedContextRuleHeadByClassExpressions_ = new UnifiedMap<>(32);
+		this.removedDefinitions_ = new UnifiedMap<>(32);
+		this.removedDefinitionReasons_ = new UnifiedMap<>(32);
 	}
 
 	/* read-only methods */

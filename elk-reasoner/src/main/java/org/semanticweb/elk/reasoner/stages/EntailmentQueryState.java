@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.loading.AbstractEntailmentQueryLoader;
 import org.semanticweb.elk.loading.ElkLoadingException;
 import org.semanticweb.elk.loading.EntailmentQueryLoader;
@@ -54,7 +55,6 @@ import org.semanticweb.elk.reasoner.query.VerifiableQueryResult;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SaturationConclusion;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
 import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Condition;
 import org.semanticweb.elk.util.collections.Evictor;
@@ -413,7 +413,7 @@ public class EntailmentQueryState implements EntailmentQueryLoader.Factory {
 			final Iterable<? extends ElkAxiom> axioms)
 			throws ElkQueryException {
 
-		final Map<ElkAxiom, VerifiableQueryResult> results = new ArrayHashMap<ElkAxiom, VerifiableQueryResult>();
+		final Map<ElkAxiom, VerifiableQueryResult> results = new UnifiedMap<ElkAxiom, VerifiableQueryResult>();
 
 		for (final ElkAxiom axiom : axioms) {
 			final QueryState state = queried_.get(axiom);

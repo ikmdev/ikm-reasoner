@@ -48,6 +48,7 @@ import java.util.Set;
  *            the type of the values
  * 
  */
+@Deprecated
 public class ArrayHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
 	/**

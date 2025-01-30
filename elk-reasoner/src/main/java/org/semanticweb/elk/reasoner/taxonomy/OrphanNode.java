@@ -24,10 +24,10 @@ package org.semanticweb.elk.reasoner.taxonomy;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.model.ComparatorKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.model.Node;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
 
 /**
  * A base {@link Node} whose subclasses are supposed to be associated with no
@@ -53,7 +53,7 @@ public abstract class OrphanNode<T extends ElkEntity> implements Node<T> {
 
 	public OrphanNode(final Iterable<? extends T> members, final int size,
 			final T canonical, ComparatorKeyProvider<? super T> keyProvider) {
-		this.members = new ArrayHashMap<Object, T>(size);
+		this.members = new UnifiedMap<Object, T>(size);
 		for (T member : members) {
 			this.members.put(keyProvider.getKey(member), member);
 		}
