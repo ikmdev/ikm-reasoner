@@ -23,17 +23,16 @@ package org.semanticweb.elk.reasoner.saturation.properties;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.proof.ReasonerProducer;
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.ObjectPropertyInference;
 import org.semanticweb.elk.reasoner.stages.PropertyHierarchyCompositionState;
-import org.semanticweb.elk.util.collections.AbstractHashMultimap;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.concurrent.computation.DelegateInterruptMonitor;
 import org.semanticweb.elk.util.concurrent.computation.InputProcessor;
 import org.semanticweb.elk.util.concurrent.computation.InputProcessorFactory;
@@ -165,7 +164,7 @@ public class PropertyHierarchyCompositionComputationFactory extends
 								.getLeftSubComposableSubPropertiesByRightProperties(
 										left, inferenceProducer_,
 										dispatcher_).get(
-										rightLeftSubProperty);
+										rightLeftSubProperty).toList();
 					}
 				}
 
@@ -173,14 +172,14 @@ public class PropertyHierarchyCompositionComputationFactory extends
 						.getSaturated();
 				synchronized (rightSaturation) {
 					if (rightSaturation.nonRedundantCompositionsByLeftSubProperty == null) {
-						rightSaturation.nonRedundantCompositionsByLeftSubProperty = new CompositionMultimap<IndexedObjectProperty>();
+						rightSaturation.nonRedundantCompositionsByLeftSubProperty = new UnifiedSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain>();
 					}
 				}
 				
 				if (!redundantLeftProperties.isEmpty()) {
 					synchronized (rightSaturation) {
 						if (rightSaturation.redundantCompositionsByLeftSubProperty == null) {
-							rightSaturation.redundantCompositionsByLeftSubProperty = new CompositionMultimap<IndexedObjectProperty>();
+							rightSaturation.redundantCompositionsByLeftSubProperty = new UnifiedSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain>();
 						}
 					}
 				}
@@ -195,51 +194,51 @@ public class PropertyHierarchyCompositionComputationFactory extends
 								leftSubProperty, rightSubPropertyChain, element, redundant);
 					}
 
-					AbstractHashMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = redundant
+					MutableSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = redundant
 							? rightSaturation.redundantCompositionsByLeftSubProperty
 							: rightSaturation.nonRedundantCompositionsByLeftSubProperty;
 					
-					Collection<IndexedComplexPropertyChain> compositionsSoFar;
+//					Collection<IndexedComplexPropertyChain> compositionsSoFar;
 					
 					synchronized (compositionsByLeft) {
-						compositionsSoFar = compositionsByLeft
-								.getValues(leftSubProperty);
-						if (compositionsSoFar == null) {
-							compositionsSoFar = new ArrayHashSet<IndexedComplexPropertyChain>(
-									2);
-							compositionsByLeft.put(leftSubProperty,
-									compositionsSoFar);
+//						compositionsSoFar = compositionsByLeft
+//								.get(leftSubProperty).toList();
+//						if (compositionsSoFar == null) {
+						if (!compositionsByLeft.containsKey(leftSubProperty)) {
+//							compositionsSoFar = new ArrayHashSet<IndexedComplexPropertyChain>(2);
+//							compositionsByLeft.put(leftSubProperty, compositionsSoFar);
 							newRecord = true;
 						}
+						compositionsByLeft.put(leftSubProperty, element);
 					}
 
 					if (newRecord) {
 						SaturatedPropertyChain leftSaturation = leftSubProperty
 								.getSaturated();
-						Map<IndexedPropertyChain, Collection<IndexedComplexPropertyChain>> compositionsByRight;
+						MutableSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> compositionsByRight;
 						if (redundant) {
 							synchronized (leftSaturation) {
 								if (leftSaturation.redundantCompositionsByRightSubProperty == null)
-									leftSaturation.redundantCompositionsByRightSubProperty = new CompositionMultimap<IndexedPropertyChain>();
+									leftSaturation.redundantCompositionsByRightSubProperty = new UnifiedSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain>();
 							}
 							compositionsByRight = leftSaturation.redundantCompositionsByRightSubProperty;
 						} else {
 							synchronized (leftSaturation) {
 								if (leftSaturation.nonRedundantCompositionsByRightSubProperty == null)
-									leftSaturation.nonRedundantCompositionsByRightSubProperty = new CompositionMultimap<IndexedPropertyChain>();
+									leftSaturation.nonRedundantCompositionsByRightSubProperty = new UnifiedSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain>();
 							}
 							compositionsByRight = leftSaturation.nonRedundantCompositionsByRightSubProperty;
 						}
 						
 						synchronized (compositionsByRight) {
-							compositionsByRight.put(rightSubPropertyChain,
-									compositionsSoFar);
+//							compositionsByRight.put(rightSubPropertyChain, compositionsSoFar);
+							compositionsByRight.put(rightSubPropertyChain, element);
 						}
 					}
 
-					synchronized (compositionsSoFar) {
-						compositionsSoFar.add(element);
-					}
+//					synchronized (compositionsSoFar) {
+//						compositionsSoFar.add(element);
+//					}
 				}
 			}
 			return null;
@@ -247,13 +246,13 @@ public class PropertyHierarchyCompositionComputationFactory extends
 
 	};
 
-	private static class CompositionMultimap<P extends IndexedPropertyChain>
-			extends AbstractHashMultimap<P, IndexedComplexPropertyChain> {
-
-		@Override
-		protected Collection<IndexedComplexPropertyChain> newRecord() {
-			return new ArrayHashSet<IndexedComplexPropertyChain>(2);
-		}
-	}
+//	private static class CompositionMultimap<P extends IndexedPropertyChain>
+//			extends MutableSetMultimap<P, IndexedComplexPropertyChain> {
+//
+//		@Override
+//		protected Collection<IndexedComplexPropertyChain> newRecord() {
+//			return new ArrayHashSet<IndexedComplexPropertyChain>(2);
+//		}
+//	}
 
 }

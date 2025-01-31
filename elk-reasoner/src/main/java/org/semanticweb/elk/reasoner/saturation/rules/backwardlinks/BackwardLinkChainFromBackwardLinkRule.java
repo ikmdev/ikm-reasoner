@@ -24,6 +24,9 @@ package org.semanticweb.elk.reasoner.saturation.rules.backwardlinks;
 
 import java.util.Collection;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.factory.Sets;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
@@ -33,9 +36,6 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.semanticweb.elk.util.collections.HashSetMultimap;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.semanticweb.elk.util.collections.chains.Matcher;
 import org.semanticweb.elk.util.collections.chains.ReferenceFactory;
 import org.semanticweb.elk.util.collections.chains.SimpleTypeBasedMatcher;
@@ -66,13 +66,13 @@ public class BackwardLinkChainFromBackwardLinkRule
 	 * {@link ContextPremises} in which this rule is saved; it stores every
 	 * {@link ForwardLink} by indexing its target by its property
 	 */
-	private final Multimap<IndexedPropertyChain, IndexedContextRoot> forwardLinksByObjectProperty_;
+	private final MutableMultimap<IndexedPropertyChain, IndexedContextRoot> forwardLinksByObjectProperty_;
 
 	private BackwardLinkChainFromBackwardLinkRule(
 			LinkableBackwardLinkRule tail) {
 		super(tail);
-		this.forwardLinksByObjectProperty_ = new HashSetMultimap<IndexedPropertyChain, IndexedContextRoot>(
-				3);
+		// TODO size = 3
+		this.forwardLinksByObjectProperty_ = new UnifiedSetMultimap<IndexedPropertyChain, IndexedContextRoot>();
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class BackwardLinkChainFromBackwardLinkRule
 	public static boolean addRuleFor(ForwardLink link, Context context) {
 		BackwardLinkChainFromBackwardLinkRule rule = context
 				.getBackwardLinkRuleChain().getCreate(MATCHER_, FACTORY_);
-		return rule.forwardLinksByObjectProperty_.add(link.getChain(),
+		return rule.forwardLinksByObjectProperty_.put(link.getChain(),
 				link.getTarget());
 	}
 
@@ -134,12 +134,12 @@ public class BackwardLinkChainFromBackwardLinkRule
 		BackwardLinkChainFromBackwardLinkRule rule = context
 				.getBackwardLinkRuleChain().find(MATCHER_);
 		return rule == null ? false
-				: rule.forwardLinksByObjectProperty_.contains(link.getChain(),
+				: rule.forwardLinksByObjectProperty_.containsKeyAndValue(link.getChain(),
 						link.getTarget());
 	}
 
 	@Deprecated
-	public Multimap<IndexedPropertyChain, IndexedContextRoot> getForwardLinksByObjectProperty() {
+	public MutableMultimap<IndexedPropertyChain, IndexedContextRoot> getForwardLinksByObjectProperty() {
 		return forwardLinksByObjectProperty_;
 	}
 
@@ -149,19 +149,18 @@ public class BackwardLinkChainFromBackwardLinkRule
 	}
 
 	private void apply(
-			Multimap<IndexedPropertyChain, IndexedComplexPropertyChain> compsByForwardRelations,
+			MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> compsByForwardRelations,
 			BackwardLink link, ContextPremises premises,
 			ClassInferenceProducer producer) {
 		/* compose the link with all forward links */
 		if (compsByForwardRelations == null)
 			return;
 
-		for (IndexedPropertyChain forwardRelation : new LazySetIntersection<IndexedPropertyChain>(
-				compsByForwardRelations.keySet(),
-				forwardLinksByObjectProperty_.keySet())) {
+		for (IndexedPropertyChain forwardRelation : Sets.intersect(compsByForwardRelations.keySet().toSet(),
+				forwardLinksByObjectProperty_.keySet().toSet())) {
 
 			Collection<IndexedComplexPropertyChain> compositions = compsByForwardRelations
-					.get(forwardRelation);
+					.get(forwardRelation).toList();
 			Collection<IndexedContextRoot> forwardTargets = forwardLinksByObjectProperty_
 					.get(forwardRelation);
 

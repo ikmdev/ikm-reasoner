@@ -35,6 +35,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.factory.Multimaps;
+
 /**
  * Some useful static methods for collections
  * 
@@ -43,53 +46,11 @@ import java.util.Set;
  */
 public class Operations {
 
-	public static final Multimap<?, ?> EMPTY_MULTIMAP = new Multimap<Object, Object>() {
-
-		@Override
-		public boolean contains(Object key, Object value) {
-			return false;
-		}
-
-		@Override
-		public boolean add(Object key, Object value) {
-			throw new UnsupportedOperationException(
-					"The Empty multimap cannot be modified!");
-		}
-
-		@Override
-		public Collection<Object> get(Object key) {
-			return Collections.emptySet();
-		}
-
-		@Override
-		public boolean remove(Object key, Object value) {
-			return false;
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return true;
-		}
-
-		@Override
-		public Set<Object> keySet() {
-			return Collections.emptySet();
-		}
-
-		@Override
-		public void clear() {
-		}
-
-		@Override
-		public Collection<Object> remove(Object key) {
-			return Collections.emptySet();
-		}
-
-	};
+	public static final MutableMultimap<?, ?> EMPTY_MULTIMAP = Multimaps.mutable.list.empty();
 
 	@SuppressWarnings("unchecked")
-	public static <S, T> Multimap<S, T> emptyMultimap() {
-		return (Multimap<S, T>) EMPTY_MULTIMAP;
+	public static <S, T> MutableMultimap<S, T> emptyMultimap() {
+		return (MutableMultimap<S, T>) EMPTY_MULTIMAP;
 	}
 
 	@SafeVarargs
@@ -733,12 +694,12 @@ public class Operations {
 	 * @throws IOException
 	 *             if any I/O error occurs
 	 */
-	public static <K, V> void dumpDiff(Multimap<K, V> first,
-			Multimap<K, V> second, Writer writer, String prefix)
+	public static <K, V> void dumpDiff(MutableMultimap<K, V> first,
+			MutableMultimap<K, V> second, Writer writer, String prefix)
 			throws IOException {
 		for (K key : first.keySet()) {
-			Collection<V> firstValues = first.get(key);
-			Collection<V> secondValues = second.get(key);
+			Collection<V> firstValues = first.get(key).toList();
+			Collection<V> secondValues = second.get(key).toList();
 			dumpDiff(firstValues, secondValues, writer, prefix + key + "->");
 		}
 

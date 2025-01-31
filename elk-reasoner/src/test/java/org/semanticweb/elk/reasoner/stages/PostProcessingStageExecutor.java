@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
-import org.semanticweb.elk.util.collections.HashListMultimap;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.semanticweb.elk.util.logging.ElkTimer;
 
 /**
@@ -43,7 +43,7 @@ import org.semanticweb.elk.util.logging.ElkTimer;
  */
 public class PostProcessingStageExecutor extends SimpleStageExecutor {
 
-	static final Multimap<Class<?>, Class<?>> postProcesingMap = new HashListMultimap<Class<?>, Class<?>>();
+	static final MutableMultimap<Class<?>, Class<?>> postProcesingMap = new FastListMultimap<>();
 
 	/*
 	 * STATIC INT
@@ -62,7 +62,7 @@ public class PostProcessingStageExecutor extends SimpleStageExecutor {
 		postProcesingMap.add(IncrementalTaxonomyCleaningStage.class,
 				ValidateTaxonomyStage.class);*/
 		
-		postProcesingMap.add(IncrementalDeletionInitializationStage.class,
+		postProcesingMap.put(IncrementalDeletionInitializationStage.class,
 				EnumerateContextsStage.class);		
 	}
 
@@ -75,7 +75,7 @@ public class PostProcessingStageExecutor extends SimpleStageExecutor {
 		// FIXME: get rid of casts
 		try {
 			for (PostProcessingStage ppStage : instantiate(
-					postProcesingMap.get(stage.getClass()),
+					postProcesingMap.get(stage.getClass()).toList(),
 					((AbstractReasonerStage) stage).reasoner)) {
 				
 				ElkTimer.getNamedTimer(ppStage.getName()).start();

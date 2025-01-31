@@ -39,6 +39,7 @@ import java.util.Map;
  * @param <Value>
  *            the values of the multimap 
  */
+@Deprecated
 public interface MultimapQueue<Key, Value> extends Multimap<Key, Value> {
 	
 	/**

@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.semanticweb.elk.owlapi.TestOWLManager;
 import org.semanticweb.elk.reasoner.query.EmptyTestOutput;
 import org.semanticweb.elk.reasoner.query.QueryTestManifest;
 import org.semanticweb.elk.reasoner.query.SatisfiabilityTestOutput;
-import org.semanticweb.elk.util.collections.HashSetMultimap;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -93,10 +93,10 @@ public class OwlExpectedTestOutputLoader {
 
 			final Set<OWLClassExpression> complex = new HashSet<OWLClassExpression>();
 			final Map<OWLClassExpression, OWLClassNode> equivalent = new HashMap<OWLClassExpression, OWLClassNode>();
-			final Multimap<OWLClassExpression, OWLClass> superClasses = new HashSetMultimap<OWLClassExpression, OWLClass>();
-			final Multimap<OWLClassExpression, OWLClass> subClasses = new HashSetMultimap<OWLClassExpression, OWLClass>();
+			final MutableMultimap<OWLClassExpression, OWLClass> superClasses = new UnifiedSetMultimap<OWLClassExpression, OWLClass>();
+			final MutableMultimap<OWLClassExpression, OWLClass> subClasses = new UnifiedSetMultimap<OWLClassExpression, OWLClass>();
 			final Map<OWLIndividual, OWLNamedIndividualNode> same = new HashMap<OWLIndividual, OWLNamedIndividualNode>();
-			final Multimap<OWLClassExpression, OWLNamedIndividual> instances = new HashSetMultimap<OWLClassExpression, OWLNamedIndividual>();
+			final MutableMultimap<OWLClassExpression, OWLNamedIndividual> instances = new UnifiedSetMultimap<OWLClassExpression, OWLNamedIndividual>();
 
 			for (final OWLAxiom axiom : expectedOnt.getAxioms()) {
 				axiom.accept(new FailingOwlAxiomVisitor() {
@@ -122,13 +122,13 @@ public class OwlExpectedTestOutputLoader {
 					@Override
 					public void visit(final OWLSubClassOfAxiom axiom) {
 						if (axiom.getSubClass() instanceof OWLClass) {
-							subClasses.add(axiom.getSuperClass(),
+							subClasses.put(axiom.getSuperClass(),
 									(OWLClass) axiom.getSubClass());
 						} else {
 							complex.add(axiom.getSubClass());
 						}
 						if (axiom.getSuperClass() instanceof OWLClass) {
-							superClasses.add(axiom.getSubClass(),
+							superClasses.put(axiom.getSubClass(),
 									(OWLClass) axiom.getSuperClass());
 						} else {
 							complex.add(axiom.getSuperClass());
@@ -154,7 +154,7 @@ public class OwlExpectedTestOutputLoader {
 					public void visit(final OWLClassAssertionAxiom axiom) {
 						if (axiom
 								.getIndividual() instanceof OWLNamedIndividual) {
-							instances.add(axiom.getClassExpression(),
+							instances.put(axiom.getClassExpression(),
 									(OWLNamedIndividual) axiom.getIndividual());
 						}
 						if (!(axiom.getClassExpression() instanceof OWLClass)) {
@@ -176,18 +176,18 @@ public class OwlExpectedTestOutputLoader {
 
 	final Set<OWLClassExpression> queryClasses_;
 	final Map<OWLClassExpression, OWLClassNode> equivalent_;
-	final Multimap<OWLClassExpression, OWLClass> superClasses_;
-	final Multimap<OWLClassExpression, OWLClass> subClasses_;
+	final MutableMultimap<OWLClassExpression, OWLClass> superClasses_;
+	final MutableMultimap<OWLClassExpression, OWLClass> subClasses_;
 	final Map<OWLIndividual, OWLNamedIndividualNode> same_;
-	final Multimap<OWLClassExpression, OWLNamedIndividual> instances_;
+	final MutableMultimap<OWLClassExpression, OWLNamedIndividual> instances_;
 
 	private OwlExpectedTestOutputLoader(
 			final Set<OWLClassExpression> queryClasses,
 			final Map<OWLClassExpression, OWLClassNode> equivalent,
-			final Multimap<OWLClassExpression, OWLClass> superClasses,
-			final Multimap<OWLClassExpression, OWLClass> subClasses,
+			final MutableMultimap<OWLClassExpression, OWLClass> superClasses,
+			final MutableMultimap<OWLClassExpression, OWLClass> subClasses,
 			final Map<OWLIndividual, OWLNamedIndividualNode> same,
-			final Multimap<OWLClassExpression, OWLNamedIndividual> instances) {
+			final MutableMultimap<OWLClassExpression, OWLNamedIndividual> instances) {
 		this.queryClasses_ = queryClasses;
 		this.equivalent_ = equivalent;
 		this.superClasses_ = superClasses;

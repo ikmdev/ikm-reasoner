@@ -41,6 +41,7 @@ import java.util.Set;
  * @param <Value>
  *            the values of the multimap 
  */
+@Deprecated
 public class MultimapQueueImpl<Key, Value> implements MultimapQueue<Key, Value> {
 
 	private final Multimap<Key, Value> multimap_;

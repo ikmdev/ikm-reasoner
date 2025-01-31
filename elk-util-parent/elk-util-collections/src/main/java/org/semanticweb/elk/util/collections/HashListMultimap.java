@@ -36,6 +36,7 @@ import java.util.Collection;
  * @param <Value>
  *            the values of the multimap
  */
+@Deprecated
 public class HashListMultimap<Key, Value> extends
 		AbstractHashMultimap<Key, Value> {
 

@@ -28,12 +28,12 @@ import java.io.Writer;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
-import org.semanticweb.elk.util.collections.AbstractHashMultimap;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.semanticweb.elk.util.collections.Operations;
 
 /**
@@ -84,7 +84,7 @@ public class SaturatedPropertyChain {
 	 * a multimap T -> {S} such that both S and ObjectPropertyChain(S, T) imply
 	 * {@link #root}
 	 */
-	Multimap<IndexedObjectProperty, IndexedObjectProperty> leftSubComposableSubPropertiesByRightProperties;
+	MutableMultimap<IndexedObjectProperty, IndexedObjectProperty> leftSubComposableSubPropertiesByRightProperties;
 
 	/**
 	 * {@code true} if {@link #leftSubComposableSubPropertiesByRightProperties}
@@ -96,25 +96,25 @@ public class SaturatedPropertyChain {
 	 * A {@link Multimap} from R to S such that ObjectPropertyChain(R, root) is
 	 * a subrole of S
 	 */
-	AbstractHashMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> nonRedundantCompositionsByLeftSubProperty;
+	MutableSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> nonRedundantCompositionsByLeftSubProperty;
 	
 	/**
 	 * A {@link Multimap} from R to S such that ObjectPropertyChain(R, root) is
 	 * a subrole of S, which is considered to be redundant
 	 */
-	AbstractHashMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> redundantCompositionsByLeftSubProperty;
+	MutableSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> redundantCompositionsByLeftSubProperty;
 
 	/**
 	 * A {@link Multimap} from R to S such that ObjectPropertyChain(root, R) is
 	 * a subrole of S
 	 */
-	AbstractHashMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> nonRedundantCompositionsByRightSubProperty;
+	MutableSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> nonRedundantCompositionsByRightSubProperty;
 	
 	/**
 	 * A {@link Multimap} from R to S such that ObjectPropertyChain(root, R) is
 	 * a subrole of S, which is considered to be redundant
 	 */
-	AbstractHashMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> redundantCompositionsByRightSubProperty;
+	MutableSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> redundantCompositionsByRightSubProperty;
 
 	public SaturatedPropertyChain(IndexedPropertyChain ipc) {
 		this.root = ipc;
@@ -190,7 +190,7 @@ public class SaturatedPropertyChain {
 	 * @return A {@link Multimap} from R to S such that ObjectPropertyChain(R,
 	 *         root) is a subrole of S, non-redundant ones
 	 */
-	public Multimap<IndexedObjectProperty, IndexedComplexPropertyChain> getNonRedundantCompositionsByLeftSubProperty() {
+	public MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> getNonRedundantCompositionsByLeftSubProperty() {
 		return nonRedundantCompositionsByLeftSubProperty == null ? Operations
 				.<IndexedObjectProperty, IndexedComplexPropertyChain> emptyMultimap()
 				: nonRedundantCompositionsByLeftSubProperty;
@@ -200,7 +200,7 @@ public class SaturatedPropertyChain {
 	 * @return A {@link Multimap} from R to S such that ObjectPropertyChain(R,
 	 *         root) is a subrole of S, redundant ones
 	 */
-	public Multimap<IndexedObjectProperty, IndexedComplexPropertyChain> getRedundantCompositionsByLeftSubProperty() {
+	public MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> getRedundantCompositionsByLeftSubProperty() {
 		return redundantCompositionsByLeftSubProperty == null ? Operations
 				.<IndexedObjectProperty, IndexedComplexPropertyChain> emptyMultimap()
 				: redundantCompositionsByLeftSubProperty;
@@ -210,7 +210,7 @@ public class SaturatedPropertyChain {
 	 * @return A {@link Multimap} from R to S such that
 	 *         ObjectPropertyChain(root, R) is a subrole of S, non-redundant ones
 	 */
-	public Multimap<IndexedPropertyChain, IndexedComplexPropertyChain> getNonRedundantCompositionsByRightSubProperty() {
+	public MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> getNonRedundantCompositionsByRightSubProperty() {
 		return nonRedundantCompositionsByRightSubProperty == null ? Operations
 				.<IndexedPropertyChain, IndexedComplexPropertyChain> emptyMultimap()
 				: nonRedundantCompositionsByRightSubProperty;
@@ -220,7 +220,7 @@ public class SaturatedPropertyChain {
 	 * @return A {@link Multimap} from R to S such that
 	 *         ObjectPropertyChain(root, R) is a subrole of S, including the redundant ones
 	 */
-	public Multimap<IndexedPropertyChain, IndexedComplexPropertyChain> getRedundantCompositionsByRightSubProperty() {
+	public MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> getRedundantCompositionsByRightSubProperty() {
 		return redundantCompositionsByRightSubProperty == null ? Operations
 				.<IndexedPropertyChain, IndexedComplexPropertyChain> emptyMultimap()
 				: redundantCompositionsByRightSubProperty;

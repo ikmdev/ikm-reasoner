@@ -15,6 +15,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>dev.ikm.jpms</groupId>
+			<artifactId>eclipse-collections</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owlapi</artifactId>
 			<scope>test</scope>

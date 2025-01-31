@@ -36,6 +36,7 @@ import java.util.Set;
  * @param <Value>
  *            the values of the multimap
  */
+@Deprecated
 public interface Multimap<Key, Value> {
 
 	/**
