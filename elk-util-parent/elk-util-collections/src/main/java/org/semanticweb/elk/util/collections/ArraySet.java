@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+@Deprecated
 public class ArraySet<T> extends ArrayList<T> implements Set<T> {
 
 	private static final long serialVersionUID = 4210562273973502066L;

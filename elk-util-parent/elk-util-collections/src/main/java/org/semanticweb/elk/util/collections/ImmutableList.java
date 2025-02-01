@@ -32,6 +32,7 @@ import java.util.Iterator;
  * @param <E>
  *            the elements contained in the list
  */
+@Deprecated
 public class ImmutableList<E> implements FList<E> {
 
 	private final E head_;
