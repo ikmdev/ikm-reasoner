@@ -156,8 +156,8 @@ public class BackwardLinkChainFromBackwardLinkRule
 		if (compsByForwardRelations == null)
 			return;
 
-		for (IndexedPropertyChain forwardRelation : Sets.intersect(compsByForwardRelations.keySet().toSet(),
-				forwardLinksByObjectProperty_.keySet().toSet())) {
+		for (IndexedPropertyChain forwardRelation : compsByForwardRelations.keySet()
+				.intersect(forwardLinksByObjectProperty_.keySet())) {
 
 			Collection<IndexedComplexPropertyChain> compositions = compsByForwardRelations
 					.get(forwardRelation).toList();
