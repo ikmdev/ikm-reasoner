@@ -29,9 +29,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 
 /**
  * A simple implementation of the depth-first search
@@ -64,7 +64,7 @@ public class DepthFirstSearch<T extends ElkEntity> {
 	public void run(TaxonomyNode<T> start, Direction dir,
 			TaxonomyNodeVisitor<T> visitor) {
 		LinkedList<TaxonomyNode<T>> path = new LinkedList<TaxonomyNode<T>>();
-		Set<TaxonomyNode<T>> pathSet = new ArrayHashSet<TaxonomyNode<T>>();
+		Set<TaxonomyNode<T>> pathSet = new UnifiedSet<TaxonomyNode<T>>();
 
 		run(start, dir, visitor, path, pathSet);
 	}

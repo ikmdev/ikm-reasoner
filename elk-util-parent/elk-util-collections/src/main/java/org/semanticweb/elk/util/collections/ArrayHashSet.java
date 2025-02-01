@@ -44,6 +44,7 @@ import java.util.Set;
  *            the type of the elements in this set
  * 
  */
+@Deprecated
 public class ArrayHashSet<E> extends AbstractSet<E> implements Set<E>,
 		DirectAccess<E> {
 

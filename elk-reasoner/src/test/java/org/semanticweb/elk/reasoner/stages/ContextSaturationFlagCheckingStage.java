@@ -28,11 +28,11 @@ package org.semanticweb.elk.reasoner.stages;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class ContextSaturationFlagCheckingStage extends BasePostProcessingStage 
 
 	public ContextSaturationFlagCheckingStage(AbstractReasonerState reasoner) {
 		classes_ = reasoner.ontologyIndex.getClassExpressions();
-		nonSaturated_ = new ArrayHashSet<Context>(reasoner.saturationState
+		nonSaturated_ = new UnifiedSet<Context>(reasoner.saturationState
 				.getNotSaturatedContexts().size());
 		nonSaturated_
 				.addAll(reasoner.saturationState.getNotSaturatedContexts());

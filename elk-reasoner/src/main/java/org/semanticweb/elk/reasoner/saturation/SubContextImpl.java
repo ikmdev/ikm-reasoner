@@ -25,6 +25,7 @@ package org.semanticweb.elk.reasoner.saturation;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
@@ -32,9 +33,8 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.Propagation;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SubClassConclusion;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SubContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.context.SubContext;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 
-public class SubContextImpl extends ArrayHashSet<IndexedContextRoot> implements
+public class SubContextImpl extends UnifiedSet<IndexedContextRoot> implements
 		SubContext {
 
 	Set<IndexedObjectSomeValuesFrom> propagatedSubsumers_;
@@ -109,7 +109,7 @@ public class SubContextImpl extends ArrayHashSet<IndexedContextRoot> implements
 		@Override
 		public Boolean visit(Propagation subConclusion) {
 			if (propagatedSubsumers_ == null)
-				propagatedSubsumers_ = new ArrayHashSet<IndexedObjectSomeValuesFrom>(
+				propagatedSubsumers_ = new UnifiedSet<IndexedObjectSomeValuesFrom>(
 						3);
 			return propagatedSubsumers_.add(subConclusion.getCarry());
 		}

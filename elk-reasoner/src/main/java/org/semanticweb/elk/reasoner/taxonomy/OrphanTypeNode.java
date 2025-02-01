@@ -24,10 +24,10 @@ package org.semanticweb.elk.reasoner.taxonomy;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 
 /**
  * An {@link OrphanTaxonomyNode} with instances.
@@ -49,7 +49,7 @@ public class OrphanTypeNode<T extends ElkEntity, I extends ElkEntity>
 			final T canonical, final Taxonomy<T> taxonomy,
 			final int estimatedInstanceNodes) {
 		super(members, size, canonical, taxonomy);
-		this.instanceNodes = new ArrayHashSet<OrphanInstanceNode<T, I>>(
+		this.instanceNodes = new UnifiedSet<OrphanInstanceNode<T, I>>(
 				estimatedInstanceNodes);
 	}
 

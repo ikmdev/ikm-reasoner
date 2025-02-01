@@ -27,11 +27,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericInstanceNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericTaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericTypeNode;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.collections.Operations.Functor;
 
@@ -50,7 +50,7 @@ public class TaxonomyNodeUtils {
 					final Collection<? extends N> direct,
 					final Functor<N, Set<? extends N>> succ) {
 		
-		final Set<N> result = new ArrayHashSet<N>(direct.size());
+		final Set<N> result = new UnifiedSet<N>(direct.size());
 		result.addAll(direct);
 		final Queue<N> todo = new LinkedList<N>(direct);
 		
@@ -73,9 +73,9 @@ public class TaxonomyNodeUtils {
 					final Functor<N, Set<? extends N>> succ,
 					final Functor<N, Set<? extends O>> collect) {
 		
-		final Set<O> result = new ArrayHashSet<O>();
+		final Set<O> result = new UnifiedSet<O>();
 		result.addAll(init);
-		final Set<N> queued = new ArrayHashSet<N>();
+		final Set<N> queued = new UnifiedSet<N>();
 		queued.addAll(direct);
 		final Queue<N> todo = new LinkedList<N>(direct);
 		

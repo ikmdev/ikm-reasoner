@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.reasoner.indexing.classes.DummyIndexedContextRootVisitor;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpressionList;
@@ -90,7 +91,6 @@ import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ObjectUnionFromDi
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.OwlNothingDecompositionRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.PropagationFromExistentialFillerRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.SuperClassFromSubClassRule;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,7 +149,7 @@ public class SaturationGraphValidationStage extends BasePostProcessingStage {
 	 */
 	private class ClassExpressionValidator {
 
-		private final Set<IndexedClassExpression> cache_ = new ArrayHashSet<IndexedClassExpression>();
+		private final Set<IndexedClassExpression> cache_ = new UnifiedSet<IndexedClassExpression>();
 
 		private final Queue<IndexedClassExpression> toValidate_ = new LinkedList<IndexedClassExpression>();
 
@@ -221,7 +221,7 @@ public class SaturationGraphValidationStage extends BasePostProcessingStage {
 	 */
 	private class ObjectPropertyValidator {
 
-		private final Set<IndexedObjectProperty> cache_ = new ArrayHashSet<IndexedObjectProperty>();
+		private final Set<IndexedObjectProperty> cache_ = new UnifiedSet<IndexedObjectProperty>();
 
 		private final Queue<IndexedObjectProperty> toValidate_ = new LinkedList<IndexedObjectProperty>();
 
@@ -576,7 +576,7 @@ public class SaturationGraphValidationStage extends BasePostProcessingStage {
 	 */
 	private class ContextValidator {
 
-		private final Set<Context> cache_ = new ArrayHashSet<Context>();
+		private final Set<Context> cache_ = new UnifiedSet<Context>();
 
 		private final Queue<Context> toValidate_ = new LinkedList<Context>();
 

@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
@@ -46,7 +47,6 @@ import org.semanticweb.elk.reasoner.indexing.model.StructuralIndexedSubObject;
 import org.semanticweb.elk.reasoner.saturation.rules.Rule;
 import org.semanticweb.elk.reasoner.saturation.rules.contextinit.ChainableContextInitRule;
 import org.semanticweb.elk.reasoner.saturation.rules.subsumers.ChainableSubsumerRule;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.collections.chains.AbstractChain;
 import org.semanticweb.elk.util.collections.chains.Chain;
@@ -136,18 +136,18 @@ public class DifferentialIndex extends DirectIndex {
 	}
 
 	public void initClassChanges() {
-		this.addedClasses_ = new ArrayHashSet<>(32);
-		this.removedClasses_ = new ArrayHashSet<>(32);
+		this.addedClasses_ = new UnifiedSet<>(32);
+		this.removedClasses_ = new UnifiedSet<>(32);
 	}
 
 	public void initIndividualChanges() {
-		this.addedIndividuals_ = new ArrayHashSet<>(32);
-		this.removedIndividuals_ = new ArrayHashSet<>(32);
+		this.addedIndividuals_ = new UnifiedSet<>(32);
+		this.removedIndividuals_ = new UnifiedSet<>(32);
 	}
 
 	public void initObjectPropertyChanges() {
-		this.addedObjectProperties_ = new ArrayHashSet<>(32);
-		this.removedObjectProperties_ = new ArrayHashSet<>(32);
+		this.addedObjectProperties_ = new UnifiedSet<>(32);
+		this.removedObjectProperties_ = new UnifiedSet<>(32);
 	}
 
 	public void initAdditions() {
@@ -159,7 +159,7 @@ public class DifferentialIndex extends DirectIndex {
 
 	public void initDeletions() {
 		this.removedContextInitRules_ = null;
-		this.todoDeletions_ = new ArrayHashSet<StructuralIndexedSubObject<?>>(1024);
+		this.todoDeletions_ = new UnifiedSet<StructuralIndexedSubObject<?>>(1024);
 		this.removedContextRuleHeadByClassExpressions_ = new UnifiedMap<>(32);
 		this.removedDefinitions_ = new UnifiedMap<>(32);
 		this.removedDefinitionReasons_ = new UnifiedMap<>(32);

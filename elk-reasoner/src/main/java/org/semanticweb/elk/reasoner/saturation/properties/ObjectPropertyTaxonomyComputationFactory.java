@@ -28,12 +28,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.predefined.PredefinedElkObjectPropertyFactory;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.concurrent.computation.DelegateInterruptMonitor;
 import org.semanticweb.elk.util.concurrent.computation.InputProcessor;
@@ -130,7 +130,7 @@ public class ObjectPropertyTaxonomyComputationFactory
 			return;
 		}
 		final Map<IndexedObjectProperty, Collection<? extends ElkObjectProperty>> subEquivalent = new UnifiedMap<IndexedObjectProperty, Collection<? extends ElkObjectProperty>>();
-		final Set<IndexedObjectProperty> indirect = new ArrayHashSet<IndexedObjectProperty>();
+		final Set<IndexedObjectProperty> indirect = new UnifiedSet<IndexedObjectProperty>();
 		for (final IndexedObjectProperty subProperty : property.getSaturated()
 				.getSubProperties()) {
 

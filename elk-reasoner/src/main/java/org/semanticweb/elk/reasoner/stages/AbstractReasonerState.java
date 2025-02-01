@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.loading.AxiomLoader;
@@ -88,7 +89,6 @@ import org.semanticweb.elk.reasoner.tracing.Conclusion;
 import org.semanticweb.elk.reasoner.tracing.TraceState;
 import org.semanticweb.elk.reasoner.tracing.TracingInference;
 import org.semanticweb.elk.reasoner.tracing.TracingProof;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.concurrent.computation.ConcurrentExecutor;
 import org.semanticweb.elk.util.statistics.NestedStats;
 import org.slf4j.Logger;
@@ -1059,7 +1059,7 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * @return all {@link ElkClass}es occurring in the ontology
 	 */
 	public synchronized Set<ElkClass> getAllClasses() {
-		Set<ElkClass> result = new ArrayHashSet<ElkClass>(
+		Set<ElkClass> result = new UnifiedSet<ElkClass>(
 				ontologyIndex.getClasses().size());
 		for (IndexedClass ic : ontologyIndex.getClasses())
 			result.add(ic.getElkEntity());
@@ -1070,7 +1070,7 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * @return all {@link ElkNamedIndividual}s occurring in the ontology
 	 */
 	public synchronized Set<ElkNamedIndividual> getAllNamedIndividuals() {
-		Set<ElkNamedIndividual> allNamedIndividuals = new ArrayHashSet<ElkNamedIndividual>(
+		Set<ElkNamedIndividual> allNamedIndividuals = new UnifiedSet<ElkNamedIndividual>(
 				ontologyIndex.getClasses().size());
 		for (IndexedIndividual ii : ontologyIndex.getIndividuals())
 			allNamedIndividuals.add(ii.getElkEntity());
@@ -1081,7 +1081,7 @@ public abstract class AbstractReasonerState implements TracingProof {
 	 * @return all {@link ElkObjectProperty}es occurring in the ontology
 	 */
 	public synchronized Set<ElkObjectProperty> getAllObjectProperties() {
-		final Set<ElkObjectProperty> result = new ArrayHashSet<ElkObjectProperty>(
+		final Set<ElkObjectProperty> result = new UnifiedSet<ElkObjectProperty>(
 				ontologyIndex.getObjectProperties().size());
 		for (final IndexedObjectProperty prop : ontologyIndex
 				.getObjectProperties()) {

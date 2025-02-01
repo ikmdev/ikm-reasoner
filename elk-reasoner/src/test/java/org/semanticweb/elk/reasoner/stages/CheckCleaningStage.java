@@ -28,6 +28,7 @@ package org.semanticweb.elk.reasoner.stages;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
@@ -35,7 +36,6 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.saturation.context.SubContextPremises;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public class CheckCleaningStage extends BasePostProcessingStage {
 
 	@Override
 	public void execute() throws ElkException {
-		Set<IndexedContextRoot> cleanedContexts = new ArrayHashSet<IndexedContextRoot>(1024);
+		Set<IndexedContextRoot> cleanedContexts = new UnifiedSet<IndexedContextRoot>(1024);
 		// checking subsumers of cleaned contexts
 		for (Context context : reasoner_.saturationState
 				.getNotSaturatedContexts()) {

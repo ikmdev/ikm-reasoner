@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.reasoner.taxonomy.model.ComparatorKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.model.NodeFactory;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 
 /**
  * An updateable generic node store whose methods are synchronized.
@@ -68,7 +68,7 @@ public class SynchronizedNodeStore<T, N extends UpdateableNode<T>>
 			final ComparatorKeyProvider<? super T> keyProvider) {
 		keyProvider_ = keyProvider;
 		nodeLookup_ = new UnifiedMap<Object, N>(capacity);
-		allNodes_ = new ArrayHashSet<N>(capacity);
+		allNodes_ = new UnifiedSet<N>(capacity);
 	}
 
 	/**
