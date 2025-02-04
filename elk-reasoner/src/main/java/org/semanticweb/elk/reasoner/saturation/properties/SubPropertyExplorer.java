@@ -27,6 +27,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.factory.Sets;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
@@ -41,7 +42,6 @@ import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubProperty
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubPropertyChainInferenceConclusionVisitor;
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubPropertyChainTautology;
 import org.semanticweb.elk.reasoner.stages.PropertyHierarchyCompositionState;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -267,8 +267,7 @@ class SubPropertyExplorer {
 					Set<IndexedObjectProperty> leftSubProperties = getSubProperties(
 							composition.getFirstProperty(), inferenceProducer,
 							dispatcher);
-					Set<IndexedObjectProperty> commonSubProperties = new LazySetIntersection<IndexedObjectProperty>(
-							subProperties, leftSubProperties);
+					Set<IndexedObjectProperty> commonSubProperties = Sets.intersect(subProperties, leftSubProperties);
 					if (commonSubProperties.isEmpty())
 						continue;
 					// else

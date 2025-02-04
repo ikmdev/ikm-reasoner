@@ -25,7 +25,6 @@ package org.semanticweb.elk.reasoner.saturation.rules.backwardlinks;
 import java.util.Collection;
 
 import org.eclipse.collections.api.multimap.MutableMultimap;
-import org.eclipse.collections.impl.factory.Sets;
 import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;

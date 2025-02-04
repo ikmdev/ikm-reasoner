@@ -54,6 +54,7 @@ import java.util.Set;
  * @see LazySetUnion
  * 
  */
+@Deprecated
 public class LazySetIntersection<E> extends AbstractSet<E> {
 
 	final Set<? extends E> smallSet;

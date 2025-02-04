@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
  * 
  *         pavel.klinov@uni-ulm.de
  */
+@Deprecated
 public class LazySetOperationsTest {
 
 	private Set<Integer> generateSet(Random rnd, int numOfElements) {

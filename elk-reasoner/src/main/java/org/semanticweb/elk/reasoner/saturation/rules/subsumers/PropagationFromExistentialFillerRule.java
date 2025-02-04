@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.factory.Sets;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectSomeValuesFrom;
@@ -41,8 +42,6 @@ import org.semanticweb.elk.reasoner.saturation.context.SubContextPremises;
 import org.semanticweb.elk.reasoner.saturation.inferences.PropagationGenerated;
 import org.semanticweb.elk.reasoner.saturation.properties.SaturatedPropertyChain;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
-import org.semanticweb.elk.util.collections.LazySetUnion;
 import org.semanticweb.elk.util.collections.chains.Chain;
 import org.semanticweb.elk.util.collections.chains.Matcher;
 import org.semanticweb.elk.util.collections.chains.ReferenceFactory;
@@ -112,9 +111,8 @@ public class PropagationFromExistentialFillerRule extends
 
 		final Map<IndexedObjectProperty, ? extends SubContextPremises> subContextMap = premises
 				.getSubContextPremisesByObjectProperty();
-		final Set<IndexedObjectProperty> candidatePropagationProperties = new LazySetUnion<IndexedObjectProperty>(
-				premises.getLocalReflexiveObjectProperties(),
-				subContextMap.keySet());
+		final Set<IndexedObjectProperty> candidatePropagationProperties = Sets
+				.union(premises.getLocalReflexiveObjectProperties(), subContextMap.keySet());
 
 		if (candidatePropagationProperties.isEmpty()) {
 			return;
@@ -126,9 +124,8 @@ public class PropagationFromExistentialFillerRule extends
 			 * creating propagations for relevant sub-properties of the relation
 			 */
 			SaturatedPropertyChain saturation = relation.getSaturated();
-			for (IndexedObjectProperty property : new LazySetIntersection<IndexedObjectProperty>(
-					candidatePropagationProperties,
-					saturation.getSubProperties())) {
+			for (IndexedObjectProperty property : Sets.adapt(candidatePropagationProperties)
+					.intersect(Sets.adapt(saturation.getSubProperties()))) {
 				if (subContextMap.get(property).isInitialized()) {
 					producer.produce(new PropagationGenerated(premises
 							.getRoot(), property, e));
