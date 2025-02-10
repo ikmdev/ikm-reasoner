@@ -24,6 +24,8 @@ package org.semanticweb.elk.reasoner.saturation.rules.subsumers;
 
 import java.util.Map;
 
+import org.eclipse.collections.impl.factory.Sets;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectIntersectionOf;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SubClassInclusion;
@@ -31,8 +33,6 @@ import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.inferences.SubClassInclusionComposedObjectIntersectionOf;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
 
 /**
  * A skeleton for a {@link ChainableSubsumerRule} that produces {@link SubClassInclusion}
@@ -49,8 +49,7 @@ public abstract class AbstractObjectIntersectionFromConjunctRule extends
 
 	AbstractObjectIntersectionFromConjunctRule(ChainableSubsumerRule tail) {
 		super(tail);
-		this.conjunctionsByConjunct_ = new ArrayHashMap<IndexedClassExpression, IndexedObjectIntersectionOf>(
-				4);
+		this.conjunctionsByConjunct_ = new UnifiedMap<IndexedClassExpression, IndexedObjectIntersectionOf>(4);
 	}
 
 	AbstractObjectIntersectionFromConjunctRule(IndexedClassExpression conjunct,
@@ -67,9 +66,8 @@ public abstract class AbstractObjectIntersectionFromConjunctRule extends
 	@Override
 	public void apply(IndexedClassExpression premise, ContextPremises premises,
 			ClassInferenceProducer producer) {
-		for (IndexedClassExpression common : new LazySetIntersection<IndexedClassExpression>(
-				conjunctionsByConjunct_.keySet(),
-				premises.getComposedSubsumers())) {
+		for (IndexedClassExpression common : Sets.adapt(conjunctionsByConjunct_.keySet())
+				.intersect(Sets.adapt(premises.getComposedSubsumers()))) {
 			producer.produce(new SubClassInclusionComposedObjectIntersectionOf(premises.getRoot(),
 					conjunctionsByConjunct_.get(common)));
 		}

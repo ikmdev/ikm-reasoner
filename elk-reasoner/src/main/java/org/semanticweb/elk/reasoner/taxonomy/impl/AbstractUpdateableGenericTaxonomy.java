@@ -24,10 +24,10 @@ package org.semanticweb.elk.reasoner.taxonomy.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.model.ComparatorKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericTaxonomyNode;
@@ -38,7 +38,6 @@ import org.semanticweb.elk.reasoner.taxonomy.model.NonBottomTaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNodeFactory;
-import org.semanticweb.elk.util.collections.LazySetUnion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,8 +130,9 @@ public abstract class AbstractUpdateableGenericTaxonomy<
 
 	@Override
 	public Set<? extends TaxonomyNode<T>> getNodes() {
-		return new LazySetUnion<TaxonomyNode<T>>(nodeStore_.getNodes(),
-				Collections.singleton(getBottomNode()));
+		UnifiedSet<TaxonomyNode<T>> nodes = new UnifiedSet<>(nodeStore_.getNodes());
+		nodes.add(getBottomNode());
+		return nodes;
 	}
 
 	@Override

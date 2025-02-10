@@ -23,6 +23,7 @@ package org.semanticweb.elk.util.collections;
 
 import java.util.Map;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.semanticweb.elk.util.statistics.Stat;
 
 /**
@@ -50,7 +51,7 @@ import org.semanticweb.elk.util.statistics.Stat;
  */
 public class CapacityBalancingEvictor<E> extends RecencyEvictor<E> {
 
-	private final Map<E, Integer> lastQueryTicks_ = new ArrayHashMap<E, Integer>();
+	private final Map<E, Integer> lastQueryTicks_ = new UnifiedMap<E, Integer>();
 
 	private final QuantileEstimator quantileEstimator_;
 	private final int balanceAfterNRepeatedQueries_;

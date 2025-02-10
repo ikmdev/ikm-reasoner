@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.factory.Sets;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
@@ -38,10 +42,6 @@ import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubProperty
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubPropertyChainInferenceConclusionVisitor;
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.SubPropertyChainTautology;
 import org.semanticweb.elk.reasoner.stages.PropertyHierarchyCompositionState;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
-import org.semanticweb.elk.util.collections.HashSetMultimap;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,7 +159,7 @@ class SubPropertyExplorer {
 		// else
 		synchronized (saturation) {
 			if (saturation.derivedSubProperyChains == null)
-				saturation.derivedSubProperyChains = new ArrayHashSet<IndexedPropertyChain>(
+				saturation.derivedSubProperyChains = new UnifiedSet<IndexedPropertyChain>(
 						8);
 		}
 		synchronized (saturation.derivedSubProperyChains) {
@@ -167,7 +167,7 @@ class SubPropertyExplorer {
 				return saturation;
 			// else
 			if (saturation.derivedSubProperties == null)
-				saturation.derivedSubProperties = new ArrayHashSet<IndexedObjectProperty>(
+				saturation.derivedSubProperties = new UnifiedSet<IndexedObjectProperty>(
 						8);
 			expandUnderSubProperties(input, saturation.derivedSubProperyChains,
 					saturation.derivedSubProperties, inferenceProducer);
@@ -242,7 +242,7 @@ class SubPropertyExplorer {
 	 *         ObjectPropertyChain(S, T) are sub-properties of the given
 	 *         {@link IndexedObjectProperty}
 	 */
-	static Multimap<IndexedObjectProperty, IndexedObjectProperty> getLeftSubComposableSubPropertiesByRightProperties(
+	static MutableMultimap<IndexedObjectProperty, IndexedObjectProperty> getLeftSubComposableSubPropertiesByRightProperties(
 			IndexedObjectProperty input,
 			ReasonerProducer<? super SubPropertyChainInference> inferenceProducer,
 			final PropertyHierarchyCompositionState.Dispatcher dispatcher) {
@@ -252,7 +252,7 @@ class SubPropertyExplorer {
 		// else
 		synchronized (saturation) {
 			if (saturation.leftSubComposableSubPropertiesByRightProperties == null)
-				saturation.leftSubComposableSubPropertiesByRightProperties = new HashSetMultimap<IndexedObjectProperty, IndexedObjectProperty>();
+				saturation.leftSubComposableSubPropertiesByRightProperties = new UnifiedSetMultimap<IndexedObjectProperty, IndexedObjectProperty>();
 		}
 		synchronized (saturation.leftSubComposableSubPropertiesByRightProperties) {
 			if (saturation.leftSubComposableSubPropertiesByRightPropertiesComputed)
@@ -267,8 +267,7 @@ class SubPropertyExplorer {
 					Set<IndexedObjectProperty> leftSubProperties = getSubProperties(
 							composition.getFirstProperty(), inferenceProducer,
 							dispatcher);
-					Set<IndexedObjectProperty> commonSubProperties = new LazySetIntersection<IndexedObjectProperty>(
-							subProperties, leftSubProperties);
+					Set<IndexedObjectProperty> commonSubProperties = Sets.intersect(subProperties, leftSubProperties);
 					if (commonSubProperties.isEmpty())
 						continue;
 					// else
@@ -277,7 +276,7 @@ class SubPropertyExplorer {
 							dispatcher))
 						for (IndexedObjectProperty commonLeft : commonSubProperties)
 							saturation.leftSubComposableSubPropertiesByRightProperties
-									.add(rightSubProperty, commonLeft);
+									.put(rightSubProperty, commonLeft);
 				}
 			}
 			saturation.leftSubComposableSubPropertiesByRightPropertiesComputed = true;

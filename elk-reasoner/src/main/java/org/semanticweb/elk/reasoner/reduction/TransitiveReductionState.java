@@ -27,11 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.saturation.SaturationState;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 
 /**
  * The intermediate state of the transitive reduction computation.
@@ -81,7 +81,7 @@ class TransitiveReductionState<R extends IndexedClassExpression, J extends Trans
 	TransitiveReductionState(J initiatorJob, SaturationState<?> saturationState) {
 		this.initiatorJob = initiatorJob;
 		this.rootEquivalent = new ArrayList<>(1);
-		this.prunedSubsumers = new ArrayHashSet<>(8);
+		this.prunedSubsumers = new UnifiedSet<>(8);
 		Set<IndexedClassExpression> subsumers = saturationState.getContext(
 				initiatorJob.getInput()).getComposedSubsumers();
 		this.subsumerIterator = subsumers.iterator();

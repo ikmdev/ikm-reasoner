@@ -48,6 +48,7 @@ import java.util.Set;
  *            the type of the elements in the sets
  * 
  */
+@Deprecated
 public class ArraySlicedSet<E> {
 
 	/**

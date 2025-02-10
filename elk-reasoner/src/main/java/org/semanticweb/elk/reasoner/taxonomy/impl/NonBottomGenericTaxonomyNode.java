@@ -24,11 +24,11 @@ package org.semanticweb.elk.reasoner.taxonomy.impl;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.TaxonomyNodeUtils;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericTaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.hashing.HashGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +88,8 @@ public abstract class NonBottomGenericTaxonomyNode<
 			final Iterable<? extends T> members, final int size) {
 		super(members, size, taxonomy.getKeyProvider());
 		this.taxonomy_ = taxonomy;
-		this.directSubNodes_ = new ArrayHashSet<UN>();
-		this.directSuperNodes_ = new ArrayHashSet<UN>();
+		this.directSubNodes_ = new UnifiedSet<UN>();
+		this.directSuperNodes_ = new UnifiedSet<UN>();
 	}
 
 	@Override

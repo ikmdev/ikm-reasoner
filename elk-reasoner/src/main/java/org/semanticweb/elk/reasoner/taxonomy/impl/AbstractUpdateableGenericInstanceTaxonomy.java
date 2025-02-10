@@ -23,10 +23,10 @@ package org.semanticweb.elk.reasoner.taxonomy.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.reasoner.taxonomy.hashing.InstanceTaxonomyEqualator;
 import org.semanticweb.elk.reasoner.taxonomy.hashing.InstanceTaxonomyHasher;
@@ -41,7 +41,6 @@ import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNodeFactory;
 import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.UpdateableInstanceTaxonomy;
-import org.semanticweb.elk.util.collections.LazySetUnion;
 
 /**
  * A generic implementation of instance taxonomy that extends an implementation
@@ -134,8 +133,9 @@ public abstract class AbstractUpdateableGenericInstanceTaxonomy<T extends ElkEnt
 
 	@Override
 	public Set<? extends TypeNode<T, I>> getNodes() {
-		return new LazySetUnion<TypeNode<T, I>>(nodeStore_.getNodes(),
-				Collections.singleton(getBottomNode()));
+		UnifiedSet<TypeNode<T, I>> nodes = new UnifiedSet<>(nodeStore_.getNodes());
+		nodes.add(getBottomNode());
+		return nodes;
 	}
 
 	@Override

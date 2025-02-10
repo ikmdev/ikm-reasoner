@@ -19,6 +19,9 @@
  */
 open module org.semanticweb.elk.util.collections {
 
+	requires dev.ikm.jpms.eclipse.collections;
+	requires dev.ikm.jpms.eclipse.collections.api;
+
 	exports org.semanticweb.elk.util.collections;
 	exports org.semanticweb.elk.util.collections.chains;
 	exports org.semanticweb.elk.util.collections.entryset;

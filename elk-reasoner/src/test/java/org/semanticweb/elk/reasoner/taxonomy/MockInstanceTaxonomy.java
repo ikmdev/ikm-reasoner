@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.owl.printers.OwlFunctionalStylePrinter;
 import org.semanticweb.elk.reasoner.taxonomy.DepthFirstSearch.Direction;
@@ -44,7 +45,6 @@ import org.semanticweb.elk.reasoner.taxonomy.model.NodeStore;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Condition;
 import org.semanticweb.elk.util.collections.Operations;
 
@@ -350,7 +350,7 @@ public class MockInstanceTaxonomy<T extends ElkEntity, I extends ElkEntity>
 	protected class MockTypeNode extends MockNode<T> implements
 			MutableTypeNode<T, I> {
 
-		final Set<InstanceNode<T, I>> instances = new ArrayHashSet<InstanceNode<T, I>>();
+		final Set<InstanceNode<T, I>> instances = new UnifiedSet<InstanceNode<T, I>>();
 
 		MockTypeNode(Collection<T> members) {
 			super(members, typeKeyProvider_);
@@ -369,7 +369,7 @@ public class MockInstanceTaxonomy<T extends ElkEntity, I extends ElkEntity>
 		@Override
 		public Set<? extends InstanceNode<T, I>> getAllInstanceNodes() {
 			Set<TypeNode<T, I>> ancestors = getAllSubNodes();
-			Set<InstanceNode<T, I>> result = new ArrayHashSet<InstanceNode<T, I>>();
+			Set<InstanceNode<T, I>> result = new UnifiedSet<InstanceNode<T, I>>();
 
 			result.addAll(instances);
 
@@ -688,7 +688,7 @@ public class MockInstanceTaxonomy<T extends ElkEntity, I extends ElkEntity>
 
 			instancesWithoutType++;
 			MockInstanceTaxonomy.this.instanceTypeMap.put(this,
-					new ArrayHashSet<TypeNode<T, I>>());
+					new UnifiedSet<TypeNode<T, I>>());
 
 			for (TypeNode<T, I> type : types) {
 				assert type != null;

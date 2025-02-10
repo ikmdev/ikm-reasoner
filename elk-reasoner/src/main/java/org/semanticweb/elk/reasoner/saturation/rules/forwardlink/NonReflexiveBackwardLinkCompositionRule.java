@@ -25,6 +25,8 @@ package org.semanticweb.elk.reasoner.saturation.rules.forwardlink;
 import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.factory.Sets;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
@@ -34,8 +36,6 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.context.ContextPremises;
 import org.semanticweb.elk.reasoner.saturation.context.SubContextPremises;
 import org.semanticweb.elk.reasoner.saturation.rules.ClassInferenceProducer;
-import org.semanticweb.elk.util.collections.LazySetIntersection;
-import org.semanticweb.elk.util.collections.Multimap;
 
 /**
  * A {@link ForwardLinkRule} applied when processing a {@link ForwardLink}
@@ -81,17 +81,17 @@ public class NonReflexiveBackwardLinkCompositionRule
 	}
 
 	private void apply(
-			final Multimap<IndexedObjectProperty, IndexedComplexPropertyChain> compsByBackwardRelation,
+			final MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> compsByBackwardRelation,
 			ContextPremises premises, ClassInferenceProducer producer) {
 		/* compose the link with all non-reflexive backward links */
 		final Map<IndexedObjectProperty, ? extends SubContextPremises> subContextMap = premises
 				.getSubContextPremisesByObjectProperty();
 
-		for (IndexedObjectProperty backwardRelation : new LazySetIntersection<IndexedObjectProperty>(
-				compsByBackwardRelation.keySet(), subContextMap.keySet())) {
+		for (IndexedObjectProperty backwardRelation : Sets
+				.intersect(compsByBackwardRelation.keySet().toSet(), subContextMap.keySet())) {
 
 			Collection<IndexedComplexPropertyChain> compositions = compsByBackwardRelation
-					.get(backwardRelation);
+					.get(backwardRelation).toList();
 			SubContextPremises subPremises = subContextMap
 					.get(backwardRelation);
 

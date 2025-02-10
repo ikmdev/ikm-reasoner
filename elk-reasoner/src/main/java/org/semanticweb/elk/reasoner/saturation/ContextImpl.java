@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpressionList;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedContextRoot;
@@ -36,8 +38,8 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.classes.BackwardLinkI
 import org.semanticweb.elk.reasoner.saturation.conclusions.classes.ContextInitializationImpl;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.BackwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion;
-import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassInconsistency;
+import org.semanticweb.elk.reasoner.saturation.conclusions.model.ContextInitialization;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.DisjointSubsumer;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.ForwardLink;
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.Propagation;
@@ -52,8 +54,6 @@ import org.semanticweb.elk.reasoner.saturation.inferences.ClassInference;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.BackwardLinkChainFromBackwardLinkRule;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.ContradictionOverBackwardLinkRule;
 import org.semanticweb.elk.reasoner.saturation.rules.backwardlinks.LinkableBackwardLinkRule;
-import org.semanticweb.elk.util.collections.ArrayHashMap;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.chains.AbstractChain;
 import org.semanticweb.elk.util.collections.chains.Chain;
 import org.semanticweb.elk.util.concurrent.collections.ActivationStack;
@@ -157,8 +157,8 @@ public class ContextImpl implements ExtendedContext {
 	public ContextImpl(IndexedContextRoot root) {
 		this.root_ = root;
 		this.toDo_ = new SynchronizedArrayListActivationStack<ClassInference>();
-		this.composedSubsumers_ = new ArrayHashSet<IndexedClassExpression>(16);
-		this.decomposedSubsumers_ = new ArrayHashSet<IndexedClassExpression>(8);
+		this.composedSubsumers_ = new UnifiedSet<IndexedClassExpression>(16);
+		this.decomposedSubsumers_ = new UnifiedSet<IndexedClassExpression>(8);
 	}
 
 	@Override
@@ -212,8 +212,7 @@ public class ContextImpl implements ExtendedContext {
 
 	SubContext getCreateSubContext(IndexedObjectProperty subRoot) {
 		if (subContextsByObjectProperty_ == null)
-			subContextsByObjectProperty_ = new ArrayHashMap<IndexedObjectProperty, SubContext>(
-					3);
+			subContextsByObjectProperty_ = new UnifiedMap<IndexedObjectProperty, SubContext>(3);
 		SubContext result = subContextsByObjectProperty_.get(subRoot);
 		if (result == null) {
 			result = new SubContextImpl();
@@ -349,7 +348,7 @@ public class ContextImpl implements ExtendedContext {
 			if (subConclusion.getTraceRoot() == root_) {
 				// reflexive
 				if (reflexiveBackwardLinks_ == null) {
-					reflexiveBackwardLinks_ = new ArrayHashSet<IndexedObjectProperty>(
+					reflexiveBackwardLinks_ = new UnifiedSet<IndexedObjectProperty>(
 							3);
 				}
 				return reflexiveBackwardLinks_.add(relation);
@@ -389,14 +388,14 @@ public class ContextImpl implements ExtendedContext {
 		@Override
 		public Boolean visit(DisjointSubsumer conclusion) {
 			if (disjointnessAxioms_ == null) {
-				disjointnessAxioms_ = new ArrayHashMap<IndexedClassExpressionList, Set<Integer>>();
+				disjointnessAxioms_ = new UnifiedMap<IndexedClassExpressionList, Set<Integer>>();
 			}
 			IndexedClassExpressionList disjoint = conclusion.getDisjointExpressions();
 			int position = conclusion.getPosition();
 			Set<Integer> positions = disjointnessAxioms_
 					.get(disjoint);
 			if (positions == null) {
-				positions = new ArrayHashSet<Integer>(2);
+				positions = new UnifiedSet<Integer>(2);
 				disjointnessAxioms_.put(disjoint, positions);
 			}
 			if (positions.contains(position)) {

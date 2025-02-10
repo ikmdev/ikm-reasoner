@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.semanticweb.elk.owl.implementation.ElkObjectBaseFactory;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
@@ -56,8 +58,6 @@ import org.semanticweb.elk.reasoner.taxonomy.ElkClassKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.ElkIndividualKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.impl.SimpleNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.Node;
-import org.semanticweb.elk.util.collections.HashSetMultimap;
-import org.semanticweb.elk.util.collections.Multimap;
 import org.semanticweb.elk.util.collections.Operations;
 
 public class ElkExpectedTestOutputLoader {
@@ -86,10 +86,10 @@ public class ElkExpectedTestOutputLoader {
 
 		final Set<ElkClassExpression> complex = new HashSet<ElkClassExpression>();
 		final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent = new HashMap<ElkClassExpression, Map<ElkIri, ElkClass>>();
-		final Multimap<ElkClassExpression, ElkClass> superClasses = new HashSetMultimap<ElkClassExpression, ElkClass>();
-		final Multimap<ElkClassExpression, ElkClass> subClasses = new HashSetMultimap<ElkClassExpression, ElkClass>();
+		final MutableMultimap<ElkClassExpression, ElkClass> superClasses = new UnifiedSetMultimap<ElkClassExpression, ElkClass>();
+		final MutableMultimap<ElkClassExpression, ElkClass> subClasses = new UnifiedSetMultimap<ElkClassExpression, ElkClass>();
 		final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same = new HashMap<ElkIndividual, Map<ElkIri, ElkNamedIndividual>>();
-		final Multimap<ElkClassExpression, ElkNamedIndividual> instances = new HashSetMultimap<ElkClassExpression, ElkNamedIndividual>();
+		final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances = new UnifiedSetMultimap<ElkClassExpression, ElkNamedIndividual>();
 
 		final ElkAxiomVisitor<Void> visitor = new DummyElkAxiomVisitor<Void>() {
 
@@ -117,7 +117,7 @@ public class ElkExpectedTestOutputLoader {
 			public Void visit(final ElkSubClassOfAxiom elkSubClassOfAxiom) {
 				if (elkSubClassOfAxiom
 						.getSubClassExpression() instanceof ElkClass) {
-					subClasses.add(elkSubClassOfAxiom.getSuperClassExpression(),
+					subClasses.put(elkSubClassOfAxiom.getSuperClassExpression(),
 							(ElkClass) elkSubClassOfAxiom
 									.getSubClassExpression());
 				} else {
@@ -125,7 +125,7 @@ public class ElkExpectedTestOutputLoader {
 				}
 				if (elkSubClassOfAxiom
 						.getSuperClassExpression() instanceof ElkClass) {
-					superClasses.add(elkSubClassOfAxiom.getSubClassExpression(),
+					superClasses.put(elkSubClassOfAxiom.getSubClassExpression(),
 							(ElkClass) elkSubClassOfAxiom
 									.getSuperClassExpression());
 				} else {
@@ -157,7 +157,7 @@ public class ElkExpectedTestOutputLoader {
 					final ElkClassAssertionAxiom elkClassAssertionAxiom) {
 				if (elkClassAssertionAxiom
 						.getIndividual() instanceof ElkNamedIndividual) {
-					instances.add(elkClassAssertionAxiom.getClassExpression(),
+					instances.put(elkClassAssertionAxiom.getClassExpression(),
 							(ElkNamedIndividual) elkClassAssertionAxiom
 									.getIndividual());
 				}
@@ -206,18 +206,18 @@ public class ElkExpectedTestOutputLoader {
 
 	private final Set<ElkClassExpression> queryClasses_;
 	private final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent_;
-	private final Multimap<ElkClassExpression, ElkClass> superClasses_;
-	private final Multimap<ElkClassExpression, ElkClass> subClasses_;
+	private final MutableMultimap<ElkClassExpression, ElkClass> superClasses_;
+	private final MutableMultimap<ElkClassExpression, ElkClass> subClasses_;
 	private final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same_;
-	private final Multimap<ElkClassExpression, ElkNamedIndividual> instances_;
+	private final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances_;
 
 	private ElkExpectedTestOutputLoader(
 			final Set<ElkClassExpression> queryClasses,
 			final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent,
-			final Multimap<ElkClassExpression, ElkClass> superClasses,
-			final Multimap<ElkClassExpression, ElkClass> subClasses,
+			final MutableMultimap<ElkClassExpression, ElkClass> superClasses,
+			final MutableMultimap<ElkClassExpression, ElkClass> subClasses,
 			final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same,
-			final Multimap<ElkClassExpression, ElkNamedIndividual> instances) {
+			final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances) {
 		this.queryClasses_ = queryClasses;
 		this.equivalent_ = equivalent;
 		this.superClasses_ = superClasses;
@@ -289,7 +289,7 @@ public class ElkExpectedTestOutputLoader {
 		for (final ElkClassExpression queryClass : queryClasses_) {
 
 			final Collection<Node<ElkClass>> superNodes = Operations.map(
-					superClasses_.get(queryClass),
+					superClasses_.get(queryClass).toList(),
 					new Operations.Transformation<ElkClass, Node<ElkClass>>() {
 						@Override
 						public Node<ElkClass> transform(final ElkClass cls) {
@@ -326,7 +326,7 @@ public class ElkExpectedTestOutputLoader {
 		for (final ElkClassExpression queryClass : queryClasses_) {
 
 			final Collection<Node<ElkClass>> subNodes = Operations.map(
-					subClasses_.get(queryClass),
+					subClasses_.get(queryClass).toList(),
 					new Operations.Transformation<ElkClass, Node<ElkClass>>() {
 						@Override
 						public Node<ElkClass> transform(final ElkClass cls) {
@@ -364,7 +364,7 @@ public class ElkExpectedTestOutputLoader {
 		for (final ElkClassExpression queryClass : queryClasses_) {
 
 			final Collection<Node<ElkNamedIndividual>> instances = Operations
-					.map(instances_.get(queryClass),
+					.map(instances_.get(queryClass).toList(),
 							new Operations.Transformation<ElkNamedIndividual, Node<ElkNamedIndividual>>() {
 								@Override
 								public Node<ElkNamedIndividual> transform(
@@ -426,7 +426,7 @@ public class ElkExpectedTestOutputLoader {
 			// Superclasses of queryClass.
 
 			final Collection<ElkClass> superClasses = superClasses_
-					.get(queryClass);
+					.get(queryClass).toList();
 			if (superClasses != null && !superClasses.isEmpty()) {
 				final ElkClass superClass = superClasses.iterator().next();
 
@@ -455,7 +455,7 @@ public class ElkExpectedTestOutputLoader {
 
 			// Subclasses of queryClass.
 
-			final Collection<ElkClass> subClasses = subClasses_.get(queryClass);
+			final Collection<ElkClass> subClasses = subClasses_.get(queryClass).toList();
 			if (subClasses != null && !subClasses.isEmpty()) {
 				final ElkClass subClass = subClasses.iterator().next();
 
@@ -485,7 +485,7 @@ public class ElkExpectedTestOutputLoader {
 			// Instances of queryClass.
 
 			final Collection<ElkNamedIndividual> instances = instances_
-					.get(queryClass);
+					.get(queryClass).toList();
 			if (instances != null && !instances.isEmpty()) {
 				final ElkNamedIndividual instance = instances.iterator().next();
 

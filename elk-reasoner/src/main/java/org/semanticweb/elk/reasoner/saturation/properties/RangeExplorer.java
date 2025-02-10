@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClassExpression;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
@@ -34,7 +35,6 @@ import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
 import org.semanticweb.elk.reasoner.proof.ReasonerProducer;
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.PropertyRangeInference;
 import org.semanticweb.elk.reasoner.saturation.properties.inferences.PropertyRangeInherited;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +133,7 @@ public class RangeExplorer {
 		// else
 		synchronized (saturation) {
 			if (saturation.derivedRanges == null)
-				saturation.derivedRanges = new ArrayHashSet<IndexedClassExpression>(
+				saturation.derivedRanges = new UnifiedSet<IndexedClassExpression>(
 						8);
 		}
 		synchronized (saturation.derivedRanges) {
@@ -141,7 +141,7 @@ public class RangeExplorer {
 				return saturation;
 			// else
 			expandUnderSuperProperties(element,
-					new ArrayHashSet<IndexedObjectProperty>(8),
+					new UnifiedSet<IndexedObjectProperty>(8),
 					saturation.derivedRanges, inferenceProducer);
 			saturation.derivedRangesComputed = true;
 		}

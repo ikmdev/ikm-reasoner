@@ -32,6 +32,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.MutableBoolean;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
@@ -52,7 +53,6 @@ import org.semanticweb.elk.reasoner.saturation.conclusions.model.ClassConclusion
 import org.semanticweb.elk.reasoner.saturation.conclusions.model.SaturationConclusion;
 import org.semanticweb.elk.reasoner.saturation.context.Context;
 import org.semanticweb.elk.reasoner.stages.ReasonerStateAccessor;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +106,7 @@ public class TracingTestUtils {
 			final ReasonerProof<? extends EntailmentInference> evidence,
 			final Collection<Conclusion> result) {
 
-		final Set<Entailment> done = new ArrayHashSet<Entailment>();
+		final Set<Entailment> done = new UnifiedSet<Entailment>();
 		final Queue<Entailment> toDo = new LinkedList<Entailment>();
 
 		if (done.add(goal)) {

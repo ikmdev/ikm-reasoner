@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
  * @author Yevgeny Kazakov
  * 
  */
+@Deprecated
 public class ArrayHashSetTest {
 
 	/**

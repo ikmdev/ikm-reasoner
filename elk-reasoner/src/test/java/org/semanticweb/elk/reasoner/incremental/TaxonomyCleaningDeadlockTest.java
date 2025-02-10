@@ -23,8 +23,9 @@ package org.semanticweb.elk.reasoner.incremental;
 
 import java.util.Random;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
 import org.junit.Test;
-import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.loading.TestAxiomLoaderFactory;
 import org.semanticweb.elk.loading.TestChangesLoader;
@@ -37,8 +38,7 @@ import org.semanticweb.elk.owl.iris.ElkPrefixImpl;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
 import org.semanticweb.elk.reasoner.Reasoner;
 import org.semanticweb.elk.reasoner.TestReasonerUtils;
-import org.semanticweb.elk.util.collections.HashSetMultimap;
-import org.semanticweb.elk.util.collections.Multimap;
+import org.semanticweb.elk.testing.RandomSeedProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +81,7 @@ public class TaxonomyCleaningDeadlockTest {
 					.createTestReasoner(loader);
 			reasoner.setAllowIncrementalMode(false);
 
-			final Multimap<Integer, ElkSubClassOfAxiom> axiomsPerSuperClass = new HashSetMultimap<Integer, ElkSubClassOfAxiom>();
+			final MutableMultimap<Integer, ElkSubClassOfAxiom> axiomsPerSuperClass = new UnifiedSetMultimap<Integer, ElkSubClassOfAxiom>();
 
 			// Add the axioms
 
@@ -93,7 +93,7 @@ public class TaxonomyCleaningDeadlockTest {
 										createElkClass("Super" + superIndex),
 										createElkClass("Sub" + subIndex));
 						loader.add(axiom);
-						axiomsPerSuperClass.add(superIndex, axiom);
+						axiomsPerSuperClass.put(superIndex, axiom);
 					}
 				}
 			}

@@ -34,6 +34,7 @@ import java.util.NoSuchElementException;
  * @param <E>
  *            the elements contained in the list
  */
+@Deprecated
 public interface FList<E> extends Iterable<E> {
 
 	/**

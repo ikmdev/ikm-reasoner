@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.semanticweb.elk.util.collections;
 
 /*
@@ -48,6 +45,7 @@ import java.util.Set;
  * @param <E>
  *            the type of elements in the collection
  */
+@Deprecated
 public class LazyCollectionMinusSet<E> extends AbstractCollection<E> {
 
 	private final Collection<? extends E> collection_;

@@ -3,6 +3,8 @@
  */
 package org.semanticweb.elk.reasoner.saturation.properties;
 
+import org.eclipse.collections.api.multimap.MutableMultimap;
+
 /*
  * #%L
  * ELK Reasoner
@@ -28,7 +30,6 @@ package org.semanticweb.elk.reasoner.saturation.properties;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedComplexPropertyChain;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedObjectProperty;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedPropertyChain;
-import org.semanticweb.elk.util.collections.Multimap;
 
 /**
  * @author Pavel Klinov
@@ -47,15 +48,15 @@ public class VerifySymmetricPropertySaturation {
 	public static void testLeftCompositions(IndexedPropertyChain ipc,
 			AsymmetricCompositionHook hook) {
 		SaturatedPropertyChain saturation = ipc.getSaturated();
-		Multimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = saturation
+		MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = saturation
 				.getNonRedundantCompositionsByLeftSubProperty();
 		for (IndexedObjectProperty left : compositionsByLeft.keySet()) {
 			for (IndexedComplexPropertyChain composition : compositionsByLeft
 					.get(left)) {
 				SaturatedPropertyChain leftSaturation = left.getSaturated();
-				Multimap<IndexedPropertyChain, IndexedComplexPropertyChain> compositionsByRight = leftSaturation
+				MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> compositionsByRight = leftSaturation
 						.getNonRedundantCompositionsByRightSubProperty();
-				if (!compositionsByRight.contains(ipc, composition)) {
+				if (!compositionsByRight.containsKeyAndValue(ipc, composition)) {
 					hook.error(left, ipc, composition, ipc);
 				}
 			}
@@ -72,15 +73,15 @@ public class VerifySymmetricPropertySaturation {
 	public static void testRightCompositions(IndexedObjectProperty ip,
 			AsymmetricCompositionHook hook) {
 		SaturatedPropertyChain saturation = ip.getSaturated();
-		Multimap<IndexedPropertyChain, IndexedComplexPropertyChain> compositionsByRight = saturation
+		MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> compositionsByRight = saturation
 				.getNonRedundantCompositionsByRightSubProperty();
 		for (IndexedPropertyChain right : compositionsByRight.keySet()) {
 			for (IndexedComplexPropertyChain composition : compositionsByRight
 					.get(right)) {
 				SaturatedPropertyChain rightSaturation = right.getSaturated();
-				Multimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = rightSaturation
+				MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> compositionsByLeft = rightSaturation
 						.getNonRedundantCompositionsByLeftSubProperty();
-				if (!compositionsByLeft.contains(ip, composition)) {
+				if (!compositionsByLeft.containsKeyAndValue(ip, composition)) {
 					hook.error(ip, right, composition, ip);
 				}
 			}

@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.loading.AbstractClassQueryLoader;
 import org.semanticweb.elk.loading.ClassQueryLoader;
 import org.semanticweb.elk.loading.ElkLoadingException;
@@ -73,7 +74,6 @@ import org.semanticweb.elk.reasoner.taxonomy.model.Node;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
-import org.semanticweb.elk.util.collections.ArrayHashSet;
 import org.semanticweb.elk.util.collections.Evictor;
 import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.concurrent.computation.InterruptMonitor;
@@ -119,7 +119,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 	/**
 	 * The class expressions that were registered by the last call.
 	 */
-	private final Set<ElkClassExpression> lastQueries_ = new ArrayHashSet<ElkClassExpression>();
+	private final Set<ElkClassExpression> lastQueries_ = new UnifiedSet<ElkClassExpression>();
 
 	/**
 	 * A manager to keep track of incompleteness for queries
@@ -550,7 +550,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 		Collection<IndexedClassExpression> queryClasses = queriesByRelated_
 				.get(related);
 		if (queryClasses == null) {
-			queryClasses = new ArrayHashSet<IndexedClassExpression>();
+			queryClasses = new UnifiedSet<IndexedClassExpression>();
 			queriesByRelated_.put(related, queryClasses);
 			LOGGER_.trace("{} add related class: {}", queryClass, related);
 		}
@@ -752,7 +752,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 		final Collection<? extends IndexedClass> allClasses = saturationState_
 				.getOntologyIndex().getClasses();
-		final Set<IndexedClass> strictSubclasses = new ArrayHashSet<IndexedClass>(
+		final Set<IndexedClass> strictSubclasses = new UnifiedSet<IndexedClass>(
 				allClasses.size());
 
 		for (final IndexedClass ic : allClasses) {
@@ -765,7 +765,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 			}
 		}
 
-		final Set<TaxonomyNode<ElkClass>> result = new ArrayHashSet<TaxonomyNode<ElkClass>>();
+		final Set<TaxonomyNode<ElkClass>> result = new UnifiedSet<TaxonomyNode<ElkClass>>();
 
 		for (final IndexedClass strictSubclass : strictSubclasses) {
 			/*
@@ -844,7 +844,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 
 		final Collection<? extends IndexedIndividual> allIndividuals = saturationState_
 				.getOntologyIndex().getIndividuals();
-		final Set<IndexedIndividual> instances = new ArrayHashSet<IndexedIndividual>(
+		final Set<IndexedIndividual> instances = new UnifiedSet<IndexedIndividual>(
 				allIndividuals.size());
 
 		for (final IndexedIndividual ii : allIndividuals) {
@@ -855,7 +855,7 @@ public class ClassExpressionQueryState implements ClassQueryLoader.Factory {
 			}
 		}
 
-		final Set<InstanceNode<ElkClass, ElkNamedIndividual>> result = new ArrayHashSet<InstanceNode<ElkClass, ElkNamedIndividual>>();
+		final Set<InstanceNode<ElkClass, ElkNamedIndividual>> result = new UnifiedSet<InstanceNode<ElkClass, ElkNamedIndividual>>();
 
 		for (final IndexedIndividual instance : instances) {
 			/*
