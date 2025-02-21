@@ -103,6 +103,14 @@ public class SnomedOntology {
 		return "<" + concept + ">";
 	}
 
+	public void setNames() {
+		if (descriptions == null)
+			return;
+		concepts.forEach(x -> x.setName(getFsn(x.getId())));
+		roleTypes.forEach(x -> x.setName(getFsn(x.getId())));
+		concreteRoleTypes.forEach(x -> x.setName(getFsn(x.getId())));
+	}
+
 	public HashSet<Concept> getDependentOnConcepts(Concept concept) {
 		return getDependentOnConcepts(concept, true, true);
 	}

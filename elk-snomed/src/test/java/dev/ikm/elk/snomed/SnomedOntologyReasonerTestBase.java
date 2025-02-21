@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -47,13 +46,14 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 		OwlElOntology ontology = new OwlElOntology();
 		ontology.load(axioms_file);
 		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
+		snomedOntology.setDescriptions(SnomedDescriptions.init(descriptions_file));
+		snomedOntology.setNames();
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
 			if (!rt.getSuperRoleTypes().stream().map(RoleType::getId).toList()
 					.equals(List.of(SnomedIds.concept_model_object_attribute))) {
-				LOG.info("" + rt);
-				rt.getSuperRoleTypes().forEach(sup -> LOG.info("\tSup 1: " + sup));
-				sor.getSuperObjectProperties(rt).forEach(sup -> LOG.info("\tSup 2: " + sup));
+				LOG.info("Role type: " + rt);
+				rt.getSuperRoleTypes().forEach(sup -> LOG.info("\tSup: " + sup));
 			}
 			if (rt.isTransitive())
 				LOG.info("Transitive: " + rt);
@@ -68,15 +68,13 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 			SnomedIsa isas = SnomedIsa.init(rels_file);
 			for (Long id : isas.getOrderedConcepts()) {
 				Concept con = snomedOntology.getConcept(id);
-				if (isas.hasAncestor(id, SnomedIds.concept_model_object_attribute))
-					continue;
 				if (con == null) {
+					if (isas.hasAncestor(id, SnomedIds.linkage_concept))
+						continue;
 					LOG.info("Skipping: " + id);
 					continue;
 				}
-				Set<Long> sups = sor.getSuperClasses(con).stream()
-						.map(cl -> Long.parseLong(cl.getIri().toString().substring(1)))
-						.collect(Collectors.toCollection(HashSet::new));
+				Set<Long> sups = sor.getSuperConcepts(id);
 				Set<Long> parents = isas.getParents(id);
 				if (id == SnomedIds.root) {
 					assertTrue(parents.isEmpty());
