@@ -31,6 +31,12 @@ public class SnomedIds {
 	// 609096000 |Role group (attribute)|
 	public static final long role_group = 609096000;
 
+	// 106237007 |Linkage concept (linkage concept)|
+	public static final long linkage_concept = 106237007;
+
+	// 410662002 |Concept model attribute (attribute)|
+	public static final long concept_model_attribute = 410662002;
+
 	// 762705008 |Concept model object attribute (attribute)|
 	public static final long concept_model_object_attribute = 762705008;
 
