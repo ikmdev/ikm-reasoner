@@ -10,6 +10,12 @@ Primary changes:
 * Replace custom collections with Eclipse collections
 * Addition of SNOMED POJO model, reasoner, and parser (without dependency on the OWLAPI)
 
+Requires Java 21.
+
+To build on Unix/Linux/OSX: `./mvnw clean install`
+
+On Windows: `./mvnw.cmd clean install`
+
 To run the integration tests:
 
 ```
@@ -18,6 +24,7 @@ To run the integration tests:
 
 The integration tests require the SNOMED test data artifacts from the [reasoner-test-data project](https://github.com/ikmdev/reasoner-test-data)
 
+Available at [Maven Central](https://central.sonatype.com/namespace/dev.ikm.elk)
 
 ### Team Ownership - Product Owner
 
