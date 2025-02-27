@@ -57,7 +57,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>23</java.version>
+		<java.version>21</java.version>
 		<!-- logging dependencies -->
 		<slf4j.version>2.0.17</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
@@ -68,7 +68,7 @@
 		<antlr4-runtime.version>4.13.2-r2</antlr4-runtime.version>
 		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi4.version>4.8.1</owlapi4.version>
+		<owlapi.version>4.8.2</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -131,22 +131,22 @@
 			<dependency>
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-api</artifactId>
-				<version>${owlapi4.version}</version>
+				<version>${owlapi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-apibinding</artifactId>
-				<version>${owlapi4.version}</version>
+				<version>${owlapi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-impl</artifactId>
-				<version>${owlapi4.version}</version>
+				<version>${owlapi.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>dev.ikm.owlapi</groupId>
 				<artifactId>owlapi-parsers</artifactId>
-				<version>${owlapi4.version}</version>
+				<version>${owlapi.version}</version>
 			</dependency>
 			<!-- Project dependencies-->
 			<dependency>
@@ -472,6 +472,7 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<release>${java.version}</release>
 					<compilerArgs combine.self="override"></compilerArgs>
 					<fork>true</fork>
 				</configuration>
