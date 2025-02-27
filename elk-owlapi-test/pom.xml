@@ -19,6 +19,10 @@
 			<artifactId>eclipse-collections</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>dev.ikm.owlapi</groupId>
+			<artifactId>owlapi-parsers</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-owlapi</artifactId>
 			<scope>test</scope>
@@ -48,6 +52,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
