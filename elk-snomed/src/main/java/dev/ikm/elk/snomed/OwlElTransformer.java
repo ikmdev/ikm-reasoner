@@ -236,8 +236,13 @@ public class OwlElTransformer {
 		OwlElTypedLiteral value = dhv.getFiller();
 		String datatype = value.getDatatype();
 		ConcreteRole.ValueType value_type = switch (datatype) {
-		case "xsd:integer" -> ConcreteRole.ValueType.Integer;
+		case "xsd:boolean" -> ConcreteRole.ValueType.Boolean;
 		case "xsd:decimal" -> ConcreteRole.ValueType.Decimal;
+		case "xsd:double" -> ConcreteRole.ValueType.Double;
+		case "xsd:float" -> ConcreteRole.ValueType.Float;
+		case "xsd:long" -> ConcreteRole.ValueType.Long;
+		case "xsd:integer" -> ConcreteRole.ValueType.Integer;
+		case "xsd:string" -> ConcreteRole.ValueType.String;
 		default -> throw new UnsupportedOperationException("Unexpected value: " + datatype);
 		};
 		return new ConcreteRole(dataPropertyType, value.getLiteral(), value_type);

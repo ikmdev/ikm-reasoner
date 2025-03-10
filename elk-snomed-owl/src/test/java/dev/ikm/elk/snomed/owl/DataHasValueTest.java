@@ -95,9 +95,19 @@ public class DataHasValueTest {
 		assertFalse(reasoner.isEntailed(df.getOWLSubClassOfAxiom(a1, a2)));
 	}
 
-//	@Test
+	@Test
 	public void dataHasValue() throws Exception {
 		loadClassifyPrintTest("/DataHasValue.owl");
+	}
+	
+	@Test
+	public void dataHasBooleanValue() throws Exception {
+		loadClassifyPrintTest("/DataHasBooleanValue.owl");
+	}
+	
+	@Test
+	public void dataHasStringValue() throws Exception {
+		loadClassifyPrintTest("/DataHasStringValue.owl");
 	}
 
 //	@Test

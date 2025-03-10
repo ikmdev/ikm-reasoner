@@ -203,5 +203,10 @@ public interface PredefinedElkDatatypeFactory {
 	 * @return the {@link ElkDatatype} corresponding to {@code rdfs:Literal}
 	 */
 	ElkDatatype getRdfsLiteral();
+	
+	/**
+	 * @return the {@link ElkDatatype} corresponding to {@code xsd:boolean}
+	 */
+	ElkDatatype getXsdBoolean();
 
 }

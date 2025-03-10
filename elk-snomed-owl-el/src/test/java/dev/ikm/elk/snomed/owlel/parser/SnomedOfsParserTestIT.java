@@ -133,10 +133,24 @@ public class SnomedOfsParserTestIT {
 		assertEquals(1, exprs.size());
 		assertEquals(0, parse(exprs));
 	}
+	
+	@Test
+	public void dataHasBooleanValue() throws Exception {
+		List<String> exprs = List.of("SubClassOf(:1 ObjectIntersectionOf(:2 DataHasValue(:3 \"true\"^^xsd:boolean)))");
+		assertEquals(1, exprs.size());
+		assertEquals(0, parse(exprs));
+	}
 
 	@Test
-	public void dataHasValue() throws Exception {
+	public void dataHasDecimalValue() throws Exception {
 		List<String> exprs = List.of("SubClassOf(:1 ObjectIntersectionOf(:2 DataHasValue(:3 \"1.1\"^^xsd:decimal)))");
+		assertEquals(1, exprs.size());
+		assertEquals(0, parse(exprs));
+	}
+	
+	@Test
+	public void dataHasStringValue() throws Exception {
+		List<String> exprs = List.of("SubClassOf(:1 ObjectIntersectionOf(:2 DataHasValue(:3 \"foo\"^^xsd:string)))");
 		assertEquals(1, exprs.size());
 		assertEquals(0, parse(exprs));
 	}
