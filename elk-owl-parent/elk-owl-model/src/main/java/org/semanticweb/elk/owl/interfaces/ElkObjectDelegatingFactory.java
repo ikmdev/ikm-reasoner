@@ -789,6 +789,11 @@ public class ElkObjectDelegatingFactory implements ElkObject.Factory {
 	public ElkDatatype getXsdBase64Binary() {
 		return filter(factory_.getXsdBase64Binary());
 	}
+	
+	@Override
+	public ElkDatatype getXsdBoolean() {
+		return filter(factory_.getXsdBoolean());
+	}
 
 	@Override
 	public ElkDatatype getXsdByte() {

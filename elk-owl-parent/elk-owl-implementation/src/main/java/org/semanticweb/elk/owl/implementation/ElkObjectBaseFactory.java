@@ -805,6 +805,11 @@ public class ElkObjectBaseFactory implements ElkObject.Factory {
 	public ElkDatatype getXsdBase64Binary() {
 		return getDatatype(PredefinedElkIris.XSD_BASE_64_BINARY);
 	}
+	
+	@Override
+	public ElkDatatype getXsdBoolean() {
+		return getDatatype(PredefinedElkIris.XSD_BOOLEAN);
+	}
 
 	@Override
 	public ElkDatatype getXsdByte() {

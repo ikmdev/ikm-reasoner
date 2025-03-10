@@ -250,10 +250,12 @@ public class SnomedOntologyReasoner {
 	private ElkDataHasValue process(ConcreteRole concreteRole) {
 		Factory f = ontology.getObjectFactory();
 		ElkDatatype datatype = switch (concreteRole.getValueType()) {
+		case Boolean -> f.getXsdBoolean();
 		case Decimal -> f.getXsdDecimal();
 		case Double -> f.getXsdDouble();
 		case Float -> f.getXsdFloat();
 		case Integer -> f.getXsdInteger();
+		case Long -> f.getXsdLong();
 		case String -> f.getXsdString();
 		};
 		ElkLiteral literal = f.getLiteral(concreteRole.getValue(), datatype);
