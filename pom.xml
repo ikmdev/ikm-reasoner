@@ -11,7 +11,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.37.6-AR-299_Java23-SNAPSHOT</version>
+	<version>0.37.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
