@@ -100,7 +100,7 @@ public class SnomedConcreteRoles {
 						String value = fields[5]; // value
 						long relationshipGroup = Long.parseLong(fields[6]); // relationshipGroup
 						long typeId = Long.parseLong(fields[7]); // typeId
-						concreteRoles.computeIfAbsent(con, x -> new HashSet<>());
+						concreteRoles.computeIfAbsent(con, _ -> new HashSet<>());
 						concreteRoles.get(con).add(new SnomedConcreteRole(value, relationshipGroup, typeId));
 					});
 		}

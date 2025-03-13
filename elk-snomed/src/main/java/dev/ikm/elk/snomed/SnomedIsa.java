@@ -81,7 +81,7 @@ public class SnomedIsa {
 		for (Entry<Long, Set<Long>> es : parentsMap.entrySet()) {
 			long con = es.getKey();
 			for (long parent : es.getValue()) {
-				childrenMap.computeIfAbsent(parent, x -> new HashSet<>());
+				childrenMap.computeIfAbsent(parent, _ -> new HashSet<>());
 				childrenMap.get(parent).add(con);
 			}
 		}
@@ -119,7 +119,7 @@ public class SnomedIsa {
 					.forEach(fields -> {
 						long con = Long.parseLong(fields[4]); // sourceId
 						long par = Long.parseLong(fields[5]); // destinationId
-						parentsMap.computeIfAbsent(con, x -> new HashSet<>());
+						parentsMap.computeIfAbsent(con, _ -> new HashSet<>());
 						parentsMap.get(con).add(par);
 					});
 		}

@@ -105,15 +105,15 @@ public abstract class SnomedOwlOntologyReasonerTestBase extends SnomedTestBase {
 					assertFalse(ontology.getAxioms(x.getSuperClass().asOWLClass()).contains(axiom));
 				}
 			}
-			case OWLSubObjectPropertyOfAxiom x -> {
+			case OWLSubObjectPropertyOfAxiom _ -> {
 			}
-			case OWLTransitiveObjectPropertyAxiom x -> {
+			case OWLTransitiveObjectPropertyAxiom _ -> {
 			}
-			case OWLSubPropertyChainOfAxiom x -> {
+			case OWLSubPropertyChainOfAxiom _ -> {
 			}
-			case OWLReflexiveObjectPropertyAxiom x -> {
+			case OWLReflexiveObjectPropertyAxiom _ -> {
 			}
-			case OWLSubDataPropertyOfAxiom x -> {
+			case OWLSubDataPropertyOfAxiom _ -> {
 			}
 			default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
 			}

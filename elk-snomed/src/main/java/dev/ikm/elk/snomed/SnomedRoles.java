@@ -95,7 +95,7 @@ public class SnomedRoles {
 						long destination = Long.parseLong(fields[5]); // destinationId
 						long relationshipGroup = Long.parseLong(fields[6]); // relationshipGroup
 						long typeId = Long.parseLong(fields[7]); // typeId
-						roles.computeIfAbsent(con, x -> new HashSet<>());
+						roles.computeIfAbsent(con, _ -> new HashSet<>());
 						roles.get(con).add(new SnomedRole(destination, relationshipGroup, typeId));
 					});
 		}

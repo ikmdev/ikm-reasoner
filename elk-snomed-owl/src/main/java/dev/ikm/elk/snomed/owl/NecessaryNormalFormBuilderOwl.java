@@ -287,8 +287,8 @@ public class NecessaryNormalFormBuilderOwl {
 		NecessaryNormalForm expr = new NecessaryNormalForm();
 		{
 			switch (axiom) {
-			case OWLEquivalentClassesAxiom x -> expr.setSubClassOf(false);
-			case OWLSubClassOfAxiom x -> expr.setSubClassOf(true);
+			case OWLEquivalentClassesAxiom _ -> expr.setSubClassOf(false);
+			case OWLSubClassOfAxiom _ -> expr.setSubClassOf(true);
 			default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
 			}
 		}
@@ -322,7 +322,7 @@ public class NecessaryNormalFormBuilderOwl {
 	private Set<OWLObjectSomeValuesFrom> processDefinition(OWLClassExpression class_expr) {
 		Set<OWLObjectSomeValuesFrom> ret = new HashSet<>();
 		switch (class_expr) {
-		case OWLClass x -> {
+		case OWLClass _ -> {
 		}
 		case OWLObjectIntersectionOf x -> ret.addAll(processIntersection(x.getOperands()));
 		// This is just for role groups
@@ -337,7 +337,7 @@ public class NecessaryNormalFormBuilderOwl {
 		Set<OWLObjectSomeValuesFrom> ret = new HashSet<>();
 		for (OWLClassExpression class_expr : class_exprs) {
 			switch (class_expr) {
-			case OWLClass x -> {
+			case OWLClass _ -> {
 			}
 			case OWLObjectSomeValuesFrom x -> ret.add(x);
 			default -> throw new UnsupportedOperationException(
