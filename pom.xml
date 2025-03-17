@@ -58,13 +58,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>23</java.version>
-		<java.compilerArgs>--enable-preview</java.compilerArgs>
+		<java.compilerArgs></java.compilerArgs>
 		<!-- logging dependencies -->
 		<slf4j.version>2.0.17</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<!-- test dependencies -->
 		<junit4.version>4.13.2</junit4.version>
-		<junit.version>5.12.0</junit.version><!-- defined in parent -->
+		<junit.version>5.12.1</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r2</antlr4-runtime.version>
 		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
@@ -485,6 +485,23 @@
 					<useModulePath>false</useModulePath>
 					<argLine>${java.compilerArgs}</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<useModulePath>false</useModulePath>
+					<argLine>${java.compilerArgs}</argLine>
+					<skipITs>${skipITs}</skipITs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

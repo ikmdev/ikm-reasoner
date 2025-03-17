@@ -80,7 +80,7 @@ public class OwlElOntology {
 				throw new UnsupportedOperationException(parser.getSyntaxError());
 			switch (obj) {
 			case OwlElOntologyDeclaration x -> iri = x.getIri();
-			case OwlElPrefixDeclaration x -> {
+			case OwlElPrefixDeclaration _ -> {
 			}
 			case OwlElAxiom x -> axioms.add(x);
 			default -> throw new IllegalArgumentException("Unexpected value: " + obj);

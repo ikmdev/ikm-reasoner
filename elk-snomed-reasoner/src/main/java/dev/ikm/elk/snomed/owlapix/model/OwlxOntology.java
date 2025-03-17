@@ -119,15 +119,15 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 	}
 
 	public ElkClass getElkClass(String name) {
-		return elkClasses.computeIfAbsent(name, k -> objectFactory.getClass(getIri(name)));
+		return elkClasses.computeIfAbsent(name, _ -> objectFactory.getClass(getIri(name)));
 	}
 
 	public ElkObjectProperty getElkObjectProperty(String name) {
-		return elkObjectProperties.computeIfAbsent(name, key -> objectFactory.getObjectProperty(getIri(name)));
+		return elkObjectProperties.computeIfAbsent(name, _ -> objectFactory.getObjectProperty(getIri(name)));
 	}
 
 	public ElkDataProperty getElkDataProperty(String name) {
-		return elkDataProperties.computeIfAbsent(name, key -> objectFactory.getDataProperty(getIri(name)));
+		return elkDataProperties.computeIfAbsent(name, _ -> objectFactory.getDataProperty(getIri(name)));
 	}
 
 	public ElkAxiom getElkSubObjectPropertyOfAxiom(String sub, String sup) {

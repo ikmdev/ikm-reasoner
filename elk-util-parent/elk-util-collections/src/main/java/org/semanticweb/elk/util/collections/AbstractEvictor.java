@@ -29,12 +29,12 @@ public abstract class AbstractEvictor<E> implements Evictor<E> {
 
 	@Override
 	public Iterator<E> evict() {
-		return evict(x -> false);
+		return evict(_ -> false);
 	}
 
 	@Override
 	public Iterator<E> addAndEvict(final E element) {
-		return addAndEvict(element, x -> false);
+		return addAndEvict(element, _ -> false);
 	}
 
 	@Override

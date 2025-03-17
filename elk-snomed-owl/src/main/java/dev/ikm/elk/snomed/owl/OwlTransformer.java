@@ -140,8 +140,8 @@ public class OwlTransformer {
 	private Definition createDefinition(OWLClass concept, OWLClassAxiom axiom, boolean isGci) {
 		Definition def = new Definition();
 		switch (axiom) {
-		case OWLEquivalentClassesAxiom x -> def.setDefinitionType(DefinitionType.EquivalentConcept);
-		case OWLSubClassOfAxiom x -> def.setDefinitionType(DefinitionType.SubConcept);
+		case OWLEquivalentClassesAxiom _ -> def.setDefinitionType(DefinitionType.EquivalentConcept);
+		case OWLSubClassOfAxiom _ -> def.setDefinitionType(DefinitionType.SubConcept);
 		default -> throw new UnsupportedOperationException("Unexpected: " + axiom.getAxiomType());
 		}
 		processAxiom(def, concept, axiom, isGci);

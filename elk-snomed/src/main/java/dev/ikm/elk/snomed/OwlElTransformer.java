@@ -217,7 +217,7 @@ public class OwlElTransformer {
 				}
 			}
 			case OwlElDataHasValue dhv -> {
-				ConcreteRole data_property = makeDataProperty(dhv);
+				ConcreteRole data_property = makeConcreteRole(dhv);
 				def.addUngroupedConcreteRole(data_property);
 			}
 			default -> throw new UnsupportedOperationException("Unexpected: " + class_expr);
@@ -231,7 +231,7 @@ public class OwlElTransformer {
 		return new Role(roleType, concept);
 	}
 
-	private ConcreteRole makeDataProperty(OwlElDataHasValue dhv) {
+	private ConcreteRole makeConcreteRole(OwlElDataHasValue dhv) {
 		ConcreteRoleType dataPropertyType = getConcreteRoleType((OwlElDataProperty) dhv.getProperty());
 		OwlElTypedLiteral value = dhv.getFiller();
 		String datatype = value.getDatatype();
@@ -253,6 +253,11 @@ public class OwlElTransformer {
 		rg.addRole(role);
 	}
 
+	private void processConcreteRole(RoleGroup rg, OwlElDataHasValue dhv) {
+		ConcreteRole role = makeConcreteRole(dhv);
+		rg.addConcreteRole(role);
+	}
+
 	private void processRoleGroup(Definition def, OwlElClassExpression class_expr) {
 		switch (class_expr) {
 		case OwlElObjectSomeValuesFrom svf -> {
@@ -260,7 +265,11 @@ public class OwlElTransformer {
 			def.addRoleGroup(rg);
 			processRole(rg, svf);
 		}
-		// TODO Should add data property, but this never happens, yet...
+		case OwlElDataHasValue dhv -> {
+			RoleGroup rg = new RoleGroup();
+			def.addRoleGroup(rg);
+			processConcreteRole(rg, dhv);
+		}
 		case OwlElObjectIntersectionOf x -> {
 			processRoleGroup(def, x.getExpressions());
 		}
@@ -277,8 +286,7 @@ public class OwlElTransformer {
 				processRole(rg, svf);
 			}
 			case OwlElDataHasValue dhv -> {
-				ConcreteRole data_property = makeDataProperty(dhv);
-				rg.addConcreteRole(data_property);
+				processConcreteRole(rg, dhv);
 			}
 			default -> throw new UnsupportedOperationException("Unexpected: " + class_expr);
 			}
