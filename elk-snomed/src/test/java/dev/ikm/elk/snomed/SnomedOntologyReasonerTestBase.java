@@ -88,12 +88,12 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 					HashSet<Long> extra = new HashSet<Long>(sups);
 					extra.removeAll(parents);
 					for (long x : extra) {
-						LOG.info("\tExtra: " + x);
+						LOG.info("\tExtra: " + snomedOntology.getConcept(x));
 					}
 					HashSet<Long> missing = new HashSet<Long>(parents);
 					missing.removeAll(sups);
 					for (long x : missing) {
-						LOG.info("\tMissing: " + x);
+						LOG.info("\tMissing: " + snomedOntology.getConcept(x));
 					}
 				}
 			}
