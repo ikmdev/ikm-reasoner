@@ -41,7 +41,7 @@ public class OwlElOntologyTestIT {
 		OwlElOntology ontology = new OwlElOntology();
 		ontology.load(SnomedOfsParserTestIT.file);
 		assertEquals("http://snomed.info/sct/900000000000207008", ontology.getIri());
-		assertEquals(369438, ontology.getAxioms().size());
+		assertEquals(370033, ontology.getAxioms().size());
 	}
 
 	@Test

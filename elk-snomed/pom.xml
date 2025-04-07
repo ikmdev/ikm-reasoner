@@ -116,6 +116,13 @@
 								<artifactItem>
 									<groupId>${snomed-test-data.groupid}</groupId>
 									<artifactId>
+										snomed-test-data-intl-20250101</artifactId>
+									<version>${snomed-test-data.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${snomed-test-data.groupid}</groupId>
+									<artifactId>
 										snomed-test-data-us-20230301</artifactId>
 									<version>${snomed-test-data.version}</version>
 									<type>zip</type>
@@ -138,6 +145,13 @@
 									<groupId>${snomed-test-data.groupid}</groupId>
 									<artifactId>
 										snomed-test-data-us-20240901</artifactId>
+									<version>${snomed-test-data.version}</version>
+									<type>zip</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${snomed-test-data.groupid}</groupId>
+									<artifactId>
+										snomed-test-data-us-20250301</artifactId>
 									<version>${snomed-test-data.version}</version>
 									<type>zip</type>
 								</artifactItem>
