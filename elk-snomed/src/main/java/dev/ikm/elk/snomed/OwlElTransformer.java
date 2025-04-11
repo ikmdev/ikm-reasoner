@@ -163,33 +163,6 @@ public class OwlElTransformer {
 		return new SnomedOntology(concepts.values(), roleTypes.values(), dataPropertyTypes.values());
 	}
 
-//	private Definition createDefinition(OwlElClass concept, OwlElClassAxiom axiom, boolean isGci) {
-//		Definition def = new Definition();
-//		switch (axiom) {
-//		case OwlElEquivalentClasses x -> def.setDefinitionType(DefinitionType.EquivalentConcept);
-//		case OwlElSubClassOf x -> def.setDefinitionType(DefinitionType.SubConcept);
-//		default -> throw new UnsupportedOperationException("Unexpected: " + axiom);
-//		}
-//		processAxiom(def, concept, axiom, isGci);
-//		return def;
-//	}
-
-//	private void processAxiom(Definition def, OwlElClass concept, OwlElClassAxiom axiom, boolean isGci) {
-//		switch (axiom) {
-//		case OwlElEquivalentClasses x -> {
-//			if (isGci)
-//				throw new UnsupportedOperationException("Unexpected: GCI for " + axiom);
-//			OwlElClassExpression expr = x.getExpression2();
-//			processClassExpression(def, expr);
-//		}
-//		case OwlElSubClassOf x -> {
-//			OwlElClassExpression expr = (isGci ? x.getSubClass() : x.getSuperClass());
-//			processClassExpression(def, expr);
-//		}
-//		default -> throw new UnsupportedOperationException("Unexpected: " + axiom);
-//		}
-//	}
-
 	private void processClassExpression(Definition def, OwlElClassExpression class_expr) {
 		switch (class_expr) {
 		case OwlElClass x -> {

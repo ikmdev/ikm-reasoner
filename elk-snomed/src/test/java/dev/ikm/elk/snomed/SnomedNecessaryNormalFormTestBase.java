@@ -72,11 +72,14 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
 				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
 		LOG.info("Init complete");
+		SnomedConcepts concepts = SnomedConcepts.init(concepts_file);
+		SnomedIsa isa = SnomedIsa.init(rels_file);
 		SnomedRoles roles = SnomedRoles.init(rels_file);
 		SnomedConcreteRoles values = SnomedConcreteRoles.init(values_file);
+		SnomedOntology inferredOntology = new SnomedLoader().load(concepts_file, descriptions_file, rels_file, values_file);
 		LOG.info("Generate");
 		long beg = System.currentTimeMillis();
-		ConceptComparer cc = new ConceptComparer(roles, values);
+		ConceptComparer cc = new ConceptComparer(inferredOntology);
 		nnfb.generate(cc);
 		LOG.info("Generate in " + ((System.currentTimeMillis() - beg) / 1000));
 		return nnfb;

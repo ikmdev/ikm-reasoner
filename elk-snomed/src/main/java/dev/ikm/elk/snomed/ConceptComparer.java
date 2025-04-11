@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 - 2024 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2025 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +27,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dev.ikm.elk.snomed.SnomedConcreteRoles.SnomedConcreteRole;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRole;
 import dev.ikm.elk.snomed.model.Definition;
@@ -42,23 +37,20 @@ public class ConceptComparer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConceptComparer.class);
 
-	private SnomedRoles roles;
-
-	private SnomedConcreteRoles concreteRoles;
+	private SnomedOntology inferredOntology;
 
 	private HashSet<Long> mis_match_cons = new HashSet<>();
-	private int root_mis_match_cnt = 0;
 
 	private int mis_match_cnt = 0;
-	private int mis_match_sno_roles_ungrouped_cnt = 0;
-	private int mis_match_nnf_roles_ungrouped_cnt = 0;
-	private int mis_match_sno_roles_grouped_cnt = 0;
-	private int mis_match_nnf_roles_grouped_cnt = 0;
-	private int mis_match_grouping_issue_cnt = 0;
+	private int mis_match_1_roles_ungrouped_cnt = 0;
+	private int mis_match_2_roles_ungrouped_cnt = 0;
+	private int mis_match_1_roles_grouped_cnt = 0;
+	private int mis_match_2_roles_grouped_cnt = 0;
 
-	public ConceptComparer(SnomedRoles roles, SnomedConcreteRoles concreteRoles) {
-		this.roles = roles;
-		this.concreteRoles = concreteRoles;
+	private boolean log_mis_match_detail = false;
+
+	public ConceptComparer(SnomedOntology inferredOntology) {
+		this.inferredOntology = inferredOntology;
 	}
 
 	public int getMisMatchCount() {
@@ -67,218 +59,177 @@ public class ConceptComparer {
 
 	public void logErrors() {
 		LOG.info("Mis match: " + mis_match_cnt);
-		LOG.info("Mis match ungrouped: " + mis_match_sno_roles_ungrouped_cnt + " SNOMED roles "
-				+ mis_match_nnf_roles_ungrouped_cnt + " NNF roles");
-		LOG.info("Mis match grouped: " + mis_match_sno_roles_grouped_cnt + " SNOMED roles "
-				+ mis_match_nnf_roles_grouped_cnt + " NNF roles");
-		LOG.info("Mis match grouping issue: " + mis_match_grouping_issue_cnt);
+		LOG.info("Mis match ungrouped: " + mis_match_1_roles_ungrouped_cnt + " SNOMED roles "
+				+ mis_match_2_roles_ungrouped_cnt + " NNF roles");
+		LOG.info("Mis match grouped: " + mis_match_1_roles_grouped_cnt + " SNOMED roles "
+				+ mis_match_2_roles_grouped_cnt + " NNF roles");
 	}
 
-	private static class SnomedRoleGroup {
-		List<SnomedRoles.SnomedRole> roles = new ArrayList<>();
-		List<SnomedConcreteRoles.SnomedConcreteRole> numberProperties = new ArrayList<>();
+	public void compare(Concept concept) {
+		compare(inferredOntology.getConcept(concept.getId()), concept);
 	}
 
-	private List<SnomedRoleGroup> getRoleGroups(long con, SnomedRoles roles, SnomedConcreteRoles concrete_roles) {
-		HashMap<Long, SnomedRoleGroup> groups = new HashMap<>();
-		for (SnomedRoles.SnomedRole role : roles.getGroupedRoles(con)) {
-			groups.putIfAbsent(role.relationshipGroup, new SnomedRoleGroup());
-			groups.get(role.relationshipGroup).roles.add(role);
+	public void compare(Concept concept1, Concept concept2) {
+		if (concept1.getDefinitions().size() == 1 & concept2.getDefinitions().size() == 1
+				&& concept1.getGciDefinitions().isEmpty() && concept2.getGciDefinitions().isEmpty())
+			log_mis_match_detail = true;
+		boolean match = true;
+		if (!compare(concept1, concept1.getDefinitions(), concept2.getDefinitions(), "1")) {
+			match = false;
 		}
-		for (SnomedConcreteRole role : concrete_roles.getGroupedConcreteRoles(con)) {
-			groups.putIfAbsent(role.relationshipGroup, new SnomedRoleGroup());
-			groups.get(role.relationshipGroup).numberProperties.add(role);
+		if (!compare(concept1, concept2.getDefinitions(), concept1.getDefinitions(), "2")) {
+			match = false;
 		}
-		return new ArrayList<>(groups.values());
-	}
-
-	private boolean compareUngrouped(Concept concept, List<SnomedRoles.SnomedRole> sno_roles_ungrouped,
-			Set<Role> nnf_roles_ungrouped) {
-		boolean mis_match = false;
-		for (SnomedRoles.SnomedRole sno_role : sno_roles_ungrouped) {
-			boolean match = nnf_roles_ungrouped.stream().anyMatch(nnf_role -> compare(sno_role, nnf_role));
-			if (!match) {
-				LOG.error("No NNF roleU for " + concept + " " + sno_role);
-				mis_match = true;
+		if (!compare(concept1, concept1.getGciDefinitions(), concept2.getGciDefinitions(), "1-gci")) {
+			match = false;
+		}
+		if (!compare(concept1, concept2.getGciDefinitions(), concept1.getGciDefinitions(), "2-gci")) {
+			match = false;
+		}
+		if (!match) {
+			mis_match_cnt++;
+			mis_match_cons.add(concept1.getId());
+			if (log_mis_match_detail) {
+				LOG.info("Concept: " + concept1);
+				LOG.info("Concept1 parents:");
+				concept1.getDefinitions().getFirst().getSuperConcepts().stream().forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept1 rolesU:");
+				concept1.getDefinitions().getFirst().getUngroupedRoles().stream().forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept1 concreteRolesU:");
+				concept1.getDefinitions().getFirst().getUngroupedConcreteRoles().stream()
+						.forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept1 rolesG:");
+				concept1.getDefinitions().getFirst().getRoleGroups().stream().forEach(rg -> {
+					LOG.info("Group:");
+					rg.getRoles().forEach(r -> LOG.info("\t" + r));
+					rg.getConcreteRoles().forEach(y -> LOG.info("\t" + y));
+				});
+				//
+				LOG.info("Concept2 parents:");
+				concept2.getDefinitions().getFirst().getSuperConcepts().stream().forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept2 rolesU:");
+				concept2.getDefinitions().getFirst().getUngroupedRoles().forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept2 concreteRolesU:");
+				concept2.getDefinitions().getFirst().getUngroupedConcreteRoles().forEach(x -> LOG.info("\t" + x));
+				LOG.info("Concept2 rolesG:");
+				concept2.getDefinitions().getFirst().getRoleGroups().forEach(rg -> {
+					LOG.info("Group:");
+					rg.getRoles().forEach(r -> LOG.info("\t" + r));
+					rg.getConcreteRoles().forEach(y -> LOG.info("\t" + y));
+				});
 			}
 		}
-		return mis_match;
 	}
 
-	private boolean compareUngrouped(Concept concept, Set<Role> nnf_roles_ungrouped,
-			List<SnomedRoles.SnomedRole> sno_roles_ungrouped) {
-		boolean mis_match = false;
-		for (Role nnf_role : nnf_roles_ungrouped) {
-			boolean match = sno_roles_ungrouped.stream().anyMatch(sno_role -> compare(sno_role, nnf_role));
-			if (!match) {
-				LOG.error("No SNOMED roleU for " + concept + " " + nnf_role);
-				mis_match = true;
+	private boolean compare(Concept concept, List<Definition> definitions1, List<Definition> definitions2, String tag) {
+		boolean match = true;
+		for (Definition definition1 : definitions1) {
+			boolean match1 = definitions2.stream().anyMatch(definition2 -> compare(concept, definition1, definition2));
+			if (!match1) {
+				if (log_mis_match_detail)
+					LOG.error("No concept" + tag + " definition for " + concept + " " + definition1);
+				match = false;
 			}
 		}
-		return mis_match;
+		return match;
 	}
 
-	private boolean compareUngroupedConcrete(Concept concept, List<SnomedConcreteRole> sno_roles_ungrouped,
-			Set<ConcreteRole> nnf_roles_ungrouped) {
-		boolean mis_match = false;
-		for (SnomedConcreteRole sno_role : sno_roles_ungrouped) {
-			boolean match = nnf_roles_ungrouped.stream().anyMatch(nnf_role -> compare(sno_role, nnf_role));
-			if (!match) {
-				LOG.error("No NNF roleU for " + concept + " " + sno_role);
-				mis_match = true;
-			}
+	private boolean compare(Concept concept, Definition definition1, Definition definition2) {
+		boolean match = true;
+		if (definition1.getDefinitionType() != definition2.getDefinitionType()) {
+			if (log_mis_match_detail)
+				LOG.error("Definition type: " + concept + " " + definition1.getDefinitionType() + " "
+						+ definition2.getDefinitionType());
+			match = false;
 		}
-		return mis_match;
-	}
-
-	private boolean compareUngroupedConcrete(Concept concept, Set<ConcreteRole> nnf_roles_ungrouped,
-			List<SnomedConcreteRole> sno_roles_ungrouped) {
-		boolean mis_match = false;
-		for (ConcreteRole nnf_role : nnf_roles_ungrouped) {
-			boolean match = sno_roles_ungrouped.stream().anyMatch(sno_role -> compare(sno_role, nnf_role));
-			if (!match) {
-				LOG.error("No SNOMED roleU for " + concept + " " + nnf_role);
-				mis_match = true;
-			}
+		if (!compareUngrouped(concept, definition1.getUngroupedRoles(), definition2.getUngroupedRoles(), "1")) {
+			match = false;
+			mis_match_1_roles_ungrouped_cnt++;
 		}
-		return mis_match;
-	}
-
-	public void compare(Concept concept, Definition definition) {
-		List<SnomedRoles.SnomedRole> sno_roles_ungrouped = roles.getUngroupedRoles(concept.getId());
-		List<SnomedConcreteRole> sno_croles_ungrouped = concreteRoles.getUngroupedConcreteRoles(concept.getId());
-		List<SnomedRoleGroup> sno_roles_grouped = getRoleGroups(concept.getId(), roles, concreteRoles);
-		//
-		Set<Role> nnf_roles_ungrouped = definition.getUngroupedRoles();
-		Set<ConcreteRole> nnf_croles_ungrouped = definition.getUngroupedConcreteRoles();
-		Set<RoleGroup> nnf_roles_grouped = definition.getRoleGroups();
-		//
-		boolean mis_match = false;
-		List<SnomedRoleGroup> mis_match_sno_roles_grouped = new ArrayList<>();
-		List<RoleGroup> mis_match_nnf_roles_grouped = new ArrayList<>();
-		if (compareUngrouped(concept, sno_roles_ungrouped, nnf_roles_ungrouped)) {
-			mis_match = true;
-			mis_match_sno_roles_ungrouped_cnt++;
+		if (!compareUngrouped(concept, definition2.getUngroupedRoles(), definition1.getUngroupedRoles(), "2")) {
+			match = false;
+			mis_match_2_roles_ungrouped_cnt++;
 		}
-		if (compareUngrouped(concept, nnf_roles_ungrouped, sno_roles_ungrouped)) {
-			mis_match = true;
-			mis_match_nnf_roles_ungrouped_cnt++;
-		}
-		if (compareUngroupedConcrete(concept, sno_croles_ungrouped, nnf_croles_ungrouped)) {
-			mis_match = true;
+		if (!compareUngroupedConcrete(concept, definition1.getUngroupedConcreteRoles(),
+				definition2.getUngroupedConcreteRoles(), "1")) {
+			match = false;
 //			mis_match_sno_roles_ungrouped_cnt++;
 		}
-		if (compareUngroupedConcrete(concept, nnf_croles_ungrouped, sno_croles_ungrouped)) {
-			mis_match = true;
+		if (!compareUngroupedConcrete(concept, definition2.getUngroupedConcreteRoles(),
+				definition1.getUngroupedConcreteRoles(), "2")) {
+			match = false;
 //			mis_match_nnf_roles_ungrouped_cnt++;
 		}
-		{
-			boolean inc = false;
-			for (SnomedRoleGroup sno_role : sno_roles_grouped) {
-				boolean match = nnf_roles_grouped.stream()
-						.anyMatch(nnf_role -> compare(sno_role.roles, nnf_role.getRoles())
-								&& compareConcrete(sno_role.numberProperties, nnf_role.getConcreteRoles()));
-				if (!match) {
-					LOG.error("No NNF roleG for " + concept + " " + sno_role);
-					mis_match = true;
-					mis_match_sno_roles_grouped.add(sno_role);
-					inc = true;
-				}
+		if (!compareRoleGroups(concept, definition1.getRoleGroups(), definition2.getRoleGroups(), "1")) {
+			match = false;
+			mis_match_1_roles_grouped_cnt++;
+		}
+		if (!compareRoleGroups(concept, definition2.getRoleGroups(), definition1.getRoleGroups(), "2")) {
+			match = false;
+			mis_match_2_roles_grouped_cnt++;
+		}
+		return match;
+	}
+
+	private boolean compareUngrouped(Concept concept, Set<Role> roles1, Set<Role> roles2, String tag) {
+		boolean match = true;
+		for (Role role1 : roles1) {
+			boolean match1 = roles2.stream().anyMatch(role2 -> compare(role1, role2));
+			if (!match1) {
+				if (log_mis_match_detail)
+					LOG.error("No concept" + tag + " roleU for " + concept + " " + role1);
+				match = false;
 			}
-			if (inc)
-				mis_match_sno_roles_grouped_cnt++;
 		}
-		{
-			boolean inc = false;
-			for (RoleGroup nnf_role : nnf_roles_grouped) {
-				boolean match = sno_roles_grouped.stream()
-						.anyMatch(sno_role -> compare(sno_role.roles, nnf_role.getRoles())
-								&& compareConcrete(sno_role.numberProperties, nnf_role.getConcreteRoles()));
-				if (!match) {
-					LOG.error("No SNOMED roleG for " + concept + " " + nnf_role);
-					mis_match = true;
-					mis_match_nnf_roles_grouped.add(nnf_role);
-					inc = true;
-				}
+		return match;
+	}
+
+	private boolean compareUngroupedConcrete(Concept concept, Set<ConcreteRole> roles1, Set<ConcreteRole> roles2,
+			String tag) {
+		boolean match = true;
+		for (ConcreteRole role1 : roles1) {
+			boolean match1 = roles2.stream().anyMatch(role2 -> compare(role1, role2));
+			if (!match1) {
+				if (log_mis_match_detail)
+					LOG.error("No concept" + tag + " roleU for " + concept + " " + role1);
+				match = false;
 			}
-			if (inc)
-				mis_match_nnf_roles_grouped_cnt++;
 		}
-		if (mis_match) {
-			mis_match_cnt++;
-			LOG.info("SNO rolesU:");
-			sno_roles_ungrouped.stream()
-					.sorted(Comparator.comparingLong((SnomedRoles.SnomedRole x) -> x.relationshipGroup)
-							.thenComparingLong((SnomedRoles.SnomedRole x) -> x.typeId)
-							.thenComparingLong((SnomedRoles.SnomedRole x) -> x.destinationId))
-					.forEach(x -> LOG.info("\t" + x));
-			LOG.info("SNO concreteRolesU:");
-			sno_croles_ungrouped.stream().forEach(x -> LOG.info("\t" + x));
-			LOG.info("SNO rolesG:");
-			sno_roles_grouped.stream().forEach(rg -> {
-				LOG.info("Group:");
-				rg.roles.forEach(r -> LOG.info("\t" + r));
-				rg.numberProperties.forEach(r -> LOG.info("\t" + r));
-			});
-			LOG.info("NNF rolesU:");
-			definition.getUngroupedRoles().forEach(x -> LOG.info("\t" + x));
-			LOG.info("NNF concreteRolesU:");
-			definition.getUngroupedConcreteRoles().forEach(x -> LOG.info("\t" + x));
-			LOG.info("NNF rolesG:");
-			definition.getRoleGroups().forEach(rg -> {
-				LOG.info("Group:");
-				rg.getRoles().forEach(r -> LOG.info("\t" + r));
-				rg.getConcreteRoles().forEach(y -> LOG.info("\t" + y));
-			});
-			// TODO
-//			if (!mis_match_cons.stream().anyMatch(x -> isa.hasAncestor(concept.getId(), x))) {
-//				LOG.info("Root mis-match: " + concept.getId());
-//				root_mis_match_cnt++;
-//			}
-			mis_match_cons.add(concept.getId());
-			LOG.info("Root mis-match cnt: " + root_mis_match_cnt);
-//			if (mis_match_roles_grouped.size() > 0 && mis_match_props_grouped.size() > 0) {
-//				if (compare(mis_match_roles_grouped, mis_match_props_grouped)) {
-//					LOG.warn("Grouping issue");
-//					mis_match_grouping_issue_cnt++;
-//					grouping_issue_concepts.add(concept);
-//				} else {
-//					LOG.error("Not a grouping issue - compare");
-//					boolean ancestor_grouping_issue = grouping_issue_concepts.stream().anyMatch(
-//							x -> isa.hasAncestor(SnomedOwlOntology.getId(concept), SnomedOwlOntology.getId(x)));
-//					if (ancestor_grouping_issue)
-//						LOG.warn("Grouping issue with ancestor");
-//				}
-//			} else {
-//				LOG.error("Not a grouping issue - size");
-//			}
+		return match;
+	}
+
+	private boolean compareRoleGroups(Concept concept, Set<RoleGroup> roles1, Set<RoleGroup> roles2, String tag) {
+		boolean match = true;
+		for (RoleGroup role1 : roles1) {
+			boolean match1 = roles2.stream().anyMatch(role2 -> compare(role1.getRoles(), role2.getRoles())
+					&& compareConcrete(role1.getConcreteRoles(), role2.getConcreteRoles()));
+			if (!match1) {
+				if (log_mis_match_detail)
+					LOG.error("No concept" + tag + " roleG for " + concept + " " + role1);
+				match = false;
+			}
 		}
+		return match;
 	}
 
-	private boolean compare(List<SnomedRoles.SnomedRole> sno_roles, Set<Role> nnf_roles) {
-		return sno_roles.stream()
-				.allMatch(sno_role -> nnf_roles.stream().anyMatch(nnf_role -> compare(sno_role, nnf_role)))
-				&& nnf_roles.stream()
-						.allMatch(nnf_role -> sno_roles.stream().anyMatch(sno_role -> compare(sno_role, nnf_role)));
+	private boolean compare(Set<Role> roles1, Set<Role> roles2) {
+		return roles1.stream().allMatch(role1 -> roles2.stream().anyMatch(role2 -> compare(role1, role2)))
+				&& roles2.stream().allMatch(role2 -> roles1.stream().anyMatch(role1 -> compare(role1, role2)));
 	}
 
-	private boolean compare(SnomedRoles.SnomedRole sno_role, Role nnf_role) {
-		return sno_role.typeId == nnf_role.getRoleType().getId()
-				&& sno_role.destinationId == nnf_role.getConcept().getId();
+	private boolean compare(Role role1, Role role2) {
+		return role1.getRoleType().getId() == role2.getRoleType().getId()
+				&& role1.getConcept().getId() == role2.getConcept().getId();
 	}
 
-	private boolean compareConcrete(List<SnomedConcreteRoles.SnomedConcreteRole> sno_roles,
-			Set<ConcreteRole> nnf_roles) {
-		return sno_roles.stream()
-				.allMatch(sno_role -> nnf_roles.stream().anyMatch(nnf_role -> compare(sno_role, nnf_role)))
-				&& nnf_roles.stream()
-						.allMatch(nnf_role -> sno_roles.stream().anyMatch(sno_role -> compare(sno_role, nnf_role)));
+	private boolean compareConcrete(Set<ConcreteRole> roles1, Set<ConcreteRole> roles2) {
+		return roles1.stream().allMatch(role1 -> roles2.stream().anyMatch(role2 -> compare(role1, role2)))
+				&& roles2.stream().allMatch(role2 -> roles1.stream().anyMatch(role1 -> compare(role1, role2)));
 	}
 
-	private boolean compare(SnomedConcreteRole sno_role, ConcreteRole nnf_role) {
-		BigDecimal sno_value = new BigDecimal(sno_role.value.replace("#", ""));
-		BigDecimal nnf_value = new BigDecimal(nnf_role.getValue());
-		return sno_role.typeId == nnf_role.getConcreteRoleType().getId() && sno_value.compareTo(nnf_value) == 0;
+	private boolean compare(ConcreteRole role1, ConcreteRole role2) {
+		return role1.getConcreteRoleType().getId() == role2.getConcreteRoleType().getId()
+				&& role1.getValueType() == role2.getValueType() && role1.getValue().equals(role2.getValue());
 	}
 
 }
