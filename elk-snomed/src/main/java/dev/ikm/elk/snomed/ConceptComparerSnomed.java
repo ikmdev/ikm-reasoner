@@ -46,8 +46,6 @@ public class ConceptComparerSnomed {
 
 	private SnomedConcepts concepts;
 
-	private SnomedIsa isa;
-
 	private SnomedRoles roles;
 
 	private SnomedConcreteRoles concreteRoles;
@@ -61,10 +59,8 @@ public class ConceptComparerSnomed {
 	private int mis_match_nnf_roles_grouped_cnt = 0;
 	private int mis_match_grouping_issue_cnt = 0;
 
-	public ConceptComparerSnomed(SnomedConcepts concepts, SnomedIsa isa, SnomedRoles roles,
-			SnomedConcreteRoles concreteRoles) {
+	public ConceptComparerSnomed(SnomedConcepts concepts, SnomedRoles roles, SnomedConcreteRoles concreteRoles) {
 		this.concepts = concepts;
-		this.isa = isa;
 		this.roles = roles;
 		this.concreteRoles = concreteRoles;
 	}
@@ -180,7 +176,7 @@ public class ConceptComparerSnomed {
 			if (expect != definition.getDefinitionType()) {
 				LOG.error("Definition type: " + concept + " " + expect + " " + definition.getDefinitionType());
 				mis_match = true;
-		}
+			}
 		}
 		if (compareUngrouped(concept, sno_roles_ungrouped, nnf_roles_ungrouped)) {
 			mis_match = true;

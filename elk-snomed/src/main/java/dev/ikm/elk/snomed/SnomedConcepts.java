@@ -82,13 +82,34 @@ public class SnomedConcepts {
 
 	private HashMap<Long, DefinitionStatus> definitionStatus = new HashMap<>();
 
+	private int activeCount = -1;
+
+	private int inactiveCount = -1;
+
 	public DefinitionStatus getDefinitionStatus(long con) {
 		return definitionStatus.get(con);
+	}
+
+	public int getActiveCount() {
+		return activeCount;
+	}
+
+	public void setActiveCount(int activeCount) {
+		this.activeCount = activeCount;
+	}
+
+	public int getInactiveCount() {
+		return inactiveCount;
+	}
+
+	public void setInactiveCount(int inactiveCount) {
+		this.inactiveCount = inactiveCount;
 	}
 
 	public static SnomedConcepts init(Path file) throws IOException {
 		SnomedConcepts ret = new SnomedConcepts();
 		ret.load(file);
+//		ret.inactiveCount = Files.readAllLines(file).size() - 1 - ret.activeCount;
 		return ret;
 	}
 
@@ -102,6 +123,12 @@ public class SnomedConcepts {
 						DefinitionStatus status = DefinitionStatus.getDefinitionStatus(Long.parseLong(fields[4])); // definitionStatusId
 						definitionStatus.put(con, status);
 					});
+		}
+		activeCount = definitionStatus.size();
+		try (Stream<String> st = Files.lines(file)) {
+			inactiveCount = (int) st.skip(1).map(line -> line.split("\\t")) //
+					.filter(fields -> Integer.parseInt(fields[2]) == 0) // active
+					.map(fields -> fields[0]).distinct().count();
 		}
 	}
 

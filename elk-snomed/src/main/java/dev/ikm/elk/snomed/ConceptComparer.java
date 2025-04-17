@@ -42,10 +42,6 @@ public class ConceptComparer {
 	private HashSet<Long> mis_match_cons = new HashSet<>();
 
 	private int mis_match_cnt = 0;
-	private int mis_match_1_roles_ungrouped_cnt = 0;
-	private int mis_match_2_roles_ungrouped_cnt = 0;
-	private int mis_match_1_roles_grouped_cnt = 0;
-	private int mis_match_2_roles_grouped_cnt = 0;
 
 	private boolean log_mis_match_detail = false;
 
@@ -57,22 +53,13 @@ public class ConceptComparer {
 		return mis_match_cnt;
 	}
 
-	public void logErrors() {
-		LOG.info("Mis match: " + mis_match_cnt);
-		LOG.info("Mis match ungrouped: " + mis_match_1_roles_ungrouped_cnt + " SNOMED roles "
-				+ mis_match_2_roles_ungrouped_cnt + " NNF roles");
-		LOG.info("Mis match grouped: " + mis_match_1_roles_grouped_cnt + " SNOMED roles "
-				+ mis_match_2_roles_grouped_cnt + " NNF roles");
+	public boolean compare(Concept concept) {
+		return compare(inferredOntology.getConcept(concept.getId()), concept);
 	}
 
-	public void compare(Concept concept) {
-		compare(inferredOntology.getConcept(concept.getId()), concept);
-	}
-
-	public void compare(Concept concept1, Concept concept2) {
-		if (concept1.getDefinitions().size() == 1 & concept2.getDefinitions().size() == 1
-				&& concept1.getGciDefinitions().isEmpty() && concept2.getGciDefinitions().isEmpty())
-			log_mis_match_detail = true;
+	public boolean compare(Concept concept1, Concept concept2) {
+		log_mis_match_detail = concept1.getDefinitions().size() == 1 & concept2.getDefinitions().size() == 1
+				&& concept1.getGciDefinitions().isEmpty() && concept2.getGciDefinitions().isEmpty();
 		boolean match = true;
 		if (!compare(concept1, concept1.getDefinitions(), concept2.getDefinitions(), "1")) {
 			match = false;
@@ -119,6 +106,7 @@ public class ConceptComparer {
 				});
 			}
 		}
+		return match;
 	}
 
 	private boolean compare(Concept concept, List<Definition> definitions1, List<Definition> definitions2, String tag) {
@@ -142,31 +130,36 @@ public class ConceptComparer {
 						+ definition2.getDefinitionType());
 			match = false;
 		}
-		if (!compareUngrouped(concept, definition1.getUngroupedRoles(), definition2.getUngroupedRoles(), "1")) {
+		if (!compareSuperConcepts(concept, definition1.getSuperConcepts(), definition2.getSuperConcepts(), "1"))
 			match = false;
-			mis_match_1_roles_ungrouped_cnt++;
-		}
-		if (!compareUngrouped(concept, definition2.getUngroupedRoles(), definition1.getUngroupedRoles(), "2")) {
+		if (!compareSuperConcepts(concept, definition2.getSuperConcepts(), definition1.getSuperConcepts(), "2"))
 			match = false;
-			mis_match_2_roles_ungrouped_cnt++;
-		}
+		if (!compareUngrouped(concept, definition1.getUngroupedRoles(), definition2.getUngroupedRoles(), "1"))
+			match = false;
+		if (!compareUngrouped(concept, definition2.getUngroupedRoles(), definition1.getUngroupedRoles(), "2"))
+			match = false;
 		if (!compareUngroupedConcrete(concept, definition1.getUngroupedConcreteRoles(),
-				definition2.getUngroupedConcreteRoles(), "1")) {
+				definition2.getUngroupedConcreteRoles(), "1"))
 			match = false;
-//			mis_match_sno_roles_ungrouped_cnt++;
-		}
 		if (!compareUngroupedConcrete(concept, definition2.getUngroupedConcreteRoles(),
-				definition1.getUngroupedConcreteRoles(), "2")) {
+				definition1.getUngroupedConcreteRoles(), "2"))
 			match = false;
-//			mis_match_nnf_roles_ungrouped_cnt++;
-		}
-		if (!compareRoleGroups(concept, definition1.getRoleGroups(), definition2.getRoleGroups(), "1")) {
+		if (!compareRoleGroups(concept, definition1.getRoleGroups(), definition2.getRoleGroups(), "1"))
 			match = false;
-			mis_match_1_roles_grouped_cnt++;
-		}
-		if (!compareRoleGroups(concept, definition2.getRoleGroups(), definition1.getRoleGroups(), "2")) {
+		if (!compareRoleGroups(concept, definition2.getRoleGroups(), definition1.getRoleGroups(), "2"))
 			match = false;
-			mis_match_2_roles_grouped_cnt++;
+		return match;
+	}
+
+	private boolean compareSuperConcepts(Concept concept, Set<Concept> sups1, Set<Concept> sups2, String tag) {
+		boolean match = true;
+		for (Concept sup1 : sups1) {
+			boolean match1 = sups2.stream().anyMatch(sup2 -> sup1.getId() == sup2.getId());
+			if (!match1) {
+				if (log_mis_match_detail)
+					LOG.error("No concept" + tag + " superC for " + concept + " " + sup1);
+				match = false;
+			}
 		}
 		return match;
 	}
