@@ -164,12 +164,14 @@ public class NecessaryNormalFormBuilder {
 			if (++cnt % 50000 == 0)
 				LOG.info("Generate: " + cnt);
 			Definition def = generateNNF(concept, false);
+			Concept nnf_con = new Concept(concept.getId());
+			nnf_con.addDefinition(def);
 			if (concept_comparer != null)
-				concept_comparer.compare(concept, def);
+				concept_comparer.compare(nnf_con);
 		}
 		LOG.info("Generate: " + cnt);
-		if (concept_comparer != null)
-			concept_comparer.logErrors();
+		if (concept_comparer != null && concept_comparer.getMisMatchCount() != 0)
+			LOG.error("Mis-match: " + concept_comparer.getMisMatchCount());
 	}
 
 	public Definition generateNNF(Concept con, boolean useDefining) {

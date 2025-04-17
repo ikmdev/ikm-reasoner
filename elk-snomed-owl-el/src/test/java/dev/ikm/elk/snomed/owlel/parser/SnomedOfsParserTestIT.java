@@ -42,8 +42,8 @@ public class SnomedOfsParserTestIT {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOfsParserTestIT.class);
 
-	public static Path file = Paths.get("target/data", "snomed-test-data-intl-20241001",
-			"sct2_sRefset_OWLExpressionSnapshot_INT_20241001.txt");
+	public static Path file = Paths.get("target/data", "snomed-test-data-intl-20240701",
+			"sct2_sRefset_OWLExpressionSnapshot_INT_20240701.txt");
 
 	private List<String> getExpressions(String regex) throws IOException {
 		return SnomedOwlExpressions.read(file).stream().filter(expr -> expr.matches(regex)).toList();
@@ -186,7 +186,7 @@ public class SnomedOfsParserTestIT {
 	@Test
 	public void all() throws Exception {
 		List<String> exprs = getExpressions(".+");
-		assertEquals(369445, exprs.size());
+		assertEquals(370040, exprs.size());
 		assertEquals(0, parse(exprs, false));
 	}
 
