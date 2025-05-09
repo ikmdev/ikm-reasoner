@@ -24,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -99,6 +102,27 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 			}
 			LOG.info("Miss: " + miss_cnt);
 			assertEquals(0, miss_cnt);
+		}
+	}
+
+	@Test
+	public void getVersionFromFull() throws Exception {
+		if (getEditionDir().equals("us"))
+			return;
+		for (Path file : List.of(axioms_file, concepts_file, descriptions_file, rels_file, values_file)) {
+			Path full_file = Paths.get(getDir().replace(getVersion(), "full"),
+					file.getFileName().toString().replace("Snapshot", "Full").replace(getVersion(), "20250101"));
+			LOG.info("Snapshot: " + file);
+			LOG.info("Full: " + full_file);
+			if (file.equals(values_file) && Integer.parseInt(getVersion()) < 20210731) {
+				LOG.info("Skipping: " + file);
+				continue;
+			}
+			List<String> lines = Files.readAllLines(file);
+			List<String> full_lines = FullReleaseUtil.getVersion(full_file, Integer.parseInt(getVersion())).toList();
+			assertEquals(lines.size() - 1, full_lines.size());
+			lines.remove(0);
+			assertTrue(lines.equals(full_lines));
 		}
 	}
 

@@ -24,11 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Concept {
-
-	private long id;
-
-	private String name;
+public class Concept extends SnomedEntity {
 
 	private List<Definition> definitions = new ArrayList<>();
 
@@ -37,22 +33,6 @@ public class Concept {
 	public Concept(long id) {
 		super();
 		this.id = id;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Definition> getDefinitions() {
