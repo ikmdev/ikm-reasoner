@@ -24,32 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ConcreteRoleType {
-
-	private long id;
-
-	private String name;
+public class ConcreteRoleType extends SnomedEntity {
 
 	private List<ConcreteRoleType> superConcreteRoleTypes = new ArrayList<>();
 
 	public ConcreteRoleType(long id) {
 		this.id = id;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<ConcreteRoleType> getSuperConcreteRoleTypes() {

@@ -64,12 +64,12 @@
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<!-- test dependencies -->
 		<junit4.version>4.13.2</junit4.version>
-		<junit.version>5.12.1</junit.version><!-- defined in parent -->
+		<junit.version>5.12.2</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
-		<antlr4-runtime.version>4.13.2-r2</antlr4-runtime.version>
+		<antlr4-runtime.version>4.13.2-r3</antlr4-runtime.version>
 		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi.version>4.8.2</owlapi.version>
+		<owlapi.version>4.8.3</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -77,9 +77,9 @@
 		<maven-clean-plugin.version>3.4.1</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
-		<maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
 		<maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-		<maven-failsafe-plugin.version>3.5.2 </maven-failsafe-plugin.version>
+		<maven-failsafe-plugin.version>3.5.3 </maven-failsafe-plugin.version>
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
@@ -88,7 +88,7 @@
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<maven-site-plugin.version>3.21.0</maven-site-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<!-- other plugins -->
 		<antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
 		<license-maven-plugin.version>2.5.0</license-maven-plugin.version>

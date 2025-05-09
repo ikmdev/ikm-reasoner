@@ -184,10 +184,22 @@ public class SnomedOntologyReasoner {
 		return snomedOntology.getConcept(getId(clazz));
 	}
 
-	public void process(Concept con) {
+	private void removeAxioms(Concept con) {
 		List<ElkAxiom> axioms = conceptIdAxiomMap.get(con.getId());
 		if (axioms != null)
 			axioms.forEach(ax -> ontology.removeAxiom(ax));
+	}
+
+	public void processDelete(Concept con) {
+		removeAxioms(con);
+	}
+
+	public void processUpdate(Concept con) {
+		process(con);
+	}
+
+	private void process(Concept con) {
+		removeAxioms(con);
 		conceptIdAxiomMap.put(con.getId(), new ArrayList<>());
 		for (Definition def : con.getDefinitions()) {
 			process(con, def, false);
