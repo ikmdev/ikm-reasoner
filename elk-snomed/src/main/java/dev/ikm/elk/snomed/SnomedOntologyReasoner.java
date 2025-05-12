@@ -188,6 +188,7 @@ public class SnomedOntologyReasoner {
 		List<ElkAxiom> axioms = conceptIdAxiomMap.get(con.getId());
 		if (axioms != null)
 			axioms.forEach(ax -> ontology.removeAxiom(ax));
+		conceptIdAxiomMap.remove(con.getId());
 	}
 
 	public void processDelete(Concept con) {
