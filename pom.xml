@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.58.0</version>
+		<version>1.59.0</version>
 		<relativePath />
 	</parent>
 
@@ -67,7 +67,7 @@
 		<junit.version>5.12.2</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r3</antlr4-runtime.version>
-		<eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
+		<eclipse-collections.version>12.0.0.M3-r2</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
 		<owlapi.version>4.8.3</owlapi.version>
 		<!-- other dependencies -->
