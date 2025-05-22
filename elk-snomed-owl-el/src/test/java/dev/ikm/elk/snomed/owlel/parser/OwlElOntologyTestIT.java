@@ -30,6 +30,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.owlel.OwlElOntology;
+import dev.ikm.elk.snomed.owlel.model.OwlElEquivalentClasses;
+import dev.ikm.elk.snomed.owlel.model.OwlElReflexiveObjectProperty;
+import dev.ikm.elk.snomed.owlel.model.OwlElSubAnnotationPropertyOf;
+import dev.ikm.elk.snomed.owlel.model.OwlElSubClassOf;
+import dev.ikm.elk.snomed.owlel.model.OwlElSubDataPropertyOf;
+import dev.ikm.elk.snomed.owlel.model.OwlElSubObjectPropertyOf;
+import dev.ikm.elk.snomed.owlel.model.OwlElTransitiveObjectProperty;
 
 public class OwlElOntologyTestIT {
 
@@ -42,6 +49,13 @@ public class OwlElOntologyTestIT {
 		ontology.load(SnomedOfsParserTestIT.file);
 		assertEquals("http://snomed.info/sct/900000000000207008", ontology.getIri());
 		assertEquals(370033, ontology.getAxioms().size());
+		assertEquals(130, ontology.getAxioms(OwlElSubObjectPropertyOf.class).size());
+		assertEquals(4, ontology.getAxioms(OwlElTransitiveObjectProperty.class).size());
+		assertEquals(2, ontology.getAxioms(OwlElReflexiveObjectProperty.class).size());
+		assertEquals(10, ontology.getAxioms(OwlElSubDataPropertyOf.class).size());
+		assertEquals(2, ontology.getAxioms(OwlElSubAnnotationPropertyOf.class).size());
+		assertEquals(143444, ontology.getAxioms(OwlElEquivalentClasses.class).size());
+		assertEquals(226441, ontology.getAxioms(OwlElSubClassOf.class).size());
 	}
 
 	@Test

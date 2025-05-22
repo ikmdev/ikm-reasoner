@@ -33,6 +33,14 @@ public class OwlElSubAnnotationPropertyOf extends OwlElAxiom {
 		this.superPropertyExpression = superPropertyExpression;
 	}
 
+	public OwlElAnnotationProperty getSubProperty() {
+		return subPropertyExpression;
+	}
+
+	public OwlElAnnotationProperty getSuperProperty() {
+		return superPropertyExpression;
+	}
+
 	@Override
 	public String toString() {
 		return "SubAnnotationPropertyOf(" + subPropertyExpression + " " + superPropertyExpression + ")";

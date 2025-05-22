@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.ikm.elk.snomed.owlel.model.OwlElAnnotationProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElClass;
 import dev.ikm.elk.snomed.owlel.model.OwlElDataProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElObjectProperty;
@@ -32,32 +33,42 @@ public class OwlElObjectFactory {
 
 	private final HashMap<String, OwlElClass> classesMap = new HashMap<>();
 
+	private final HashMap<String, OwlElObjectProperty> objectPropertiesMap = new HashMap<>();
+
 	private final HashMap<String, OwlElDataProperty> dataPropertiesMap = new HashMap<>();
 
-	private final HashMap<String, OwlElObjectProperty> objectPropertiesMap = new HashMap<>();
+	private final HashMap<String, OwlElAnnotationProperty> annotationPropertiesMap = new HashMap<>();
 
 	public List<OwlElClass> getClasses() {
 		return new ArrayList<>(classesMap.values());
-	}
-
-	public List<OwlElDataProperty> getDataProperties() {
-		return new ArrayList<>(dataPropertiesMap.values());
 	}
 
 	public List<OwlElObjectProperty> getObjectProperties() {
 		return new ArrayList<>(objectPropertiesMap.values());
 	}
 
+	public List<OwlElDataProperty> getDataProperties() {
+		return new ArrayList<>(dataPropertiesMap.values());
+	}
+
+	public List<OwlElAnnotationProperty> getAnnotationProperties() {
+		return new ArrayList<>(annotationPropertiesMap.values());
+	}
+
 	public OwlElClass getOwlElClass(String iri) {
 		return classesMap.computeIfAbsent(iri, OwlElClass::new);
+	}
+
+	public OwlElObjectProperty getOwlElObjectProperty(String iri) {
+		return objectPropertiesMap.computeIfAbsent(iri, OwlElObjectProperty::new);
 	}
 
 	public OwlElDataProperty getOwlElDataProperty(String iri) {
 		return dataPropertiesMap.computeIfAbsent(iri, OwlElDataProperty::new);
 	}
 
-	public OwlElObjectProperty getOwlElObjectProperty(String iri) {
-		return objectPropertiesMap.computeIfAbsent(iri, OwlElObjectProperty::new);
+	public OwlElAnnotationProperty getOwlElAnnotationProperty(String iri) {
+		return annotationPropertiesMap.computeIfAbsent(iri, OwlElAnnotationProperty::new);
 	}
 
 }

@@ -21,6 +21,7 @@ package dev.ikm.elk.snomed.owl;
  */
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.owlapi.model.AxiomType;
@@ -134,7 +135,7 @@ public class OwlTransformer {
 				concept.addGciDefinition(def);
 			}
 		}
-		return new SnomedOntology(concepts.values(), roleTypes.values(), dataPropertyTypes.values());
+		return new SnomedOntology(concepts.values(), roleTypes.values(), dataPropertyTypes.values(), List.of());
 	}
 
 	private Definition createDefinition(OWLClass concept, OWLClassAxiom axiom, boolean isGci) {
