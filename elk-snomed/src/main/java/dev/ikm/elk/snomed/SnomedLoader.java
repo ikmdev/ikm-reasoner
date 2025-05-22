@@ -22,6 +22,7 @@ package dev.ikm.elk.snomed;
 
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRole;
@@ -48,7 +49,7 @@ public class SnomedLoader {
 		SnomedRoles roles = SnomedRoles.init(relationships_file);
 		SnomedConcreteRoles values = SnomedConcreteRoles.init(values_file);
 		load(snomed_concepts, descriptions, isa, roles, values);
-		return new SnomedOntology(concepts.values(), role_types.values(), concrete_role_types.values());
+		return new SnomedOntology(concepts.values(), role_types.values(), concrete_role_types.values(), List.of());
 	}
 
 	private void load(SnomedConcepts snomed_concepts, SnomedDescriptions descr, SnomedIsa isa, SnomedRoles roles,

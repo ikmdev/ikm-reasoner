@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.ikm.elk.snomed.model.AnnotationType;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRoleType;
 import dev.ikm.elk.snomed.model.Definition;
@@ -49,6 +50,10 @@ public class SnomedOntology {
 
 	private List<ConcreteRoleType> concreteRoleTypes;
 
+	private HashMap<Long, AnnotationType> annotationTypeIdMap;
+
+	private List<AnnotationType> annotationTypes;
+
 	private SnomedDescriptions descriptions;
 
 	public Concept getConcept(long id) {
@@ -63,6 +68,10 @@ public class SnomedOntology {
 		return concreteRoleTypeIdMap.get(id);
 	}
 
+	public AnnotationType getAnnotationType(long id) {
+		return annotationTypeIdMap.get(id);
+	}
+
 	public List<Concept> getConcepts() {
 		return concepts;
 	}
@@ -75,6 +84,10 @@ public class SnomedOntology {
 		return concreteRoleTypes;
 	}
 
+	public List<AnnotationType> getAnnotationTypes() {
+		return annotationTypes;
+	}
+
 	public SnomedDescriptions getDescriptions() {
 		return descriptions;
 	}
@@ -84,7 +97,7 @@ public class SnomedOntology {
 	}
 
 	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
-			Collection<ConcreteRoleType> concreteRoleTypes) {
+			Collection<ConcreteRoleType> concreteRoleTypes, Collection<AnnotationType> annotationTypes) {
 		super();
 		this.conceptIdMap = new HashMap<>();
 		concepts.forEach(x -> conceptIdMap.put(x.getId(), x));
@@ -95,6 +108,9 @@ public class SnomedOntology {
 		this.concreteRoleTypeIdMap = new HashMap<>();
 		concreteRoleTypes.forEach(x -> concreteRoleTypeIdMap.put(x.getId(), x));
 		this.concreteRoleTypes = new ArrayList<>(concreteRoleTypes);
+		this.annotationTypeIdMap = new HashMap<>();
+		annotationTypes.forEach(x -> annotationTypeIdMap.put(x.getId(), x));
+		this.annotationTypes = new ArrayList<>(annotationTypes);
 	}
 
 	public void addConcept(Concept concept) {
@@ -116,6 +132,7 @@ public class SnomedOntology {
 		concepts.forEach(x -> x.setName(getFsn(x.getId())));
 		roleTypes.forEach(x -> x.setName(getFsn(x.getId())));
 		concreteRoleTypes.forEach(x -> x.setName(getFsn(x.getId())));
+		annotationTypes.forEach(x -> x.setName(getFsn(x.getId())));
 	}
 
 	public HashSet<Concept> getDependentOnConcepts(Concept concept) {

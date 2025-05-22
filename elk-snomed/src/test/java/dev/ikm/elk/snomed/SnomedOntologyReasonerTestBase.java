@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.model.AnnotationType;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlel.OwlElOntology;
@@ -64,6 +65,10 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 				LOG.info("Chained: " + rt + " " + rt.getChained());
 			if (rt.isReflexive())
 				LOG.info("Reflexive: " + rt);
+		}
+		for (AnnotationType rt : snomedOntology.getAnnotationTypes()) {
+			LOG.info("Annotation type: " + rt);
+			rt.getSuperAnnotationTypes().forEach(sup -> LOG.info("\tSup: " + sup));
 		}
 		{
 			ArrayList<Long> misses = new ArrayList<>();

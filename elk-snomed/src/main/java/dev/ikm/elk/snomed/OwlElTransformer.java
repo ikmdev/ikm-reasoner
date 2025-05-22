@@ -26,6 +26,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.model.AnnotationType;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRole;
 import dev.ikm.elk.snomed.model.ConcreteRoleType;
@@ -35,6 +36,7 @@ import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
 import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlel.OwlElOntology;
+import dev.ikm.elk.snomed.owlel.model.OwlElAnnotationProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElClass;
 import dev.ikm.elk.snomed.owlel.model.OwlElClassExpression;
 import dev.ikm.elk.snomed.owlel.model.OwlElDataHasValue;
@@ -45,6 +47,7 @@ import dev.ikm.elk.snomed.owlel.model.OwlElObjectProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElObjectPropertyChain;
 import dev.ikm.elk.snomed.owlel.model.OwlElObjectSomeValuesFrom;
 import dev.ikm.elk.snomed.owlel.model.OwlElReflexiveObjectProperty;
+import dev.ikm.elk.snomed.owlel.model.OwlElSubAnnotationPropertyOf;
 import dev.ikm.elk.snomed.owlel.model.OwlElSubClassOf;
 import dev.ikm.elk.snomed.owlel.model.OwlElSubDataPropertyOf;
 import dev.ikm.elk.snomed.owlel.model.OwlElSubObjectPropertyOf;
@@ -60,7 +63,9 @@ public class OwlElTransformer {
 
 	HashMap<OwlElObjectProperty, RoleType> roleTypes = new HashMap<>();
 
-	HashMap<OwlElDataProperty, ConcreteRoleType> dataPropertyTypes = new HashMap<>();
+	HashMap<OwlElDataProperty, ConcreteRoleType> concreteRoleTypes = new HashMap<>();
+
+	HashMap<OwlElAnnotationProperty, AnnotationType> annotationTypes = new HashMap<>();
 
 	private static long toLong(String iri) {
 		return Long.parseLong(iri.replaceFirst("^.*:", ""));
@@ -70,11 +75,15 @@ public class OwlElTransformer {
 		return toLong(clazz.getIri());
 	}
 
+	public static long getId(OwlElObjectProperty prop) {
+		return toLong(prop.getIri());
+	}
+
 	public static long getId(OwlElDataProperty prop) {
 		return toLong(prop.getIri());
 	}
 
-	public static long getId(OwlElObjectProperty prop) {
+	public static long getId(OwlElAnnotationProperty prop) {
 		return toLong(prop.getIri());
 	}
 
@@ -92,8 +101,14 @@ public class OwlElTransformer {
 
 	private ConcreteRoleType getConcreteRoleType(OwlElDataProperty prop) {
 		long id = getId(prop);
-		dataPropertyTypes.putIfAbsent(prop, new ConcreteRoleType(id));
-		return dataPropertyTypes.get(prop);
+		concreteRoleTypes.putIfAbsent(prop, new ConcreteRoleType(id));
+		return concreteRoleTypes.get(prop);
+	}
+
+	private AnnotationType getAnnotationType(OwlElAnnotationProperty prop) {
+		long id = getId(prop);
+		annotationTypes.putIfAbsent(prop, new AnnotationType(id));
+		return annotationTypes.get(prop);
 	}
 
 	public SnomedOntology transform(OwlElOntology ontology) {
@@ -134,6 +149,14 @@ public class OwlElTransformer {
 			OwlElDataProperty sup = (OwlElDataProperty) ax.getSuperProperty();
 			getConcreteRoleType(sub).addSuperConcreteRoleType(getConcreteRoleType(sup));
 		}
+		for (OwlElAnnotationProperty prop : ontology.getAnnotationProperties()) {
+			getAnnotationType(prop);
+		}
+		for (OwlElSubAnnotationPropertyOf ax : ontology.getAxioms(OwlElSubAnnotationPropertyOf.class)) {
+			OwlElAnnotationProperty sub = (OwlElAnnotationProperty) ax.getSubProperty();
+			OwlElAnnotationProperty sup = (OwlElAnnotationProperty) ax.getSuperProperty();
+			getAnnotationType(sub).addSuperAnnotationType(getAnnotationType(sup));
+		}
 		for (OwlElEquivalentClasses ax : ontology.getAxioms(OwlElEquivalentClasses.class)) {
 			OwlElClass clazz = (OwlElClass) ax.getExpression1();
 			Concept concept = getConcept(clazz);
@@ -160,7 +183,8 @@ public class OwlElTransformer {
 				processClassExpression(def, ax.getSubClass());
 			}
 		}
-		return new SnomedOntology(concepts.values(), roleTypes.values(), dataPropertyTypes.values());
+		return new SnomedOntology(concepts.values(), roleTypes.values(), concreteRoleTypes.values(),
+				annotationTypes.values());
 	}
 
 	private void processClassExpression(Definition def, OwlElClassExpression class_expr) {

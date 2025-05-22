@@ -234,7 +234,7 @@ public class SnomedOfsVisitor extends SnomedOfsGrammarBaseVisitor<OwlElObject> {
 		if (log_visit)
 			LOG.info("visitAnnotationProperty: " + context.getText());
 		IriString iri = (IriString) context.iri().accept(this);
-		return new OwlElAnnotationProperty(iri.getIri());
+		return factory.getOwlElAnnotationProperty(iri.getIri());
 	}
 
 	@Override

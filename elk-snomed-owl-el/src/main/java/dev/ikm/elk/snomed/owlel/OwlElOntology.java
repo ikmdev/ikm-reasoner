@@ -28,6 +28,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.owlel.model.OwlElAnnotationProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElAxiom;
 import dev.ikm.elk.snomed.owlel.model.OwlElClass;
 import dev.ikm.elk.snomed.owlel.model.OwlElDataProperty;
@@ -52,12 +53,16 @@ public class OwlElOntology {
 		return factory.getClasses();
 	}
 
+	public List<OwlElObjectProperty> getObjectProperties() {
+		return factory.getObjectProperties();
+	}
+
 	public List<OwlElDataProperty> getDataProperties() {
 		return factory.getDataProperties();
 	}
 
-	public List<OwlElObjectProperty> getObjectProperties() {
-		return factory.getObjectProperties();
+	public List<OwlElAnnotationProperty> getAnnotationProperties() {
+		return factory.getAnnotationProperties();
 	}
 
 	public String getIri() {
