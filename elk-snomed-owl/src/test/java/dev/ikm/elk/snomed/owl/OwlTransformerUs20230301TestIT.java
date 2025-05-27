@@ -30,6 +30,7 @@ import dev.ikm.elk.snomed.SnomedOntology;
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.DefinitionType;
+import dev.ikm.elk.snomed.test.SnomedVersionUs;
 
 public class OwlTransformerUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 

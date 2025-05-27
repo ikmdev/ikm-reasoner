@@ -46,6 +46,7 @@
 		<module>elk-owlapi</module>
 		<module>elk-owlapi-test</module>
 		<module>elk-snomed-owl-el</module>
+		<module>elk-snomed-test</module>
 		<module>elk-snomed</module>
 		<module>elk-snomed-reasoner</module>
 		<module>elk-snomed-owl</module>
@@ -205,6 +206,11 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>elk-snomed-reasoner</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>elk-snomed-test</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

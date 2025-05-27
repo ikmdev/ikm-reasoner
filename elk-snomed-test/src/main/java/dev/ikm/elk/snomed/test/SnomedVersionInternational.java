@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed;
+package dev.ikm.elk.snomed.test;
 
 /*-
  * #%L
- * ELK Integration with SNOMED
+ * ELK SNOMED Testing Utility
  * %%
- * Copyright (C) 2023 - 2024 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2025 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,21 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-public interface SnomedVersionUs extends SnomedVersion {
+public interface SnomedVersionInternational extends SnomedVersion {
 
 	@Override
 	default String getEdition() {
-		return "US1000124";
+		return "INT";
 	}
 
 	@Override
 	default String getEditionDir() {
-		return "us";
+		return "intl";
+	}
+
+	@Override
+	default String getInternationalVersion() {
+		return getVersion();
 	}
 
 }

@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed.test;
 
 /*-
  * #%L
- * ELK Integration with SNOMED using OWL API
+ * ELK SNOMED Testing Utility
  * %%
- * Copyright (C) 2023 - 2024 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2025 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

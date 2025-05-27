@@ -26,6 +26,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionInternational;
+
 public class SnomedOwlOntologyReasonerInternational20200731TestIT extends SnomedOwlOntologyReasonerTestBase
 		implements SnomedVersionInternational {
 

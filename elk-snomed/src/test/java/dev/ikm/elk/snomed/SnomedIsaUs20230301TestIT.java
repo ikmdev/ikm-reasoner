@@ -33,6 +33,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionUs;
+
 @TestInstance(Lifecycle.PER_CLASS)
 public class SnomedIsaUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 

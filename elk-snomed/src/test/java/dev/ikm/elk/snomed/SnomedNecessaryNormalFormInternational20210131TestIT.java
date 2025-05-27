@@ -23,6 +23,8 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionInternational;
+
 public class SnomedNecessaryNormalFormInternational20210131TestIT extends SnomedNecessaryNormalFormTestBase
 		implements SnomedVersionInternational {
 

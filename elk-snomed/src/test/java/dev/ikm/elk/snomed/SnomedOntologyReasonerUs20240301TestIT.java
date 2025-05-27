@@ -23,6 +23,8 @@ package dev.ikm.elk.snomed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionUs;
+
 public class SnomedOntologyReasonerUs20240301TestIT extends SnomedOntologyReasonerTestBase implements SnomedVersionUs {
 
 	@SuppressWarnings("unused")

@@ -24,32 +24,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class SnomedTestBase implements SnomedVersion {
+import dev.ikm.elk.snomed.test.SnomedVersionBase;
+
+public abstract class SnomedTestBase extends SnomedVersionBase {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedTestBase.class);
-
-	protected Path axioms_file = Paths.get(getDir(),
-			"sct2_sRefset_OWLExpressionSnapshot_" + getEdition() + "_" + getVersion() + ".txt");
-
-	protected Path concepts_file = Paths.get(getDir(),
-			"sct2_Concept_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
-
-	protected Path rels_file = Paths.get(getDir(),
-			"sct2_Relationship_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
-
-	protected Path values_file = Paths.get(getDir(),
-			"sct2_RelationshipConcreteValues_Snapshot_" + getEdition() + "_" + getVersion() + ".txt");
-
-	protected Path descriptions_file = Paths.get(getDir(),
-			"sct2_Description_Snapshot-en_" + getEdition() + "_" + getVersion() + ".txt");
 
 	@BeforeEach
 	protected void filesExist() {

@@ -97,6 +97,11 @@ public class SnomedOntology {
 	}
 
 	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
+			Collection<ConcreteRoleType> concreteRoleTypes) {
+		this(concepts, roleTypes, concreteRoleTypes, List.of());
+	}
+
+	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
 			Collection<ConcreteRoleType> concreteRoleTypes, Collection<AnnotationType> annotationTypes) {
 		super();
 		this.conceptIdMap = new HashMap<>();

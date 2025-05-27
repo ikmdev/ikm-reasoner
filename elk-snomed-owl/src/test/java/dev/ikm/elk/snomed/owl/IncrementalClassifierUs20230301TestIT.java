@@ -31,6 +31,8 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionUs;
+
 public class IncrementalClassifierUs20230301TestIT extends SnomedTestBase implements SnomedVersionUs {
 
 	private static final Logger LOG = LoggerFactory.getLogger(IncrementalClassifierUs20230301TestIT.class);
