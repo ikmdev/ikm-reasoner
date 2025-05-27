@@ -33,6 +33,8 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dev.ikm.elk.snomed.test.SnomedVersionUs;
+
 public class SnomedOwlOntologyReasonerUs20230901TestIT extends SnomedOwlOntologyReasonerTestBase
 		implements SnomedVersionUs {
 

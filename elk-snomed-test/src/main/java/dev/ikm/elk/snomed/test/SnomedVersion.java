@@ -1,10 +1,10 @@
-package dev.ikm.elk.snomed.owl;
+package dev.ikm.elk.snomed.test;
 
 /*-
  * #%L
- * ELK Integration with SNOMED using OWL API
+ * ELK SNOMED Testing Utility
  * %%
- * Copyright (C) 2023 - 2024 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2025 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,18 @@ package dev.ikm.elk.snomed.owl;
  * #L%
  */
 
-public interface SnomedVersionInternational extends SnomedVersion {
+public interface SnomedVersion {
 
-	@Override
-	default String getEdition() {
-		return "INT";
+	default String getDir() {
+		return "target/data/snomed-test-data-" + getEditionDir() + "-" + getVersion();
 	}
 
-	@Override
-	default String getEditionDir() {
-		return "intl";
-	}
+	String getEdition();
 
-	@Override
-	default String getInternationalVersion() {
-		return getVersion();
-	}
+	String getEditionDir();
+
+	String getVersion();
+
+	String getInternationalVersion();
 
 }

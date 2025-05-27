@@ -33,6 +33,10 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>elk-owlapi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>elk-reasoner</artifactId>
 		</dependency>
 		<dependency>
@@ -41,7 +45,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>elk-owlapi</artifactId>
+			<artifactId>elk-snomed-test</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
