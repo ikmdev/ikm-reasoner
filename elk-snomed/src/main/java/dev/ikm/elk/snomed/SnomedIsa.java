@@ -50,10 +50,6 @@ public class SnomedIsa {
 		return orderedConcepts;
 	}
 
-	private SnomedIsa() {
-		super();
-	}
-
 	public static SnomedIsa init(Path file) throws IOException {
 		SnomedIsa ret = new SnomedIsa();
 		ret.load(file);
@@ -79,7 +75,7 @@ public class SnomedIsa {
 		return ret;
 	}
 
-	private void init(long root) {
+	public void init(long root) {
 		initChildren();
 		initOrderedConcepts(root);
 	}
@@ -114,7 +110,7 @@ public class SnomedIsa {
 		}
 	}
 
-	private void load(Path file) throws IOException {
+	public void load(Path file) throws IOException {
 		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
 		// typeId characteristicTypeId modifierId
 		//
@@ -123,7 +119,7 @@ public class SnomedIsa {
 		load(st, 1);
 	}
 
-	private void load(Path file, int version) throws IOException {
+	public void load(Path file, int version) throws IOException {
 		Stream<String> st = FullReleaseUtil.getVersion(file, version);
 		load(st, 0);
 	}
