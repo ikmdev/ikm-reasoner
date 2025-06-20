@@ -243,7 +243,7 @@ public class NecessaryNormalFormBuilder {
 			for (ConcreteRole role2 : roles) {
 				if (role1 == role2)
 					continue;
-				if (role1.equals(role2))
+				if (nnfSubsumption.isSubsumedBy(role1, role2))
 					to_remove.add(role2);
 			}
 		}
