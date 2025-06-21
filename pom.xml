@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.59.0</version>
+		<version>1.63.0</version>
 		<relativePath />
 	</parent>
 
@@ -93,7 +93,7 @@
 		<!-- other plugins -->
 		<antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
 		<license-maven-plugin.version>2.5.0</license-maven-plugin.version>
-		<nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+		<sonatype.central.plugin.version>0.8.0</sonatype.central.plugin.version> <!-- Property for deploying to Maven Central -->
 		<tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
 		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
 	</properties>
