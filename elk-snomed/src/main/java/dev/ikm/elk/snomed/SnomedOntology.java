@@ -125,6 +125,20 @@ public class SnomedOntology {
 		concepts.add(concept);
 	}
 
+	public void addRoleType(RoleType role) {
+		if (roleTypeIdMap.containsKey(role.getId()))
+			return;
+		roleTypeIdMap.put(role.getId(), role);
+		roleTypes.add(role);
+	}
+
+	public void addConcreteRoleType(ConcreteRoleType role) {
+		if (concreteRoleTypeIdMap.containsKey(role.getId()))
+			return;
+		concreteRoleTypeIdMap.put(role.getId(), role);
+		concreteRoleTypes.add(role);
+	}
+
 	public String getFsn(long concept) {
 		if (descriptions != null)
 			return descriptions.getFsn(concept);

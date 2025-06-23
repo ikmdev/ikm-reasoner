@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
-import org.semanticweb.elk.owl.interfaces.ElkDataHasValue;
 import org.semanticweb.elk.owl.interfaces.ElkDatatype;
 import org.semanticweb.elk.owl.interfaces.ElkLiteral;
 import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
@@ -57,7 +56,7 @@ public class SnomedOntologyReasoner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOntologyReasoner.class);
 
-	private SnomedOntology snomedOntology;
+	protected SnomedOntology snomedOntology;
 
 	private OwlxOntology ontology;
 
@@ -65,13 +64,14 @@ public class SnomedOntologyReasoner {
 
 	private HashMap<Long, List<ElkAxiom>> conceptIdAxiomMap;
 
-	private SnomedOntologyReasoner() {
+	protected SnomedOntologyReasoner() {
 		super();
 	}
 
 	public static SnomedOntologyReasoner create(SnomedOntology snomedOntology) {
 		SnomedOntologyReasoner sor = new SnomedOntologyReasoner();
 		sor.init(snomedOntology);
+		sor.computeInferences();
 		return sor;
 	}
 
@@ -83,10 +83,14 @@ public class SnomedOntologyReasoner {
 		return conceptIdAxiomMap.get(id);
 	}
 
-	private void init(SnomedOntology snomedOntology) {
+	protected void init(SnomedOntology snomedOntology) {
 		this.snomedOntology = snomedOntology;
 		ontology = new OwlxOntology();
 		conceptIdAxiomMap = new HashMap<>();
+		process();
+	}
+
+	protected void process() {
 		for (RoleType rt : this.snomedOntology.getRoleTypes()) {
 			process(rt);
 		}
@@ -96,6 +100,9 @@ public class SnomedOntologyReasoner {
 		for (Concept con : this.snomedOntology.getConcepts()) {
 			process(con);
 		}
+	}
+
+	protected void computeInferences() {
 		reasoner = ElkReasoner.createReasoner(ontology, ontology.getObjectFactory());
 		reasoner.flush();
 		try {
@@ -128,7 +135,7 @@ public class SnomedOntologyReasoner {
 		return snomedOntology.getRoleType(getId(clazz));
 	}
 
-	private void process(RoleType rt) {
+	protected void process(RoleType rt) {
 		String iri = getIri(rt);
 		ontology.getElkObjectProperty(iri);
 		HashSet<String> rt_axioms = new HashSet<>();
@@ -157,11 +164,11 @@ public class SnomedOntologyReasoner {
 		}
 	}
 
-	private void process(ConcreteRoleType dt) {
-		String iri = getIri(dt);
+	protected void process(ConcreteRoleType crt) {
+		String iri = getIri(crt);
 		ontology.getElkDataProperty(iri);
 		HashSet<String> dt_axioms = new HashSet<>();
-		for (ConcreteRoleType sup : dt.getSuperConcreteRoleTypes()) {
+		for (ConcreteRoleType sup : crt.getSuperConcreteRoleTypes()) {
 			ElkAxiom axiom = ontology.getElkSubDataPropertyOfAxiom(iri, getIri(sup));
 			ontology.addAxiom(axiom);
 			dt_axioms.add(axiom.toString());
@@ -199,7 +206,7 @@ public class SnomedOntologyReasoner {
 		process(con);
 	}
 
-	private void process(Concept con) {
+	protected void process(Concept con) {
 		removeAxioms(con);
 		conceptIdAxiomMap.put(con.getId(), new ArrayList<>());
 		for (Definition def : con.getDefinitions()) {
@@ -212,9 +219,9 @@ public class SnomedOntologyReasoner {
 
 	private void process(Concept con, Definition def, boolean isGci) {
 		List<ElkClass> sups = def.getSuperConcepts().stream().map(sup -> ontology.getElkClass(getIri(sup))).toList();
-		List<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles().stream().map(x -> process(x)).toList();
-		List<ElkDataHasValue> props = def.getUngroupedConcreteRoles().stream().map(this::process).toList();
-		List<ElkObjectSomeValuesFrom> groups = def.getRoleGroups().stream().map(x -> process(x)).toList();
+		List<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles().stream().map(this::process).toList();
+		List<ElkClassExpression> props = def.getUngroupedConcreteRoles().stream().map(this::process).toList();
+		List<ElkObjectSomeValuesFrom> groups = def.getRoleGroups().stream().map(this::process).toList();
 		List<ElkClassExpression> exprs = new ArrayList<>();
 		exprs.addAll(sups);
 		exprs.addAll(roles);
@@ -241,13 +248,13 @@ public class SnomedOntologyReasoner {
 		conceptIdAxiomMap.get(con.getId()).add(axiom);
 	}
 
-	private ElkObjectSomeValuesFrom process(Role role) {
+	protected ElkObjectSomeValuesFrom process(Role role) {
 		return ontology.getElkObjectSomeValuesFrom(getIri(role.getRoleType()), getIri(role.getConcept()));
 	}
 
 	private ElkObjectSomeValuesFrom process(RoleGroup rg) {
-		List<ElkObjectSomeValuesFrom> roles = rg.getRoles().stream().map(role -> process(role)).toList();
-		List<ElkDataHasValue> props = rg.getConcreteRoles().stream().map(x -> process(x)).toList();
+		List<ElkObjectSomeValuesFrom> roles = rg.getRoles().stream().map(this::process).toList();
+		List<ElkClassExpression> props = rg.getConcreteRoles().stream().map(this::process).toList();
 		ArrayList<ElkClassExpression> exprs = new ArrayList<>();
 		exprs.addAll(roles);
 		exprs.addAll(props);
@@ -260,7 +267,7 @@ public class SnomedOntologyReasoner {
 		return ontology.getElkObjectSomeValuesFrom("" + SnomedIds.role_group, expr);
 	}
 
-	private ElkDataHasValue process(ConcreteRole concreteRole) {
+	protected ElkClassExpression process(ConcreteRole concreteRole) {
 		Factory f = ontology.getObjectFactory();
 		ElkDatatype datatype = switch (concreteRole.getValueType()) {
 		case Boolean -> f.getXsdBoolean();

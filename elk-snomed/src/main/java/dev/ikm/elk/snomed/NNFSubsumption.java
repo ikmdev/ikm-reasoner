@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.model.ConcreteRole;
+import dev.ikm.elk.snomed.model.ConcreteRoleType;
 import dev.ikm.elk.snomed.model.Definition;
 import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
@@ -92,6 +94,11 @@ public class NNFSubsumption {
 		return superRoles.get(role1).contains(role2);
 	}
 
+	private boolean isSubsumedBy1(ConcreteRoleType role1, ConcreteRoleType role2) {
+		// TODO Handle super types if they are introduced
+		return role1.equals(role2);
+	}
+
 	private boolean isSubsumedBy1(Concept con1, Concept con2) {
 		if (con1.equals(con2))
 			return true;
@@ -101,6 +108,11 @@ public class NNFSubsumption {
 	private boolean isSubsumedBy(Role role1, Role role2) {
 		return isSubsumedBy1(role1.getRoleType(), role2.getRoleType())
 				&& isSubsumedBy1(role1.getConcept(), role2.getConcept());
+	}
+
+	protected boolean isSubsumedBy(ConcreteRole role1, ConcreteRole role2) {
+		return isSubsumedBy1(role1.getConcreteRoleType(), role2.getConcreteRoleType())
+				&& role1.getValueType().equals(role2.getValueType()) && role1.getValue().equals(role2.getValue());
 	}
 
 	protected boolean isSubsumedBy(RoleGroup rg1, RoleGroup rg2) {

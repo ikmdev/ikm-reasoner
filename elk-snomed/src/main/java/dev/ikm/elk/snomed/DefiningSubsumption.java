@@ -63,6 +63,9 @@ public class DefiningSubsumption extends NNFSubsumption {
 		if (!def2.getUngroupedRoles().stream().allMatch(
 				role2 -> def1.getUngroupedRoles().stream().anyMatch(role1 -> isSubRoleOfEntailed(role1, role2))))
 			return false;
+		if (!def2.getUngroupedConcreteRoles().stream().allMatch(
+				role2 -> def1.getUngroupedConcreteRoles().stream().anyMatch(role1 -> isSubsumedBy(role1, role2))))
+			return false;
 //		LOG.info("rg1:" + def1.getRoleGroups());
 //		LOG.info("rg2:" + def2.getRoleGroups());
 		if (!def2.getRoleGroups().stream()
