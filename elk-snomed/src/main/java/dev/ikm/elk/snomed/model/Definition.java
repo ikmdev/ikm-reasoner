@@ -102,4 +102,10 @@ public class Definition {
 		return def;
 	}
 
+	@Override
+	public String toString() {
+		return getDefinitionType() + "\n" + getSuperConcepts() + "\n" + getUngroupedRoles() + "\n"
+				+ getUngroupedConcreteRoles() + "\n" + getRoleGroups();
+	}
+
 }
