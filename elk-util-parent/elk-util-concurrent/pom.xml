@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-util-parent</artifactId>
-		<version>0.39.1-SNAPSHOT</version>
+		<version>0.39.1</version>
 	</parent>
 
 	<artifactId>elk-util-concurrent</artifactId>
