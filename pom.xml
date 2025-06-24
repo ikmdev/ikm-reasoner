@@ -92,8 +92,9 @@
 		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<!-- other plugins -->
 		<antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
+		<javacc-maven-plugin.version>3.1.1</javacc-maven-plugin.version>
 		<license-maven-plugin.version>2.6.0</license-maven-plugin.version>
-		<sonatype.central.plugin.version>0.8.0</sonatype.central.plugin.version> <!-- Property for deploying to Maven Central -->
+		<sonatype.central.plugin.version>0.8.0</sonatype.central.plugin.version> <!--Property for deploying to Maven Central -->
 		<tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
 		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
 	</properties>
@@ -352,6 +353,11 @@
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-maven-plugin</artifactId>
 					<version>${antlr4-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>javacc-maven-plugin</artifactId>
+					<version>${javacc-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
