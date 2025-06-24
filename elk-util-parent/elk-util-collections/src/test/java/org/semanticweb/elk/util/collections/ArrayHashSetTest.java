@@ -67,7 +67,7 @@ public class ArrayHashSetTest {
 	}
 
 	@Test
-	public static void testAddRemoveContains() {
+	public void testAddRemoveContains() {
 		// random number generator for elements
 		Random generator = new Random(123);
 		// number of test iterations

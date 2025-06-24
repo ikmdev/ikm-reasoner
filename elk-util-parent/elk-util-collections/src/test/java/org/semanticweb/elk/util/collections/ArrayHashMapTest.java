@@ -65,7 +65,7 @@ public class ArrayHashMapTest {
 	}
 
 	@Test
-	public static void testPutGet() {
+	public void testPutGet() {
 		// random number generator for elements
 		Random generator = new Random(123);
 		// number of iterations of filling in elements
