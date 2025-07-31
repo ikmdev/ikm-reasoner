@@ -30,5 +30,6 @@ open module dev.ikm.elk.snomed {
 
 	exports dev.ikm.elk.snomed;
 	exports dev.ikm.elk.snomed.model;
+	exports dev.ikm.elk.snomed.interval;
 
 }

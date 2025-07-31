@@ -46,15 +46,15 @@ public class NecessaryNormalFormBuilder {
 
 	private List<Concept> concepts = new ArrayList<>();
 
-	private SnomedIsa isa;
+	protected SnomedIsa isa;
 
 	private long root;
 
-	private HashMap<RoleType, Set<RoleType>> superRolesTypes = new HashMap<>();
+	protected HashMap<RoleType, Set<RoleType>> superRolesTypes = new HashMap<>();
 
-	private HashMap<Concept, Definition> necessaryNormalForm = new HashMap<>();
+	protected HashMap<Concept, Definition> necessaryNormalForm = new HashMap<>();
 
-	private NNFSubsumption nnfSubsumption;
+	protected NNFSubsumption nnfSubsumption;
 
 	public List<Concept> getConcepts() {
 		return concepts;
@@ -81,7 +81,7 @@ public class NecessaryNormalFormBuilder {
 		return necessaryNormalForm.get(con);
 	}
 
-	private NecessaryNormalFormBuilder(SnomedOntology snomedOntology, long root) {
+	protected NecessaryNormalFormBuilder(SnomedOntology snomedOntology, long root) {
 		super();
 		this.snomedOntology = snomedOntology;
 		this.root = root;
@@ -97,11 +97,15 @@ public class NecessaryNormalFormBuilder {
 		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, root);
 		nnfb.initConcepts(superConcepts);
 		nnfb.initRoles(superRoleTypes);
-		nnfb.nnfSubsumption = new NNFSubsumption(nnfb.isa, nnfb.superRolesTypes, nnfb.necessaryNormalForm);
+		nnfb.initSubsumption();
 		return nnfb;
 	}
 
-	private void initConcepts(HashMap<Long, Set<Long>> superConcepts) {
+	protected void initSubsumption() {
+		nnfSubsumption = new NNFSubsumption(isa, superRolesTypes, necessaryNormalForm);
+	}
+
+	protected void initConcepts(HashMap<Long, Set<Long>> superConcepts) {
 		isa = SnomedIsa.init(superConcepts, root);
 		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
 		for (Concept concept : snomedOntology.getConcepts()) {
@@ -117,7 +121,7 @@ public class NecessaryNormalFormBuilder {
 
 	private final boolean log_roles = false;
 
-	private void initRoles(HashMap<Long, Set<Long>> superRoles) {
+	protected void initRoles(HashMap<Long, Set<Long>> superRoles) {
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
 			superRolesTypes.put(rt, new HashSet<>());
 			superRolesTypes.get(rt).add(rt);
