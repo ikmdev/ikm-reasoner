@@ -11,7 +11,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.39.3-SNAPSHOT</version>
+	<version>0.39.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
@@ -71,17 +71,17 @@
 		<log4j.version>3.0.0-alpha1</log4j.version>
 		<!-- test dependencies -->
 		<junit4.version>4.13.2</junit4.version>
-		<junit.version>5.13.1</junit.version><!-- defined in parent -->
+		<junit.version>5.13.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
-		<antlr4-runtime.version>4.13.2-r3</antlr4-runtime.version>
-		<eclipse-collections.version>12.0.0.M3-r2</eclipse-collections.version>
+		<antlr4-runtime.version>4.13.2-r5</antlr4-runtime.version>
+		<eclipse-collections.version>12.0.0.M3-r3</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi.version>4.8.3</owlapi.version>
+		<owlapi.version>4.8.4</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
 		<maven-changes-plugin.version>2.12.1</maven-changes-plugin.version>
-		<maven-clean-plugin.version>3.4.1</maven-clean-plugin.version>
+		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
@@ -98,8 +98,9 @@
 		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<!-- other plugins -->
 		<antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
-		<license-maven-plugin.version>2.5.0</license-maven-plugin.version>
-		<sonatype.central.plugin.version>0.8.0</sonatype.central.plugin.version> <!-- Property for deploying to Maven Central -->
+		<javacc-maven-plugin.version>3.1.1</javacc-maven-plugin.version>
+		<license-maven-plugin.version>2.6.0</license-maven-plugin.version>
+		<sonatype.central.plugin.version>0.8.0</sonatype.central.plugin.version> <!--Property for deploying to Maven Central -->
 		<tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
 		<versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
 	</properties>
@@ -358,6 +359,11 @@
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-maven-plugin</artifactId>
 					<version>${antlr4-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>javacc-maven-plugin</artifactId>
+					<version>${javacc-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
