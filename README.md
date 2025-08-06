@@ -11,6 +11,8 @@ Primary changes:
 * Addition of SNOMED POJO model, reasoner, and parser (without dependency on the OWLAPI)
 
 Requires Java 23.
+Requires Maven 3.9.11
+Requires Git
 
 To build on Unix/Linux/OSX: `./mvnw clean install`
 
