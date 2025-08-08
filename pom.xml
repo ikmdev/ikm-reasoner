@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
-		<version>1.63.0</version>
+		<version>1.64.0</version>
 		<relativePath />
 	</parent>
 
@@ -60,11 +60,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>24</java.version>
 		<java.compilerArgs></java.compilerArgs>
-
-		<!-- Properties Needed To Build On Java 24 (Start) -->
-		<maven-dependency-analyzer.version>1.16.0</maven-dependency-analyzer.version>
-		<maven-pmd-plugin.version>3.27.0</maven-pmd-plugin.version>
-		<!-- Properties Needed To Build On Java 24 (End) -->
 
 		<!-- logging dependencies -->
 		<slf4j.version>2.0.17</slf4j.version>
@@ -564,14 +559,14 @@
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<!-- Necessary for JDK 24. Should be removed for updates of dependency plugin -->
-					<dependency>
-						<groupId>org.apache.maven.shared</groupId>
-						<artifactId>maven-dependency-analyzer</artifactId>
-						<version>${maven-dependency-analyzer.version}</version>
-					</dependency>
-				</dependencies>
+<!--				<dependencies>-->
+<!--					&lt;!&ndash; Necessary for JDK 24. Should be removed for updates of dependency plugin &ndash;&gt;-->
+<!--					<dependency>-->
+<!--						<groupId>org.apache.maven.shared</groupId>-->
+<!--						<artifactId>maven-dependency-analyzer</artifactId>-->
+<!--						<version>${maven-dependency-analyzer.version}</version>-->
+<!--					</dependency>-->
+<!--				</dependencies>-->
 			</plugin>
 		</plugins>
 	</build>
@@ -629,28 +624,4 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-	<profiles>
-	<!-- codeQuality profile to override pmd configuration from build-parent
-     Need to ovverride aggregate parameter as it is deprecated. -->
-	<profile>
-		<!-- To disable this, use something like "mvn install -P!codeQuality" -->
-		<id>codeQuality</id>
-		<activation>
-			<activeByDefault>false</activeByDefault>
-		</activation>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-pmd-plugin</artifactId>
-					<configuration>
-						<aggregate combine.self="override"></aggregate> <!-- Overridden due to deprecation -->
-						<targetJdk>${java.version}</targetJdk>
-					</configuration>
-				</plugin>
-			</plugins>
-		</build>
-	</profile>
-</profiles>
 </project>
