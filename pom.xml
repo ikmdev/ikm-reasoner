@@ -559,14 +559,6 @@
 						</configuration>
 					</execution>
 				</executions>
-<!--				<dependencies>-->
-<!--					&lt;!&ndash; Necessary for JDK 24. Should be removed for updates of dependency plugin &ndash;&gt;-->
-<!--					<dependency>-->
-<!--						<groupId>org.apache.maven.shared</groupId>-->
-<!--						<artifactId>maven-dependency-analyzer</artifactId>-->
-<!--						<version>${maven-dependency-analyzer.version}</version>-->
-<!--					</dependency>-->
-<!--				</dependencies>-->
 			</plugin>
 		</plugins>
 	</build>
