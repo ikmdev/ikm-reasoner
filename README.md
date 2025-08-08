@@ -10,7 +10,7 @@ Primary changes:
 * Replace custom collections with Eclipse collections
 * Addition of SNOMED POJO model, reasoner, and parser (without dependency on the OWLAPI)
 
-Requires Java 23.
+Requires Java 24.
 Requires Maven 3.9.11
 Requires Git
 
