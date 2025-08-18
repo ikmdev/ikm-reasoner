@@ -6,7 +6,6 @@
 		<groupId>dev.ikm.build</groupId>
 		<artifactId>java-parent</artifactId>
 		<version>1.64.0</version>
-		<relativePath />
 	</parent>
 
 	<groupId>dev.ikm.elk</groupId>
