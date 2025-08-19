@@ -19,8 +19,8 @@
  */
 open module org.semanticweb.elk.reasoner {
 
-	requires dev.ikm.jpms.eclipse.collections;
-	requires dev.ikm.jpms.eclipse.collections.api;
+    requires org.eclipse.collections.api;
+    requires org.eclipse.collections.impl;
 
 	requires org.slf4j;
 
