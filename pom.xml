@@ -68,9 +68,9 @@
 		<junit.version>5.13.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r5</antlr4-runtime.version>
-		<eclipse-collections.version>12.0.0.M3-r3</eclipse-collections.version>
+		<eclipse-collections.version>13.0.0</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi.version>4.8.4</owlapi.version>
+		<owlapi.version>4.8.5</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -126,7 +126,7 @@
 				<version>${antlr4-runtime.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>dev.ikm.jpms</groupId>
+				<groupId>org.eclipse.collections</groupId>
 				<artifactId>eclipse-collections</artifactId>
 				<version>${eclipse-collections.version}</version>
 			</dependency>
@@ -554,7 +554,7 @@
 							</ignoredUnusedDeclaredDependencies>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
 							<ignoredUsedUndeclaredDependencies>
-								dev.ikm.jpms:eclipse-collections-api</ignoredUsedUndeclaredDependencies>
+                                org.eclipse.collections:eclipse-collections-api</ignoredUsedUndeclaredDependencies>
 						</configuration>
 					</execution>
 				</executions>
