@@ -23,13 +23,15 @@ package dev.ikm.elk.snomed.interval;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.ikm.elk.snomed.model.Concept;
+
 public class Interval {
 
 	private int lowerBound, upperBound;
 
 	private boolean lowerOpen, upperOpen;
 
-	private long unitOfMeasure;
+	private Concept unitOfMeasure;
 
 	public int getLowerBound() {
 		return lowerBound;
@@ -63,15 +65,15 @@ public class Interval {
 		this.upperOpen = upperOpen;
 	}
 
-	public long getUnitOfMeasure() {
+	public Concept getUnitOfMeasure() {
 		return unitOfMeasure;
 	}
 
-	public void setUnitOfMeasure(long unitOfMeasure) {
+	public void setUnitOfMeasure(Concept unitOfMeasure) {
 		this.unitOfMeasure = unitOfMeasure;
 	}
 
-	public Interval(int lowerBound, boolean lowerOpen, int upperBound, boolean upperOpen, long unitOfMeasure) {
+	public Interval(int lowerBound, boolean lowerOpen, int upperBound, boolean upperOpen, Concept unitOfMeasure) {
 		super();
 		this.lowerBound = lowerBound;
 		this.lowerOpen = lowerOpen;
@@ -95,7 +97,8 @@ public class Interval {
 		ret.lowerBound = Integer.parseInt(mat.group(2));
 		ret.upperBound = Integer.parseInt(mat.group(3));
 		ret.upperOpen = mat.group(4).equals(")");
-		ret.unitOfMeasure = Long.parseLong(mat.group(5));
+		long uom = Long.parseLong(mat.group(5));
+		ret.unitOfMeasure = new Concept(uom);
 		return ret;
 	}
 
@@ -106,7 +109,7 @@ public class Interval {
 
 	public String toString(boolean includeUnitOfMeasure) {
 		return (lowerOpen ? "(" : "[") + lowerBound + "," + upperBound + (upperOpen ? ")" : "]")
-				+ (includeUnitOfMeasure ? unitOfMeasure : "");
+				+ (includeUnitOfMeasure ? unitOfMeasure.getId() : "");
 	}
 
 	private int getLowerContainsValue() {
@@ -124,7 +127,7 @@ public class Interval {
 	public boolean contains(Interval that) {
 		return this.getLowerContainsValue() <= that.getLowerContainsValue()
 				&& this.getUpperContainsValue() >= that.getUpperContainsValue()
-				&& this.unitOfMeasure == that.unitOfMeasure;
+				&& this.unitOfMeasure.equals(that.unitOfMeasure);
 	}
 
 }
