@@ -10,7 +10,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.39.4-SNAPSHOT</version>
+	<version>0.39.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
@@ -68,9 +68,9 @@
 		<junit.version>5.13.4</junit.version><!-- defined in parent -->
 		<!-- dev.ikm.jpms dependencies -->
 		<antlr4-runtime.version>4.13.2-r5</antlr4-runtime.version>
-		<eclipse-collections.version>12.0.0.M3-r3</eclipse-collections.version>
+		<eclipse-collections.version>13.0.0</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi.version>4.8.4</owlapi.version>
+		<owlapi.version>4.8.5</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
@@ -79,12 +79,12 @@
 		<maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
 		<maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-		<maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+		<maven-enforcer-plugin.version>3.6.1</maven-enforcer-plugin.version>
 		<maven-failsafe-plugin.version>3.5.3 </maven-failsafe-plugin.version>
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<maven-install-plugin.version>3.1.4</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.11.3</maven-javadoc-plugin.version>
 		<maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<maven-site-plugin.version>3.21.0</maven-site-plugin.version>
@@ -126,7 +126,7 @@
 				<version>${antlr4-runtime.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>dev.ikm.jpms</groupId>
+				<groupId>org.eclipse.collections</groupId>
 				<artifactId>eclipse-collections</artifactId>
 				<version>${eclipse-collections.version}</version>
 			</dependency>
@@ -554,7 +554,7 @@
 							</ignoredUnusedDeclaredDependencies>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
 							<ignoredUsedUndeclaredDependencies>
-								dev.ikm.jpms:eclipse-collections-api</ignoredUsedUndeclaredDependencies>
+                                org.eclipse.collections:eclipse-collections-api</ignoredUsedUndeclaredDependencies>
 						</configuration>
 					</execution>
 				</executions>
