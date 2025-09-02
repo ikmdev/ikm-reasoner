@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-owl-parent</artifactId>
-		<version>0.39.6-SNAPSHOT</version>
+		<version>0.39.6</version>
 	</parent>
 
 	<artifactId>elk-owl-implementation</artifactId>
