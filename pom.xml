@@ -59,7 +59,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>24</java.version>
 		<java.compilerArgs></java.compilerArgs>
-
 		<!-- logging dependencies -->
 		<slf4j.version>2.0.17</slf4j.version>
 		<log4j.version>3.0.0-alpha1</log4j.version>
@@ -70,7 +69,7 @@
 		<antlr4-runtime.version>4.13.2-r5</antlr4-runtime.version>
 		<eclipse-collections.version>13.0.0</eclipse-collections.version>
 		<!-- dev.ikm.owlapi dependencies -->
-		<owlapi.version>4.8.5</owlapi.version>
+		<owlapi.version>4.8.7</owlapi.version>
 		<!-- other dependencies -->
 		<!-- org.apache.maven.plugins -->
 		<maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
