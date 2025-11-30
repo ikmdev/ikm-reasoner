@@ -884,5 +884,4 @@ public class ElkReasoner {
 		void ontologyChanged();
 
 	}
-
 }

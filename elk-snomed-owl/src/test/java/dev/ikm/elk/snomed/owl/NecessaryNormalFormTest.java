@@ -65,7 +65,8 @@ public class NecessaryNormalFormTest {
 		snomedOntologyReasoner.flush();
 		LOG.info("Classify complete");
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
-				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false),
+				(workDone, max) -> {});
 		LOG.info("Init complete");
 		checkPriors(ontology, nnfb);
 		nnfb.generate();
