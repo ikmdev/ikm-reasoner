@@ -81,20 +81,29 @@ public class NecessaryNormalFormBuilder {
 		return necessaryNormalForm.get(con);
 	}
 
-	protected NecessaryNormalFormBuilder(SnomedOntology snomedOntology, long root) {
+	@FunctionalInterface
+	public interface ProgressUpdater {
+		void update(int workDone, int max);
+	}
+
+	final ProgressUpdater progressUpdater;
+
+	protected NecessaryNormalFormBuilder(SnomedOntology snomedOntology, long root, ProgressUpdater progressUpdater) {
 		super();
 		this.snomedOntology = snomedOntology;
 		this.root = root;
+		this.progressUpdater = progressUpdater;
 	}
 
 	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
-			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes) {
-		return create(snomedOntology, superConcepts, superRoleTypes, SnomedIds.root);
+			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes, ProgressUpdater progressUpdater) {
+		return create(snomedOntology, superConcepts, superRoleTypes, SnomedIds.root, progressUpdater);
 	}
 
 	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
-			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes, long root) {
-		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, root);
+			HashMap<Long, Set<Long>> superConcepts, HashMap<Long, Set<Long>> superRoleTypes, long root,
+													ProgressUpdater progressUpdater) {
+		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, root, progressUpdater);
 		nnfb.initConcepts(superConcepts);
 		nnfb.initRoles(superRoleTypes);
 		nnfb.initSubsumption();
@@ -164,16 +173,19 @@ public class NecessaryNormalFormBuilder {
 	public void generate(ConceptComparer concept_comparer) {
 		this.conceptComparer = concept_comparer;
 		int cnt = 0;
+		final int size = concepts.size();
 		for (Concept concept : concepts) {
-			if (++cnt % 50000 == 0)
-				LOG.info("Generate: " + cnt);
+			if (++cnt % 50000 == 0) {
+				LOG.info("Generate: " + String.format("%,d", cnt));
+				progressUpdater.update(cnt, size);
+			}
 			Definition def = generateNNF(concept, false);
 			Concept nnf_con = new Concept(concept.getId());
 			nnf_con.addDefinition(def);
 			if (concept_comparer != null)
 				concept_comparer.compare(nnf_con);
 		}
-		LOG.info("Generate: " + cnt);
+		LOG.info("Generate: " + String.format("%,d", cnt));
 		if (concept_comparer != null && concept_comparer.getMisMatchCount() != 0)
 			LOG.error("Mis-match: " + concept_comparer.getMisMatchCount());
 	}

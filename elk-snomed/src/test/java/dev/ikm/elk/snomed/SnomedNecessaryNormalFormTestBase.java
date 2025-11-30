@@ -57,7 +57,7 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
-				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false), (workDone, max) -> {});
 		checkPriors(snomedOntologyReasoner, nnfb);
 	}
 
@@ -69,7 +69,7 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
-				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false));
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false), (workDone, max) -> {} );
 		LOG.info("Init complete");
 		SnomedOntology inferredOntology = new SnomedLoader().load(concepts_file, descriptions_file, rels_file, values_file);
 		LOG.info("Generate");

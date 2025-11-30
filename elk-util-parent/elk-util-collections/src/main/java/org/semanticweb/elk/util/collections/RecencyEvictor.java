@@ -191,7 +191,7 @@ public class RecencyEvictor<E> extends AbstractEvictor<E> {
 
 		@Override
 		public String toString() {
-			return String.format("%s(%d,%f)", RecencyEvictor.class.getName(),
+			return String.format("%s(%,d,%f)", RecencyEvictor.class.getName(),
 					capacity_, loadFactor_);
 		}
 

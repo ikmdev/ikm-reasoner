@@ -68,7 +68,11 @@ public class OwlElTransformer {
 	HashMap<OwlElAnnotationProperty, AnnotationType> annotationTypes = new HashMap<>();
 
 	private static long toLong(String iri) {
-		return Long.parseLong(iri.replaceFirst("^.*:", ""));
+		int lastColon = iri.lastIndexOf(':');
+		if (lastColon >= 0) {
+			return Long.parseLong(iri.substring(lastColon + 1));
+		}
+		return Long.parseLong(iri);
 	}
 
 	public static long getId(OwlElClass clazz) {
