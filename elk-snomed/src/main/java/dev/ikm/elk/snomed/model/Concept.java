@@ -20,23 +20,26 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.MutableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Concept extends SnomedEntity {
 
-	private List<Definition> definitions = new ArrayList<>();
-
-	private List<Definition> gciDefinitions = new ArrayList<>();
+	// Use Eclipse Collections adaptive lists
+	private MutableList<Definition> definitions = Lists.mutable.empty();
+	private MutableList<Definition> gciDefinitions = Lists.mutable.empty();
 
 	public Concept(long id) {
 		super();
 		this.id = id;
 	}
 
-	public List<Definition> getDefinitions() {
-		return definitions;
+	public MutableList<Definition> getDefinitions() {
+		return definitions;  // MutableList implements List
 	}
 
 	public void addDefinition(Definition definition) {
@@ -44,7 +47,7 @@ public class Concept extends SnomedEntity {
 	}
 
 	public void removeAllDefinitions() {
-		this.definitions = new ArrayList<>();
+		this.definitions.clear();  // More efficient than new allocation
 	}
 
 	public List<Definition> getGciDefinitions() {
@@ -56,7 +59,7 @@ public class Concept extends SnomedEntity {
 	}
 
 	public void removeAllGciDefinitions() {
-		this.gciDefinitions = new ArrayList<>();
+		this.gciDefinitions.clear();
 	}
 
 	@Override

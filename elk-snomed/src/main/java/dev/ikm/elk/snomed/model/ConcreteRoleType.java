@@ -20,13 +20,13 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.MutableList;
 
 public class ConcreteRoleType extends SnomedEntity {
-
-	private List<ConcreteRoleType> superConcreteRoleTypes = new ArrayList<>();
+    private MutableList<ConcreteRoleType> superConcreteRoleTypes = Lists.mutable.empty();
 
 	public ConcreteRoleType(long id) {
 		this.id = id;

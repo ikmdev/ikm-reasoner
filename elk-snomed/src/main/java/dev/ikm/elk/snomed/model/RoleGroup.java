@@ -20,17 +20,18 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.set.MutableSet;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class RoleGroup {
+	private MutableSet<Role> roles = Sets.mutable.empty();
+	private MutableSet<ConcreteRole> concreteRoles = Sets.mutable.empty();
 
-	Set<Role> roles = new HashSet<>();
-
-	Set<ConcreteRole> concreteRoles = new HashSet<>();
-
-	public Set<Role> getRoles() {
+	public MutableSet<Role> getRoles() {
 		return roles;
 	}
 
@@ -38,7 +39,7 @@ public class RoleGroup {
 		this.roles.add(role);
 	}
 
-	public Set<ConcreteRole> getConcreteRoles() {
+	public MutableSet<ConcreteRole> getConcreteRoles() {
 		return concreteRoles;
 	}
 

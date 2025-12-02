@@ -20,19 +20,19 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import java.util.HashSet;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.set.MutableSet;
+
 import java.util.Objects;
 import java.util.Set;
 
 public class Definition {
-
-	private DefinitionType definitionType;
-
-	private Set<Concept> superConcepts = new HashSet<>();
-
-	private RoleGroup ungroupedRoles = new RoleGroup();
-
-	private Set<RoleGroup> roleGroups = new HashSet<>();
+    private DefinitionType definitionType;
+    
+    // These will auto-optimize based on size
+    private MutableSet<Concept> superConcepts = Sets.mutable.empty();
+    private RoleGroup ungroupedRoles = new RoleGroup();
+    private MutableSet<RoleGroup> roleGroups = Sets.mutable.empty();
 
 	public DefinitionType getDefinitionType() {
 		return definitionType;
@@ -42,15 +42,11 @@ public class Definition {
 		this.definitionType = definitionType;
 	}
 
-	public Set<Concept> getSuperConcepts() {
+	public MutableSet<Concept> getSuperConcepts() {
 		return superConcepts;
 	}
 
-	public void addSuperConcept(Concept superConcept) {
-		this.superConcepts.add(superConcept);
-	}
-
-	public Set<Role> getUngroupedRoles() {
+	public MutableSet<Role> getUngroupedRoles() {
 		return ungroupedRoles.getRoles();
 	}
 
@@ -58,7 +54,7 @@ public class Definition {
 		this.ungroupedRoles.addRole(role);
 	}
 
-	public Set<ConcreteRole> getUngroupedConcreteRoles() {
+	public MutableSet<ConcreteRole> getUngroupedConcreteRoles() {
 		return ungroupedRoles.getConcreteRoles();
 	}
 
@@ -66,13 +62,21 @@ public class Definition {
 		this.ungroupedRoles.addConcreteRole(concreteRole);
 	}
 
-	public Set<RoleGroup> getRoleGroups() {
+	public MutableSet<RoleGroup> getRoleGroups() {
 		return roleGroups;
 	}
 
 	public void addRoleGroup(RoleGroup roleGroup) {
 		this.roleGroups.add(roleGroup);
 	}
+
+    // If you KNOW the typical size, you can hint:
+    // private MutableSet<Concept> superConcepts = Sets.mutable.withInitialCapacity(2);
+    
+    // All your existing methods work unchanged!
+    public void addSuperConcept(Concept superConcept) {
+        this.superConcepts.add(superConcept);  // Internally upgrades to UnifiedSet when needed
+    }
 
 	@Override
 	public int hashCode() {

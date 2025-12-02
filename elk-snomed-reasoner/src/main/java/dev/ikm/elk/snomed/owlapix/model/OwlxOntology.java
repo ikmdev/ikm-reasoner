@@ -1,10 +1,12 @@
 package dev.ikm.elk.snomed.owlapix.model;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.set.MutableSet;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
@@ -50,13 +52,11 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 
 	private ElkPrefixImpl prefix;
 
-	private HashMap<String, ElkClass> elkClasses = new HashMap<>();
-
-	private HashMap<String, ElkObjectProperty> elkObjectProperties = new HashMap<>();
-
-	private HashMap<String, ElkDataProperty> elkDataProperties = new HashMap<>();
-
-	private HashSet<ElkAxiom> axioms = new HashSet<>();
+	// Use the Eclipse Collections factory API
+	private MutableMap<String, ElkClass> elkClasses = Maps.mutable.empty();
+	private MutableMap<String, ElkObjectProperty> elkObjectProperties = Maps.mutable.empty();
+	private MutableMap<String, ElkDataProperty> elkDataProperties = Maps.mutable.empty();
+	private MutableSet<ElkAxiom> axioms = Sets.mutable.empty();
 
 	public ElkObject.Factory getObjectFactory() {
 		return objectFactory;
@@ -190,7 +190,7 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 
 	// OwlxOntologyManager
 
-	private HashSet<OWLOntologyChangeListener> change_listeners = new HashSet<>();
+	private MutableSet<OWLOntologyChangeListener> change_listeners = Sets.mutable.empty();
 
 	public void addOntologyChangeListener(OWLOntologyChangeListener ontologyChangeListener_) {
 		change_listeners.add(ontologyChangeListener_);

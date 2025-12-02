@@ -20,12 +20,14 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.set.MutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,50 +46,66 @@ public class NNFSubsumption {
 
 	private SnomedIsa isa;
 
-	private HashMap<RoleType, Set<RoleType>> superRoles;
+	// Use Eclipse Collections - better performance
+	private MutableMap<RoleType, MutableSet<RoleType>> superRoles;
 
-	protected HashMap<Concept, Definition> necessaryNormalForm;
+	protected MutableMap<Concept, Definition> necessaryNormalForm;
 
-	public NNFSubsumption(SnomedIsa isa, HashMap<RoleType, Set<RoleType>> superRoles,
-			HashMap<Concept, Definition> necessaryNormalForm) {
+	public NNFSubsumption(SnomedIsa isa, Map<RoleType, ? extends MutableSet<RoleType>> superRoles,
+			MutableMap<Concept, Definition> necessaryNormalForm) {
 		super();
 		this.isa = isa;
-		this.superRoles = superRoles;
+		this.superRoles = Maps.mutable.ofMap(superRoles);
 		this.necessaryNormalForm = necessaryNormalForm;
 	}
 
-	private HashSet<Role> expandChain(RoleType role_type, Concept filler) {
-		HashSet<Role> roles = new HashSet<>();
-		roles.add(new Role(role_type, filler));
+	private MutableSet<Role> expandChain(RoleType role_type, Concept filler) {
+		MutableSet<Role> roles = Sets.mutable.with(new Role(role_type, filler));
+		
 		while (true) {
-			ArrayList<Role> roles_l = new ArrayList<>(roles);
-			for (Role role : roles_l) {
-				List<Role> chain_exps = expandChain1(role);
-				roles.addAll(chain_exps);
-				List<Role> sup_exps = expandSuperRoleTypes(role);
-				roles.addAll(sup_exps);
-			}
-			if (roles.size() == roles_l.size())
+			int initialSize = roles.size();
+			
+			// Use Eclipse Collections to avoid copying to ArrayList
+			MutableList<Role> rolesToExpand = Lists.mutable.withAll(roles);
+			
+			rolesToExpand.forEach(role -> {
+				roles.addAll(expandChain1(role));
+				roles.addAll(expandSuperRoleTypes(role));
+			});
+			
+			// Break if no new roles were added
+			if (roles.size() == initialSize)
 				break;
 		}
 		return roles;
 	}
 
-	private List<Role> expandChain1(Role svf) {
-		ArrayList<RoleType> chained_rts = new ArrayList<>();
+	private MutableList<Role> expandChain1(Role svf) {
+		MutableList<RoleType> chained_rts = Lists.mutable.empty();
+		
 		if (svf.getRoleType().getChained() != null) {
 			chained_rts.add(svf.getRoleType().getChained());
 		}
-		if (svf.getRoleType().isTransitive())
+		if (svf.getRoleType().isTransitive()) {
 			chained_rts.add(svf.getRoleType());
-		List<Concept> chained_cons = necessaryNormalForm.get(svf.getConcept()).getUngroupedRoles().stream()
-				.filter(x -> chained_rts.contains(x.getRoleType())).map(x -> x.getConcept()).distinct().toList();
-		return chained_cons.stream().map(x -> new Role(svf.getRoleType(), x)).toList();
+		}
+		
+		// Use Eclipse Collections select/collect instead of stream
+		MutableList<Concept> chained_cons = Lists.mutable.withAll(necessaryNormalForm.get(svf.getConcept())
+						.getUngroupedRoles())
+				.select(x -> chained_rts.contains(x.getRoleType()))
+				.collect(Role::getConcept)
+				.distinct();
+
+		return chained_cons.collect(concept -> new Role(svf.getRoleType(), concept));
 	}
 
-	private List<Role> expandSuperRoleTypes(Role role) {
-		return superRoles.get(role.getRoleType()).stream().filter(rt -> !rt.equals(role.getRoleType()))
-				.map(rt -> new Role(rt, role.getConcept())).toList();
+	private MutableList<Role> expandSuperRoleTypes(Role role) {
+		// Use Eclipse Collections select/collect - no stream overhead
+		return superRoles.get(role.getRoleType())
+				.select(rt -> !rt.equals(role.getRoleType()))
+				.collect(rt -> new Role(rt, role.getConcept()))
+				.toList();
 	}
 
 	private boolean isSubsumedBy1(RoleType role1, RoleType role2) {
@@ -112,29 +130,34 @@ public class NNFSubsumption {
 
 	protected boolean isSubsumedBy(ConcreteRole role1, ConcreteRole role2) {
 		return isSubsumedBy1(role1.getConcreteRoleType(), role2.getConcreteRoleType())
-				&& role1.getValueType().equals(role2.getValueType()) && role1.getValue().equals(role2.getValue());
+				&& role1.getValueType().equals(role2.getValueType()) 
+				&& role1.getValue().equals(role2.getValue());
 	}
 
 	protected boolean isSubsumedBy(RoleGroup rg1, RoleGroup rg2) {
-		return rg2.getRoles().stream()
-				.allMatch(role2 -> rg1.getRoles().stream().anyMatch(role1 -> isSubRoleOfEntailed(role1, role2)));
+		// Use Eclipse Collections allSatisfy/anySatisfy instead of stream
+		return rg2.getRoles().allSatisfy(role2 -> 
+			rg1.getRoles().anySatisfy(role1 -> 
+				isSubRoleOfEntailed(role1, role2)));
 	}
 
 	protected boolean isSubRoleOfEntailed(Role role1, Role role2) {
 		if (isSubsumedBy1(role1.getRoleType(), role2.getRoleType())) {
-			{
-				Concept con1 = role1.getConcept();
-				Concept con2 = role2.getConcept();
-				if (isSubsumedBy1(con1, con2))
-					return true;
-			}
-			HashSet<Role> chain1 = expandChain(role1.getRoleType(), role1.getConcept());
-			HashSet<Role> chain2 = expandChain(role2.getRoleType(), role2.getConcept());
-			boolean isSubsumedBy = chain2.stream().allMatch(
-					chain2_role -> chain1.stream().anyMatch(chain1_role -> isSubsumedBy(chain1_role, chain2_role)));
-			return isSubsumedBy;
+			// Quick check before expensive chain expansion
+			Concept con1 = role1.getConcept();
+			Concept con2 = role2.getConcept();
+			if (isSubsumedBy1(con1, con2))
+				return true;
+			
+			// Expand chains only when needed
+			MutableSet<Role> chain1 = expandChain(role1.getRoleType(), role1.getConcept());
+			MutableSet<Role> chain2 = expandChain(role2.getRoleType(), role2.getConcept());
+			
+			// Use Eclipse Collections allSatisfy/anySatisfy - more efficient than stream
+			return chain2.allSatisfy(chain2_role -> 
+				chain1.anySatisfy(chain1_role -> 
+					isSubsumedBy(chain1_role, chain2_role)));
 		}
 		return false;
 	}
-
 }
