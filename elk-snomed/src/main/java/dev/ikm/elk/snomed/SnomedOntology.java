@@ -20,12 +20,17 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.factory.primitive.LongObjectMaps;
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
+import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 
 import dev.ikm.elk.snomed.model.AnnotationType;
 import dev.ikm.elk.snomed.model.Concept;
@@ -38,21 +43,22 @@ import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public class SnomedOntology {
 
-	private HashMap<Long, Concept> conceptIdMap;
+	// Use primitive maps to avoid boxing/unboxing overhead
+	private MutableLongObjectMap<Concept> conceptIdMap;
 
-	private List<Concept> concepts;
+	private MutableList<Concept> concepts;
 
-	private HashMap<Long, RoleType> roleTypeIdMap;
+	private MutableLongObjectMap<RoleType> roleTypeIdMap;
 
-	private List<RoleType> roleTypes;
+	private MutableList<RoleType> roleTypes;
 
-	private HashMap<Long, ConcreteRoleType> concreteRoleTypeIdMap;
+	private MutableLongObjectMap<ConcreteRoleType> concreteRoleTypeIdMap;
 
-	private List<ConcreteRoleType> concreteRoleTypes;
+	private MutableList<ConcreteRoleType> concreteRoleTypes;
 
-	private HashMap<Long, AnnotationType> annotationTypeIdMap;
+	private MutableLongObjectMap<AnnotationType> annotationTypeIdMap;
 
-	private List<AnnotationType> annotationTypes;
+	private MutableList<AnnotationType> annotationTypes;
 
 	private SnomedDescriptions descriptions;
 
@@ -104,18 +110,25 @@ public class SnomedOntology {
 	public SnomedOntology(Collection<Concept> concepts, Collection<RoleType> roleTypes,
 			Collection<ConcreteRoleType> concreteRoleTypes, Collection<AnnotationType> annotationTypes) {
 		super();
-		this.conceptIdMap = new HashMap<>();
-		concepts.forEach(x -> conceptIdMap.put(x.getId(), x));
-		this.concepts = new ArrayList<>(conceptIdMap.values());
-		this.roleTypeIdMap = new HashMap<>();
+		// Use Eclipse Collections primitive maps with initial capacity
+		this.conceptIdMap = LongObjectMaps.mutable.withInitialCapacity(concepts.size());
+		this.concepts = Lists.mutable.withInitialCapacity(concepts.size());
+		concepts.forEach(x -> {
+			conceptIdMap.put(x.getId(), x);
+			this.concepts.add(x);
+		});
+		
+		this.roleTypeIdMap = LongObjectMaps.mutable.withInitialCapacity(roleTypes.size());
+		this.roleTypes = Lists.mutable.withAll(roleTypes);
 		roleTypes.forEach(x -> roleTypeIdMap.put(x.getId(), x));
-		this.roleTypes = new ArrayList<>(roleTypes);
-		this.concreteRoleTypeIdMap = new HashMap<>();
+		
+		this.concreteRoleTypeIdMap = LongObjectMaps.mutable.withInitialCapacity(concreteRoleTypes.size());
+		this.concreteRoleTypes = Lists.mutable.withAll(concreteRoleTypes);
 		concreteRoleTypes.forEach(x -> concreteRoleTypeIdMap.put(x.getId(), x));
-		this.concreteRoleTypes = new ArrayList<>(concreteRoleTypes);
-		this.annotationTypeIdMap = new HashMap<>();
+		
+		this.annotationTypeIdMap = LongObjectMaps.mutable.withInitialCapacity(annotationTypes.size());
+		this.annotationTypes = Lists.mutable.withAll(annotationTypes);
 		annotationTypes.forEach(x -> annotationTypeIdMap.put(x.getId(), x));
-		this.annotationTypes = new ArrayList<>(annotationTypes);
 	}
 
 	public void addConcept(Concept concept) {
@@ -154,21 +167,24 @@ public class SnomedOntology {
 		annotationTypes.forEach(x -> x.setName(getFsn(x.getId())));
 	}
 
-	public HashSet<Concept> getDependentOnConcepts(Concept concept) {
+	public MutableSet<Concept> getDependentOnConcepts(Concept concept) {
 		return getDependentOnConcepts(concept, true, true);
 	}
 
-	public HashSet<Long> getDependentOnConcepts(long concept) {
+	public MutableLongSet getDependentOnConcepts(long concept) {
 		return getDependentOnConcepts(concept, true, true);
 	}
 
-	public HashSet<Long> getDependentOnConcepts(long concept, boolean includeSuperConcepts, boolean includeGcis) {
-		return getDependentOnConcepts(getConcept(concept), includeSuperConcepts, includeGcis).stream()
-				.map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+	public MutableLongSet getDependentOnConcepts(long concept, boolean includeSuperConcepts, boolean includeGcis) {
+		// Use primitive long set and collectLong for better performance
+		MutableSet<Concept> conceptDeps = getDependentOnConcepts(getConcept(concept), includeSuperConcepts, includeGcis);
+		MutableLongSet result = LongSets.mutable.withInitialCapacity(conceptDeps.size());
+		conceptDeps.forEach(c -> result.add(c.getId()));
+		return result;
 	}
 
-	public HashSet<Concept> getDependentOnConcepts(Concept concept, boolean includeSuperConcepts, boolean includeGcis) {
-		HashSet<Concept> deps = new HashSet<>();
+	public MutableSet<Concept> getDependentOnConcepts(Concept concept, boolean includeSuperConcepts, boolean includeGcis) {
+		MutableSet<Concept> deps = Sets.mutable.empty();
 		for (Definition def : concept.getDefinitions()) {
 			deps.addAll(getDependentOnConcepts(def, includeSuperConcepts));
 		}
@@ -180,12 +196,10 @@ public class SnomedOntology {
 		return deps;
 	}
 
-	public HashSet<Concept> getDependentOnConcepts(Definition def, boolean includeSuperConcepts) {
-		HashSet<Concept> deps = new HashSet<>();
+	public MutableSet<Concept> getDependentOnConcepts(Definition def, boolean includeSuperConcepts) {
+		MutableSet<Concept> deps = Sets.mutable.empty();
 		if (includeSuperConcepts) {
-			for (Concept sup : def.getSuperConcepts()) {
-				deps.add(sup);
-			}
+			deps.addAll(def.getSuperConcepts());
 		}
 		for (Role role : def.getUngroupedRoles()) {
 			deps.add(role.getConcept());

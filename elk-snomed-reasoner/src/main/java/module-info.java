@@ -27,8 +27,10 @@ open module dev.ikm.elk.snomed.reasoner {
 	requires org.semanticweb.elk.util.common;
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.logging;
+    requires org.eclipse.collections.api;
+    requires org.eclipse.collections.impl;
 
-	exports dev.ikm.elk.snomed.owlapix.model;
+    exports dev.ikm.elk.snomed.owlapix.model;
 	exports dev.ikm.elk.snomed.owlapix.reasoner;
 	exports dev.ikm.elk.snomed.reasoner;
 

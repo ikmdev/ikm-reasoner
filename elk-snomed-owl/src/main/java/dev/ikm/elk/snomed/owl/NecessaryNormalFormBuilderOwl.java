@@ -31,6 +31,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.collections.api.factory.primitive.LongObjectMaps;
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.semanticweb.elk.reasoner.Reasoner;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -116,12 +120,12 @@ public class NecessaryNormalFormBuilderOwl {
 	}
 
 	private void initConcepts() {
-		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
-		HashMap<Long, Set<Long>> dependentOnConcepts = new HashMap<>();
+		MutableLongObjectMap<MutableLongSet> superConcepts = LongObjectMaps.mutable.empty();
+		MutableLongObjectMap<MutableLongSet> dependentOnConcepts = LongObjectMaps.mutable.empty();
 		for (OWLClass concept : ontology.getOntology().getClassesInSignature()) {
 			long id = SnomedOwlOntology.getId(concept);
-			superConcepts.put(id, ontology.getSuperClasses(id));
-			dependentOnConcepts.put(id, getDependentOnConcepts(concept));
+			superConcepts.put(id, LongSets.mutable.ofAll(ontology.getSuperClasses(id)));
+			dependentOnConcepts.put(id, LongSets.mutable.ofAll(getDependentOnConcepts(concept)));
 		}
 		isa = SnomedIsa.init(superConcepts);
 //		isa.getConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
@@ -129,9 +133,9 @@ public class NecessaryNormalFormBuilderOwl {
 		LOG.info("Concepts: " + concepts.size());
 	}
 
-	private void sortConcepts(HashMap<Long, Set<Long>> dependentOnConcepts) {
+	private void sortConcepts(MutableLongObjectMap<MutableLongSet> dependentOnConcepts) {
 		SnomedIsa deps = SnomedIsa.init(dependentOnConcepts);
-		deps.getOrderedConcepts().stream().map(id -> ontology.getOwlClass(id)).forEach(clazz -> concepts.add(clazz));
+		deps.getOrderedConcepts().forEach(id -> concepts.add(ontology.getOwlClass(id)));
 	}
 
 	private void initRoles() {

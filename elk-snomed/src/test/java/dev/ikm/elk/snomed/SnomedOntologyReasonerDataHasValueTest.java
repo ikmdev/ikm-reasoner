@@ -27,7 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,12 @@ public class SnomedOntologyReasonerDataHasValueTest {
 		ontology.load(axioms);
 		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
-		assertEquals(Set.of(1l), sor.getSuperConcepts(2));
+		
+		// Convert primitive MutableLongSet to Set<Long> for comparison
+		MutableLongSet superConcepts = sor.getSuperConcepts(2);
+		Set<Long> superConceptsSet = superConcepts.collect(Long::valueOf).toSet();
+		assertEquals(Set.of(1L), superConceptsSet);
+		
 		return snomedOntology.getConcept(1).getDefinitions().getFirst().getUngroupedConcreteRoles().iterator().next();
 	}
 

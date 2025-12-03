@@ -134,7 +134,8 @@ public abstract class SnomedOwlOntologyReasonerTestBase extends SnomedTestBase {
 		for (OWLClass clazz : ontology.getOntology().getClassesInSignature()) {
 			long id = SnomedOwlOntology.getId(clazz);
 			Set<Long> sups = ontology.getSuperClasses(id);
-			Set<Long> parents = isas.getParents(id);
+			Set<Long> parents = new HashSet<>();
+			isas.getParents(id).forEach(parents::add);
 			if (id == SnomedIds.root) {
 				assertTrue(parents.isEmpty());
 			} else {
@@ -167,7 +168,8 @@ public abstract class SnomedOwlOntologyReasonerTestBase extends SnomedTestBase {
 		misses.stream().limit(10).forEach((id) -> {
 			LOG.error("Miss: " + id);
 			Set<Long> sups = ontology.getSuperClasses(id);
-			Set<Long> parents = isas.getParents(id);
+			Set<Long> parents = new HashSet<>();
+			isas.getParents(id).forEach(parents::add);
 			HashSet<Long> par = new HashSet<>(parents);
 			par.removeAll(sups);
 			HashSet<Long> sup = new HashSet<>(sups);

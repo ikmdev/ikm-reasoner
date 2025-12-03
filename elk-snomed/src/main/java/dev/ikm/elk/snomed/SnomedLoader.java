@@ -53,22 +53,25 @@ public class SnomedLoader {
 
 	private void load(SnomedConcepts snomed_concepts, SnomedDescriptions descr, SnomedIsa isa, SnomedRoles roles,
 			SnomedConcreteRoles values) {
-		for (long id : isa.getDescendants(SnomedIds.concept_model_object_attribute)) {
+		isa.getDescendants(SnomedIds.concept_model_object_attribute).forEach(id -> {
 			RoleType role_type = new RoleType(id);
 			role_type.setName(descr.getFsn(id));
 			role_types.put(id, role_type);
-		}
-		for (long id : isa.getDescendants(SnomedIds.concept_model_data_attribute)) {
+		});
+
+		isa.getDescendants(SnomedIds.concept_model_data_attribute).forEach(id -> {
 			ConcreteRoleType role_type = new ConcreteRoleType(id);
 			role_type.setName(descr.getFsn(id));
 			concrete_role_types.put(id, role_type);
-		}
-		for (long id : isa.getOrderedConcepts()) {
+		});
+
+		isa.getOrderedConcepts().forEach(id -> {
 			Concept con = new Concept(id);
 			con.setName(descr.getFsn(id));
 			concepts.put(id, con);
-		}
-		for (long id : isa.getOrderedConcepts()) {
+		});
+
+		isa.getOrderedConcepts().forEach(id -> {
 			Concept con = concepts.get(id);
 			Definition def = new Definition();
 			con.addDefinition(def);
@@ -94,7 +97,7 @@ public class SnomedLoader {
 										? ConcreteRole.ValueType.Integer
 										: ConcreteRole.ValueType.Decimal))));
 			});
-		}
+		});
 	}
 
 }

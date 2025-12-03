@@ -25,6 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
+import org.eclipse.collections.impl.factory.primitive.LongObjectMaps;
+import org.eclipse.collections.impl.factory.primitive.LongSets;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -105,6 +110,16 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 		return superConcepts;
 	}
 
+	private MutableLongObjectMap<MutableLongSet> convertToEclipseCollections(HashMap<Long, Set<Long>> map) {
+		MutableLongObjectMap<MutableLongSet> result = LongObjectMaps.mutable.empty();
+		map.forEach((key, value) -> {
+			MutableLongSet longSet = LongSets.mutable.empty();
+			value.forEach(longSet::add);
+			result.put(key, longSet);
+		});
+		return result;
+	}
+
 	private void toEquivalentClasses(SnomedOwlOntology ontology) throws Exception {
 		OWLClassAxiom ax = getCldAxiom(ontology);
 		OWLClassExpression rhs = getCldRhs(ontology);
@@ -125,7 +140,7 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 		SnomedOwlOntology ontology = ontologyEquivalentClasses();
 		ontology.classify();
 		HashMap<Long, Set<Long>> supers = getSuperClassMap(ontology);
-		return SnomedIsa.init(supers);
+		return SnomedIsa.init(convertToEclipseCollections(supers));
 	}
 
 	private void toSubClassOf(SnomedOwlOntology ontology) throws Exception {
@@ -148,7 +163,7 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 		SnomedOwlOntology ontology = ontologySubClassOf();
 		ontology.classify();
 		HashMap<Long, Set<Long>> supers = getSuperClassMap(ontology);
-		return SnomedIsa.init(supers);
+		return SnomedIsa.init(convertToEclipseCollections(supers));
 	}
 
 	@Test

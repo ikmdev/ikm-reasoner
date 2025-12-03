@@ -21,22 +21,19 @@ package dev.ikm.elk.snomed;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.semanticweb.elk.owl.interfaces.ElkAxiom;
-import org.semanticweb.elk.owl.interfaces.ElkClass;
-import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
-import org.semanticweb.elk.owl.interfaces.ElkDatatype;
-import org.semanticweb.elk.owl.interfaces.ElkLiteral;
-import org.semanticweb.elk.owl.interfaces.ElkObject.Factory;
-import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
-import org.semanticweb.elk.owl.interfaces.ElkObjectSomeValuesFrom;
-import org.semanticweb.elk.owl.interfaces.ElkReflexiveObjectPropertyAxiom;
-import org.semanticweb.elk.owl.interfaces.ElkTransitiveObjectPropertyAxiom;
+import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.primitive.LongObjectMaps;
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
+import org.semanticweb.elk.owl.interfaces.*;
+import dev.ikm.elk.snomed.reasoner.ElkReasoner;
 import org.semanticweb.elk.reasoner.taxonomy.model.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +46,6 @@ import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
 import dev.ikm.elk.snomed.model.RoleType;
 import dev.ikm.elk.snomed.owlapix.model.OwlxOntology;
-import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
-import dev.ikm.elk.snomed.reasoner.ElkReasoner;
 
 public class SnomedOntologyReasoner {
 
@@ -62,7 +57,7 @@ public class SnomedOntologyReasoner {
 
 	private ElkReasoner reasoner;
 
-	private HashMap<Long, List<ElkAxiom>> conceptIdAxiomMap;
+	private MutableLongObjectMap<MutableList<ElkAxiom>> conceptIdAxiomMap;
 
 	protected SnomedOntologyReasoner() {
 		super();
@@ -79,14 +74,14 @@ public class SnomedOntologyReasoner {
 		return snomedOntology;
 	}
 
-	public List<ElkAxiom> getConceptAxioms(long id) {
+	public MutableList<ElkAxiom> getConceptAxioms(long id) {
 		return conceptIdAxiomMap.get(id);
 	}
 
 	protected void init(SnomedOntology snomedOntology) {
 		this.snomedOntology = snomedOntology;
 		ontology = new OwlxOntology();
-		conceptIdAxiomMap = new HashMap<>();
+		conceptIdAxiomMap = LongObjectMaps.mutable.empty();
 		process();
 	}
 
@@ -138,40 +133,33 @@ public class SnomedOntologyReasoner {
 	protected void process(RoleType rt) {
 		String iri = getIri(rt);
 		ontology.getElkObjectProperty(iri);
-		HashSet<String> rt_axioms = new HashSet<>();
 		for (RoleType sup : rt.getSuperRoleTypes()) {
 			ElkAxiom axiom = ontology.getElkSubObjectPropertyOfAxiom(iri, getIri(sup));
 			ontology.addAxiom(axiom);
-			rt_axioms.add(axiom.toString());
 		}
 		if (rt.isTransitive()) {
 			ElkTransitiveObjectPropertyAxiom axiom = ontology.getElkTransitiveObjectPropertyAxiom(iri);
 			ontology.addAxiom(axiom);
 			LOG.info("Transitive: " + axiom);
-			rt_axioms.add(axiom.toString());
 		}
 		if (rt.getChained() != null) {
 			ElkAxiom axiom = ontology.getElkSubObjectPropertyChainOfAxiom(iri, getIri(rt.getChained()));
 			ontology.addAxiom(axiom);
 			LOG.info("Chained: " + axiom);
-			rt_axioms.add(axiom.toString());
 		}
 		if (rt.isReflexive()) {
 			ElkReflexiveObjectPropertyAxiom axiom = ontology.getElkReflexiveObjectPropertyAxiom(iri);
 			ontology.addAxiom(axiom);
 			LOG.info("Reflexive: " + axiom);
-			rt_axioms.add(axiom.toString());
 		}
 	}
 
 	protected void process(ConcreteRoleType crt) {
 		String iri = getIri(crt);
 		ontology.getElkDataProperty(iri);
-		HashSet<String> dt_axioms = new HashSet<>();
 		for (ConcreteRoleType sup : crt.getSuperConcreteRoleTypes()) {
 			ElkAxiom axiom = ontology.getElkSubDataPropertyOfAxiom(iri, getIri(sup));
 			ontology.addAxiom(axiom);
-			dt_axioms.add(axiom.toString());
 		}
 	}
 
@@ -192,7 +180,7 @@ public class SnomedOntologyReasoner {
 	}
 
 	private void removeAxioms(Concept con) {
-		List<ElkAxiom> axioms = conceptIdAxiomMap.get(con.getId());
+		MutableList<ElkAxiom> axioms = conceptIdAxiomMap.get(con.getId());
 		if (axioms != null)
 			axioms.forEach(ax -> ontology.removeAxiom(ax));
 		conceptIdAxiomMap.remove(con.getId());
@@ -208,7 +196,7 @@ public class SnomedOntologyReasoner {
 
 	protected void process(Concept con) {
 		removeAxioms(con);
-		conceptIdAxiomMap.put(con.getId(), new ArrayList<>());
+		conceptIdAxiomMap.put(con.getId(), Lists.mutable.empty());
 		for (Definition def : con.getDefinitions()) {
 			process(con, def, false);
 		}
@@ -218,21 +206,29 @@ public class SnomedOntologyReasoner {
 	}
 
 	private void process(Concept con, Definition def, boolean isGci) {
-		List<ElkClass> sups = def.getSuperConcepts().stream().map(sup -> ontology.getElkClass(getIri(sup))).toList();
-		List<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles().stream().map(this::process).toList();
-		List<ElkClassExpression> props = def.getUngroupedConcreteRoles().stream().map(this::process).toList();
-		List<ElkObjectSomeValuesFrom> groups = def.getRoleGroups().stream().map(this::process).toList();
-		List<ElkClassExpression> exprs = new ArrayList<>();
+		// Use Eclipse Collections collect instead of stream
+		MutableList<ElkClass> sups = def.getSuperConcepts()
+				.collect(sup -> ontology.getElkClass(getIri(sup))).toList();
+		MutableList<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles()
+				.collect(this::process).toList();
+		MutableList<ElkClassExpression> props = def.getUngroupedConcreteRoles()
+				.collect(this::process).toList();
+		MutableList<ElkObjectSomeValuesFrom> groups = def.getRoleGroups()
+				.collect(this::process).toList();
+		
+		MutableList<ElkClassExpression> exprs = Lists.mutable.empty();
 		exprs.addAll(sups);
 		exprs.addAll(roles);
 		exprs.addAll(props);
 		exprs.addAll(groups);
+		
 		ElkClassExpression expr;
 		if (exprs.size() == 1) {
 			expr = exprs.getFirst();
 		} else {
 			expr = ontology.getObjectFactory().getObjectIntersectionOf(exprs);
 		}
+		
 		ElkAxiom axiom = null;
 		switch (def.getDefinitionType()) {
 		case EquivalentConcept -> axiom = ontology.getEquivalentClassesAxiom(getIri(con), expr);
@@ -253,11 +249,14 @@ public class SnomedOntologyReasoner {
 	}
 
 	private ElkObjectSomeValuesFrom process(RoleGroup rg) {
-		List<ElkObjectSomeValuesFrom> roles = rg.getRoles().stream().map(this::process).toList();
-		List<ElkClassExpression> props = rg.getConcreteRoles().stream().map(this::process).toList();
-		ArrayList<ElkClassExpression> exprs = new ArrayList<>();
+		// Use Eclipse Collections collect instead of stream
+		MutableList<ElkObjectSomeValuesFrom> roles = rg.getRoles().collect(this::process).toList();
+		MutableList<ElkClassExpression> props = rg.getConcreteRoles().collect(this::process).toList();
+		
+		MutableList<ElkClassExpression> exprs = Lists.mutable.empty();
 		exprs.addAll(roles);
 		exprs.addAll(props);
+		
 		ElkClassExpression expr;
 		if (exprs.size() == 1) {
 			expr = exprs.getFirst();
@@ -268,7 +267,7 @@ public class SnomedOntologyReasoner {
 	}
 
 	protected ElkClassExpression process(ConcreteRole concreteRole) {
-		Factory f = ontology.getObjectFactory();
+		ElkObject.Factory f = ontology.getObjectFactory();
 		ElkDatatype datatype = switch (concreteRole.getValueType()) {
 		case Boolean -> f.getXsdBoolean();
 		case Decimal -> f.getXsdDecimal();
@@ -320,20 +319,28 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<RoleType> getSuperRoleTypes(RoleType rt, boolean direct) {
-		return getSuperObjectProperties(rt, direct).stream().map(this::getRoleType)
-				.collect(Collectors.toCollection(HashSet::new));
+		Set<ElkObjectProperty> superProps = getSuperObjectProperties(rt, direct);
+		Set<RoleType> result = new HashSet<>(superProps.size());
+		for (ElkObjectProperty prop : superProps) {
+			result.add(getRoleType(prop));
+		}
+		return result;
 	}
 
-	public Set<Long> getSuperRoleTypes(long id, boolean direct) {
+	public MutableLongSet getSuperRoleTypes(long id, boolean direct) {
 		RoleType rt = snomedOntology.getRoleType(id);
 		if (rt == null)
 			return null;
-		return getSuperRoleTypes(rt, direct).stream().map(RoleType::getId)
-				.collect(Collectors.toCollection(HashSet::new));
+		Set<RoleType> superRoleTypes = getSuperRoleTypes(rt, direct);
+		MutableLongSet result = LongSets.mutable.withInitialCapacity(superRoleTypes.size());
+		for (RoleType roleType : superRoleTypes) {
+			result.add(roleType.getId());
+		}
+		return result;
 	}
 
-	public HashMap<Long, Set<Long>> getSuperRoleTypes(boolean direct) {
-		HashMap<Long, Set<Long>> superRoleTypes = new HashMap<>();
+	public MutableLongObjectMap<MutableLongSet> getSuperRoleTypes(boolean direct) {
+		MutableLongObjectMap<MutableLongSet> superRoleTypes = LongObjectMaps.mutable.empty();
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
 			long id = rt.getId();
 			superRoleTypes.put(id, getSuperRoleTypes(id, direct));
@@ -362,24 +369,32 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getSuperConcepts(Concept con, boolean direct) {
-		return getSuperClasses(con, direct).stream().map(this::getConcept)
-				.collect(Collectors.toCollection(HashSet::new));
+		Set<ElkClass> superClasses = getSuperClasses(con, direct);
+		Set<Concept> result = new HashSet<>(superClasses.size());
+		for (ElkClass clazz : superClasses) {
+			result.add(getConcept(clazz));
+		}
+		return result;
 	}
 
-	public Set<Long> getSuperConcepts(long id) {
+	public MutableLongSet getSuperConcepts(long id) {
 		return getSuperConcepts(id, true);
 	}
 
-	public Set<Long> getSuperConcepts(long id, boolean direct) {
+	public MutableLongSet getSuperConcepts(long id, boolean direct) {
 		Concept con = snomedOntology.getConcept(id);
 		if (con == null)
 			return null;
-		return getSuperConcepts(con, direct).stream().map(Concept::getId)
-				.collect(Collectors.toCollection(HashSet::new));
+		Set<Concept> superConcepts = getSuperConcepts(con, direct);
+		MutableLongSet result = LongSets.mutable.withInitialCapacity(superConcepts.size());
+		for (Concept concept : superConcepts) {
+			result.add(concept.getId());
+		}
+		return result;
 	}
 
-	public HashMap<Long, Set<Long>> getSuperConcepts() {
-		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
+	public MutableLongObjectMap<MutableLongSet> getSuperConcepts() {
+		MutableLongObjectMap<MutableLongSet> superConcepts = LongObjectMaps.mutable.empty();
 		for (Concept concept : snomedOntology.getConcepts()) {
 			long id = concept.getId();
 			superConcepts.put(id, getSuperConcepts(id));
@@ -408,18 +423,28 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getSubConcepts(Concept con, boolean direct) {
-		return getSubClasses(con, direct).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+		Set<ElkClass> subClasses = getSubClasses(con, direct);
+		Set<Concept> result = new HashSet<>(subClasses.size());
+		for (ElkClass clazz : subClasses) {
+			result.add(getConcept(clazz));
+		}
+		return result;
 	}
 
-	public Set<Long> getSubConcepts(long id) {
+	public MutableLongSet getSubConcepts(long id) {
 		return getSubConcepts(id, true);
 	}
 
-	public Set<Long> getSubConcepts(long id, boolean direct) {
+	public MutableLongSet getSubConcepts(long id, boolean direct) {
 		Concept con = snomedOntology.getConcept(id);
 		if (con == null)
 			return null;
-		return getSubConcepts(con, direct).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+		Set<Concept> subConcepts = getSubConcepts(con, direct);
+		MutableLongSet result = LongSets.mutable.withInitialCapacity(subConcepts.size());
+		for (Concept concept : subConcepts) {
+			result.add(concept.getId());
+		}
+		return result;
 	}
 
 	public Set<ElkClass> getEquivalentClasses(Concept con) {
@@ -436,14 +461,24 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getEquivalentConcepts(Concept con) {
-		return getEquivalentClasses(con).stream().map(this::getConcept).collect(Collectors.toCollection(HashSet::new));
+		Set<ElkClass> equivalentClasses = getEquivalentClasses(con);
+		Set<Concept> result = new HashSet<>(equivalentClasses.size());
+		for (ElkClass clazz : equivalentClasses) {
+			result.add(getConcept(clazz));
+		}
+		return result;
 	}
 
-	public Set<Long> getEquivalentConcepts(long id) {
+	public MutableLongSet getEquivalentConcepts(long id) {
 		Concept con = snomedOntology.getConcept(id);
 		if (con == null)
 			return null;
-		return getEquivalentConcepts(con).stream().map(Concept::getId).collect(Collectors.toCollection(HashSet::new));
+		Set<Concept> equivalentConcepts = getEquivalentConcepts(con);
+		MutableLongSet result = LongSets.mutable.withInitialCapacity(equivalentConcepts.size());
+		for (Concept concept : equivalentConcepts) {
+			result.add(concept.getId());
+		}
+		return result;
 	}
 
 }

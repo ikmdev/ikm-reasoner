@@ -20,76 +20,76 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import java.util.ArrayList;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.MutableList;
+
 import java.util.List;
 import java.util.Objects;
 
 public class RoleType extends SnomedEntity {
 
-	private List<RoleType> superRoleTypes = new ArrayList<>();
+    // Use Eclipse Collections adaptive list
+    private MutableList<RoleType> superRoleTypes = Lists.mutable.empty();
 
-	private boolean transitive = false;
+    private boolean transitive = false;
+    private RoleType chained;
+    private boolean reflexive = false;
 
-	private RoleType chained;
+    public RoleType(long id) {
+        this.id = id;
+    }
 
-	private boolean reflexive = false;
+    public List<RoleType> getSuperRoleTypes() {
+        return superRoleTypes;  // MutableList implements List
+    }
 
-	public RoleType(long id) {
-		this.id = id;
-	}
+    public void addSuperRoleType(RoleType superRoleType) {
+        this.superRoleTypes.add(superRoleType);
+    }
 
-	public List<RoleType> getSuperRoleTypes() {
-		return superRoleTypes;
-	}
+    public boolean isTransitive() {
+        return transitive;
+    }
 
-	public void addSuperRoleType(RoleType superRoleType) {
-		this.superRoleTypes.add(superRoleType);
-	}
+    public void setTransitive(boolean transitive) {
+        this.transitive = transitive;
+    }
 
-	public boolean isTransitive() {
-		return transitive;
-	}
+    public RoleType getChained() {
+        return chained;
+    }
 
-	public void setTransitive(boolean transitive) {
-		this.transitive = transitive;
-	}
+    public void setChained(RoleType chained) {
+        this.chained = chained;
+    }
 
-	public RoleType getChained() {
-		return chained;
-	}
+    public boolean isReflexive() {
+        return reflexive;
+    }
 
-	public void setChained(RoleType chained) {
-		this.chained = chained;
-	}
+    public void setReflexive(boolean reflexive) {
+        this.reflexive = reflexive;
+    }
 
-	public boolean isReflexive() {
-		return reflexive;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
-	public void setReflexive(boolean reflexive) {
-		this.reflexive = reflexive;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        RoleType other = (RoleType) obj;
+        return id == other.id;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RoleType other = (RoleType) obj;
-		return id == other.id;
-	}
-
-	@Override
-	public String toString() {
-		return "RoleType[" + id + (name != null ? " " + name : "") + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "RoleType[" + id + (name != null ? " " + name : "") + "]";
+    }
 }

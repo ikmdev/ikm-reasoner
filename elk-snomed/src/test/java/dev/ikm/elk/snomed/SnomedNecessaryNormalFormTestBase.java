@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +42,11 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 	public int expected_concept_cnt = -1;
 
 	public static void checkPriors(SnomedOntologyReasoner ontology, NecessaryNormalFormBuilder nnf) {
-		HashSet<Long> priors = new HashSet<>();
+		MutableLongSet priors = LongSets.mutable.empty();
 		for (Concept con : nnf.getConcepts()) {
-			for (Long sup : ontology.getSuperConcepts(con.getId())) {
+			ontology.getSuperConcepts(con.getId()).forEach(sup -> {
 				assertTrue(priors.contains(sup));
-			}
+			});
 			priors.add(con.getId());
 		}
 	}

@@ -20,9 +20,11 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 
 import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.Definition;
@@ -36,7 +38,8 @@ public class DefiningSubsumption extends NNFSubsumption {
 	private SnomedIsa definingIsa;
 
 	public DefiningSubsumption(SnomedOntology ontology, SnomedIsa definingIsa, SnomedIsa isa,
-			HashMap<RoleType, Set<RoleType>> superRoles, HashMap<Concept, Definition> necessaryNormalForm) {
+			Map<RoleType, ? extends MutableSet<RoleType>> superRoles, 
+			MutableMap<Concept, Definition> necessaryNormalForm) {
 		super(isa, superRoles, necessaryNormalForm);
 		this.ontology = ontology;
 		this.definingIsa = definingIsa;
@@ -48,29 +51,45 @@ public class DefiningSubsumption extends NNFSubsumption {
 	public boolean isSubsumedByStructural(Concept con1, Concept con2) {
 		if (con1.equals(con2))
 			throw new RuntimeException(con1 + " " + con2);
+		
 		Definition def1 = necessaryNormalForm.get(con1);
 		Definition def2 = necessaryNormalForm.get(con2);
+		
 //		LOG.info("s1:" + def1.getSuperConcepts());
 //		LOG.info("s2:" + def2.getSuperConcepts());
-		HashSet<Long> ancestors2 = definingIsa.getAncestors(con2.getId());
+		
+		// Use primitive long set and Eclipse Collections methods
+		MutableLongSet ancestors2 = definingIsa.getAncestors(con2.getId());
 		ancestors2.add(con2.getId());
-		ancestors2.removeIf(anc2 -> anc2 != SnomedIds.root && ontology.getConcept(anc2).getDefinitions().getFirst()
-				.getDefinitionType() == DefinitionType.EquivalentConcept);
-		if (!ancestors2.stream().allMatch(anc2 -> definingIsa.hasAncestor(con1.getId(), anc2)))
+		ancestors2.removeIf(anc2 -> anc2 != SnomedIds.root 
+				&& ontology.getConcept(anc2).getDefinitions().getFirst()
+						.getDefinitionType() == DefinitionType.EquivalentConcept);
+		
+		// Early exit if ancestors check fails
+		if (!ancestors2.allSatisfy(anc2 -> definingIsa.hasAncestor(con1.getId(), anc2)))
 			return false;
+		
 //		LOG.info("r1:" + def1.getUngroupedRoles());
 //		LOG.info("r2:" + def2.getUngroupedRoles());
-		if (!def2.getUngroupedRoles().stream().allMatch(
-				role2 -> def1.getUngroupedRoles().stream().anyMatch(role1 -> isSubRoleOfEntailed(role1, role2))))
+		
+		// Replace streams with Eclipse Collections methods for ungrouped roles
+		if (!def2.getUngroupedRoles().allSatisfy(
+				role2 -> def1.getUngroupedRoles().anySatisfy(role1 -> isSubRoleOfEntailed(role1, role2))))
 			return false;
-		if (!def2.getUngroupedConcreteRoles().stream().allMatch(
-				role2 -> def1.getUngroupedConcreteRoles().stream().anyMatch(role1 -> isSubsumedBy(role1, role2))))
+		
+		// Replace streams with Eclipse Collections methods for concrete roles
+		if (!def2.getUngroupedConcreteRoles().allSatisfy(
+				role2 -> def1.getUngroupedConcreteRoles().anySatisfy(role1 -> isSubsumedBy(role1, role2))))
 			return false;
+		
 //		LOG.info("rg1:" + def1.getRoleGroups());
 //		LOG.info("rg2:" + def2.getRoleGroups());
-		if (!def2.getRoleGroups().stream()
-				.allMatch(rg2 -> def1.getRoleGroups().stream().anyMatch(rg1 -> isSubsumedBy(rg1, rg2))))
+		
+		// Replace streams with Eclipse Collections methods for role groups
+		if (!def2.getRoleGroups().allSatisfy(
+				rg2 -> def1.getRoleGroups().anySatisfy(rg1 -> isSubsumedBy(rg1, rg2))))
 			return false;
+		
 		return true;
 	}
 

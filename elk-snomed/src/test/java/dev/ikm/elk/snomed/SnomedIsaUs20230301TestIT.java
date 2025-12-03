@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
-
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -84,36 +84,39 @@ public class SnomedIsaUs20230301TestIT extends SnomedTestBase implements SnomedV
 
 	@Test
 	public void hasAncestor() {
-		for (long con : isas.getOrderedConcepts()) {
-			for (long ancestor : isas.getAncestors(con)) {
+		// Use Eclipse Collections forEach for primitive long iteration
+		isas.getOrderedConcepts().forEach(con -> 
+			isas.getAncestors(con).forEach(ancestor -> {
 				assertTrue(isas.hasAncestor(con, ancestor));
 				assertFalse(isas.hasAncestor(ancestor, con));
-			}
-		}
+			})
+		);
 	}
 
 	@Test
 	public void hasParent() {
-		for (long con : isas.getOrderedConcepts()) {
-			for (long parent : isas.getParents(con)) {
+		// Use Eclipse Collections forEach for primitive long iteration
+		isas.getOrderedConcepts().forEach(con ->
+			isas.getParents(con).forEach(parent -> {
 				assertTrue(isas.hasParent(con, parent));
 				assertFalse(isas.hasParent(parent, con));
 				assertTrue(isas.hasAncestor(con, parent));
 				assertFalse(isas.hasAncestor(parent, con));
 				assertTrue(isas.getAncestors(con).contains(parent));
-			}
-		}
+			})
+		);
 	}
 
 	@Test
 	public void hasDescendant() {
 		int cnt = 0;
-		for (long con : isas.getOrderedConcepts()) {
+		// Use Eclipse Collections forEachPrimitive for better performance
+		for (long con : isas.getOrderedConcepts().toArray()) {
 			if (isas.getDescendants(con).size() > 1000) {
 				cnt++;
 				continue;
 			}
-			for (long desc : isas.getDescendants(con)) {
+			for (long desc : isas.getDescendants(con).toArray()) {
 				assertTrue(isas.hasDescendant(con, desc));
 				assertFalse(isas.hasDescendant(desc, con));
 			}
@@ -123,26 +126,28 @@ public class SnomedIsaUs20230301TestIT extends SnomedTestBase implements SnomedV
 
 	@Test
 	public void hasChild() {
-		for (long con : isas.getOrderedConcepts()) {
-			for (long child : isas.getChildren(con)) {
+		// Use Eclipse Collections forEach for primitive long iteration
+		isas.getOrderedConcepts().forEach(con ->
+			isas.getChildren(con).forEach(child -> {
 				assertTrue(isas.hasChild(con, child));
 				assertFalse(isas.hasChild(child, con));
 				assertTrue(isas.hasDescendant(con, child));
 				assertFalse(isas.hasDescendant(child, con));
 				assertTrue(isas.getDescendants(con).contains(child));
-			}
-		}
+			})
+		);
 	}
 
 	@Test
 	public void checkPriors() {
-		HashSet<Long> priors = new HashSet<>();
-		for (long con : isas.getOrderedConcepts()) {
-			for (long sup : isas.getParents(con)) {
+		// Use Eclipse Collections primitive long set to avoid boxing
+		MutableLongSet priors = LongSets.mutable.empty();
+		isas.getOrderedConcepts().forEach(con -> {
+			isas.getParents(con).forEach(sup -> {
 				assertTrue(priors.contains(sup));
-			}
+			});
 			priors.add(con);
-		}
+		});
 	}
 
 }

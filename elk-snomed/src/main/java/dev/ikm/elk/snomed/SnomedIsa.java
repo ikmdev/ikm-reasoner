@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2025 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,30 +23,36 @@ package dev.ikm.elk.snomed;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Stream;
+
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.primitive.LongLists;
+import org.eclipse.collections.api.factory.primitive.LongObjectMaps;
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.list.primitive.MutableLongList;
+import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
+import org.eclipse.collections.api.set.primitive.ImmutableLongSet;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 
 public class SnomedIsa {
 
-	private HashMap<Long, Set<Long>> parentsMap = new HashMap<>();
+	// Use primitive collections - no boxing!
+	private MutableLongObjectMap<MutableLongSet> parentsMap = LongObjectMaps.mutable.empty();
+	private MutableLongObjectMap<MutableLongSet> childrenMap = LongObjectMaps.mutable.empty();
+	private MutableLongList orderedConcepts = LongLists.mutable.empty();
+	
+	// Cache for empty set to avoid repeated allocations
+	private static final ImmutableLongSet EMPTY_SET = LongSets.immutable.empty();
 
-	private HashMap<Long, Set<Long>> childrenMap = new HashMap<>();
-
-	private ArrayList<Long> orderedConcepts = new ArrayList<>();
-
-	public HashMap<Long, Set<Long>> getParentsMap() {
+	public MutableLongObjectMap<MutableLongSet> getParentsMap() {
 		return parentsMap;
 	}
 
-	public HashMap<Long, Set<Long>> getChildrenMap() {
+	public MutableLongObjectMap<MutableLongSet> getChildrenMap() {
 		return childrenMap;
 	}
 
-	public ArrayList<Long> getOrderedConcepts() {
+	public MutableLongList getOrderedConcepts() {
 		return orderedConcepts;
 	}
 
@@ -64,11 +70,11 @@ public class SnomedIsa {
 		return ret;
 	}
 
-	public static SnomedIsa init(HashMap<Long, Set<Long>> isas) {
+	public static SnomedIsa init(MutableLongObjectMap<MutableLongSet> isas) {
 		return init(isas, SnomedIds.root);
 	}
 
-	public static SnomedIsa init(HashMap<Long, Set<Long>> isas, long root) {
+	public static SnomedIsa init(MutableLongObjectMap<MutableLongSet> isas, long root) {
 		SnomedIsa ret = new SnomedIsa();
 		ret.parentsMap = isas;
 		ret.init(root);
@@ -81,25 +87,27 @@ public class SnomedIsa {
 	}
 
 	private void initChildren() {
-		for (Entry<Long, Set<Long>> es : parentsMap.entrySet()) {
-			long con = es.getKey();
-			for (long parent : es.getValue()) {
-				childrenMap.computeIfAbsent(parent, _ -> new HashSet<>());
-				childrenMap.get(parent).add(con);
-			}
-		}
+		// Primitive forEach - no boxing!
+		parentsMap.forEachKeyValue((con, parents) -> {
+			parents.forEach(parent -> {
+				MutableLongSet children = childrenMap.getIfAbsentPut(parent, LongSets.mutable::empty);
+				children.add(con);
+			});
+		});
 	}
 
 	private void initOrderedConcepts(long root) {
-		HashSet<Long> visited = new HashSet<>();
+		MutableLongSet visited = LongSets.mutable.empty();
 		orderedConcepts.add(root);
 		visited.add(root);
 		initOrderedConcepts(root, visited);
 	}
 
-	private void initOrderedConcepts(long con, HashSet<Long> visited) {
-		for (long sub : getChildren(con)) {
-			boolean sups_visited = getParents(sub).stream().allMatch(x -> visited.contains(x));
+	private void initOrderedConcepts(long con, MutableLongSet visited) {
+		// Primitive iteration - no boxing!
+		getChildren(con).forEach(sub -> {
+			// Check if all parents have been visited
+			boolean sups_visited = getParents(sub).allSatisfy(visited::contains);
 			if (sups_visited) {
 				if (!visited.contains(sub)) {
 					orderedConcepts.add(sub);
@@ -107,14 +115,10 @@ public class SnomedIsa {
 				}
 				initOrderedConcepts(sub, visited);
 			}
-		}
+		});
 	}
 
 	public void load(Path file) throws IOException {
-		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
-		// typeId characteristicTypeId modifierId
-		//
-		// 116680003 |Is a (attribute)|
 		Stream<String> st = Files.lines(file);
 		load(st, 1);
 	}
@@ -124,100 +128,101 @@ public class SnomedIsa {
 		load(st, 0);
 	}
 
-	private void load(Stream<String> st, int skip) throws IOException {
-		// id effectiveTime active moduleId sourceId destinationId relationshipGroup
-		// typeId characteristicTypeId modifierId
-		//
-		// 116680003 |Is a (attribute)|
-		st.skip(skip).map(line -> line.split("\\t")) //
-				.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
-				.filter(fields -> Long.parseLong(fields[7]) == SnomedIds.isa) // typeId
-				.forEach(fields -> {
-					long con = Long.parseLong(fields[4]); // sourceId
-					long par = Long.parseLong(fields[5]); // destinationId
-					parentsMap.computeIfAbsent(con, _ -> new HashSet<>());
-					parentsMap.get(con).add(par);
-				});
+	private void load(Stream<String> st, int skip) {
+		st.skip(skip)
+			.map(line -> line.split("\\t"))
+			.filter(fields -> Integer.parseInt(fields[2]) == 1) // active
+			.filter(fields -> Long.parseLong(fields[7]) == SnomedIds.isa) // typeId
+			.forEach(fields -> {
+				long con = Long.parseLong(fields[4]); // sourceId
+				long par = Long.parseLong(fields[5]); // destinationId
+				MutableLongSet parents = parentsMap.getIfAbsentPut(con, LongSets.mutable::empty);
+				parents.add(par);
+			});
 	}
 
-	public Set<Long> getParents(long con) {
-		return parentsMap.getOrDefault(con, Set.of());
+	// Return immutable view for safety - prevents accidental modification
+	public ImmutableLongSet getParents(long con) {
+		MutableLongSet parents = parentsMap.get(con);
+		return parents != null ? parents.toImmutable() : EMPTY_SET;
 	}
 
 	public boolean hasParent(long con, long parent) {
-		return getParents(con).contains(parent);
+		MutableLongSet parents = parentsMap.get(con);
+		return parents != null && parents.contains(parent);
 	}
 
-	public HashSet<Long> getAncestors(long con) {
-		HashSet<Long> visited = new HashSet<>();
-		this.getAncestors(con, visited);
+	public MutableLongSet getAncestors(long con) {
+		MutableLongSet visited = LongSets.mutable.empty();
+		getAncestors(con, visited);
 		return visited;
 	}
 
-	private void getAncestors(long con, HashSet<Long> visited) {
-		for (long parent : this.getParents(con)) {
-			if (visited.contains(parent))
-				continue;
-			visited.add(parent);
-			getAncestors(parent, visited);
-		}
+	private void getAncestors(long con, MutableLongSet visited) {
+		getParents(con).forEach(parent -> {
+			if (!visited.contains(parent)) {
+				visited.add(parent);
+				getAncestors(parent, visited);
+			}
+		});
 	}
 
 	public boolean hasAncestor(long con, long ancestor) {
-		return hasAncestor(con, ancestor, new HashSet<>());
+		return hasAncestor(con, ancestor, LongSets.mutable.empty());
 	}
 
-	private boolean hasAncestor(long con, long ancestor, HashSet<Long> visited) {
+	private boolean hasAncestor(long con, long ancestor, MutableLongSet visited) {
 		if (hasParent(con, ancestor))
 			return true;
-		for (long parent : getParents(con)) {
+		
+		// Early exit optimization
+		return getParents(con).anySatisfy(parent -> {
 			if (visited.contains(parent))
-				continue;
+				return false;
 			visited.add(parent);
-			if (hasAncestor(parent, ancestor, visited))
-				return true;
-		}
-		return false;
+			return hasAncestor(parent, ancestor, visited);
+		});
 	}
 
-	public Set<Long> getChildren(long con) {
-		return childrenMap.getOrDefault(con, Set.of());
+	public ImmutableLongSet getChildren(long con) {
+		MutableLongSet children = childrenMap.get(con);
+		return children != null ? children.toImmutable() : EMPTY_SET;
 	}
 
 	public boolean hasChild(long con, long child) {
-		return getChildren(con).contains(child);
+		MutableLongSet children = childrenMap.get(con);
+		return children != null && children.contains(child);
 	}
 
-	public HashSet<Long> getDescendants(long con) {
-		HashSet<Long> visited = new HashSet<>();
-		this.getDescendants(con, visited);
+	public MutableLongSet getDescendants(long con) {
+		MutableLongSet visited = LongSets.mutable.empty();
+		getDescendants(con, visited);
 		return visited;
 	}
 
-	private void getDescendants(long con, HashSet<Long> visited) {
-		for (long child : this.getChildren(con)) {
-			if (visited.contains(child))
-				continue;
-			visited.add(child);
-			getDescendants(child, visited);
-		}
+	private void getDescendants(long con, MutableLongSet visited) {
+		getChildren(con).forEach(child -> {
+			if (!visited.contains(child)) {
+				visited.add(child);
+				getDescendants(child, visited);
+			}
+		});
 	}
 
 	public boolean hasDescendant(long con, long descendant) {
-		return hasDescendant(con, descendant, new HashSet<>());
+		return hasDescendant(con, descendant, LongSets.mutable.empty());
 	}
 
-	private boolean hasDescendant(long con, long descendant, HashSet<Long> visited) {
+	private boolean hasDescendant(long con, long descendant, MutableLongSet visited) {
 		if (hasChild(con, descendant))
 			return true;
-		for (long child : getChildren(con)) {
+		
+		// Early exit optimization
+		return getChildren(con).anySatisfy(child -> {
 			if (visited.contains(child))
-				continue;
+				return false;
 			visited.add(child);
-			if (hasDescendant(child, descendant, visited))
-				return true;
-		}
-		return false;
+			return hasDescendant(child, descendant, visited);
+		});
 	}
-
 }

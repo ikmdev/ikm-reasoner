@@ -27,11 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.set.primitive.ImmutableLongSet;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,10 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 		snomedOntology.setNames();
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
 		for (RoleType rt : snomedOntology.getRoleTypes()) {
-			if (!rt.getSuperRoleTypes().stream().map(RoleType::getId).toList()
-					.equals(List.of(SnomedIds.concept_model_object_attribute))) {
+			// Use Eclipse Collections collect instead of stream
+			if (!Lists.mutable.withAll(rt.getSuperRoleTypes())
+					.collect(RoleType::getId)
+					.equals(Lists.mutable.with(SnomedIds.concept_model_object_attribute))) {
 				LOG.info("Role type: " + rt);
 				rt.getSuperRoleTypes().forEach(sup -> LOG.info("\tSup: " + sup));
 			}
@@ -71,10 +75,10 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 			rt.getSuperAnnotationTypes().forEach(sup -> LOG.info("\tSup: " + sup));
 		}
 		{
-			ArrayList<Long> misses = new ArrayList<>();
+			MutableList<Long> misses = Lists.mutable.empty();
 			int miss_cnt = 0;
 			SnomedIsa isas = SnomedIsa.init(rels_file);
-			for (Long id : isas.getOrderedConcepts()) {
+			for (Long id : isas.getOrderedConcepts().toArray()) {
 				Concept con = snomedOntology.getConcept(id);
 				if (con == null) {
 					if (isas.hasAncestor(id, SnomedIds.linkage_concept))
@@ -82,8 +86,8 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 					LOG.info("Skipping: " + id);
 					continue;
 				}
-				Set<Long> sups = sor.getSuperConcepts(id);
-				Set<Long> parents = isas.getParents(id);
+				MutableLongSet sups = sor.getSuperConcepts(id);
+				ImmutableLongSet parents = isas.getParents(id);
 				if (id == SnomedIds.root) {
 					assertTrue(parents.isEmpty());
 				} else {
@@ -93,16 +97,12 @@ public abstract class SnomedOntologyReasonerTestBase extends SnomedTestBase {
 					misses.add(id);
 					miss_cnt++;
 					LOG.info("Miss: " + con);
-					HashSet<Long> extra = new HashSet<Long>(sups);
+					MutableLongSet extra = LongSets.mutable.withAll(sups);
 					extra.removeAll(parents);
-					for (long x : extra) {
-						LOG.info("\tExtra: " + snomedOntology.getConcept(x));
-					}
-					HashSet<Long> missing = new HashSet<Long>(parents);
+					extra.forEach(x -> LOG.info("\tExtra: " + snomedOntology.getConcept(x)));
+					MutableLongSet missing = LongSets.mutable.withAll(parents);
 					missing.removeAll(sups);
-					for (long x : missing) {
-						LOG.info("\tMissing: " + snomedOntology.getConcept(x));
-					}
+					missing.forEach(x -> LOG.info("\tMissing: " + snomedOntology.getConcept(x)));
 				}
 			}
 			LOG.info("Miss: " + miss_cnt);
