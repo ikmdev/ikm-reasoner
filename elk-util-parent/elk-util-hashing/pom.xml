@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dev.ikm.elk</groupId>
 		<artifactId>elk-util-parent</artifactId>
-		<version>0.39.7-progress-SNAPSHOT</version>
+		<version>0.39.7-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>elk-util-hashing</artifactId>
