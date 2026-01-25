@@ -101,13 +101,13 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 		return ontology;
 	}
 
-	private HashMap<Long, Set<Long>> getSuperClassMap(SnomedOwlOntology ontology) {
+	private MutableLongObjectMap<MutableLongSet> getSuperClassMap(SnomedOwlOntology ontology) {
 		HashMap<Long, Set<Long>> superConcepts = new HashMap<>();
 		for (OWLClass clazz : ontology.getOntology().getClassesInSignature()) {
 			long id = SnomedOwlOntology.getId(clazz);
 			superConcepts.put(id, ontology.getSuperClasses(id));
 		}
-		return superConcepts;
+		return convertToEclipseCollections(superConcepts);
 	}
 
 	private MutableLongObjectMap<MutableLongSet> convertToEclipseCollections(HashMap<Long, Set<Long>> map) {
@@ -139,8 +139,8 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 	private SnomedIsa classifyEquivalentClasses() throws Exception {
 		SnomedOwlOntology ontology = ontologyEquivalentClasses();
 		ontology.classify();
-		HashMap<Long, Set<Long>> supers = getSuperClassMap(ontology);
-		return SnomedIsa.init(convertToEclipseCollections(supers));
+		MutableLongObjectMap<MutableLongSet> supers = getSuperClassMap(ontology);
+		return SnomedIsa.init(supers);
 	}
 
 	private void toSubClassOf(SnomedOwlOntology ontology) throws Exception {
@@ -162,8 +162,8 @@ public class IncrementalClassifierCldUs20230301TestIT extends SnomedTestBase imp
 	private SnomedIsa classifySubClassOf() throws Exception {
 		SnomedOwlOntology ontology = ontologySubClassOf();
 		ontology.classify();
-		HashMap<Long, Set<Long>> supers = getSuperClassMap(ontology);
-		return SnomedIsa.init(convertToEclipseCollections(supers));
+		MutableLongObjectMap<MutableLongSet> supers = getSuperClassMap(ontology);
+		return SnomedIsa.init(supers);
 	}
 
 	@Test
