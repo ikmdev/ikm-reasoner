@@ -169,4 +169,26 @@ public class IntervalTest {
 		assertEquals(Long.MIN_VALUE, i.getUnitOfMeasure().getId());
 	}
 
+	@Test
+	public void decimal() {
+		Interval i = Interval.fromString("[10.1, 20.1) 30");
+		i = Interval.fromString(i.toString());
+		assertFalse(i.isLowerOpen());
+		assertEquals(new BigDecimal("10.1"), i.getLowerBound());
+		assertEquals(new BigDecimal("20.1"), i.getUpperBound());
+		assertTrue(i.isUpperOpen());
+		assertEquals(30, i.getUnitOfMeasure().getId());
+	}
+
+	@Test
+	public void decimalNegative() {
+		Interval i = Interval.fromString("[-10.1, -20.1) 30");
+		i = Interval.fromString(i.toString());
+		assertFalse(i.isLowerOpen());
+		assertEquals(new BigDecimal("-10.1"), i.getLowerBound());
+		assertEquals(new BigDecimal("-20.1"), i.getUpperBound());
+		assertTrue(i.isUpperOpen());
+		assertEquals(30, i.getUnitOfMeasure().getId());
+	}
+
 }

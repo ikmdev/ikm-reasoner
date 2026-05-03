@@ -107,7 +107,9 @@ public class Interval {
 
 	public static Interval fromString(String str) {
 		str = str.replace(" ", "");
-		String regex = "^(\\[|\\()(\\-?\\d+),(\\-?\\d+)(\\]|\\))(\\-?\\d+)$";
+		String integer = "(\\-?\\d+)";
+		String decimal = "(\\-?\\d+(\\.\\d+)?)";
+		String regex = "^(\\[|\\()" + decimal + "," + decimal + "(\\]|\\))" + integer + "$";
 		Pattern pat = Pattern.compile(regex);
 		Matcher mat = pat.matcher(str);
 		if (!mat.matches())
@@ -115,9 +117,9 @@ public class Interval {
 		Interval ret = new Interval();
 		ret.lowerOpen = mat.group(1).equals("(");
 		ret.lowerBound = new BigDecimal(mat.group(2));
-		ret.upperBound = new BigDecimal(mat.group(3));
-		ret.upperOpen = mat.group(4).equals(")");
-		long uom = Long.parseLong(mat.group(5));
+		ret.upperBound = new BigDecimal(mat.group(4));
+		ret.upperOpen = mat.group(6).equals(")");
+		long uom = Long.parseLong(mat.group(7));
 		ret.unitOfMeasure = new Concept(uom);
 		return ret;
 	}
