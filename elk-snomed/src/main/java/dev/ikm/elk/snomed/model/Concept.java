@@ -1,5 +1,11 @@
 package dev.ikm.elk.snomed.model;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.MutableList;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -20,13 +26,6 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.MutableList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class Concept extends SnomedEntity {
 
 	// Use Eclipse Collections adaptive lists
@@ -39,7 +38,7 @@ public class Concept extends SnomedEntity {
 	}
 
 	public MutableList<Definition> getDefinitions() {
-		return definitions;  // MutableList implements List
+		return definitions; // MutableList implements List
 	}
 
 	public void addDefinition(Definition definition) {
@@ -47,7 +46,7 @@ public class Concept extends SnomedEntity {
 	}
 
 	public void removeAllDefinitions() {
-		this.definitions.clear();  // More efficient than new allocation
+		this.definitions.clear(); // More efficient than new allocation
 	}
 
 	public List<Definition> getGciDefinitions() {

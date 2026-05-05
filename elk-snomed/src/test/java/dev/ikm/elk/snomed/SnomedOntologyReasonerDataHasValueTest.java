@@ -27,7 +27,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.eclipse.collections.api.set.primitive.MutableLongSet;
 import org.junit.jupiter.api.Test;
@@ -48,12 +47,12 @@ public class SnomedOntologyReasonerDataHasValueTest {
 		ontology.load(axioms);
 		SnomedOntology snomedOntology = new OwlElTransformer().transform(ontology);
 		SnomedOntologyReasoner sor = SnomedOntologyReasoner.create(snomedOntology);
-		
+
 		// Convert primitive MutableLongSet to Set<Long> for comparison
 		MutableLongSet superConcepts = sor.getSuperConcepts(2);
 		Set<Long> superConceptsSet = superConcepts.collect(Long::valueOf).toSet();
 		assertEquals(Set.of(1L), superConceptsSet);
-		
+
 		return snomedOntology.getConcept(1).getDefinitions().getFirst().getUngroupedConcreteRoles().iterator().next();
 	}
 
@@ -62,7 +61,7 @@ public class SnomedOntologyReasonerDataHasValueTest {
 		ConcreteRole role = classify("\"true\"^^xsd:boolean");
 		assertEquals(ConcreteRole.ValueType.Boolean, role.getValueType());
 		assertEquals(true, Boolean.valueOf(role.getValue()));
-		LOG.info(""+ role);
+		LOG.info("" + role);
 	}
 
 	@Test
@@ -92,7 +91,7 @@ public class SnomedOntologyReasonerDataHasValueTest {
 		assertEquals(ConcreteRole.ValueType.Integer, role.getValueType());
 		assertEquals(1, Integer.valueOf(role.getValue()));
 	}
-	
+
 	@Test
 	public void dataHasLongValue() throws Exception {
 		ConcreteRole role = classify("\"112233445566\"^^xsd:long");

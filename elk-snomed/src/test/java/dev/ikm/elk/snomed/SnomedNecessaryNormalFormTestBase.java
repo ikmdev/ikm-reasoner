@@ -1,6 +1,16 @@
 package dev.ikm.elk.snomed;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.eclipse.collections.api.factory.primitive.LongSets;
+import org.eclipse.collections.api.set.primitive.MutableLongSet;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import dev.ikm.elk.snomed.model.Concept;
+import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 /*-
  * #%L
@@ -21,19 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * limitations under the License.
  * #L%
  */
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.HashSet;
-
-import org.eclipse.collections.api.factory.primitive.LongSets;
-import org.eclipse.collections.api.set.primitive.MutableLongSet;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import dev.ikm.elk.snomed.model.Concept;
-import dev.ikm.elk.snomed.owlel.OwlElOntology;
 
 public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 
@@ -59,7 +56,9 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
-				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false), (workDone, max) -> {});
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false),
+				(workDone, max) -> {
+				});
 		checkPriors(snomedOntologyReasoner, nnfb);
 	}
 
@@ -71,9 +70,12 @@ public abstract class SnomedNecessaryNormalFormTestBase extends SnomedTestBase {
 		SnomedOntologyReasoner snomedOntologyReasoner = SnomedOntologyReasoner.create(snomedOntology);
 		snomedOntologyReasoner.flush();
 		NecessaryNormalFormBuilder nnfb = NecessaryNormalFormBuilder.create(snomedOntology,
-				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false), (workDone, max) -> {} );
+				snomedOntologyReasoner.getSuperConcepts(), snomedOntologyReasoner.getSuperRoleTypes(false),
+				(workDone, max) -> {
+				});
 		LOG.info("Init complete");
-		SnomedOntology inferredOntology = new SnomedLoader().load(concepts_file, descriptions_file, rels_file, values_file);
+		SnomedOntology inferredOntology = new SnomedLoader().load(concepts_file, descriptions_file, rels_file,
+				values_file);
 		LOG.info("Generate");
 		long beg = System.currentTimeMillis();
 		ConceptComparer cc = new ConceptComparer(inferredOntology);

@@ -21,7 +21,6 @@ package dev.ikm.elk.snomed;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -36,7 +35,6 @@ import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.primitive.MutableLongObjectMap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.primitive.MutableLongSet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,17 +105,16 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
-			MutableLongObjectMap<MutableLongSet> superConcepts,  // ← Primitive map!
-			MutableLongObjectMap<MutableLongSet> superRoleTypes,  // ← Primitive map!
+			MutableLongObjectMap<MutableLongSet> superConcepts, // ← Primitive map!
+			MutableLongObjectMap<MutableLongSet> superRoleTypes, // ← Primitive map!
 			ProgressUpdater progressUpdater) {
 		return create(snomedOntology, superConcepts, superRoleTypes, SnomedIds.root, progressUpdater);
 	}
 
 	public static NecessaryNormalFormBuilder create(SnomedOntology snomedOntology,
-			MutableLongObjectMap<MutableLongSet> superConcepts,  // ← Primitive map!
-			MutableLongObjectMap<MutableLongSet> superRoleTypes,  // ← Primitive map!
-			long root,
-			ProgressUpdater progressUpdater) {
+			MutableLongObjectMap<MutableLongSet> superConcepts, // ← Primitive map!
+			MutableLongObjectMap<MutableLongSet> superRoleTypes, // ← Primitive map!
+			long root, ProgressUpdater progressUpdater) {
 		NecessaryNormalFormBuilder nnfb = new NecessaryNormalFormBuilder(snomedOntology, root, progressUpdater);
 		nnfb.initConcepts(superConcepts);
 		nnfb.initRoles(superRoleTypes);
@@ -131,16 +128,16 @@ public class NecessaryNormalFormBuilder {
 
 	protected void initConcepts(MutableLongObjectMap<MutableLongSet> superConcepts) {
 		isa = SnomedIsa.init(superConcepts, root);
-		MutableLongObjectMap<MutableLongSet> dependentOnConcepts = LongObjectMaps.mutable.ofInitialCapacity(
-				snomedOntology.getConcepts().size());
-		
+		MutableLongObjectMap<MutableLongSet> dependentOnConcepts = LongObjectMaps.mutable
+				.ofInitialCapacity(snomedOntology.getConcepts().size());
+
 		for (Concept concept : snomedOntology.getConcepts()) {
 			dependentOnConcepts.put(concept.getId(), getDependentOnConcepts(concept));
 		}
-		
+
 		SnomedIsa deps = SnomedIsa.init(dependentOnConcepts, root);
 		deps.getOrderedConcepts().forEach(id -> concepts.add(snomedOntology.getConcept(id)));
-		
+
 		LOG.info("Concepts: " + concepts.size());
 	}
 
@@ -151,14 +148,14 @@ public class NecessaryNormalFormBuilder {
 			MutableSet<RoleType> superTypes = Sets.mutable.empty();
 			superRolesTypes.put(rt, superTypes);
 			superTypes.add(rt);
-			
+
 			// Use primitive forEach - no boxing!
 			superRoles.get(rt.getId()).forEach(sup_id -> {
 				RoleType sup_rt = snomedOntology.getRoleType(sup_id);
 				superTypes.add(sup_rt);
 			});
 		}
-		
+
 		if (log_roles) {
 			for (Entry<RoleType, MutableSet<RoleType>> es : superRolesTypes.entrySet()) {
 				RoleType rt = es.getKey();
@@ -175,9 +172,9 @@ public class NecessaryNormalFormBuilder {
 	}
 
 	private MutableLongSet getDependentOnConcepts(Concept concept) {
-		MutableLongSet deps = LongSets.mutable.empty();  // ← Primitive set!
+		MutableLongSet deps = LongSets.mutable.empty(); // ← Primitive set!
 		long id = concept.getId();
-		deps.addAll(isa.getParents(id));  // Now returns primitive set
+		deps.addAll(isa.getParents(id)); // Now returns primitive set
 		deps.addAll(snomedOntology.getDependentOnConcepts(id, false, false));
 		return deps;
 	}
@@ -222,13 +219,9 @@ public class NecessaryNormalFormBuilder {
 		}
 		MutableSet<Concept> sups;
 		if (useDefining) {
-			sups = con.getDefinitions()
-					.flatCollect(Definition::getSuperConcepts)
-					.toSet();
+			sups = con.getDefinitions().flatCollect(Definition::getSuperConcepts).toSet();
 		} else {
-			sups = isa.getParents(con.getId())
-					.collect(snomedOntology::getConcept)
-					.toSet();
+			sups = isa.getParents(con.getId()).collect(snomedOntology::getConcept).toSet();
 		}
 		sups.forEach(sup -> def.addSuperConcept(sup));
 		for (Concept sup : sups) {

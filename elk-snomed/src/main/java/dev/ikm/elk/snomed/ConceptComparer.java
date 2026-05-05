@@ -4,7 +4,7 @@ package dev.ikm.elk.snomed;
  * #%L
  * ELK Integration with SNOMED
  * %%
- * Copyright (C) 2023 - 2025 Integrated Knowledge Management
+ * Copyright (C) 2023 - 2026 Integrated Knowledge Management
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,11 @@ package dev.ikm.elk.snomed;
  * #L%
  */
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.collections.api.factory.primitive.LongSets;
 import org.eclipse.collections.api.set.primitive.MutableLongSet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +35,7 @@ import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
 
 public class ConceptComparer {
-    private MutableLongSet mis_match_cons = LongSets.mutable.empty();
+	private MutableLongSet mis_match_cons = LongSets.mutable.empty();
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConceptComparer.class);
 
@@ -53,22 +51,24 @@ public class ConceptComparer {
 		this.inferredOntology = inferredOntology;
 	}
 
-    /**
-     * Check if a concept ID has mismatches.
-     * @param conceptId the concept ID to check
-     * @return true if this concept has recorded mismatches
-     */
-    public boolean hasMismatch(long conceptId) {
-        return mis_match_cons.contains(conceptId);  // Primitive contains - no boxing!
-    }
+	/**
+	 * Check if a concept ID has mismatches.
+	 * 
+	 * @param conceptId the concept ID to check
+	 * @return true if this concept has recorded mismatches
+	 */
+	public boolean hasMismatch(long conceptId) {
+		return mis_match_cons.contains(conceptId); // Primitive contains - no boxing!
+	}
 
-    /**
-     * Get all concept IDs with mismatches.
-     * @return array of concept IDs (no boxing in array)
-     */
-    public long[] getMismatchConceptIds() {
-        return mis_match_cons.toArray();  // Primitive array - efficient!
-    }
+	/**
+	 * Get all concept IDs with mismatches.
+	 * 
+	 * @return array of concept IDs (no boxing in array)
+	 */
+	public long[] getMismatchConceptIds() {
+		return mis_match_cons.toArray(); // Primitive array - efficient!
+	}
 
 	public int getMisMatchCount() {
 		return mis_match_cnt;
@@ -96,7 +96,7 @@ public class ConceptComparer {
 		}
 		if (!match) {
 			mis_match_cnt++;
-			mis_match_cons.add(concept1.getId());  // No boxing - primitive add!
+			mis_match_cons.add(concept1.getId()); // No boxing - primitive add!
 			if (log_mis_match_detail) {
 				LOG.info("Concept: " + concept1);
 				LOG.info("Concept1 parents:");
