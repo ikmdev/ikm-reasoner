@@ -1,5 +1,7 @@
 package dev.ikm.elk.snomed.interval;
 
+import java.math.BigDecimal;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -27,26 +29,34 @@ import dev.ikm.elk.snomed.model.Concept;
 
 public class Interval {
 
-	private int lowerBound, upperBound;
+	private BigDecimal lowerBound, upperBound;
 
 	private boolean lowerOpen, upperOpen;
 
 	private Concept unitOfMeasure;
 
-	public int getLowerBound() {
+	public BigDecimal getLowerBound() {
 		return lowerBound;
 	}
 
-	public void setLowerBound(int lowerBound) {
+	public void setLowerBound(BigDecimal lowerBound) {
 		this.lowerBound = lowerBound;
 	}
 
-	public int getUpperBound() {
+	public void setLowerBound(int lowerBound) {
+		this.lowerBound = new BigDecimal(lowerBound);
+	}
+
+	public BigDecimal getUpperBound() {
 		return upperBound;
 	}
 
-	public void setUpperBound(int upperBound) {
+	public void setUpperBound(BigDecimal upperBound) {
 		this.upperBound = upperBound;
+	}
+
+	public void setUpperBound(int upperBound) {
+		this.upperBound = new BigDecimal(upperBound);
 	}
 
 	public boolean isLowerOpen() {
@@ -73,7 +83,8 @@ public class Interval {
 		this.unitOfMeasure = unitOfMeasure;
 	}
 
-	public Interval(int lowerBound, boolean lowerOpen, int upperBound, boolean upperOpen, Concept unitOfMeasure) {
+	public Interval(BigDecimal lowerBound, boolean lowerOpen, BigDecimal upperBound, boolean upperOpen,
+			Concept unitOfMeasure) {
 		super();
 		this.lowerBound = lowerBound;
 		this.lowerOpen = lowerOpen;
@@ -87,17 +98,19 @@ public class Interval {
 
 	public static Interval fromString(String str) {
 		str = str.replace(" ", "");
-		String regex = "^(\\[|\\()(\\-?\\d+),(\\-?\\d+)(\\]|\\))(\\-?\\d+)$";
+		String integer = "(\\-?\\d+)";
+		String decimal = "(\\-?\\d+(\\.\\d+)?)";
+		String regex = "^(\\[|\\()" + decimal + "," + decimal + "(\\]|\\))" + integer + "$";
 		Pattern pat = Pattern.compile(regex);
 		Matcher mat = pat.matcher(str);
 		if (!mat.matches())
 			throw new IllegalArgumentException(str);
 		Interval ret = new Interval();
 		ret.lowerOpen = mat.group(1).equals("(");
-		ret.lowerBound = Integer.parseInt(mat.group(2));
-		ret.upperBound = Integer.parseInt(mat.group(3));
-		ret.upperOpen = mat.group(4).equals(")");
-		long uom = Long.parseLong(mat.group(5));
+		ret.lowerBound = new BigDecimal(mat.group(2));
+		ret.upperBound = new BigDecimal(mat.group(4));
+		ret.upperOpen = mat.group(6).equals(")");
+		long uom = Long.parseLong(mat.group(7));
 		ret.unitOfMeasure = new Concept(uom);
 		return ret;
 	}
@@ -112,22 +125,37 @@ public class Interval {
 				+ (includeUnitOfMeasure ? unitOfMeasure.getId() : "");
 	}
 
-	private int getLowerContainsValue() {
-		if (this.isLowerOpen())
-			return this.getLowerBound() + 1;
-		return this.getLowerBound();
+	private boolean lowerContains(Interval that) {
+		if (this.isLowerOpen() && !that.isLowerOpen())
+			return this.getLowerBound().compareTo(that.getLowerBound()) < 0;
+		return this.getLowerBound().compareTo(that.getLowerBound()) <= 0;
 	}
 
-	private int getUpperContainsValue() {
-		if (this.isUpperOpen())
-			return this.getUpperBound() - 1;
-		return this.getUpperBound();
+	private boolean upperContains(Interval that) {
+		if (this.isUpperOpen() && !that.isUpperOpen())
+			return this.getUpperBound().compareTo(that.getUpperBound()) > 0;
+		return this.getUpperBound().compareTo(that.getUpperBound()) >= 0;
 	}
+
+	// an open interval does not include endpoints
+	// (a, b) = { x | a < x < b }
+	// a closed interval includes endpoints
+	// [a, b] = { x | a <= x <= b }
+
+	// x contains y
+	//
+	// x.LO & y.LO -> x.LB <= y.LB
+	// x.LC & y.LC -> x.LB <= y.LB
+	// x.LC & y.LO -> x.LB <= y.LB
+	// x.LO & y.LC -> x.LB < y.LB
+	//
+	// x.UO & y.UO -> x.UB >= y.UB
+	// x.UC & y.UC -> x.UB >= y.UB
+	// x.UC & y.UO -> x.UB >= y.UB
+	// x.UO & y.UC -> x.UB > y.UB
 
 	public boolean contains(Interval that) {
-		return this.getLowerContainsValue() <= that.getLowerContainsValue()
-				&& this.getUpperContainsValue() >= that.getUpperContainsValue()
-				&& this.unitOfMeasure.equals(that.unitOfMeasure);
+		return lowerContains(that) && upperContains(that) && this.unitOfMeasure.equals(that.unitOfMeasure);
 	}
 
 }

@@ -1,5 +1,10 @@
 package dev.ikm.elk.snomed.model;
 
+import java.util.Objects;
+
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.set.MutableSet;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -20,19 +25,13 @@ package dev.ikm.elk.snomed.model;
  * #L%
  */
 
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.set.MutableSet;
-
-import java.util.Objects;
-import java.util.Set;
-
 public class Definition {
-    private DefinitionType definitionType;
-    
-    // These will auto-optimize based on size
-    private MutableSet<Concept> superConcepts = Sets.mutable.empty();
-    private RoleGroup ungroupedRoles = new RoleGroup();
-    private MutableSet<RoleGroup> roleGroups = Sets.mutable.empty();
+	private DefinitionType definitionType;
+
+	// These will auto-optimize based on size
+	private MutableSet<Concept> superConcepts = Sets.mutable.empty();
+	private RoleGroup ungroupedRoles = new RoleGroup();
+	private MutableSet<RoleGroup> roleGroups = Sets.mutable.empty();
 
 	public DefinitionType getDefinitionType() {
 		return definitionType;
@@ -70,13 +69,14 @@ public class Definition {
 		this.roleGroups.add(roleGroup);
 	}
 
-    // If you KNOW the typical size, you can hint:
-    // private MutableSet<Concept> superConcepts = Sets.mutable.withInitialCapacity(2);
-    
-    // All your existing methods work unchanged!
-    public void addSuperConcept(Concept superConcept) {
-        this.superConcepts.add(superConcept);  // Internally upgrades to UnifiedSet when needed
-    }
+	// If you KNOW the typical size, you can hint:
+	// private MutableSet<Concept> superConcepts =
+	// Sets.mutable.withInitialCapacity(2);
+
+	// All your existing methods work unchanged!
+	public void addSuperConcept(Concept superConcept) {
+		this.superConcepts.add(superConcept); // Internally upgrades to UnifiedSet when needed
+	}
 
 	@Override
 	public int hashCode() {

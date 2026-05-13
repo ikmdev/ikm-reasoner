@@ -1,5 +1,10 @@
 package dev.ikm.elk.snomed.model;
 
+import java.util.Objects;
+
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.set.MutableSet;
+
 /*-
  * #%L
  * ELK Integration with SNOMED
@@ -19,13 +24,6 @@ package dev.ikm.elk.snomed.model;
  * limitations under the License.
  * #L%
  */
-
-import org.eclipse.collections.api.factory.Sets;
-import org.eclipse.collections.api.set.MutableSet;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class RoleGroup {
 	private MutableSet<Role> roles = Sets.mutable.empty();
