@@ -10,7 +10,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.40.0</version>
+	<version>0.40.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
