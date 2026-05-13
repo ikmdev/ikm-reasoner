@@ -93,15 +93,6 @@ public class Interval {
 		this.unitOfMeasure = unitOfMeasure;
 	}
 
-	public Interval(int lowerBound, boolean lowerOpen, int upperBound, boolean upperOpen, Concept unitOfMeasure) {
-		super();
-		this.lowerBound = new BigDecimal(lowerBound);
-		this.lowerOpen = lowerOpen;
-		this.upperBound = new BigDecimal(upperBound);
-		this.upperOpen = upperOpen;
-		this.unitOfMeasure = unitOfMeasure;
-	}
-
 	private Interval() {
 	}
 
