@@ -22,8 +22,10 @@
  */
 package dev.ikm.elk.snomed.reasoner;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.elk.loading.AbstractAxiomLoader;
@@ -162,7 +164,12 @@ public class OwlOntologyLoader extends AbstractAxiomLoader implements
 	}
 
 	private void initAxioms(OWLOntology ontology) {
-		Set<ElkAxiom> axioms = ontology.getAxioms();
+		// Iterate over a snapshot: the ontology's axiom set is mutated by
+		// incremental updates after this loader has finished, and a live
+		// iterator would resume on such mutations and walk off the end of
+		// the backing hash table. Axioms added or removed after the initial
+		// load reach the reasoner through the changes loader, never here.
+		List<ElkAxiom> axioms = new ArrayList<>(ontology.getAxioms());
 		axiomsIterator_ = axioms.iterator();
 		axiomsCount_ = axioms.size();
 		axiomsProcessed_ = 0;
