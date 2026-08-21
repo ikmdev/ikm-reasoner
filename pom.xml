@@ -3,9 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>dev.ikm.build</groupId>
-		<artifactId>java-parent</artifactId>
-		<version>1.64.0</version>
+		<groupId>network.ike.platform</groupId>
+		<artifactId>ike-parent</artifactId>
+		<version>172</version>
+		<relativePath/>
 	</parent>
 
 	<groupId>dev.ikm.elk</groupId>
@@ -54,6 +55,18 @@
 	<scm>
 		<url>https://github.com/ikmdev/ikm-reasoner</url>
 	</scm>
+	<distributionManagement>
+		<!-- Explicit <site> URL — see ike-parent/CLAUDE.md
+		     ("Inheriting projects MUST declare their own
+		     <distributionManagement><site>") and ike-issues#380/#383.
+		     Artifact id is `elk-parent`; site lives at the repo path.
+		     Position is fixed by tidy-maven-plugin's canonical element
+		     order: after <scm>, before <properties>. -->
+		<site>
+			<id>ike-site</id>
+			<url>https://ike.network/ikm-reasoner/</url>
+		</site>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,6 +113,32 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- BOM imports formerly inherited from dev.ikm.build:java-parent, which this
+			     project no longer parents to (ike-issues#1055). junit-bom is what supplies
+			     the version for the org.junit.jupiter artifacts the modules declare
+			     version-less; slf4j-bom and log4j-bom are carried over unchanged so any
+			     artifact beyond the two managed explicitly below still resolves. -->
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-bom</artifactId>
+				<version>${slf4j.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${log4j.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<!-- logging dependencies -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -521,6 +560,13 @@
 					<doclint>none</doclint>
 					<source>${java.version}</source>
 					<release>${java.version}</release>
+					<!-- ike-parent hardcodes the enable-preview javadoc option (not
+					     property-gated), and javadoc rejects it against a release below 25:
+					     "invalid source release 24 with [enable-preview]". elk is published
+					     to Maven Central and stays on Java 24, so drop the inherited option
+					     rather than raise the baseline. combine.self=override replaces the
+					     parent's list instead of merging with it. See ike-issues#1055. -->
+					<additionalOptions combine.self="override"/>
 				</configuration>
 				<executions>
 					<execution>

@@ -226,3 +226,9 @@ Temporary Items
 # General
 ###################
 **.zip
+
+###################
+# Claude (unpacked build standards)
+###################
+.claude
+.ike/vcs-state
