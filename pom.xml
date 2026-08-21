@@ -660,4 +660,54 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<profiles>
+		<!-- Restores the test-artifact attachment that dev.ikm.build:java-parent
+		     supplied through its own java-tests-additional-tasks profile, which this
+		     project no longer inherits (ike-issues#1055). elk-owlapi-test declares
+		     elk-reasoner and elk-owl-parsing-javacc as test-jar dependencies, so
+		     without these executions the reactor cannot resolve them on a clean
+		     agent. A developer machine can hide this: a stale tests jar left in the
+		     local repository by an earlier build satisfies the dependency, which is
+		     how it reached CI unnoticed. Same file-based activation as the original,
+		     so only modules that actually have tests attach anything. -->
+		<profile>
+			<id>java-tests-additional-tasks</id>
+			<activation>
+				<file>
+					<exists>${basedir}/src/test/java</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>jar-tests-classes</id>
+								<phase>package</phase>
+								<goals>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-test-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
