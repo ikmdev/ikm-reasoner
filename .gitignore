@@ -232,3 +232,7 @@ Temporary Items
 ###################
 .claude
 .ike/vcs-state
+# BEGIN ike-managed
+# IKE local state (never committed)
+.ike/vcs-state
+# END ike-managed
