@@ -11,7 +11,7 @@
 
 	<groupId>dev.ikm.elk</groupId>
 	<artifactId>elk-parent</artifactId>
-	<version>0.40.1-SNAPSHOT</version>
+	<version>0.40.1-8bp-jdk27-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>IKM ELK Reasoner</name>
