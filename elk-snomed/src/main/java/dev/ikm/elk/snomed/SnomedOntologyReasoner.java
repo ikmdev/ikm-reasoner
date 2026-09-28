@@ -64,9 +64,25 @@ public class SnomedOntologyReasoner {
 	}
 
 	public static SnomedOntologyReasoner create(SnomedOntology snomedOntology) {
+		SnomedOntologyReasoner sor = createUninitialized(snomedOntology);
+		sor.computeInferences();
+		return sor;
+	}
+
+	/**
+	 * Builds a reasoner over the ontology without classifying it.
+	 *
+	 * <p>{@link #create(SnomedOntology)} does both, and returns only once the classification has
+	 * finished — which leaves a caller no handle on the reasoner while the slow part runs, and so
+	 * no way to {@link #interrupt()} it. Taking the instance first and calling
+	 * {@link #computeInferences()} separately is what makes a long classification cancellable.
+	 *
+	 * @param snomedOntology the ontology to reason over
+	 * @return a reasoner that has not yet classified
+	 */
+	public static SnomedOntologyReasoner createUninitialized(SnomedOntology snomedOntology) {
 		SnomedOntologyReasoner sor = new SnomedOntologyReasoner();
 		sor.init(snomedOntology);
-		sor.computeInferences();
 		return sor;
 	}
 
@@ -97,7 +113,14 @@ public class SnomedOntologyReasoner {
 		}
 	}
 
-	protected void computeInferences() {
+	/**
+	 * Classifies the ontology. Slow — minutes on a full dataset.
+	 *
+	 * <p>Public so a caller that obtained the reasoner from
+	 * {@link #createUninitialized(SnomedOntology)} can start the classification itself, holding a
+	 * reference throughout and able to {@link #interrupt()} it.
+	 */
+	public void computeInferences() {
 		reasoner = ElkReasoner.createReasoner(ontology, ontology.getObjectFactory());
 		reasoner.flush();
 		try {
@@ -106,6 +129,28 @@ public class SnomedOntologyReasoner {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * Asks the underlying ELK reasoner to stop as soon as it can.
+	 *
+	 * <p>ELK checks for interruption between and within its stages, so an in-flight
+	 * classification unwinds rather than running to completion. Mirrors what
+	 * {@code ElkReasoner.interrupt()} does for the OWL API wrapper.
+	 *
+	 * <p>Safe to call at any time and from any thread. Before {@link #computeInferences()} has
+	 * created the underlying reasoner there is nothing to interrupt and this does nothing, so a
+	 * caller racing a cancel against the start of a classification need not guard against it.
+	 *
+	 * <p>An interrupted reasoner is not reusable for further inference; discard it and build
+	 * another.
+	 */
+	public void interrupt() {
+		ElkReasoner current = reasoner;
+		if (current == null) {
+			return;
+		}
+		current.getInternalReasoner().interrupt();
 	}
 
 	public void flush() {
