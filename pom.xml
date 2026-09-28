@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>network.ike.platform</groupId>
 		<artifactId>ike-parent</artifactId>
-		<version>178</version>
+		<version>186</version>
 		<relativePath/>
 	</parent>
 
@@ -70,7 +70,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>24</java.version>
+		<java.version>27</java.version>
 		<java.compilerArgs></java.compilerArgs>
 		<!-- logging dependencies -->
 		<slf4j.version>2.0.17</slf4j.version>
