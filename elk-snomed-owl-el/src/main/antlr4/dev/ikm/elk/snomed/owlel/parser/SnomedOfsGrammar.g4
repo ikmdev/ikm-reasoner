@@ -13,7 +13,7 @@ prefixDeclaration : 'Prefix' '(' prefixName '=' fullIRI ')' ;
 ontologyDeclaration : 'Ontology' '(' iri ')' ;
 
 // 8 - https://www.w3.org/TR/owl2-syntax/#Class_Expressions
-classExpression : class | objectIntersectionOf | objectSomeValuesFrom | dataHasValue ;
+classExpression : owlClass | objectIntersectionOf | objectSomeValuesFrom | dataHasValue ;
 
 // 8.1.1 - https://www.w3.org/TR/owl2-syntax/#Intersection_of_Class_Expressions
 objectIntersectionOf : 'ObjectIntersectionOf' '(' classExpression classExpression+ ')' ;
@@ -65,7 +65,7 @@ annotationAxiom : subAnnotationPropertyOf ;
 subAnnotationPropertyOf : 'SubAnnotationPropertyOf' '(' annotationProperty annotationProperty ')' ;
 
 // 5.1 - https://www.w3.org/TR/owl2-syntax/#Classes
-class : iri ;
+owlClass : iri ;
 
 // 5.2 - https://www.w3.org/TR/owl2-syntax/#Datatypes
 datatype : iri ;

@@ -48,7 +48,6 @@ import dev.ikm.elk.snomed.owlel.model.OwlElTransitiveObjectProperty;
 import dev.ikm.elk.snomed.owlel.model.OwlElTypedLiteral;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.AbbreviatedIRIContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.AnnotationPropertyContext;
-import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.ClassContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.DataHasValueContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.DataPropertyContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.EquivalentClassesContext;
@@ -58,6 +57,7 @@ import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.ObjectIntersection
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.ObjectPropertyContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.ObjectSomeValuesFromContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.OntologyDeclarationContext;
+import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.OwlClassContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.PrefixDeclarationContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.PropertyExpressionChainContext;
 import dev.ikm.elk.snomed.owlel.parser.SnomedOfsGrammarParser.ReflexiveObjectPropertyContext;
@@ -206,9 +206,9 @@ public class SnomedOfsVisitor extends SnomedOfsGrammarBaseVisitor<OwlElObject> {
 	}
 
 	@Override
-	public OwlElObject visitClass(ClassContext context) {
+	public OwlElObject visitOwlClass(OwlClassContext context) {
 		if (log_visit)
-			LOG.info("visitClass: " + context.getText());
+			LOG.info("visitOwlClass: " + context.getText());
 		IriString iri = (IriString) context.iri().accept(this);
 		return factory.getOwlElClass(iri.getIri());
 	}
