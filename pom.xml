@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>network.ike.platform</groupId>
 		<artifactId>ike-parent</artifactId>
-		<version>193</version>
+		<version>195</version>
 		<relativePath/>
 	</parent>
 
@@ -590,10 +590,6 @@
 								<ignoredUnusedDeclaredDependency>
 									org.apache.logging.log4j:*</ignoredUnusedDeclaredDependency>
 								<ignoredUnusedDeclaredDependency>org.slf4j:*</ignoredUnusedDeclaredDependency>
-								<!-- ike-parent's standards and site theme, unpacked at validate; drop
-								     when ike-parent ignores them itself (IKE-Network/ike-issues#1193). -->
-								<ignoredUnusedDeclaredDependency>network.ike.tooling:ike-build-standards</ignoredUnusedDeclaredDependency>
-								<ignoredUnusedDeclaredDependency>network.ike:ike-base-parent</ignoredUnusedDeclaredDependency>
 							</ignoredUnusedDeclaredDependencies>
 							<ignoreUnusedRuntime>true</ignoreUnusedRuntime>
 							<ignoredUsedUndeclaredDependencies>
