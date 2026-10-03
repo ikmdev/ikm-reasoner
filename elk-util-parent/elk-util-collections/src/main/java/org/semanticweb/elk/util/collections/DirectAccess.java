@@ -23,8 +23,7 @@ package org.semanticweb.elk.util.collections;
 /**
  * A helper interface indicating that the class can provide direct access to its
  * elements to optimize some operations, such as random access and iteration.
- * Typically used with collections of elements. Used internally, e.g., to
- * optimize {@link LazySetIntersection}.
+ * Typically used with collections of elements.
  * 
  * @author "Yevgeny Kazakov"
  * 

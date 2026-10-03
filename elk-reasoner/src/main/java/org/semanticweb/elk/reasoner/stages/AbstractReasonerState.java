@@ -1132,16 +1132,6 @@ public abstract class AbstractReasonerState implements TracingProof {
 		return ontologyIndex;
 	}
 
-	@Deprecated
-	public ElkPolarityExpressionConverter getExpressionConverter() {
-		return this.expressionConverter_;
-	}
-
-	@Deprecated
-	public ElkSubObjectPropertyExpressionVisitor<? extends IndexedPropertyChain> getSubPropertyConverter() {
-		return this.subPropertyConverter_;
-	}
-
 	// TODO: limit the output to only what is necessary	
 	OccurrencesInOntology getOccurrencesInOntology() {
 		return this.occurrencesInOntology_;

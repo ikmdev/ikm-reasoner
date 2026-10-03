@@ -62,15 +62,6 @@ public class SnomedOwlOntology {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SnomedOwlOntology.class);
 
-	@Deprecated
-	public static final long root = SnomedIds.root;
-
-	@Deprecated
-	public static final long isa = SnomedIds.isa;
-
-	@Deprecated
-	public static final long role_group = SnomedIds.role_group;
-
 	private OWLOntology ontology;
 
 	private OWLDataFactory dataFactory;
