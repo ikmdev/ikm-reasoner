@@ -568,14 +568,8 @@
 					     parent's list instead of merging with it. See ike-issues#1055. -->
 					<additionalOptions combine.self="override"/>
 				</configuration>
-				<executions>
-					<execution>
-						<id>jar</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<!-- The jar execution itself (attach-javadocs) is ike-parent's; a second
+				     one here ran javadoc twice and attached the jar twice. -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
