@@ -675,14 +675,14 @@ public class Operations {
 	}
 
 	/**
-	 * Prints key-value entries present in the first {@link Multimap} but not in
-	 * the second {@link Multimap} using the given {@link Writer} and prefixing
-	 * all messages with a given prefix.
+	 * Prints key-value entries present in the first {@link MutableMultimap} but
+	 * not in the second {@link MutableMultimap} using the given {@link Writer} and
+	 * prefixing all messages with a given prefix.
 	 * 
 	 * @param <K>
-	 *            the type of the keys of the {@link Multimap}
+	 *            the type of the keys of the {@link MutableMultimap}
 	 * @param <V>
-	 *            the type of the values of the {@link Multimap}
+	 *            the type of the values of the {@link MutableMultimap}
 	 * @param first
 	 *            the entries that should be printed
 	 * @param second
