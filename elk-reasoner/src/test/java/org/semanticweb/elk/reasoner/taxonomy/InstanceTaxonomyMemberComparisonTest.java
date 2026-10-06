@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.semanticweb.elk.exceptions.ElkException;
@@ -272,131 +271,6 @@ public class InstanceTaxonomyMemberComparisonTest {
 		assertNotSame(nodeSameA1, nodeSameC1);
 		assertNotSame(nodeSameA1, nodeSameC2);
 		assertNotSame(nodeSameA1, nodeSameC3);
-
-	}
-
-	@Test
-	@Ignore // TODO: read comment in
-			// org.semanticweb.elk.reasoner.taxonomy.InstanceTaxonomyComputationFactory
-	public void testMemberSet() throws ElkException {
-		final InstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = instanceTaxonomyProvider_
-				.getTaxonomy(
-						"taxonomy_member_comparison/instance_member_set.owl");
-
-		final ElkNamedIndividual sameA1 = OBJECT_FACTORY.getNamedIndividual(
-				new ElkFullIri("http://example.org/same#a"));
-		final ElkNamedIndividual sameA2 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same1:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"a"));
-		final ElkNamedIndividual sameA3 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same2:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"a"));
-		final ElkNamedIndividual differentA1 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkFullIri("http://example.org/different#a"));
-		final ElkNamedIndividual differentA2 = OBJECT_FACTORY
-				.getNamedIndividual(new ElkAbbreviatedIri(
-						new ElkPrefixImpl("different:",
-								new ElkFullIri(
-										"http://example.org/different#")),
-						"a"));
-
-		final ElkNamedIndividual sameB1 = OBJECT_FACTORY.getNamedIndividual(
-				new ElkFullIri("http://example.org/same#b"));
-		final ElkNamedIndividual sameB2 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same1:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"b"));
-		final ElkNamedIndividual sameB3 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same2:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"b"));
-		final ElkNamedIndividual differentB1 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkFullIri("http://example.org/different#b"));
-		final ElkNamedIndividual differentB2 = OBJECT_FACTORY
-				.getNamedIndividual(new ElkAbbreviatedIri(
-						new ElkPrefixImpl("different:",
-								new ElkFullIri(
-										"http://example.org/different#")),
-						"b"));
-
-		final ElkNamedIndividual sameC1 = OBJECT_FACTORY.getNamedIndividual(
-				new ElkFullIri("http://example.org/same#c"));
-		final ElkNamedIndividual sameC2 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same1:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"c"));
-		final ElkNamedIndividual sameC3 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkAbbreviatedIri(
-								new ElkPrefixImpl("same2:",
-										new ElkFullIri(
-												"http://example.org/same#")),
-								"c"));
-		final ElkNamedIndividual differentC1 = OBJECT_FACTORY
-				.getNamedIndividual(
-						new ElkFullIri("http://example.org/different#c"));
-		final ElkNamedIndividual differentC2 = OBJECT_FACTORY
-				.getNamedIndividual(new ElkAbbreviatedIri(
-						new ElkPrefixImpl("different:",
-								new ElkFullIri(
-										"http://example.org/different#")),
-						"c"));
-
-		// The same members are in the node only once
-
-		final InstanceNode<ElkClass, ElkNamedIndividual> nodeA = taxonomy
-				.getInstanceNode(differentA1);
-
-		assertEquals(3, nodeA.size());
-		assertTrue(nodeA.contains(differentA1));
-		assertTrue(nodeA.contains(differentA2));
-		assertTrue(nodeA.contains(sameA1));
-		assertTrue(nodeA.contains(sameA2));
-		assertTrue(nodeA.contains(sameA3));
-		assertFalse(nodeA.contains(differentB1));
-		assertFalse(nodeA.contains(differentB2));
-		assertTrue(nodeA.contains(sameB1));
-		assertTrue(nodeA.contains(sameB2));
-		assertTrue(nodeA.contains(sameB3));
-
-		// Node does not contain members that should be different
-
-		final InstanceNode<ElkClass, ElkNamedIndividual> nodeB = taxonomy
-				.getInstanceNode(differentB1);
-
-		assertTrue(nodeB.contains(differentB1));
-		assertTrue(nodeB.contains(differentB2));
-		assertFalse(nodeB.contains(sameB1));
-		assertFalse(nodeB.contains(sameB2));
-		assertFalse(nodeB.contains(sameB3));
-
-		final InstanceNode<ElkClass, ElkNamedIndividual> nodeC = taxonomy
-				.getInstanceNode(sameC1);
-
-		assertFalse(nodeC.contains(differentC1));
-		assertFalse(nodeC.contains(differentC2));
-		assertTrue(nodeC.contains(sameC1));
-		assertTrue(nodeC.contains(sameC2));
-		assertTrue(nodeC.contains(sameC3));
 
 	}
 
