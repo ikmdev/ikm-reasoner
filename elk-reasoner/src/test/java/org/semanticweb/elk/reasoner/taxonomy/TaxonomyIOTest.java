@@ -121,7 +121,7 @@ public class TaxonomyIOTest {
 
 		StringReader reader = new StringReader(writer.getBuffer().toString());
 		Owl2Parser parser = parserFactory.getParser(reader);
-		InstanceTaxonomy<ElkClass, ElkNamedIndividual> loaded = MockTaxonomyLoader
+		InstanceTaxonomy<ElkClass, ElkNamedIndividual> loaded = MockInstanceTaxonomyLoader
 				.load(objectFactory, parser);
 
 		final StringWriter loadedWriter = new StringWriter();

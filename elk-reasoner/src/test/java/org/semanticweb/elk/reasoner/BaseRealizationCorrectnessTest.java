@@ -37,7 +37,7 @@ import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
 import org.semanticweb.elk.owl.parsing.Owl2ParseException;
 import org.semanticweb.elk.owl.parsing.javacc.Owl2FunctionalStyleParserFactory;
-import org.semanticweb.elk.reasoner.taxonomy.MockTaxonomyLoader;
+import org.semanticweb.elk.reasoner.taxonomy.MockInstanceTaxonomyLoader;
 import org.semanticweb.elk.reasoner.taxonomy.model.InstanceTaxonomy;
 import org.semanticweb.elk.testing.ConfigurationUtils;
 import org.semanticweb.elk.testing.ElkTestUtils;
@@ -90,7 +90,7 @@ public abstract class BaseRealizationCorrectnessTest extends
 						// input and expected output are OWL ontologies
 						ElkObject.Factory objectFactory = new ElkObjectEntityRecyclingFactory();
 						try (InputStream stream = urls.get(1).openStream()) {
-							InstanceTaxonomy<ElkClass, ElkNamedIndividual> expectedTaxonomy = MockTaxonomyLoader
+							InstanceTaxonomy<ElkClass, ElkNamedIndividual> expectedTaxonomy = MockInstanceTaxonomyLoader
 									.load(objectFactory,
 											new Owl2FunctionalStyleParserFactory(
 													objectFactory)

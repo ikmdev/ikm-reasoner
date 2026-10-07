@@ -6,5 +6,4 @@ Prefix(owl: = <http://www.w3.org/2002/07/owl#>)
 Ontology(
 # inconsistent
 EquivalentClasses(owl:Nothing owl:Thing :A :B :C)
-ClassAssertion(owl:Nothing :a)
 )

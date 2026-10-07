@@ -131,7 +131,7 @@ public class InstanceTaxonomyMemberComparisonTest {
 				final String resource) throws ElkException {
 			try (InputStream testInput = getClass().getClassLoader()
 					.getResourceAsStream(resource)) {
-				return MockTaxonomyLoader.load(OBJECT_FACTORY,
+				return MockInstanceTaxonomyLoader.load(OBJECT_FACTORY,
 						new Owl2FunctionalStyleParserFactory()
 								.getParser(testInput));
 			} catch (IOException e) {
