@@ -27,17 +27,14 @@ import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.exceptions.ElkRuntimeException;
 import org.semanticweb.elk.reasoner.incremental.IncrementalStages;
 import org.semanticweb.elk.reasoner.indexing.model.IndexedClass;
-import org.semanticweb.elk.reasoner.indexing.model.IndexedClassEntity;
-import org.semanticweb.elk.reasoner.indexing.model.IndexedIndividual;
 import org.semanticweb.elk.reasoner.taxonomy.TaxonomyCleaning;
 import org.semanticweb.elk.util.collections.Operations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Used to clean both class and instance taxonomy. Removes nodes with classes or
- * individuals that became not saturated. {@link ClassTaxonomyState} and
- * {@link InstanceTaxonomyState} keep track of these classes and individuals.
+ * Used to clean the class taxonomy. Removes nodes with classes that became not
+ * saturated. {@link ClassTaxonomyState} keeps track of these classes.
  * 
  * @author Pavel Klinov
  * 
@@ -69,18 +66,13 @@ public class IncrementalTaxonomyCleaningStage extends AbstractReasonerStage {
 
 		final Collection<IndexedClass> classesToRemove = reasoner.classTaxonomyState
 				.getToRemove();
-		final Collection<IndexedIndividual> individualsToRemove = reasoner.instanceTaxonomyState
-				.getToRemove();
-		Collection<IndexedClassEntity> inputs = Operations.getCollection(
-				Operations.concat(classesToRemove, individualsToRemove),
-				classesToRemove.size() + individualsToRemove.size());
+		Collection<IndexedClass> inputs = Operations.getCollection(
+				classesToRemove, classesToRemove.size());
 
 		LOGGER_.trace("{}: classes to remove", classesToRemove);
-		LOGGER_.trace("{}: individuals to remove", individualsToRemove);
 
 		cleaning_ = new TaxonomyCleaning(inputs, reasoner.getInterrupter(),
 				reasoner.classTaxonomyState.getTaxonomy(),
-				reasoner.instanceTaxonomyState.getTaxonomy(),
 				reasoner.getProcessExecutor(), workerNo,
 				reasoner.getProgressMonitor());
 
@@ -102,12 +94,6 @@ public class IncrementalTaxonomyCleaningStage extends AbstractReasonerStage {
 		if (!classesToRemove.isEmpty()) {
 			throw new ElkRuntimeException(TaxonomyCleaning.class.getSimpleName()
 					+ " did not remove some classes from the taxonomy!");
-		}
-		final Collection<IndexedIndividual> individualsToRemove = reasoner.instanceTaxonomyState
-				.getToRemove();
-		if (!individualsToRemove.isEmpty()) {
-			throw new ElkRuntimeException(TaxonomyCleaning.class.getSimpleName()
-					+ " did not remove some individuals from the taxonomy!");
 		}
 		this.cleaning_ = null;
 

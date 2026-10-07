@@ -38,7 +38,7 @@ public class IncompletenessManager {
 
 	private final IncompletenessMonitor ontologySatisfiabilityMonitor_,
 			classTaxonomyMonitor_, objectPropertyTaxonomyMonitor_,
-			instanceTaxonomyMonitor_, generalQueryMonitor_;
+			generalQueryMonitor_;
 
 	public IncompletenessManager(OccurrenceManager occurrencesInOntology) {
 		this.occurrencesInOntology_ = occurrencesInOntology;
@@ -59,10 +59,6 @@ public class IncompletenessManager {
 				ontologySatisfiabilityMonitor_,
 				"Class inclusions may be incomplete because ontology satisfiability cannot be checked!");
 
-		instanceTaxonomyMonitor_ = new IncompletenessStatusMonitor(
-				ontologySatisfiabilityMonitor_,
-				"Instance relations may be incomplete because ontology satisfiability cannot be checked!");
-
 		generalQueryMonitor_ = new IncompletenessStatusMonitor(
 				ontologySatisfiabilityMonitor_,
 				"Query answers may be incomplete because ontology satisfiability cannot be checked!");
@@ -79,10 +75,6 @@ public class IncompletenessManager {
 
 	public IncompletenessMonitor getObjectPropertyTaxonomyMonitor() {
 		return objectPropertyTaxonomyMonitor_;
-	}
-
-	public IncompletenessMonitor getInstanceTaxonomyMonitor() {
-		return instanceTaxonomyMonitor_;
 	}
 
 	public IncompletenessMonitor getQueryMonitor(

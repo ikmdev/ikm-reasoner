@@ -40,10 +40,8 @@ import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassAssertionAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.owl.interfaces.ElkEquivalentClassesAxiom;
-import org.semanticweb.elk.owl.interfaces.ElkIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
-import org.semanticweb.elk.owl.interfaces.ElkSameIndividualAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkSubClassOfAxiom;
 import org.semanticweb.elk.owl.iris.ElkIri;
 import org.semanticweb.elk.owl.iris.ElkPrefix;
@@ -55,7 +53,6 @@ import org.semanticweb.elk.owl.predefined.PredefinedElkIris;
 import org.semanticweb.elk.owl.visitors.DummyElkAxiomVisitor;
 import org.semanticweb.elk.owl.visitors.ElkAxiomVisitor;
 import org.semanticweb.elk.reasoner.taxonomy.ElkClassKeyProvider;
-import org.semanticweb.elk.reasoner.taxonomy.ElkIndividualKeyProvider;
 import org.semanticweb.elk.reasoner.taxonomy.impl.SimpleNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.Node;
 import org.semanticweb.elk.util.collections.Operations;
@@ -74,8 +71,8 @@ public class ElkExpectedTestOutputLoader {
 	 * equivalence axiom if there is more than one class in the set. Whether
 	 * such a set contains super- or sub-classes of the query class should be
 	 * expressed by a single subclass axiom of the query class with one of the
-	 * related classes. Analogously for individuals: grouped by same individuals
-	 * axioms and related by class assertion axioms.
+	 * related classes. Instances of a query class are expressed by class
+	 * assertion axioms; they become class assertion entailment queries.
 	 * 
 	 * @param expectedOutput
 	 *            contains the ontology that encode the expected output
@@ -88,7 +85,6 @@ public class ElkExpectedTestOutputLoader {
 		final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent = new HashMap<ElkClassExpression, Map<ElkIri, ElkClass>>();
 		final MutableMultimap<ElkClassExpression, ElkClass> superClasses = new UnifiedSetMultimap<ElkClassExpression, ElkClass>();
 		final MutableMultimap<ElkClassExpression, ElkClass> subClasses = new UnifiedSetMultimap<ElkClassExpression, ElkClass>();
-		final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same = new HashMap<ElkIndividual, Map<ElkIri, ElkNamedIndividual>>();
 		final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances = new UnifiedSetMultimap<ElkClassExpression, ElkNamedIndividual>();
 
 		final ElkAxiomVisitor<Void> visitor = new DummyElkAxiomVisitor<Void>() {
@@ -130,24 +126,6 @@ public class ElkExpectedTestOutputLoader {
 									.getSuperClassExpression());
 				} else {
 					complex.add(elkSubClassOfAxiom.getSuperClassExpression());
-				}
-				return null;
-			}
-
-			@Override
-			public Void visit(
-					final ElkSameIndividualAxiom elkSameIndividualAxiom) {
-				final Map<ElkIri, ElkNamedIndividual> individuals = new HashMap<ElkIri, ElkNamedIndividual>();
-				for (final ElkIndividual i : elkSameIndividualAxiom
-						.getIndividuals()) {
-					if (i instanceof ElkNamedIndividual) {
-						final ElkNamedIndividual ni = (ElkNamedIndividual) i;
-						individuals.put(ni.getIri(), ni);
-					}
-				}
-				for (final ElkIndividual i : elkSameIndividualAxiom
-						.getIndividuals()) {
-					same.put(i, individuals);
 				}
 				return null;
 			}
@@ -196,7 +174,7 @@ public class ElkExpectedTestOutputLoader {
 			});
 
 			return new ElkExpectedTestOutputLoader(complex, equivalent,
-					superClasses, subClasses, same, instances);
+					superClasses, subClasses, instances);
 
 		} catch (final Owl2ParseException e) {
 			throw new IllegalArgumentException(e);
@@ -208,7 +186,6 @@ public class ElkExpectedTestOutputLoader {
 	private final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent_;
 	private final MutableMultimap<ElkClassExpression, ElkClass> superClasses_;
 	private final MutableMultimap<ElkClassExpression, ElkClass> subClasses_;
-	private final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same_;
 	private final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances_;
 
 	private ElkExpectedTestOutputLoader(
@@ -216,13 +193,11 @@ public class ElkExpectedTestOutputLoader {
 			final Map<ElkClassExpression, Map<ElkIri, ElkClass>> equivalent,
 			final MutableMultimap<ElkClassExpression, ElkClass> superClasses,
 			final MutableMultimap<ElkClassExpression, ElkClass> subClasses,
-			final Map<ElkIndividual, Map<ElkIri, ElkNamedIndividual>> same,
 			final MutableMultimap<ElkClassExpression, ElkNamedIndividual> instances) {
 		this.queryClasses_ = queryClasses;
 		this.equivalent_ = equivalent;
 		this.superClasses_ = superClasses;
 		this.subClasses_ = subClasses;
-		this.same_ = same;
 		this.instances_ = instances;
 	}
 
@@ -350,46 +325,6 @@ public class ElkExpectedTestOutputLoader {
 
 							new ElkDirectSubClassesTestOutput(queryClass,
 									subNodes)));
-		}
-
-		return result;
-	}
-
-	public Collection<QueryTestManifest<ElkClassExpression, ElkDirectInstancesTestOutput>> getInstancesManifests(
-			final String name, final URL input) {
-
-		final List<QueryTestManifest<ElkClassExpression, ElkDirectInstancesTestOutput>> result = new ArrayList<>(
-				queryClasses_.size());
-
-		for (final ElkClassExpression queryClass : queryClasses_) {
-
-			final Collection<Node<ElkNamedIndividual>> instances = Operations
-					.map(instances_.get(queryClass).toList(),
-							new Operations.Transformation<ElkNamedIndividual, Node<ElkNamedIndividual>>() {
-								@Override
-								public Node<ElkNamedIndividual> transform(
-										final ElkNamedIndividual ind) {
-									final Map<ElkIri, ElkNamedIndividual> indSame = same_
-											.get(ind);
-									if (indSame != null) {
-										Collection<ElkNamedIndividual> values = indSame
-												.values();
-										return new SimpleNode<>(values,
-												values.size(),
-												ElkIndividualKeyProvider.INSTANCE);
-									}
-									// else
-									return new SimpleNode<>(
-											Collections.singleton(ind), 1,
-											ElkIndividualKeyProvider.INSTANCE);
-								}
-							});
-
-			result.add(
-					new QueryTestManifest<ElkClassExpression, ElkDirectInstancesTestOutput>(
-							name + " getDirectInstances", input, queryClass,
-							new ElkDirectInstancesTestOutput(queryClass,
-									instances)));
 		}
 
 		return result;

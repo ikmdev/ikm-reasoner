@@ -38,7 +38,6 @@ import org.junit.Test;
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
-import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.iris.ElkIri;
@@ -50,9 +49,7 @@ import org.semanticweb.elk.owl.parsing.javacc.Owl2FunctionalStyleParserFactory;
 import org.semanticweb.elk.reasoner.ElkInconsistentOntologyException;
 import org.semanticweb.elk.reasoner.TestReasonerUtils;
 import org.semanticweb.elk.reasoner.completeness.TestIncompleteness;
-import org.semanticweb.elk.reasoner.taxonomy.hashing.InstanceTaxonomyHasher;
 import org.semanticweb.elk.reasoner.taxonomy.hashing.TaxonomyHasher;
-import org.semanticweb.elk.reasoner.taxonomy.model.InstanceTaxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 
 /**
@@ -106,36 +103,6 @@ public class TaxonomyIOTest {
 				+ "loaded:\n"
 				+ loadedWriter.getBuffer().toString(),
 				TaxonomyHasher.hash(original) == TaxonomyHasher.hash(loaded)
-				&& original.equals(loaded));
-		// @formatter:on
-	}
-
-	@Test
-	public void instanceTaxonomyRoundtrip() throws IOException,
-			Owl2ParseException, ElkInconsistentOntologyException, ElkException {
-		InstanceTaxonomy<ElkClass, ElkNamedIndividual> original = loadAndClassify(
-				"io/instance_taxonomy.owl");
-		StringWriter writer = new StringWriter();
-
-		TaxonomyPrinter.dumpInstanceTaxomomy(original, writer, false);
-
-		StringReader reader = new StringReader(writer.getBuffer().toString());
-		Owl2Parser parser = parserFactory.getParser(reader);
-		InstanceTaxonomy<ElkClass, ElkNamedIndividual> loaded = MockInstanceTaxonomyLoader
-				.load(objectFactory, parser);
-
-		final StringWriter loadedWriter = new StringWriter();
-		TaxonomyPrinter.dumpInstanceTaxomomy(loaded, loadedWriter, false);
-
-		// compare
-		// @formatter:off
-		assertTrue("Taxonomies are not equal!\n"
-				+ "original:\n"
-				+ writer.getBuffer().toString()
-				+ "\n"
-				+ "loaded:\n"
-				+ loadedWriter.getBuffer().toString(),
-				InstanceTaxonomyHasher.hash(original) == InstanceTaxonomyHasher.hash(loaded)
 				&& original.equals(loaded));
 		// @formatter:on
 	}
@@ -222,12 +189,12 @@ public class TaxonomyIOTest {
 		assertSame(taxonomy.getTopNode(), taxonomy.getBottomNode());
 	}
 
-	private InstanceTaxonomy<ElkClass, ElkNamedIndividual> loadAndClassify(
-			String resource) throws IOException, Owl2ParseException,
+	private Taxonomy<ElkClass> loadAndClassify(String resource)
+			throws IOException, Owl2ParseException,
 			ElkInconsistentOntologyException, ElkException {
 		try (InputStream stream = getInputStream(resource)) {
 			return TestIncompleteness.getValue(TestReasonerUtils
-					.createTestReasoner(stream, 1).getInstanceTaxonomy());
+					.createTestReasoner(stream, 1).getTaxonomy());
 		}
 
 	}
