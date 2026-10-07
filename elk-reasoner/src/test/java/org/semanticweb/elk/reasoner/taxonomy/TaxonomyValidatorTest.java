@@ -32,7 +32,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.semanticweb.elk.io.IOUtils;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
-import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.iris.ElkFullIri;
 import org.semanticweb.elk.owl.managers.ElkObjectEntityRecyclingFactory;
@@ -65,15 +64,15 @@ public class TaxonomyValidatorTest {
 
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testNodesNonDisjoint() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
 		ElkClass C = factory.getClass(new ElkFullIri("#C"));
 		// doing this manually because the taxonomy will try to prevent us from
 		// creating an invalid one
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(C));
 		// The nodes for A and C overlap on B
 		taxonomy.getNode(A).members.add(B);
 		taxonomy.getNode(C).members.add(B);
@@ -86,7 +85,7 @@ public class TaxonomyValidatorTest {
 
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testNodeLinksInconsistent() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
@@ -94,10 +93,10 @@ public class TaxonomyValidatorTest {
 		ElkClass D = factory.getClass(new ElkFullIri("#D"));
 		// doing this manually because the taxonomy will try to prevent us from
 		// creating an invalid one
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(B));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
-		taxonomy.getCreateTypeNode(Arrays.asList(D));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(B));
+		taxonomy.getCreateNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(D));
 
 		taxonomy.getNode(C).addDirectParent(taxonomy.getNode(A));
 		taxonomy.getNode(D).addDirectParent(taxonomy.getNode(B));
@@ -112,17 +111,17 @@ public class TaxonomyValidatorTest {
 
 	@Test
 	public void testAcyclic() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
 		ElkClass C = factory.getClass(new ElkFullIri("#C"));
 		ElkClass D = factory.getClass(new ElkFullIri("#D"));
 
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(B));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
-		taxonomy.getCreateTypeNode(Arrays.asList(D));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(B));
+		taxonomy.getCreateNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(D));
 
 		taxonomy.getNode(B).addDirectParent(taxonomy.getNode(A));
 		taxonomy.getNode(C).addDirectParent(taxonomy.getNode(A));
@@ -135,17 +134,17 @@ public class TaxonomyValidatorTest {
 
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testCyclic() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
 		ElkClass C = factory.getClass(new ElkFullIri("#C"));
 		ElkClass D = factory.getClass(new ElkFullIri("#D"));
 
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(B));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
-		taxonomy.getCreateTypeNode(Arrays.asList(D));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(B));
+		taxonomy.getCreateNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(D));
 
 		taxonomy.getNode(B).addDirectParent(taxonomy.getNode(A));
 		taxonomy.getNode(C).addDirectParent(taxonomy.getNode(A));
@@ -160,17 +159,17 @@ public class TaxonomyValidatorTest {
 
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testSelfLoop() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
 		ElkClass C = factory.getClass(new ElkFullIri("#C"));
 		ElkClass D = factory.getClass(new ElkFullIri("#D"));
 
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(B));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
-		taxonomy.getCreateTypeNode(Arrays.asList(D));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(B));
+		taxonomy.getCreateNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(D));
 
 		taxonomy.getNode(B).addDirectParent(taxonomy.getNode(A));
 		taxonomy.getNode(C).addDirectParent(taxonomy.getNode(A));
@@ -185,17 +184,17 @@ public class TaxonomyValidatorTest {
 
 	@Test(expected = InvalidTaxonomyException.class)
 	public void testNonReduced() throws Exception {
-		MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> taxonomy = createEmptyTaxonomy();
+		MockTaxonomy<ElkClass> taxonomy = createEmptyTaxonomy();
 		ElkObject.Factory factory = new ElkObjectEntityRecyclingFactory();
 		ElkClass A = factory.getClass(new ElkFullIri("#A"));
 		ElkClass B = factory.getClass(new ElkFullIri("#B"));
 		ElkClass C = factory.getClass(new ElkFullIri("#C"));
 		ElkClass D = factory.getClass(new ElkFullIri("#D"));
 
-		taxonomy.getCreateTypeNode(Arrays.asList(A));
-		taxonomy.getCreateTypeNode(Arrays.asList(B));
-		taxonomy.getCreateTypeNode(Arrays.asList(C));
-		taxonomy.getCreateTypeNode(Arrays.asList(D));
+		taxonomy.getCreateNode(Arrays.asList(A));
+		taxonomy.getCreateNode(Arrays.asList(B));
+		taxonomy.getCreateNode(Arrays.asList(C));
+		taxonomy.getCreateNode(Arrays.asList(D));
 
 		taxonomy.getNode(B).addDirectParent(taxonomy.getNode(A));
 		taxonomy.getNode(C).addDirectParent(taxonomy.getNode(A));
@@ -207,12 +206,11 @@ public class TaxonomyValidatorTest {
 				.validate(taxonomy);
 	}
 
-	private MockInstanceTaxonomy<ElkClass, ElkNamedIndividual> createEmptyTaxonomy() {
+	private MockTaxonomy<ElkClass> createEmptyTaxonomy() {
 		PredefinedElkClassFactory factory = new ElkObjectEntityRecyclingFactory();
-		return new MockInstanceTaxonomy<ElkClass, ElkNamedIndividual>(
+		return new MockTaxonomy<ElkClass>(
 				factory.getOwlThing(), factory.getOwlNothing(),
-				ElkClassKeyProvider.INSTANCE,
-				ElkIndividualKeyProvider.INSTANCE);
+				ElkClassKeyProvider.INSTANCE);
 	}
 
 	@SuppressWarnings("resource")

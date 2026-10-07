@@ -88,15 +88,4 @@ public interface OWLReasonerConfiguration extends Serializable {
 	 * @return The fresh entity policy.
 	 */
 	FreshEntityPolicy getFreshEntityPolicy();
-
-	/**
-	 * Gets the {@link IndividualNodeSetPolicy} which determines how
-	 * {@code NodeSet}s of named individuals are returned from the reasoner.
-	 * 
-	 * @return The {@code IndividualNodeSetPolicy} that should be used. By default
-	 *         the policy is {@link IndividualNodeSetPolicy#BY_NAME} i.e. by default
-	 *         individuals that are the same as each other are not grouped into the
-	 *         same node within a node set.
-	 */
-	IndividualNodeSetPolicy getIndividualNodeSetPolicy();
 }

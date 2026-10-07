@@ -29,8 +29,7 @@ import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
 
 /**
- * Compares two taxonomies for equality. For comparing instance taxonomies see
- * {@link InstanceTaxonomyEqualator}. Two taxonomies are equal when they have
+ * Compares two taxonomies for equality. Two taxonomies are equal when they have
  * the same set of nodes, each of which has the same set of members, super-nodes
  * and sub-nodes.
  * 

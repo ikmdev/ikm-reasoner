@@ -39,8 +39,6 @@ import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
 import org.semanticweb.elk.owl.interfaces.ElkDataProperty;
 import org.semanticweb.elk.owl.interfaces.ElkDataPropertyExpression;
-import org.semanticweb.elk.owl.interfaces.ElkLiteral;
-import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.interfaces.ElkObjectPropertyExpression;
@@ -71,7 +69,6 @@ import dev.ikm.elk.snomed.owlapix.model.OWLOntologyChangeProgressListener;
 import dev.ikm.elk.snomed.owlapix.model.OWLOntologyManager;
 import dev.ikm.elk.snomed.owlapix.reasoner.BufferingMode;
 import dev.ikm.elk.snomed.owlapix.reasoner.FreshEntityPolicy;
-import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.InferenceType;
 
 /**
@@ -354,22 +351,6 @@ public class ElkReasoner {
 	}
 
 //	@Override
-	public Set<ElkLiteral> getDataPropertyValues(ElkNamedIndividual arg0, ElkDataProperty arg1) throws ElkException {
-		LOGGER_.trace("getDataPropertyValues(ElkNamedIndividual, ElkDataProperty)");
-		checkInterrupted();
-		// TODO Provide implementation
-		throw unsupportedOwlApiMethod("getDataPropertyValues(ElkNamedIndividual, ElkDataProperty)");
-	}
-
-//	@Override
-	public Set<ElkNamedIndividual> getDifferentIndividuals(ElkNamedIndividual arg0) throws ElkException {
-		LOGGER_.trace("getDifferentIndividuals(ElkNamedIndividual)");
-		checkInterrupted();
-		// TODO Provide implementation
-		throw unsupportedOwlApiMethod("getDifferentIndividuals(ElkNamedIndividual)");
-	}
-
-//	@Override
 	public Set<ElkClass> getDisjointClasses(ElkClassExpression arg0) throws ElkException {
 		LOGGER_.trace("getDisjointClasses(ElkClassExpression)");
 		checkInterrupted();
@@ -438,26 +419,6 @@ public class ElkReasoner {
 	}
 
 //	@Override
-	public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
-		LOGGER_.trace("getIndividualNodeSetPolicy()");
-		return IndividualNodeSetPolicy.BY_NAME;
-	}
-
-	public IncompleteResult<? extends Set<? extends Node<ElkNamedIndividual>>> computeInstances(ElkClassExpression ce,
-			boolean direct) throws ElkException {
-		checkInterrupted();
-		return reasoner_.getInstances(ce, direct);
-	}
-
-//	@Override
-	public Set<? extends Node<ElkNamedIndividual>> getInstances(ElkClassExpression ce, boolean direct)
-			throws ElkException {
-		LOGGER_.trace("getInstances(ElkClassExpression, boolean)");
-		checkInterrupted();
-		return Incompleteness.getValue(computeInstances(ce, direct));
-	}
-
-//	@Override
 	public Node<ElkObjectPropertyExpression> getInverseObjectProperties(ElkObjectPropertyExpression arg0)
 			throws ElkException {
 		LOGGER_.trace("getInverseObjectProperties(ElkObjectPropertyExpression)");
@@ -483,15 +444,6 @@ public class ElkReasoner {
 	}
 
 //	@Override
-	public Set<ElkNamedIndividual> getObjectPropertyValues(ElkNamedIndividual arg0, ElkObjectPropertyExpression arg1)
-			throws ElkException {
-		LOGGER_.trace("getObjectPropertyValues(ElkNamedIndividual, ElkObjectPropertyExpression)");
-		checkInterrupted();
-		// TODO Provide implementation
-		throw unsupportedOwlApiMethod("getObjectPropertyValues(ElkNamedIndividual, ElkObjectPropertyExpression)");
-	}
-
-//	@Override
 	public Set<ElkAxiom> getPendingAxiomAdditions() {
 		LOGGER_.trace("getPendingAxiomAdditions()");
 		return bufferedChangesLoader_.getPendingAxiomAdditions();
@@ -512,7 +464,7 @@ public class ElkReasoner {
 //	@Override
 	public Set<InferenceType> getPrecomputableInferenceTypes() {
 		LOGGER_.trace("getPrecomputableInferenceTypes()");
-		return new HashSet<InferenceType>(Arrays.asList(InferenceType.CLASS_ASSERTIONS, InferenceType.CLASS_HIERARCHY,
+		return new HashSet<InferenceType>(Arrays.asList(InferenceType.CLASS_HIERARCHY,
 				InferenceType.OBJECT_PROPERTY_HIERARCHY));
 	}
 
@@ -552,15 +504,6 @@ public class ElkReasoner {
 	public OWLOntology getRootOntology() {
 		LOGGER_.trace("getRootOntology()");
 		return owlOntology_;
-	}
-
-//	@Override
-	public ElkNamedIndividual getSameIndividuals(ElkNamedIndividual arg0) throws ElkException {
-		LOGGER_.trace("getSameIndividuals(ElkNamedIndividual)");
-		checkInterrupted();
-		// TODO This needs to be updated when we support nominals
-//		return new OWLNamedIndividualNode(arg0);
-		return arg0;
 	}
 
 	public IncompleteResult<? extends Set<? extends Node<ElkClass>>> computeSubClasses(ElkClassExpression ce,
@@ -674,18 +617,6 @@ public class ElkReasoner {
 		return Incompleteness.getValue(computeTopObjectPropertyNode());
 	}
 
-	public IncompleteResult<? extends Set<? extends Node<ElkClass>>> computeTypes(ElkNamedIndividual ind,
-			boolean direct) throws ElkException {
-		checkInterrupted();
-		return reasoner_.getTypes(ind, direct);
-	}
-
-//	@Override
-	public Set<? extends Node<ElkClass>> getTypes(ElkNamedIndividual ind, boolean direct) throws ElkException {
-		LOGGER_.trace("getTypes(ElkNamedIndividual, boolean)");
-		return Incompleteness.getValue(computeTypes(ind, direct));
-	}
-
 	public IncompleteResult<? extends Node<ElkClass>> computeUnsatisfiableClasses() throws ElkException {
 		checkInterrupted();
 		return getClassNode(objectFactory_.getOwlNothing());
@@ -755,8 +686,6 @@ public class ElkReasoner {
 		LOGGER_.trace("isPrecomputed(InferenceType)");
 		if (inferenceType.equals(InferenceType.CLASS_HIERARCHY))
 			return reasoner_.doneTaxonomy();
-		if (inferenceType.equals(InferenceType.CLASS_ASSERTIONS))
-			return reasoner_.doneInstanceTaxonomy();
 		if (inferenceType.equals(InferenceType.OBJECT_PROPERTY_HIERARCHY)) {
 			return reasoner_.doneObjectPropertyTaxonomy();
 		}
@@ -786,8 +715,6 @@ public class ElkReasoner {
 			for (InferenceType inferenceType : inferenceTypes) {
 				if (inferenceType.equals(InferenceType.CLASS_HIERARCHY))
 					reasoner_.getTaxonomy();
-				else if (inferenceType.equals(InferenceType.CLASS_ASSERTIONS))
-					reasoner_.getInstanceTaxonomy();
 				else if (inferenceType.equals(InferenceType.OBJECT_PROPERTY_HIERARCHY)) {
 					reasoner_.getObjectPropertyTaxonomy();
 				}

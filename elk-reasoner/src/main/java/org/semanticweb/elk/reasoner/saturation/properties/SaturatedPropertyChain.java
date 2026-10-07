@@ -93,25 +93,25 @@ public class SaturatedPropertyChain {
 	volatile boolean leftSubComposableSubPropertiesByRightPropertiesComputed = false;
 
 	/**
-	 * A {@link Multimap} from R to S such that ObjectPropertyChain(R, root) is
+	 * A {@link MutableMultimap} from R to S such that ObjectPropertyChain(R, root) is
 	 * a subrole of S
 	 */
 	MutableSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> nonRedundantCompositionsByLeftSubProperty;
 	
 	/**
-	 * A {@link Multimap} from R to S such that ObjectPropertyChain(R, root) is
+	 * A {@link MutableMultimap} from R to S such that ObjectPropertyChain(R, root) is
 	 * a subrole of S, which is considered to be redundant
 	 */
 	MutableSetMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> redundantCompositionsByLeftSubProperty;
 
 	/**
-	 * A {@link Multimap} from R to S such that ObjectPropertyChain(root, R) is
+	 * A {@link MutableMultimap} from R to S such that ObjectPropertyChain(root, R) is
 	 * a subrole of S
 	 */
 	MutableSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> nonRedundantCompositionsByRightSubProperty;
 	
 	/**
-	 * A {@link Multimap} from R to S such that ObjectPropertyChain(root, R) is
+	 * A {@link MutableMultimap} from R to S such that ObjectPropertyChain(root, R) is
 	 * a subrole of S, which is considered to be redundant
 	 */
 	MutableSetMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> redundantCompositionsByRightSubProperty;
@@ -187,7 +187,7 @@ public class SaturatedPropertyChain {
 	}
 
 	/**
-	 * @return A {@link Multimap} from R to S such that ObjectPropertyChain(R,
+	 * @return A {@link MutableMultimap} from R to S such that ObjectPropertyChain(R,
 	 *         root) is a subrole of S, non-redundant ones
 	 */
 	public MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> getNonRedundantCompositionsByLeftSubProperty() {
@@ -197,7 +197,7 @@ public class SaturatedPropertyChain {
 	}
 	
 	/**
-	 * @return A {@link Multimap} from R to S such that ObjectPropertyChain(R,
+	 * @return A {@link MutableMultimap} from R to S such that ObjectPropertyChain(R,
 	 *         root) is a subrole of S, redundant ones
 	 */
 	public MutableMultimap<IndexedObjectProperty, IndexedComplexPropertyChain> getRedundantCompositionsByLeftSubProperty() {
@@ -207,7 +207,7 @@ public class SaturatedPropertyChain {
 	}
 
 	/**
-	 * @return A {@link Multimap} from R to S such that
+	 * @return A {@link MutableMultimap} from R to S such that
 	 *         ObjectPropertyChain(root, R) is a subrole of S, non-redundant ones
 	 */
 	public MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> getNonRedundantCompositionsByRightSubProperty() {
@@ -217,7 +217,7 @@ public class SaturatedPropertyChain {
 	}
 	
 	/**
-	 * @return A {@link Multimap} from R to S such that
+	 * @return A {@link MutableMultimap} from R to S such that
 	 *         ObjectPropertyChain(root, R) is a subrole of S, including the redundant ones
 	 */
 	public MutableMultimap<IndexedPropertyChain, IndexedComplexPropertyChain> getRedundantCompositionsByRightSubProperty() {

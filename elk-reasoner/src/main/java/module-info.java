@@ -31,7 +31,6 @@ open module org.semanticweb.elk.reasoner {
 	requires org.semanticweb.elk.util.common;
 	requires org.semanticweb.elk.util.concurrent;
 	requires org.semanticweb.elk.util.hashing;
-	requires org.semanticweb.elk.util.io;
 	requires org.semanticweb.elk.util.logging;
 
 	exports org.semanticweb.elk.loading;

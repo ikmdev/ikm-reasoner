@@ -31,7 +31,6 @@ import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkDeclarationAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
 import org.semanticweb.elk.owl.interfaces.ElkEquivalentObjectPropertiesAxiom;
-import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.owl.interfaces.ElkObjectPropertyExpression;
 import org.semanticweb.elk.owl.interfaces.ElkSubObjectPropertyExpression;
@@ -43,7 +42,7 @@ import org.semanticweb.elk.owl.parsing.Owl2ParserAxiomProcessor;
 import org.semanticweb.elk.owl.predefined.PredefinedElkObjectPropertyFactory;
 import org.semanticweb.elk.owl.visitors.DummyElkAxiomVisitor;
 import org.semanticweb.elk.owl.visitors.ElkAxiomVisitor;
-import org.semanticweb.elk.reasoner.taxonomy.MockInstanceTaxonomy.MutableTypeNode;
+import org.semanticweb.elk.reasoner.taxonomy.MockTaxonomy.MutableTaxonomyNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 
 /**
@@ -55,11 +54,10 @@ public class MockObjectPropertyTaxonomyLoader {
 			final PredefinedElkObjectPropertyFactory factory,
 			final Owl2Parser parser) throws Owl2ParseException {
 
-		final MockInstanceTaxonomy<ElkObjectProperty, ElkNamedIndividual> taxonomy = new MockInstanceTaxonomy<ElkObjectProperty, ElkNamedIndividual>(
+		final MockTaxonomy<ElkObjectProperty> taxonomy = new MockTaxonomy<ElkObjectProperty>(
 				factory.getOwlTopObjectProperty(),
 				factory.getOwlBottomObjectProperty(),
-				ElkObjectPropertyKeyProvider.INSTANCE,
-				ElkIndividualKeyProvider.INSTANCE);
+				ElkObjectPropertyKeyProvider.INSTANCE);
 
 		final Collector collector = new Collector();
 
@@ -127,10 +125,10 @@ public class MockObjectPropertyTaxonomyLoader {
 
 	private static class TaxonomyInserter extends DummyElkAxiomVisitor<Void> {
 
-		final MockInstanceTaxonomy<ElkObjectProperty, ElkNamedIndividual> taxonomy_;
+		final MockTaxonomy<ElkObjectProperty> taxonomy_;
 
 		public TaxonomyInserter(
-				final MockInstanceTaxonomy<ElkObjectProperty, ElkNamedIndividual> taxonomy) {
+				final MockTaxonomy<ElkObjectProperty> taxonomy) {
 			this.taxonomy_ = taxonomy;
 		}
 
@@ -147,7 +145,7 @@ public class MockObjectPropertyTaxonomyLoader {
 				}
 			}
 
-			taxonomy_.getCreateTypeNode(props);
+			taxonomy_.getCreateNode(props);
 
 			return null;
 		}
@@ -158,7 +156,7 @@ public class MockObjectPropertyTaxonomyLoader {
 			final ElkEntity entity = elkDeclarationAxiom.getEntity();
 
 			if (entity instanceof ElkObjectProperty) {
-				taxonomy_.getCreateTypeNode(
+				taxonomy_.getCreateNode(
 						Collections.singleton((ElkObjectProperty) entity));
 			}
 
@@ -179,10 +177,10 @@ public class MockObjectPropertyTaxonomyLoader {
 				final ElkObjectProperty subProperty = (ElkObjectProperty) subExpression;
 				final ElkObjectProperty superProperty = (ElkObjectProperty) superExpression;
 
-				final MutableTypeNode<ElkObjectProperty, ElkNamedIndividual> subNode = taxonomy_
-						.getCreateTypeNode(Collections.singleton(subProperty));
-				final MutableTypeNode<ElkObjectProperty, ElkNamedIndividual> superNode = taxonomy_
-						.getCreateTypeNode(
+				final MutableTaxonomyNode<ElkObjectProperty> subNode = taxonomy_
+						.getCreateNode(Collections.singleton(subProperty));
+				final MutableTaxonomyNode<ElkObjectProperty> superNode = taxonomy_
+						.getCreateNode(
 								Collections.singleton(superProperty));
 
 				if (!subNode.equals(superNode)) {

@@ -29,10 +29,7 @@ import java.util.Set;
 
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.semanticweb.elk.owl.interfaces.ElkEntity;
-import org.semanticweb.elk.reasoner.taxonomy.model.GenericInstanceNode;
 import org.semanticweb.elk.reasoner.taxonomy.model.GenericTaxonomyNode;
-import org.semanticweb.elk.reasoner.taxonomy.model.GenericTypeNode;
-import org.semanticweb.elk.util.collections.Operations;
 import org.semanticweb.elk.util.collections.Operations.Functor;
 
 /**
@@ -59,33 +56,6 @@ public class TaxonomyNodeUtils {
 			
 			for (final N succNode : succ.apply(next)) {
 				if (result.add(succNode)) {
-					todo.add(succNode);
-				}
-			}
-		}
-		
-		return Collections.unmodifiableSet(result);
-	}
-	
-	public static <N, O> Set<O> collectFromAllReachable(
-					final Collection<? extends N> direct,
-					final Collection<? extends O> init,
-					final Functor<N, Set<? extends N>> succ,
-					final Functor<N, Set<? extends O>> collect) {
-		
-		final Set<O> result = new UnifiedSet<O>();
-		result.addAll(init);
-		final Set<N> queued = new UnifiedSet<N>();
-		queued.addAll(direct);
-		final Queue<N> todo = new LinkedList<N>(direct);
-		
-		while (!todo.isEmpty()) {
-			final N next = todo.poll();
-			
-			result.addAll(collect.apply(next));
-			
-			for (final N succNode : succ.apply(next)) {
-				if (queued.add(succNode)) {
 					todo.add(succNode);
 				}
 			}
@@ -139,41 +109,5 @@ public class TaxonomyNodeUtils {
 				return node.getDirectSubNodes();
 			}});
 	}
-	
-	/**
-	 * Returns all instance nodes of the specified type node and all its
-	 * sub-nodes.
-	 *
-	 * @param <TN>
-	 *            The type of type nodes
-	 * @param <IN>
-	 *            The type of instance nodes
-	 * @param <T>
-	 *            The type of members of the type nodes.
-	 * @param <I>
-	 *            The type of members of the instance nodes.
-	 * @param node
-	 *            The type node whose instances should be returned.
-	 * @return all instance nodes of the specified type node and all its
-	 *         sub-nodes.
-	 */
-	public static <T extends ElkEntity, I extends ElkEntity, TN extends GenericTypeNode<T, I, TN, IN>, IN extends GenericInstanceNode<T, I, TN, IN>>
-			Set<? extends IN> getAllInstanceNodes(final GenericTypeNode<T, I, TN, IN> node) {
-		return TaxonomyNodeUtils.collectFromAllReachable(
-				node.getDirectSubNodes(),
-				node.getDirectInstanceNodes(),
-				new Operations.Functor<GenericTypeNode<T, I, TN, IN>, Set<? extends GenericTypeNode<T, I, TN, IN>>>() {
-					@Override
-					public Set<? extends TN> apply(final GenericTypeNode<T, I, TN, IN> n) {
-						return n.getDirectSubNodes();
-					}
-				},
-				new Operations.Functor<GenericTypeNode<T, I, TN, IN>, Set<? extends IN>>() {
-					@Override
-					public Set<? extends IN> apply(final GenericTypeNode<T, I, TN, IN> n) {
-						return n.getDirectInstanceNodes();
-					}
-				});
-	}
-	
+
 }

@@ -11,12 +11,4 @@
 	<artifactId>elk-snomed-test</artifactId>
 
 	<name>ELK SNOMED Testing Utility</name>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 </project>

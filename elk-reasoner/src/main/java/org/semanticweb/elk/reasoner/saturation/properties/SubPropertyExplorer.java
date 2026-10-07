@@ -226,7 +226,7 @@ class SubPropertyExplorer {
 	}
 
 	/**
-	 * Given an {@link IndexedObjectProperty} Computes a {@link Multimap} from
+	 * Given an {@link IndexedObjectProperty} Computes a {@link MutableMultimap} from
 	 * {@link IndexedObjectProperty}s to {@link IndexedObjectProperty}
 	 * consisting of the the assignments T -> S such that both S and
 	 * ObjectPropertyChain(S, T) are sub-properties of the given

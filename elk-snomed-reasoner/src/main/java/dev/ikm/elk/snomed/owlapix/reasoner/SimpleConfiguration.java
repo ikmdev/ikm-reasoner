@@ -47,7 +47,6 @@ public class SimpleConfiguration implements OWLReasonerConfiguration {
 
 	private FreshEntityPolicy freshEntityPolicy = FreshEntityPolicy.ALLOW;
 
-	private IndividualNodeSetPolicy individualNodeSetPolicy = IndividualNodeSetPolicy.BY_NAME;
 	private long timeOut = Long.MAX_VALUE;
 
 	/** default constructor */
@@ -74,14 +73,12 @@ public class SimpleConfiguration implements OWLReasonerConfiguration {
 	 * @param progressMonitor         the progress monitor to use
 	 * @param freshEntityPolicy       the policy for fresh entities
 	 * @param timeOut                 the timeout in milliseconds
-	 * @param individualNodeSetPolicy the policy for individual nodes
 	 */
 	public SimpleConfiguration(ReasonerProgressMonitor progressMonitor, FreshEntityPolicy freshEntityPolicy,
-			long timeOut, IndividualNodeSetPolicy individualNodeSetPolicy) {
+			long timeOut) {
 		this.progressMonitor = progressMonitor;
 		this.freshEntityPolicy = freshEntityPolicy;
 		this.timeOut = timeOut;
-		this.individualNodeSetPolicy = individualNodeSetPolicy;
 	}
 
 	/**
@@ -113,10 +110,5 @@ public class SimpleConfiguration implements OWLReasonerConfiguration {
 	@Override
 	public FreshEntityPolicy getFreshEntityPolicy() {
 		return freshEntityPolicy;
-	}
-
-	@Override
-	public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
-		return individualNodeSetPolicy;
 	}
 }

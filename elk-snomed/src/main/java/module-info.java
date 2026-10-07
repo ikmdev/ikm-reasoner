@@ -26,7 +26,6 @@ open module dev.ikm.elk.snomed {
 
 	requires dev.ikm.elk.snomed.owlel;
 	requires dev.ikm.elk.snomed.reasoner;
-	requires dev.ikm.elk.snomed.test;
     requires org.eclipse.collections.api;
 
     exports dev.ikm.elk.snomed;

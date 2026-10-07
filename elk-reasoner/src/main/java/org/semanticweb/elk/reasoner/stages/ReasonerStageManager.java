@@ -38,8 +38,7 @@ public class ReasonerStageManager {
 			incrementalDeletionStage, incrementalContextGapFillingStage,
 			incrementalAdditionInitializationStage, incrementalAdditionStage,
 			incrementalTaxonomyCleaningStage,
-			classTaxonomyComputationStage,
-			instanceTaxonomyComputationStage, inferenceTracingStage,
+			classTaxonomyComputationStage, inferenceTracingStage,
 			classExpressionQueryStage, entailmentQueryStage;
 
 	ReasonerStageManager(AbstractReasonerState reasoner) {
@@ -100,9 +99,6 @@ public class ReasonerStageManager {
 
 		this.classTaxonomyComputationStage = new ClassTaxonomyComputationStage(
 				reasoner, consistencyCheckingStage);
-
-		this.instanceTaxonomyComputationStage = new InstanceTaxonomyComputationStage(
-				reasoner, classTaxonomyComputationStage);
 
 		/* Tracing stages */
 

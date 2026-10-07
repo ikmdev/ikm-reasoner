@@ -25,13 +25,11 @@ package org.semanticweb.elk.reasoner;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.semanticweb.elk.exceptions.ElkException;
 import org.semanticweb.elk.owl.interfaces.ElkAxiom;
 import org.semanticweb.elk.owl.interfaces.ElkClass;
 import org.semanticweb.elk.owl.interfaces.ElkClassExpression;
-import org.semanticweb.elk.owl.interfaces.ElkNamedIndividual;
 import org.semanticweb.elk.owl.interfaces.ElkObject;
 import org.semanticweb.elk.owl.interfaces.ElkObjectProperty;
 import org.semanticweb.elk.reasoner.completeness.IncompleteResult;
@@ -40,15 +38,10 @@ import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 import org.semanticweb.elk.reasoner.indexing.model.OntologyIndex;
 import org.semanticweb.elk.reasoner.stages.AbstractReasonerState;
 import org.semanticweb.elk.reasoner.stages.ReasonerStageExecutor;
-import org.semanticweb.elk.reasoner.taxonomy.FreshInstanceNode;
 import org.semanticweb.elk.reasoner.taxonomy.FreshTaxonomyNode;
-import org.semanticweb.elk.reasoner.taxonomy.FreshTypeNode;
-import org.semanticweb.elk.reasoner.taxonomy.model.InstanceNode;
-import org.semanticweb.elk.reasoner.taxonomy.model.InstanceTaxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.Node;
 import org.semanticweb.elk.reasoner.taxonomy.model.Taxonomy;
 import org.semanticweb.elk.reasoner.taxonomy.model.TaxonomyNode;
-import org.semanticweb.elk.reasoner.taxonomy.model.TypeNode;
 import org.semanticweb.elk.util.concurrent.computation.ConcurrentExecutor;
 import org.semanticweb.elk.util.concurrent.computation.ConcurrentExecutors;
 import org.slf4j.Logger;
@@ -288,57 +281,6 @@ public class Reasoner extends AbstractReasonerState {
 			if (allowFreshEntities) {
 				return new FreshTaxonomyNode<ElkClass>(elkClass, taxonomy);
 			}
-			// else
-			throw new ElkFreshEntitiesException(elkClass);
-		});
-	}
-
-	/**
-	 * Helper method to get an {@link InstanceNode} from the taxonomy.
-	 * 
-	 * @param elkNamedIndividual
-	 *            a {@link ElkNamedIndividual} for which to find an
-	 *            {@link InstanceNode}
-	 * @return the {@link InstanceNode} for the given {@link ElkNamedIndividual}
-	 * @throws ElkException
-	 *             if the result cannot be computed
-	 */
-	protected IncompleteResult<? extends InstanceNode<ElkClass, ElkNamedIndividual>> getInstanceNode(
-			ElkNamedIndividual elkNamedIndividual) throws ElkException {
-		return getInstanceTaxonomy().map(tax -> {
-			InstanceNode<ElkClass, ElkNamedIndividual> node = tax
-					.getInstanceNode(elkNamedIndividual);
-			if (node != null)
-				return node;
-			// else
-			if (allowFreshEntities)
-				return new FreshInstanceNode<ElkClass, ElkNamedIndividual>(
-						elkNamedIndividual, tax);
-			// else
-			throw new ElkFreshEntitiesException(elkNamedIndividual);
-		});
-	}
-
-	/**
-	 * Helper method to get a {@link TypeNode} from the taxonomy.
-	 * 
-	 * @param elkClass
-	 *            an {@link ElkClass} for which to find a {@link TypeNode}
-	 * @return the {@link TypeNode} for the given {@link ElkClass}
-	 * @throws ElkException
-	 *             if the result cannot be computed
-	 */
-	protected IncompleteResult<? extends TypeNode<ElkClass, ElkNamedIndividual>> getTypeNode(
-			ElkClass elkClass) throws ElkException {
-		return getInstanceTaxonomy().map(tax -> {
-			final TypeNode<ElkClass, ElkNamedIndividual> node = tax
-					.getNode(elkClass);
-			if (node != null)
-				return node;
-			// else
-			if (allowFreshEntities)
-				return new FreshTypeNode<ElkClass, ElkNamedIndividual>(elkClass,
-						tax);
 			// else
 			throw new ElkFreshEntitiesException(elkClass);
 		});
@@ -655,116 +597,6 @@ public class Reasoner extends AbstractReasonerState {
 		return getObjectPropertyNode(property)
 				.map(queryNode -> direct ? queryNode.getDirectSuperNodes()
 						: queryNode.getAllSuperNodes());
-	}
-
-	/**
-	 * Return the (direct or indirect) instances of the given
-	 * {@link ElkClassExpression} as specified by the parameter. The method
-	 * returns a set of {@link Node}s, each of which representing an equivalent
-	 * class of instances. Calling of this method may trigger the computation of
-	 * the realization, if it has not been done yet.
-	 * 
-	 * @param classExpression
-	 *            the {@link ElkClassExpression} for which to return the
-	 *            instances {@link Node}s
-	 * @param direct
-	 *            if {@code true}, only direct instances are returned
-	 * @return the set of {@link Node}s for direct or indirect instances of the
-	 *         given {@link ElkClassExpression} according to the specified
-	 *         parameter
-	 * @throws ElkInconsistentOntologyException
-	 *             if the ontology is inconsistent
-	 * @throws ElkException
-	 *             if the result cannot be computed
-	 */
-	public synchronized IncompleteResult<? extends Set<? extends Node<ElkNamedIndividual>>> getInstances(
-			ElkClassExpression classExpression, boolean direct)
-			throws ElkInconsistentOntologyException, ElkException {
-
-		if (classExpression instanceof ElkClass) {
-			return getTypeNode((ElkClass) classExpression).map(
-					queryNode -> direct ? queryNode.getDirectInstanceNodes()
-							: queryNode.getAllInstanceNodes());
-		}
-
-		IncompleteResult<? extends Set<? extends Node<ElkNamedIndividual>>> incompleteInstances = queryDirectInstances(
-				classExpression);
-
-		if (direct) {
-			return incompleteInstances;
-		}
-		// else collect all instances off direct sub classes
-		IncompleteResult<? extends InstanceTaxonomy<ElkClass, ElkNamedIndividual>> incompleteTaxonomy = getInstanceTaxonomy();
-
-		IncompleteResult<? extends Set<? extends Node<ElkClass>>> incompleteSubNodes = queryDirectSubClasses(
-				classExpression);
-
-		return Incompleteness.compose(incompleteTaxonomy, incompleteSubNodes,
-				incompleteInstances, (taxonomy, subNodes, instances) -> {
-					return Stream
-							.concat(instances.stream(), subNodes.stream()
-									.map(n -> taxonomy
-											.getNode(n.getCanonicalMember()))
-									.flatMap(n -> n.getAllInstanceNodes()
-											.stream()))
-							.collect(Collectors.toSet());
-				});
-	}
-
-	/**
-	 * Return the (direct or indirect) instances of the given
-	 * {@link ElkClassExpression} as specified by the parameter. The method
-	 * returns a set of {@link Node}s, each of which representing an equivalent
-	 * class of instances. Calling of this method may trigger the computation of
-	 * the realization, if it has not been done yet.
-	 * 
-	 * @param classExpression
-	 *            the {@link ElkClassExpression} for which to return the
-	 *            instances {@link Node}s
-	 * @param direct
-	 *            if {@code true}, only direct instances are returned
-	 * @return the set of {@link Node}s for direct or indirect instances of the
-	 *         given {@link ElkClassExpression} according to the specified
-	 *         parameter
-	 * @throws ElkException
-	 *             if the result cannot be computed
-	 */
-	public synchronized IncompleteResult<? extends Set<? extends Node<ElkNamedIndividual>>> getInstancesQuietly(
-			ElkClassExpression classExpression, boolean direct)
-			throws ElkException {
-		try {
-			return getInstances(classExpression, direct);
-		} catch (final ElkInconsistentOntologyException e) {
-			// All classes are equivalent to each other, so also to owl:Nothing.
-			return getInstanceTaxonomyQuietly()
-					.map(tax -> tax.getInstanceNodes());
-		}
-	}
-
-	/**
-	 * Return the (direct or indirect) types of the given
-	 * {@link ElkNamedIndividual}. The method returns a set of {@link Node}s,
-	 * each of which representing an equivalent class of types. Calling of this
-	 * method may trigger the computation of the realization, if it has not been
-	 * done yet.
-	 * 
-	 * @param elkNamedIndividual
-	 *            the {@link ElkNamedIndividual} for which to return the types
-	 *            {@link Node}s
-	 * @param direct
-	 *            if {@code true}, only direct types are returned
-	 * @return the set of {@link Node}s for the direct or indirect types of the
-	 *         given {@link ElkNamedIndividual} according to the specified
-	 *         parameter
-	 * @throws ElkException
-	 *             if the result cannot be computed
-	 */
-	public synchronized IncompleteResult<? extends Set<? extends Node<ElkClass>>> getTypes(
-			ElkNamedIndividual elkNamedIndividual, boolean direct)
-			throws ElkException {
-		return getInstanceNode(elkNamedIndividual)
-				.map(node -> direct ? node.getDirectTypeNodes()
-						: node.getAllTypeNodes());
 	}
 
 	/**

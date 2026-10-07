@@ -28,7 +28,6 @@ package dev.ikm.elk.snomed.reasoner;
 import org.semanticweb.elk.reasoner.config.ReasonerConfiguration;
 
 import dev.ikm.elk.snomed.owlapix.reasoner.FreshEntityPolicy;
-import dev.ikm.elk.snomed.owlapix.reasoner.IndividualNodeSetPolicy;
 import dev.ikm.elk.snomed.owlapix.reasoner.NullReasonerProgressMonitor;
 import dev.ikm.elk.snomed.owlapix.reasoner.OWLReasonerConfiguration;
 import dev.ikm.elk.snomed.owlapix.reasoner.ReasonerProgressMonitor;
@@ -71,8 +70,7 @@ public class ElkReasonerConfiguration implements OWLReasonerConfiguration {
 
 	public static OWLReasonerConfiguration getDefaultOwlReasonerConfiguration(
 			ReasonerProgressMonitor monitor) {
-		return new SimpleConfiguration(monitor, FreshEntityPolicy.ALLOW, 0,
-				IndividualNodeSetPolicy.BY_NAME);
+		return new SimpleConfiguration(monitor, FreshEntityPolicy.ALLOW, 0);
 	}
 	
 	public static OWLReasonerConfiguration getDefaultOwlReasonerConfiguration() {
@@ -83,11 +81,6 @@ public class ElkReasonerConfiguration implements OWLReasonerConfiguration {
 	@Override
 	public FreshEntityPolicy getFreshEntityPolicy() {
 		return owlConfig.getFreshEntityPolicy();
-	}
-
-	@Override
-	public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
-		return owlConfig.getIndividualNodeSetPolicy();
 	}
 
 	@Override
