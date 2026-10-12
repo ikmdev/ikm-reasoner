@@ -12,6 +12,11 @@ Files in `.claude/standards/` are build artifacts unpacked from `ike-build-stand
 mvn clean verify -DskipTests -T 1C
 ```
 
+Inside a workspace, build from the workspace root: `mvn -pl <this-subproject>/<module> ...` there,
+not from this directory. Maven 4 resolves siblings outside the build from the project-local
+repository of the nearest `.mvn` root, and this subproject's own one goes stale
+(IKE-Network/ike-issues#1265).
+
 ## Key Facts
 
 - GroupId: `dev.ikm.elk`
@@ -28,6 +33,7 @@ mvn clean verify -DskipTests -T 1C
 
 See `.claude/standards/` (after `mvn validate`) for full standards.
 See `CLAUDE-ikm-reasoner.md` for project-specific notes.
+
 <!-- BEGIN ike-managed: standards-pointer -->
 
 ## IKE Build Standards
