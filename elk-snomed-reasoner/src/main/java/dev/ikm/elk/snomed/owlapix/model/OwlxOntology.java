@@ -144,6 +144,12 @@ public class OwlxOntology implements OWLOntology, OWLOntologyManager {
 		return objectFactory.getSubObjectPropertyOfAxiom(ch, getElkObjectProperty(name));
 	}
 
+	public ElkAxiom getElkSubObjectPropertyChainOfAxiom(List<String> chain, String sup) {
+		ElkObjectPropertyChain ch = objectFactory
+				.getObjectPropertyChain(chain.stream().map(this::getElkObjectProperty).toList());
+		return objectFactory.getSubObjectPropertyOfAxiom(ch, getElkObjectProperty(sup));
+	}
+
 	public ElkReflexiveObjectPropertyAxiom getElkReflexiveObjectPropertyAxiom(String name) {
 		return objectFactory.getReflexiveObjectPropertyAxiom(getElkObjectProperty(name));
 	}

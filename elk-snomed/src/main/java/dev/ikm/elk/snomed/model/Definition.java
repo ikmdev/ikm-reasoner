@@ -32,6 +32,7 @@ public class Definition {
 	private MutableSet<Concept> superConcepts = Sets.mutable.empty();
 	private RoleGroup ungroupedRoles = new RoleGroup();
 	private MutableSet<RoleGroup> roleGroups = Sets.mutable.empty();
+	private MutableSet<NestedRole> nestedRoles = Sets.mutable.empty();
 
 	public DefinitionType getDefinitionType() {
 		return definitionType;
@@ -61,6 +62,19 @@ public class Definition {
 		this.ungroupedRoles.addConcreteRole(concreteRole);
 	}
 
+	/**
+	 * The ungrouped existential restrictions whose fillers are expressions, not concepts.
+	 *
+	 * @return the nested roles
+	 */
+	public MutableSet<NestedRole> getNestedRoles() {
+		return nestedRoles;
+	}
+
+	public void addNestedRole(NestedRole nestedRole) {
+		this.nestedRoles.add(nestedRole);
+	}
+
 	public MutableSet<RoleGroup> getRoleGroups() {
 		return roleGroups;
 	}
@@ -80,7 +94,7 @@ public class Definition {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(definitionType, roleGroups, superConcepts, ungroupedRoles);
+		return Objects.hash(definitionType, roleGroups, superConcepts, ungroupedRoles, nestedRoles);
 	}
 
 	@Override
@@ -94,7 +108,8 @@ public class Definition {
 		Definition other = (Definition) obj;
 		return definitionType == other.definitionType && Objects.equals(roleGroups, other.roleGroups)
 				&& Objects.equals(superConcepts, other.superConcepts)
-				&& Objects.equals(ungroupedRoles, other.ungroupedRoles);
+				&& Objects.equals(ungroupedRoles, other.ungroupedRoles)
+				&& Objects.equals(nestedRoles, other.nestedRoles);
 	}
 
 	public Definition copy() {
@@ -103,13 +118,15 @@ public class Definition {
 		def.roleGroups.addAll(this.roleGroups.stream().map(x -> x.copy()).toList());
 		def.superConcepts.addAll(this.superConcepts);
 		def.ungroupedRoles = this.ungroupedRoles.copy();
+		def.nestedRoles.addAll(this.nestedRoles.stream().map(NestedRole::copy).toList());
 		return def;
 	}
 
 	@Override
 	public String toString() {
 		return getDefinitionType() + "\n" + getSuperConcepts() + "\n" + getUngroupedRoles() + "\n"
-				+ getUngroupedConcreteRoles() + "\n" + getRoleGroups();
+				+ getUngroupedConcreteRoles() + "\n" + getRoleGroups()
+				+ (nestedRoles.isEmpty() ? "" : "\n" + nestedRoles);
 	}
 
 }

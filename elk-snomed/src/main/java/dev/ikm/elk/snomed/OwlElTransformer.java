@@ -125,12 +125,12 @@ public class OwlElTransformer {
 				OwlElObjectProperty prop1 = (OwlElObjectProperty) chain.getExpression1();
 				OwlElObjectProperty prop2 = (OwlElObjectProperty) chain.getExpression2();
 				OwlElObjectProperty sup = (OwlElObjectProperty) ax.getSuperProperty();
-				if (!prop1.equals(sup))
-					throw new UnsupportedOperationException("Unexpected: " + ax);
-				if (getRoleType(prop1).getChained() != null)
-					throw new UnsupportedOperationException(
-							"Two chains for: " + prop1 + " " + ax + " " + getRoleType(prop1).getChained());
-				getRoleType(prop1).setChained(getRoleType(prop2));
+				if (prop1.equals(sup) && getRoleType(prop1).getChained() == null) {
+					// The right identity SNOMED CT states, R ∘ S ⊑ R.
+					getRoleType(prop1).setChained(getRoleType(prop2));
+				} else {
+					getRoleType(sup).addChain(List.of(getRoleType(prop1), getRoleType(prop2)));
+				}
 			} else {
 				OwlElObjectProperty sub = (OwlElObjectProperty) ax.getSubProperty();
 				OwlElObjectProperty sup = (OwlElObjectProperty) ax.getSuperProperty();

@@ -33,6 +33,7 @@ public class RoleType extends SnomedEntity {
 
     private boolean transitive = false;
     private RoleType chained;
+    private final MutableList<List<RoleType>> chains = Lists.mutable.empty();
     private boolean reflexive = false;
 
     public RoleType(long id) {
@@ -61,6 +62,28 @@ public class RoleType extends SnomedEntity {
 
     public void setChained(RoleType chained) {
         this.chained = chained;
+    }
+
+    /**
+     * The property chains that imply this role other than its right identity (see
+     * {@link #getChained()}): each a sequence of two or more roles whose composition is a kind of
+     * this one, {@code R1 ∘ … ∘ Rn ⊑ this}.
+     *
+     * @return the chains, in the order they were added
+     */
+    public List<List<RoleType>> getChains() {
+        return chains;
+    }
+
+    /**
+     * Adds a property chain that implies this role.
+     *
+     * @param chain the roles composed, two or more, in order
+     */
+    public void addChain(List<RoleType> chain) {
+        if (chain.size() < 2)
+            throw new IllegalArgumentException("A property chain composes two or more roles: " + chain);
+        chains.add(List.copyOf(chain));
     }
 
     public boolean isReflexive() {
