@@ -32,9 +32,24 @@ public class Concept extends SnomedEntity {
 	private MutableList<Definition> definitions = Lists.mutable.empty();
 	private MutableList<Definition> gciDefinitions = Lists.mutable.empty();
 
+	/** Whether this concept stands for the bottom, owl:Nothing. */
+	private boolean bottom;
+
 	public Concept(long id) {
 		super();
 		this.id = id;
+	}
+
+	/**
+	 * @return whether this concept stands for the bottom, owl:Nothing; marked on the concept so
+	 *         it travels with it into any ontology built from it
+	 */
+	public boolean isBottom() {
+		return bottom;
+	}
+
+	public void setBottom(boolean bottom) {
+		this.bottom = bottom;
 	}
 
 	public MutableList<Definition> getDefinitions() {

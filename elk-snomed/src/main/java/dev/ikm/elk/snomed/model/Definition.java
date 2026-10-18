@@ -33,6 +33,7 @@ public class Definition {
 	private RoleGroup ungroupedRoles = new RoleGroup();
 	private MutableSet<RoleGroup> roleGroups = Sets.mutable.empty();
 	private MutableSet<NestedRole> nestedRoles = Sets.mutable.empty();
+	private MutableSet<Concept> disjointConcepts = Sets.mutable.empty();
 
 	public DefinitionType getDefinitionType() {
 		return definitionType;
@@ -75,6 +76,20 @@ public class Definition {
 		this.nestedRoles.add(nestedRole);
 	}
 
+	/**
+	 * The concepts the defined concept is disjoint with: it and each of them have no instance in
+	 * common. Meaningful only in a necessary definition.
+	 *
+	 * @return the disjoint concepts
+	 */
+	public MutableSet<Concept> getDisjointConcepts() {
+		return disjointConcepts;
+	}
+
+	public void addDisjointConcept(Concept concept) {
+		this.disjointConcepts.add(concept);
+	}
+
 	public MutableSet<RoleGroup> getRoleGroups() {
 		return roleGroups;
 	}
@@ -94,7 +109,7 @@ public class Definition {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(definitionType, roleGroups, superConcepts, ungroupedRoles, nestedRoles);
+		return Objects.hash(definitionType, roleGroups, superConcepts, ungroupedRoles, nestedRoles, disjointConcepts);
 	}
 
 	@Override
@@ -109,7 +124,8 @@ public class Definition {
 		return definitionType == other.definitionType && Objects.equals(roleGroups, other.roleGroups)
 				&& Objects.equals(superConcepts, other.superConcepts)
 				&& Objects.equals(ungroupedRoles, other.ungroupedRoles)
-				&& Objects.equals(nestedRoles, other.nestedRoles);
+				&& Objects.equals(nestedRoles, other.nestedRoles)
+				&& Objects.equals(disjointConcepts, other.disjointConcepts);
 	}
 
 	public Definition copy() {
@@ -119,6 +135,7 @@ public class Definition {
 		def.superConcepts.addAll(this.superConcepts);
 		def.ungroupedRoles = this.ungroupedRoles.copy();
 		def.nestedRoles.addAll(this.nestedRoles.stream().map(NestedRole::copy).toList());
+		def.disjointConcepts.addAll(this.disjointConcepts);
 		return def;
 	}
 
@@ -126,7 +143,8 @@ public class Definition {
 	public String toString() {
 		return getDefinitionType() + "\n" + getSuperConcepts() + "\n" + getUngroupedRoles() + "\n"
 				+ getUngroupedConcreteRoles() + "\n" + getRoleGroups()
-				+ (nestedRoles.isEmpty() ? "" : "\n" + nestedRoles);
+				+ (nestedRoles.isEmpty() ? "" : "\n" + nestedRoles)
+				+ (disjointConcepts.isEmpty() ? "" : "\ndisjoint " + disjointConcepts);
 	}
 
 }

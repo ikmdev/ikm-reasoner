@@ -62,6 +62,30 @@ public class SnomedOntology {
 
 	private SnomedDescriptions descriptions;
 
+	/** The concept marked as the bottom, found once rather than per query. */
+	private java.util.OptionalLong bottomConceptId = java.util.OptionalLong.empty();
+
+	/**
+	 * Names the concept that stands for the bottom: a reference to it is a reference to
+	 * owl:Nothing, its stated parents are where an unsatisfiable concept is placed, and its own
+	 * stated definitions are not sent to the reasoner. The mark is on the concept, so an ontology
+	 * built from these concepts knows its bottom too.
+	 *
+	 * @param id the bottom concept's id
+	 */
+	public void setBottomConceptId(long id) {
+		Concept bottom = getConcept(id);
+		if (bottom == null)
+			throw new IllegalArgumentException("No concept " + id + " to stand for the bottom");
+		bottom.setBottom(true);
+		bottomConceptId = java.util.OptionalLong.of(id);
+	}
+
+	/** @return the concept that stands for the bottom, if one of the concepts is marked so */
+	public java.util.OptionalLong getBottomConceptId() {
+		return bottomConceptId;
+	}
+
 	public Concept getConcept(long id) {
 		return conceptIdMap.get(id);
 	}
@@ -116,6 +140,8 @@ public class SnomedOntology {
 		concepts.forEach(x -> {
 			conceptIdMap.put(x.getId(), x);
 			this.concepts.add(x);
+			if (x.isBottom())
+				bottomConceptId = java.util.OptionalLong.of(x.getId());
 		});
 		
 		this.roleTypeIdMap = LongObjectMaps.mutable.withInitialCapacity(roleTypes.size());
@@ -136,6 +162,8 @@ public class SnomedOntology {
 			return;
 		conceptIdMap.put(concept.getId(), concept);
 		concepts.add(concept);
+		if (concept.isBottom())
+			bottomConceptId = java.util.OptionalLong.of(concept.getId());
 	}
 
 	public void addRoleType(RoleType role) {

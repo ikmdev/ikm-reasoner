@@ -42,6 +42,7 @@ import dev.ikm.elk.snomed.model.Concept;
 import dev.ikm.elk.snomed.model.ConcreteRole;
 import dev.ikm.elk.snomed.model.ConcreteRoleType;
 import dev.ikm.elk.snomed.model.Definition;
+import dev.ikm.elk.snomed.model.DefinitionType;
 import dev.ikm.elk.snomed.model.NestedRole;
 import dev.ikm.elk.snomed.model.Role;
 import dev.ikm.elk.snomed.model.RoleGroup;
@@ -123,6 +124,7 @@ public class SnomedOntologyReasoner {
 	 * reference throughout and able to {@link #interrupt()} it.
 	 */
 	public void computeInferences() {
+		unsatisfiable = null;
 		reasoner = ElkReasoner.createReasoner(ontology, ontology.getObjectFactory());
 		reasoner.flush();
 		try {
@@ -156,6 +158,7 @@ public class SnomedOntologyReasoner {
 	}
 
 	public void flush() {
+		unsatisfiable = null;
 		reasoner.flush();
 		try {
 			reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
@@ -329,7 +332,63 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Concept getConcept(ElkClass clazz) {
+		if (clazz.equals(ontology.getOwlNothing())) {
+			java.util.OptionalLong bottom = snomedOntology.getBottomConceptId();
+			return bottom.isPresent() ? snomedOntology.getConcept(bottom.getAsLong()) : null;
+		}
 		return snomedOntology.getConcept(getId(clazz));
+	}
+
+	/**
+	 * Whether the concept is unsatisfiable: in owl:Nothing's node, equivalent to the bottom. The
+	 * bottom concept is, by definition.
+	 */
+	public boolean isUnsatisfiable(Concept con) {
+		return isBottom(con) || unsatisfiableConcepts().contains(con);
+	}
+
+	/** owl:Nothing's node, read once per classification. */
+	private volatile Set<Concept> unsatisfiable;
+
+	/**
+	 * Where an unsatisfiable concept is placed: the bottom concept's stated parents, since it is
+	 * equivalent to the bottom; none when the content names no bottom concept. ELK's own answer,
+	 * the bottom node's direct super classes, is every leaf of the taxonomy.
+	 */
+	private Set<ElkClass> bottomPlacement(boolean direct) {
+		java.util.OptionalLong bottom = snomedOntology.getBottomConceptId();
+		Set<ElkClass> placement = new HashSet<>();
+		Concept bottomConcept = bottom.isPresent() ? snomedOntology.getConcept(bottom.getAsLong()) : null;
+		if (bottomConcept == null)
+			return placement;
+		for (Definition def : bottomConcept.getDefinitions()) {
+			for (Concept sup : def.getSuperConcepts()) {
+				ElkClass supClass = elkClass(sup);
+				placement.add(supClass);
+				if (!direct)
+					placement.addAll(getSuperClasses(sup, false));
+			}
+		}
+		return placement;
+	}
+
+	/** The unsatisfiable concepts: owl:Nothing's node, and the bottom concept. */
+	private Set<Concept> unsatisfiableConcepts() {
+		Set<Concept> known = this.unsatisfiable;
+		if (known != null)
+			return known;
+		Set<Concept> unsatisfiable = new HashSet<>();
+		try {
+			for (ElkClass member : reasoner.getEquivalentClasses(ontology.getOwlNothing())) {
+				Concept concept = getConcept(member);
+				if (concept != null)
+					unsatisfiable.add(concept);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		this.unsatisfiable = java.util.Collections.unmodifiableSet(unsatisfiable);
+		return unsatisfiable;
 	}
 
 	private void removeAxioms(Concept con) {
@@ -350,7 +409,9 @@ public class SnomedOntologyReasoner {
 	protected void process(Concept con) {
 		removeAxioms(con);
 		conceptIdAxiomMap.put(con.getId(), Lists.mutable.empty());
-		for (Definition def : con.getDefinitions()) {
+		// The bottom concept's stated definitions only place it, and so its unsatisfiable
+		// equivalents, in the taxonomy: owl:Nothing is a kind of everything already.
+		for (Definition def : isBottom(con) ? List.<Definition>of() : con.getDefinitions()) {
 			process(con, def, false);
 		}
 		for (Definition def : con.getGciDefinitions()) {
@@ -363,24 +424,44 @@ public class SnomedOntologyReasoner {
 
 		ElkAxiom axiom = null;
 		switch (def.getDefinitionType()) {
-		case EquivalentConcept -> axiom = ontology.getEquivalentClassesAxiom(getIri(con), expr);
+		case EquivalentConcept -> axiom = ontology.getObjectFactory().getEquivalentClassesAxiom(elkClass(con), expr);
 		case SubConcept -> {
 			if (isGci) {
-				axiom = ontology.getSubClassOfAxiom(expr, getIri(con));
+				axiom = ontology.getSubClassOfAxiom(expr, elkClass(con));
 			} else {
-				axiom = ontology.getSubClassOfAxiom(getIri(con), expr);
+				axiom = ontology.getSubClassOfAxiom(elkClass(con), expr);
 			}
 		}
 		}
 		ontology.addAxiom(axiom);
 		conceptIdAxiomMap.get(con.getId()).add(axiom);
+		if (!def.getDisjointConcepts().isEmpty()) {
+			if (isGci || def.getDefinitionType() != DefinitionType.SubConcept)
+				throw new UnsupportedOperationException("Disjointness belongs in a necessary definition: " + con);
+			for (Concept disjoint : def.getDisjointConcepts()) {
+				ElkAxiom disjointness = ontology.getObjectFactory().getDisjointClassesAxiom(elkClass(con),
+						elkClass(disjoint));
+				ontology.addAxiom(disjointness);
+				conceptIdAxiomMap.get(con.getId()).add(disjointness);
+			}
+		}
+	}
+
+	/** Whether the concept stands for the bottom, owl:Nothing. */
+	private boolean isBottom(Concept con) {
+		return con.isBottom();
+	}
+
+	/** The concept's class: owl:Nothing for the bottom concept, else the class named by its id. */
+	private ElkClass elkClass(Concept con) {
+		return isBottom(con) ? ontology.getOwlNothing() : ontology.getElkClass(getIri(con));
 	}
 
 	/** A definition's content as one class expression: its conjuncts, or the single one. */
 	private ElkClassExpression expression(Definition def) {
 		// Use Eclipse Collections collect instead of stream
 		MutableList<ElkClass> sups = def.getSuperConcepts()
-				.collect(sup -> ontology.getElkClass(getIri(sup))).toList();
+				.collect(this::elkClass).toList();
 		MutableList<ElkObjectSomeValuesFrom> roles = def.getUngroupedRoles()
 				.collect(this::process).toList();
 		MutableList<ElkObjectSomeValuesFrom> nested = def.getNestedRoles()
@@ -397,6 +478,10 @@ public class SnomedOntologyReasoner {
 		exprs.addAll(props);
 		exprs.addAll(groups);
 		
+		if (exprs.isEmpty()) {
+			// A definition stating only disjointness says nothing more of the concept.
+			return ontology.getOwlThing();
+		}
 		if (exprs.size() == 1) {
 			return exprs.getFirst();
 		}
@@ -404,11 +489,13 @@ public class SnomedOntologyReasoner {
 	}
 
 	protected ElkObjectSomeValuesFrom process(NestedRole role) {
+		if (!role.filler().getDisjointConcepts().isEmpty())
+			throw new UnsupportedOperationException("Disjointness inside a restriction's filler: " + role);
 		return ontology.getElkObjectSomeValuesFrom(getIri(role.roleType()), expression(role.filler()));
 	}
 
 	protected ElkObjectSomeValuesFrom process(Role role) {
-		return ontology.getElkObjectSomeValuesFrom(getIri(role.getRoleType()), getIri(role.getConcept()));
+		return ontology.getElkObjectSomeValuesFrom(getIri(role.getRoleType()), elkClass(role.getConcept()));
 	}
 
 	private ElkObjectSomeValuesFrom process(RoleGroup rg) {
@@ -516,6 +603,8 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getSuperClasses(Concept con, boolean direct) {
+		if (isUnsatisfiable(con))
+			return bottomPlacement(direct);
 		try {
 			Set<? extends Node<ElkClass>> sups = reasoner.getSuperClasses(ontology.getElkClass(getIri(con)), direct);
 			Set<ElkClass> flat = flatten(sups);
@@ -570,10 +659,17 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<ElkClass> getSubClasses(Concept con, boolean direct) {
+		if (isUnsatisfiable(con))
+			return new HashSet<>();
 		try {
-			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(ontology.getElkClass(getIri(con)), direct);
-			Set<ElkClass> flat = flatten(subs);
-			flat.remove(ontology.getOwlNothing());
+			Set<? extends Node<ElkClass>> subs = reasoner.getSubClasses(elkClass(con), direct);
+			// owl:Nothing's node is a sub class of everything; its members are placed where the
+			// bottom concept is stated, below.
+			Set<ElkClass> flat = new HashSet<>();
+			for (Node<ElkClass> node : subs) {
+				if (!node.contains(ontology.getOwlNothing()))
+					flat.addAll(flatten(node));
+			}
 			return flat;
 			// TODO ElkException
 		} catch (Exception e) {
@@ -591,6 +687,8 @@ public class SnomedOntologyReasoner {
 		for (ElkClass clazz : subClasses) {
 			result.add(getConcept(clazz));
 		}
+		if (bottomPlacement(!direct).contains(elkClass(con)))
+			result.addAll(unsatisfiableConcepts());
 		return result;
 	}
 
@@ -612,7 +710,7 @@ public class SnomedOntologyReasoner {
 
 	public Set<ElkClass> getEquivalentClasses(Concept con) {
 		try {
-			Node<ElkClass> eqs = reasoner.getEquivalentClasses(ontology.getElkClass(getIri(con)));
+			Node<ElkClass> eqs = reasoner.getEquivalentClasses(elkClass(con));
 			Set<ElkClass> flat = new HashSet<>(flatten(eqs));
 			flat.remove(ontology.getOwlThing());
 			flat.remove(ontology.getOwlNothing());
@@ -624,6 +722,8 @@ public class SnomedOntologyReasoner {
 	}
 
 	public Set<Concept> getEquivalentConcepts(Concept con) {
+		if (isUnsatisfiable(con))
+			return unsatisfiableConcepts();
 		Set<ElkClass> equivalentClasses = getEquivalentClasses(con);
 		Set<Concept> result = new HashSet<>(equivalentClasses.size());
 		for (ElkClass clazz : equivalentClasses) {
