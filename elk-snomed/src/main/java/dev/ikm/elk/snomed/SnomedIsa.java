@@ -81,8 +81,21 @@ public class SnomedIsa {
 	}
 
 	public void init(long root) {
+		placeUnderRoot(root);
 		initChildren();
 		initOrderedConcepts(root);
+	}
+
+	/**
+	 * Places each concept with no parent directly under the root. The reasoner places a class
+	 * with no axiom under owl:Thing, which no taxonomy lists; left without a parent, the concept
+	 * and every concept below it would never be reached from the root.
+	 */
+	private void placeUnderRoot(long root) {
+		parentsMap.forEachKeyValue((con, parents) -> {
+			if (con != root && parents.isEmpty())
+				parents.add(root);
+		});
 	}
 
 	private void initChildren() {
